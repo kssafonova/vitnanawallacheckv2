@@ -183,7 +183,7 @@
     const calculate=()=>{
       const w=Number(widthInput.value),h=Number(heightInput.value),ref=refs[layout];
       const leafW=w/layout,valid=Number.isFinite(w)&&Number.isFinite(h)&&w>=1400&&h>=1800&&h<=3100&&leafW>=720&&leafW<=3000;
-      out.size.textContent=(w||'—')+' × '+(h||'—')+' мм';out.layout.textContent='HS · '+ref.label;out.opening.textContent='≈ '+Math.round(ref.open*100)+'%';out.glass.textContent=glassButtons.find(b=>b.dataset.glass===glass)?.querySelector('b')?.textContent||glass;renderPreview(layout);
+      out.size.textContent=(w||'—')+' × '+(h||'—')+' мм';out.layout.textContent='HS · '+ref.label;out.opening.textContent='≈ '+Math.round(ref.open*100)+'%';out.glass.textContent=glassButtons.find(b=>b.dataset.glass===glass)?.querySelector('strong,b')?.textContent||glass;renderPreview(layout);
       if(!valid){out.price.textContent='По расчёту';out.note.textContent='Для этих размеров нужна индивидуальная инженерная проверка: подтвердим количество секций, массу стекла и узел монтажа.';return}
       const area=w*h/1e6,refArea=ref.w*ref.h/1e6;
       let price=ref.price*(area/refArea)*glassFactor*colorFactor;
