@@ -2309,3 +2309,92 @@ body.hs-page{
     padding:13px 14px
   }
 }
+
+
+/* ============================================================
+   HS CALCULATOR — FIX OUTER DESKTOP GRID
+   calculator.css uses an outer 2-column layout on desktop.
+   HS already owns its internal form/result split, so it must
+   remain a single full-width calculator shell.
+   ============================================================ */
+.hs-calculator>.w{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+}
+.hs-calculator .calc-head{
+  width:min(100%,1440px)!important;
+  max-width:1440px!important;
+  margin:0 auto!important;
+  padding-left:20px!important;
+  padding-right:20px!important;
+}
+.hs-calculator .calculator-v18-scope{
+  width:100%!important;
+  max-width:none!important;
+}
+.hs-calculator .calculator-stage{
+  width:min(100%,1440px)!important;
+  max-width:1440px!important;
+  margin:0 auto!important;
+  padding:0 20px!important;
+}
+.hs-calculator .calculator{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  grid-template-columns:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+}
+.hs-calculator .calculator__main{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+.hs-calculator .hs-calc{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  grid-template-columns:1fr!important;
+}
+.hs-calculator .hs-calc__form,
+.hs-calculator .hs-calc__result{
+  min-width:0!important;
+}
+.hs-calculator .hs-calc-addons .addon-row__text small{
+  color:#77736a!important;
+  letter-spacing:.02em;
+}
+
+@media(min-width:760px){
+  .hs-calculator .calc-head,
+  .hs-calculator .calculator-stage{
+    padding-left:36px!important;
+    padding-right:36px!important;
+  }
+  .hs-calculator .hs-calc{
+    grid-template-columns:minmax(0,1.16fr) minmax(320px,.84fr)!important;
+    align-items:stretch;
+  }
+  .hs-calculator .hs-calc__result{
+    height:100%;
+  }
+}
+@media(min-width:1100px){
+  .hs-calculator .calc-head,
+  .hs-calculator .calculator-stage{
+    padding-left:48px!important;
+    padding-right:48px!important;
+  }
+  .hs-calculator .hs-calc__form{
+    padding:30px!important;
+  }
+  .hs-calculator .hs-calc__result{
+    padding:30px!important;
+  }
+}
