@@ -34,6 +34,10 @@
  * 4. Fixes calculateHsPortal() so its thermalContour parameter actually
  *    controls the thermal contour instead of silently remapping to the
  *    glazing package axis.
+ * 5. Adds a cross-check between thermal contour and glazing package: warns
+ *    when the combination is commercially/physically pointless (e.g. cold
+ *    contour + energy-saving multifunctional glass, or warm contour +
+ *    basic tempered glass with no coating).
  */
 (function(){
   if (typeof window.evaluateFramework !== 'function' ||
@@ -46,6 +50,27 @@
   var AESTHETIC_HIDE_RATIO = 0.35;
   var AESTHETIC_WARN_RATIO = 0.5;
   var SAFE_LOAD_RATIO = 0.8; // must match the value inside calculator.js
+
+  // Matches THERMAL_CONTOURS priceFactor values inside calculator.js.
+  var WARM_FACTOR = 1.08;
+  var COLD_FACTOR = 0.94;
+
+  function contourGlazingNote(thermalFactor, glazingArg){
+    var isCold = Math.abs(thermalFactor - COLD_FACTOR) < 0.001;
+    var isWarm = Math.abs(thermalFactor - WARM_FACTOR) < 0.001;
+    var glazingLabel = glazingArg && glazingArg.label ? glazingArg.label : '';
+
+    if (isCold && glazingLabel === 'Мультифункция') {
+      return 'в холодном контуре энергопокрытие стекла почти бессмысленно — без терморазрыва в раме его эффект теряется. Для сезонной террасы дешевле взять закалённое стекло.';
+    }
+    if (isCold && glazingLabel === 'Триплекс') {
+      return 'в холодном контуре триплекс даёт безопасность и акустику, но не тепло — если цель только в тепле, дешевле взять закалённое.';
+    }
+    if (isWarm && glazingLabel === 'Закалённое') {
+      return 'для круглогодичного проживания рекомендуем стеклопакет с энергосберегающим покрытием — иначе тёплый профиль частично теряет смысл из-за простого стекла.';
+    }
+    return null;
+  }
 
   var originalEvaluateFramework = window.evaluateFramework;
   window.evaluateFramework = function(args){
@@ -61,11 +86,26 @@
   window.evaluatePreset = function(args){
     var result = originalEvaluatePreset(args);
     if (!result.available) return result;
+
     var proportionRatio = result.leafWidthMm / args.height;
     var aestheticWarning = proportionRatio < AESTHETIC_WARN_RATIO;
+    var notes = [];
+
     if (aestheticWarning) {
-      result.customerNote = "Створки получаются узкими при таком количестве секций — фасад может выглядеть дробным. Рекомендуем меньше секций или другую ширину проёма.";
+      notes.push('створки получаются узкими при таком количестве секций — фасад может выглядеть дробным. рекомендуем меньше секций или другую ширину проёма');
     }
+
+    var cgNote = contourGlazingNote(args.thermalFactor, args.glazing);
+    if (cgNote) {
+      notes.push(cgNote);
+      result.contourGlazingWarning = true;
+    }
+
+    if (notes.length > 0) {
+      var joined = notes.join('. ');
+      result.customerNote = joined.charAt(0).toUpperCase() + joined.slice(1) + '.';
+    }
+
     result.proportionRatio = proportionRatio;
     result.aestheticWarning = aestheticWarning;
     return result;
@@ -73,7 +113,7 @@
 
   window.pickRecommendedOption = function(availableOptions){
     var safeOptions = availableOptions.filter(function(option){
-      return option.internal.loadRatio <= SAFE_LOAD_RATIO && !option.aestheticWarning;
+      return option.internal.loadRatio <= SAFE_LOAD_RATIO && !option.aestheticWarning && !option.contourGlazingWarning;
     });
 
     if (safeOptions.length > 0) {
