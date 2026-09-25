@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link rel="preload" href="../assets/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Корзина | PORTAL SYSTEMS</title>
+<meta name="description" content="Корзина и оформление заказа HS- и FS-порталов PORTAL SYSTEMS. Без онлайн-оплаты: инженер позвонит, приедет на замер, затем договор и счёт.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="../assets/css/cart.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="cart-page">
+<site-menu data-base="../"></site-menu>
+
+<main>
+<section class="cart-head">
+  <div class="ui-wrap">
+    <p class="ui-eyebrow">Корзина</p>
+    <h1>Ваш заказ</h1>
+    <p class="ui-lead">Онлайн-оплаты нет. После заказа инженер позвонит, приедет на замер, затем договор и счёт.</p>
+  </div>
+</section>
+
+<div class="ui-wrap cart-layout" data-cart-root hidden>
+  <section class="cart-items" aria-label="Товары в корзине">
+    <p class="cart-note" data-cart-note hidden></p>
+    <ul class="cart-list" data-cart-list></ul>
+  </section>
+
+  <aside class="cart-side">
+    <div class="cart-summary">
+      <div class="cart-summary__row"><span>Товаров</span><span data-cart-count>0</span></div>
+      <div class="cart-summary__total"><span>Итого</span><strong data-cart-total>—</strong></div>
+      <p class="cart-summary__note">Цена «от» — за конструкцию стандартной комплектации. Итоговую стоимость с монтажом подтвердим после замера.</p>
+    </div>
+
+    <form class="cart-form" data-cart-form data-endpoint="../forms/send.php">
+      <h2>Оформление</h2>
+      <label class="cart-field"><span>Имя</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Как к вам обращаться"></label>
+      <label class="cart-field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" required placeholder="+7 999 000-00-00"></label>
+      <label class="cart-field"><span>Город или посёлок</span><input name="city" autocomplete="address-level2" required maxlength="120" placeholder="Например, Истра"></label>
+      <label class="cart-field"><span>Комментарий</span><textarea name="comment" maxlength="3000" placeholder="Размер проёма, стадия строительства, удобное время для звонка"></textarea></label>
+      <label class="cart-consent"><input type="checkbox" name="privacy_consent" value="1" required><span>Соглашаюсь с <a href="../content/privacy-policy-portal-systems.pdf" rel="nofollow noopener" target="_blank">политикой конфиденциальности</a></span></label>
+      <input class="cart-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="ui-btn ui-btn--dark" type="submit">Оформить заказ <span>→</span></button>
+      <p class="cart-form__status" data-cart-status role="status"></p>
+    </form>
+  </aside>
+</div>
+
+<section class="ui-wrap cart-empty" data-cart-empty hidden>
+  <h2>Корзина пуста</h2>
+  <p>Выберите готовый портал в каталоге или рассчитайте конструкцию под свой проём.</p>
+  <div class="cart-empty__actions"><a class="ui-btn ui-btn--dark" href="../catalog/">Выбрать готовый портал <span>→</span></a><a class="ui-btn" href="../systems/hs/#hs-calculator">Рассчитать под свой проём <span>↗</span></a></div>
+</section>
+
+<section class="cart-steps">
+  <div class="ui-wrap">
+    <p class="ui-eyebrow">Что будет после заказа</p>
+    <ol class="cart-steps__list">
+      <li><span>01</span><b>Звонок инженера</b><p>В рабочее время перезвоним, уточним проём и комплектацию.</p></li>
+      <li><span>02</span><b>Замер</b><p>Бесплатно в Москве и МО. Проверяем проём, порог и монтажный узел.</p></li>
+      <li><span>03</span><b>Договор</b><p>Фиксируем конфигурацию, итоговую цену, сроки изготовления и монтажа.</p></li>
+      <li><span>04</span><b>Счёт</b><p>Оплата по счёту после подписания договора. Онлайн-оплаты на сайте нет.</p></li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<site-footer data-base="../"></site-footer>
+<script src="../assets/js/components/site-menu.js"></script>
+<script src="../assets/js/components/site-footer.js"></script>
+<script src="../assets/js/shop.js"></script>
+<script src="../assets/js/cart.js"></script>
+</body>
+</html>

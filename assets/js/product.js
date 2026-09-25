@@ -34,5 +34,18 @@
     items.forEach(el=>io.observe(el));
   };
 
-  initForm();initReveal();
+  // Фото «Закрыто / Открыто» — один ракурс, переключение без перезагрузки
+  const initMedia=()=>{
+    const media=document.querySelector('[data-media-toggle]');
+    if(!media)return;
+    media.addEventListener('click',e=>{
+      const btn=e.target.closest('[data-media-state]');
+      if(!btn)return;
+      const open=btn.dataset.mediaState==='open';
+      media.classList.toggle('is-open',open);
+      media.querySelectorAll('[data-media-state]').forEach(b=>{const on=b===btn;b.classList.toggle('is-active',on);b.setAttribute('aria-pressed',String(on))});
+    });
+  };
+
+  initForm();initReveal();initMedia();
 })();

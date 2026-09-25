@@ -1,5 +1,5 @@
 {
-  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = цвета × схемы каждой модели. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото по цветам: assets/images/products/<model>/<color.slug>.webp (подхватываются автоматически).",
+  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = цвета × схемы каждой модели. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото вариантов: assets/images/products/<model>/<color.slug>-<scheme.slug>.webp и …-open.webp (подхватываются автоматически). render — студийный рендер модели в закрытом и открытом виде и схема на нём: node tools/recolor-photos.mjs перекрашивает его во все цвета модели, зеркальные схемы отражает.",
   "models": [
     {
       "model": "HS2",
@@ -61,7 +61,12 @@
           "short": "справа",
           "slug": "aktivnaya-sprava"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_2_closed.webp",
+        "open": "assets/images/products/hs_2_opened.webp",
+        "scheme": "A1"
+      }
     },
     {
       "model": "HS3",
@@ -117,7 +122,15 @@
           "short": "2 + 1",
           "slug": "dve-aktivnye-odna-fiksirovannaya"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_3_closed.webp",
+        "open": "assets/images/products/hs_3_opened.webp",
+        "scheme": "D1",
+        "flip": true,
+        "align": true,
+        "_note": "На рендере активные створки справа, в схеме D1 — слева: flip. Открытый кадр снят с другой точки: align выравнивает его по раме закрытого."
+      }
     },
     {
       "model": "HS4",
@@ -173,7 +186,14 @@
           "short": "от центра",
           "slug": "otkryvanie-ot-centra"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_4_closed.webp",
+        "open": "assets/images/products/hs_4_opened.webp",
+        "scheme": "A7",
+        "align": true,
+        "_note": "Открытый кадр выравнивается по раме закрытого. На закрытом рендере ручки серебристые, на открытом — чёрные."
+      }
     },
     {
       "model": "FS3",
@@ -299,7 +319,12 @@
           "short": "1 + 3",
           "slug": "odna-vlevo-tri-vpravo"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/fs_4_closed.webp",
+        "scheme": "431-R",
+        "_note": "Закрытый кадр: ручка на стыке 1-й и 2-й створки слева — это 431-R (1 влево + 3 вправо). Открытый кадр fs_4_opened.webp не подходит: все створки сложены влево, нет отдельной проходной — нужен новый рендер 3 + 1."
+      }
     }
   ]
 }
