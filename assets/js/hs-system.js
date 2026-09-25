@@ -317,9 +317,11 @@
       if(!valid){out.price.textContent='По расчёту';out.note.textContent='Для этих размеров нужна индивидуальная инженерная проверка: подтвердим количество секций, массу стекла и узел монтажа.';return}
       const area=w*h/1e6,refArea=ref.w*ref.h/1e6;
       let price=ref.price*(area/refArea)*glassFactor*colorFactor;
-      addonInputs.filter(i=>i.checked).forEach(i=>price+=Number(i.dataset.price)||0);
       out.price.textContent='≈ '+money(round1000(price));
-      out.note.textContent='Предварительная оценка по выбранной геометрии и комплектации. Точную цену подтверждаем после проверки стеклопакета, схемы и монтажного узла.';
+      const hasCustomOptions=addonInputs.some(i=>i.checked);
+      out.note.textContent=hasCustomOptions
+        ? 'Предварительная цена без стоимости выбранных дополнительных опций. Безбарьерный порог и москитную систему рассчитаем отдельно после проверки размеров и узла.'
+        : 'Предварительная оценка по выбранной геометрии и комплектации. Точную цену подтверждаем после проверки стеклопакета, схемы и монтажного узла.';
     };
 
     layoutButtons.forEach(btn=>btn.addEventListener('click',()=>{layout=Number(btn.dataset.layout);select(layoutButtons,'layout',layout);calculate()}));
