@@ -218,3 +218,7 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
   .m-card__scheme{width:72px;padding:6px}
   .m-card__badge{top:12px;left:12px}
 }
+/* Второе фото карточки — открытый вид, показывается при наведении (тот же ракурс) */
+.m-card__open{position:absolute;inset:0;opacity:0;transition:opacity .35s ease}
+.m-card__open[hidden]{display:none}
+@media(hover:hover){.m-card:hover .m-card__open{opacity:1}}

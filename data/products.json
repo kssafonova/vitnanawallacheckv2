@@ -1,5 +1,5 @@
 {
-  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = цвета × схемы каждой модели. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото по цветам: assets/images/products/<model>/<color.slug>.webp (подхватываются автоматически).",
+  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = цвета × схемы каждой модели. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото вариантов: assets/images/products/<model>/<color.slug>-<scheme.slug>.webp и …-open.webp (подхватываются автоматически). render — студийный рендер модели в закрытом и открытом виде и схема на нём: node tools/recolor-photos.mjs перекрашивает его во все цвета модели, зеркальные схемы отражает.",
   "models": [
     {
       "model": "HS2",
@@ -61,7 +61,12 @@
           "short": "справа",
           "slug": "aktivnaya-sprava"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_2_closed.webp",
+        "open": "assets/images/products/hs_2_opened.webp",
+        "scheme": "A1"
+      }
     },
     {
       "model": "HS3",
@@ -299,7 +304,12 @@
           "short": "1 + 3",
           "slug": "odna-vlevo-tri-vpravo"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/fs_4_closed.webp",
+        "open": "assets/images/products/fs_4_opened.webp",
+        "scheme": "431-L"
+      }
     }
   ]
 }

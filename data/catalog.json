@@ -16,7 +16,8 @@
       "scheme_title": "Открывание",
       "price": 375000,
       "available": true,
-      "image": "assets/images/products/hs_2_closed.webp",
+      "image": "assets/images/products/hs2/belyi-aktivnaya-sleva.webp",
+      "image_open": "assets/images/products/hs2/belyi-aktivnaya-sleva-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sleva/"
     },
     {
@@ -34,7 +35,8 @@
       "scheme_title": "Открывание",
       "price": 375000,
       "available": true,
-      "image": "assets/images/products/hs_2_closed.webp",
+      "image": "assets/images/products/hs2/belyi-aktivnaya-sprava.webp",
+      "image_open": "assets/images/products/hs2/belyi-aktivnaya-sprava-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sprava/"
     },
     {
@@ -52,7 +54,8 @@
       "scheme_title": "Открывание",
       "price": 375000,
       "available": true,
-      "image": "assets/images/products/hs_2_closed.webp",
+      "image": "assets/images/products/hs2/antratsit-aktivnaya-sleva.webp",
+      "image_open": "assets/images/products/hs2/antratsit-aktivnaya-sleva-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sleva/"
     },
     {
@@ -70,7 +73,8 @@
       "scheme_title": "Открывание",
       "price": 375000,
       "available": true,
-      "image": "assets/images/products/hs_2_closed.webp",
+      "image": "assets/images/products/hs2/antratsit-aktivnaya-sprava.webp",
+      "image_open": "assets/images/products/hs2/antratsit-aktivnaya-sprava-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sprava/"
     },
     {
@@ -89,6 +93,7 @@
       "price": 489000,
       "available": true,
       "image": "assets/images/systems/hs-overview.jpg",
+      "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
@@ -107,6 +112,7 @@
       "price": 489000,
       "available": true,
       "image": "assets/images/systems/hs-overview.jpg",
+      "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
@@ -125,6 +131,7 @@
       "price": 620000,
       "available": true,
       "image": "assets/images/projects/terrace.webp",
+      "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/"
     },
     {
@@ -143,6 +150,7 @@
       "price": 620000,
       "available": true,
       "image": "assets/images/projects/terrace.webp",
+      "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/"
     },
     {
@@ -161,6 +169,7 @@
       "price": 540000,
       "available": false,
       "image": "assets/images/systems/fs-view.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/"
     },
     {
@@ -179,6 +188,7 @@
       "price": 540000,
       "available": false,
       "image": "assets/images/systems/fs-view.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/"
     },
     {
@@ -197,6 +207,7 @@
       "price": 540000,
       "available": false,
       "image": "assets/images/systems/fs-view.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/"
     },
     {
@@ -215,6 +226,7 @@
       "price": 540000,
       "available": false,
       "image": "assets/images/systems/fs-view.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/"
     },
     {
@@ -232,7 +244,8 @@
       "scheme_title": "Схема",
       "price": 610000,
       "available": false,
-      "image": "assets/images/products/fs_4_closed.webp",
+      "image": "assets/images/products/fs4/antratsit-tri-vlevo-odna-vpravo.webp",
+      "image_open": "assets/images/products/fs4/antratsit-tri-vlevo-odna-vpravo-open.webp",
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-tri-vlevo-odna-vpravo/"
     },
     {
@@ -250,7 +263,8 @@
       "scheme_title": "Схема",
       "price": 610000,
       "available": false,
-      "image": "assets/images/products/fs_4_closed.webp",
+      "image": "assets/images/products/fs4/antratsit-odna-vlevo-tri-vpravo.webp",
+      "image_open": "assets/images/products/fs4/antratsit-odna-vlevo-tri-vpravo-open.webp",
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-odna-vlevo-tri-vpravo/"
     },
     {
@@ -268,7 +282,8 @@
       "scheme_title": "Схема",
       "price": 610000,
       "available": false,
-      "image": "assets/images/products/fs_4_closed.webp",
+      "image": "assets/images/products/fs4/chernyi-tri-vlevo-odna-vpravo.webp",
+      "image_open": "assets/images/products/fs4/chernyi-tri-vlevo-odna-vpravo-open.webp",
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-tri-vlevo-odna-vpravo/"
     },
     {
@@ -286,7 +301,8 @@
       "scheme_title": "Схема",
       "price": 610000,
       "available": false,
-      "image": "assets/images/products/fs_4_closed.webp",
+      "image": "assets/images/products/fs4/chernyi-odna-vlevo-tri-vpravo.webp",
+      "image_open": "assets/images/products/fs4/chernyi-odna-vlevo-tri-vpravo-open.webp",
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-odna-vlevo-tri-vpravo/"
     }
   ]

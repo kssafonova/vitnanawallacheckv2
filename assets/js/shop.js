@@ -81,6 +81,8 @@
       card.querySelectorAll('[data-card-link]').forEach(a=>{a.href=v.href+(a.dataset.cardHash||'')});
       const img=card.querySelector('[data-card-img]');
       if(img&&img.getAttribute('src')!==v.img)img.src=v.img;
+      const open=card.querySelector('[data-card-img-open]');
+      if(open){if(v.open){open.hidden=false;if(open.getAttribute('src')!==v.open)open.src=v.open}else open.hidden=true}
       mark('[data-color]','color',state.c,card.querySelector('[data-card-color]'));
       mark('[data-scheme]','scheme',state.s,card.querySelector('[data-card-scheme]'));
       card.querySelectorAll('[data-scheme-svg]').forEach(el=>{el.hidden=el.dataset.schemeSvg!==state.s});

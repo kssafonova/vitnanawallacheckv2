@@ -37,18 +37,22 @@ const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порт�
 // ---------- варианты ----------
 const missingPhotos = [];
 const variants = [];
+// Фото варианта: assets/images/products/<model>/<цвет>-<схема>.webp (+ -open.webp — открытый вид),
+// их делает tools/recolor-photos.mjs из студийного рендера. Нет фото — общее фото модели.
 for (const m of data.models) {
   for (const c of m.colors) {
-    const colorPhoto = `assets/images/products/${m.model.toLowerCase()}/${c.slug}.webp`;
-    const hasPhoto = exists(colorPhoto);
-    if (!hasPhoto) missingPhotos.push(`${colorPhoto}  — ${m.code} ${m.name}, ${c.name} RAL ${c.ral}`);
     for (const s of m.schemes) {
       const slug = `${profileSlug(m)}-${m.width}x${m.height}-${c.slug}-${s.slug}`;
+      const photo = `assets/images/products/${m.model.toLowerCase()}/${c.slug}-${s.slug}.webp`;
+      const photoOpen = photo.replace(/\.webp$/, '-open.webp');
+      const hasPhoto = exists(photo);
+      if (!hasPhoto) missingPhotos.push(`${photo}  — ${m.code} ${m.name}, ${c.name} RAL ${c.ral}, ${s.code}`);
       variants.push({
         m, c, s,
         sku: `STD-${m.model}-${profileCode(m)}-${m.width}X${m.height}-${c.ral}-${s.code}`,
         path: `catalog/${m.cat}/${slug}/`,
-        image: hasPhoto ? colorPhoto : m.image,
+        image: hasPhoto ? photo : m.image,
+        imageOpen: hasPhoto && exists(photoOpen) ? photoOpen : null,
         available: m.status === 'available',
       });
     }
@@ -121,7 +125,7 @@ function marketCard(m, rel) {
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
   const s0 = m.schemes[0], c0 = m.colors[0];
-  const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image }));
+  const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
   const swatches = m.colors.map((c, i) => {
     const v = find(m.model, c.slug, s0.slug);
     return `<a class="m-card__swatch${i ? '' : ' is-active'}" href="${href(v)}" data-color="${c.slug}" data-name="${esc(c.name)} RAL ${c.ral}" style="--sw:${c.hex}" title="${esc(c.name)} RAL ${c.ral}" aria-label="Цвет ${esc(c.name)} RAL ${c.ral}"${i ? '' : ' aria-current="true"'}></a>`;
@@ -141,7 +145,8 @@ function marketCard(m, rel) {
     : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
   return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}">
         <a class="m-card__media" href="${href(first)}" data-card-link>
-          <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>
+          <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
+          <img class="m-card__open" src="${rel}${first.imageOpen}" alt="" loading="lazy" decoding="async" data-card-img-open>` : ''}
           ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
           <span class="m-card__scheme" aria-hidden="true">${schemesSvg}</span>
         </a>
@@ -262,8 +267,10 @@ ${jsonLd(crumbs)}
 <nav class="p-wrap p-crumbs" aria-label="Хлебные крошки"><a href="${base}">Главная</a><span>/</span><a href="${base}catalog/">Каталог</a><span>/</span><a href="${systemHref(m, base)}">${m.system}</a><span>/</span>${esc(m.code)}</nav>
 <section class="product-hero">
   <div class="product-hero__grid">
-    <div class="product-media" data-reveal>
-      <img src="${base + v.image}" alt="${esc(`${m.code} — ${size}, ${c.name}`)}" fetchpriority="high">
+    <div class="product-media"${v.imageOpen ? ' data-media-toggle' : ''} data-reveal>
+      <img src="${base + v.image}" alt="${esc(`${m.code} — ${size}, ${c.name}, закрыто`)}" fetchpriority="high">${v.imageOpen ? `
+      <img class="product-media__open" src="${base + v.imageOpen}" alt="${esc(`${m.code} — ${size}, ${c.name}, открыто`)}" loading="lazy">
+      <div class="product-media__states" role="group" aria-label="Вид конструкции"><button type="button" class="is-active" aria-pressed="true" data-media-state="closed">Закрыто</button><button type="button" aria-pressed="false" data-media-state="open">Открыто</button></div>` : ''}
       <span class="product-media__label">${esc(s.code)} · ${esc(colorName)}</span>
       <span class="product-media__scheme" aria-hidden="true">${smallSvg(m, s)}</span>
     </div>
@@ -396,7 +403,7 @@ outputs.set('data/catalog.json', JSON.stringify({
     sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m),
     color: `${v.c.name} RAL ${v.c.ral}`, color_slug: v.c.slug, hex: v.c.hex,
     scheme: v.s.label, scheme_slug: v.s.slug, scheme_short: v.s.short, scheme_title: v.m.scheme_title,
-    price: v.m.price, available: v.available, image: v.image, url: v.path,
+    price: v.m.price, available: v.available, image: v.image, image_open: v.imageOpen, url: v.path,
   })),
 }, null, 2) + '\n');
 
@@ -438,5 +445,5 @@ if (CHECK) {
   console.log(changed.length ? `Обновлено файлов: ${changed.length}` : 'Изменений нет.');
   if (stale.length) console.log('Удалены лишние папки:\n  ' + stale.join('\n  '));
 }
-if (missingPhotos.length) console.log(`\nНе хватает фото по цветам (${missingPhotos.length}), пока стоит общее фото модели:\n  ` + missingPhotos.join('\n  '));
+if (missingPhotos.length) console.log(`\nНе хватает фото вариантов (${missingPhotos.length}), пока стоит общее фото модели:\n  ` + missingPhotos.join('\n  '));
 if (warnings.length) { console.log('\nВнимание:\n  ' + warnings.join('\n  ')); if (CHECK) process.exitCode = 1; }
