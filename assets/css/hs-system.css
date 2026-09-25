@@ -1226,3 +1226,10 @@
 /* Заголовки секций: чуть шире, чтобы не рвать фразу на 5 строк */
 .hs-home-approach__grid h2,.hs-section-head h2{max-width:14ch}
 .hs-home-process__title h2{max-width:none}
+/* Телефон: этапы «От проёма до готового HS-портала» — сеткой 2×2 */
+@media(max-width:767px){
+  .hs-home-process__steps{display:grid;grid-template-columns:1fr 1fr}
+  .hs-home-process__steps article{grid-template-columns:1fr;align-content:start;gap:6px;padding:14px 12px 16px 0}
+  .hs-home-process__steps article:nth-child(even){padding:14px 0 16px 12px;border-left:1px solid var(--hs-line)}
+  .hs-home-process__steps p{grid-column:auto;margin:0}
+}
