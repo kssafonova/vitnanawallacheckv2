@@ -43,3 +43,17 @@
   .hs-faq details p{padding-bottom:24px;font-size:14px}
 }
 @media(min-width:1100px){.hs-localnav{padding-inline:42px}}
+
+
+/* RU market: sealing / engineering block */
+.hs-seal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--hs-line);border-left:1px solid var(--hs-line)}
+.hs-seal-grid article{min-height:172px;padding:16px 14px;border-right:1px solid var(--hs-line);border-bottom:1px solid var(--hs-line);background:#f5f4ef}
+.hs-seal-grid article>span{display:block;color:#8a857b;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.hs-seal-grid b{display:block;margin-top:34px;font-size:15px;font-weight:400;letter-spacing:-.02em}
+.hs-seal-grid p{margin:7px 0 0;color:var(--hs-muted);font-size:11px;line-height:1.45}
+@media(min-width:760px){
+  .hs-seal-grid{grid-template-columns:repeat(4,1fr)}
+  .hs-seal-grid article{min-height:210px;padding:22px 18px}
+  .hs-seal-grid b{font-size:17px}
+  .hs-seal-grid p{font-size:12px}
+}
