@@ -4,27 +4,27 @@
     connectedCallback(){
       if(this.shadowRoot)return;
       const base=normBase(this.dataset.base),root=this.attachShadow({mode:'open'});
-      root.innerHTML=\`
+      root.innerHTML=`
       <style>
-      :host{display:block;font-family:'Manrope',Arial,sans-serif}*{box-sizing:border-box}a{color:inherit;text-decoration:none}
-      .footer{background:#050505;color:#f1f0eb;padding:58px 20px 22px;border-top:1px solid #292927}.in{width:min(100%,1440px);margin:auto}
-      .brand{font-size:clamp(42px,13vw,104px);line-height:.76;font-weight:300;letter-spacing:-.07em;padding-bottom:34px;border-bottom:1px solid #2d2d2a}
+      :host{display:block;font-family:var(--font,'Manrope',Arial,sans-serif)}*{box-sizing:border-box}a{color:inherit;text-decoration:none}
+      .footer{background:#050505;color:#f1f0eb;padding:clamp(56px,8vw,96px) var(--ui-pad,20px) calc(22px + env(safe-area-inset-bottom));border-top:1px solid #292927}.in{width:min(100%,1440px);margin:auto}
+      .brand{font-size:clamp(34px,9.4vw,150px);line-height:.8;white-space:nowrap;font-weight:300;letter-spacing:-.05em;word-spacing:.12em;padding-bottom:34px;border-bottom:1px solid #2d2d2a}
       .grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 18px;padding:34px 0 44px}
-      h3{margin:0 0 13px;color:#77746d;font-size:8px;line-height:1;text-transform:uppercase;letter-spacing:.13em;font-weight:500}
-      a,p{display:block;margin:0 0 8px;color:#d7d4cb;font-size:11px;line-height:1.45}a:hover{opacity:.62}
-      .bottom{display:flex;justify-content:space-between;gap:20px;padding-top:16px;border-top:1px solid #2d2d2a;color:#6f6c65;font-size:7px;letter-spacing:.09em;text-transform:uppercase}
-      @media(min-width:800px){.footer{padding:82px 48px 24px}.grid{grid-template-columns:repeat(4,1fr);gap:45px;padding:44px 0 62px}a,p{font-size:13px}.bottom{font-size:8px}}
+      h3{margin:0 0 14px;color:#8a877f;font-size:var(--fs-label,11px);line-height:1;text-transform:uppercase;letter-spacing:.13em;font-weight:500}
+      a,p{display:block;margin:0 0 10px;color:#d7d4cb;font-size:var(--fs-small,13px);line-height:1.45}a:hover{opacity:.62}
+      .bottom{display:flex;justify-content:space-between;gap:20px;padding-top:16px;border-top:1px solid #2d2d2a;color:#8a877f;font-size:var(--fs-label,11px);letter-spacing:.09em;text-transform:uppercase}
+      @media(min-width:768px){.grid{grid-template-columns:repeat(4,1fr);gap:45px;padding:44px 0 62px}}
       </style>
       <footer class="footer"><div class="in">
         <div class="brand">PORTAL SYSTEMS</div>
         <div class="grid">
-          <div><h3>Системы</h3><a href="\${base}systems/hs/">Подъёмно-раздвижная HS</a><a href="\${base}index.html#systems">Складная FS</a><a href="\${base}index.html#systems">Панорамные окна</a></div>
-          <div><h3>Проект</h3><a href="\${base}catalog/">Готовые конфигурации</a><a href="\${base}index.html#projects">Проекты</a><a href="\${base}index.html#calculator">Калькулятор</a></div>
-          <div><h3>Бюро</h3><a href="\${base}index.html#why">Подход</a><a href="\${base}index.html#faq">FAQ</a><a href="\${base}index.html#contact">Контакты</a></div>
+          <div><h3>Системы</h3><a href="${base}systems/hs/">Подъёмно-раздвижная HS</a><a href="${base}index.html#systems">Складная FS</a><a href="${base}index.html#systems">Панорамные окна</a></div>
+          <div><h3>Проект</h3><a href="${base}catalog/">Готовые конфигурации</a><a href="${base}index.html#projects">Проекты</a><a href="${base}index.html#calculator">Калькулятор</a></div>
+          <div><h3>Бюро</h3><a href="${base}index.html#why">Подход</a><a href="${base}index.html#faq">FAQ</a><a href="${base}index.html#contact">Контакты</a></div>
           <div><h3>Регион</h3><p>Москва и Московская область</p><p>Проектирование · производство · монтаж</p></div>
         </div>
         <div class="bottom"><span>© PORTAL SYSTEMS</span><span>Архитектурное остекление</span></div>
-      </div></footer>\`;
+      </div></footer>`;
     }
   }
   if(!customElements.get('site-footer'))customElements.define('site-footer',SiteFooter);

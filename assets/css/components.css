@@ -1,4 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+/* ============================================================
+   PORTAL SYSTEMS — DESIGN TOKENS (единый источник размеров)
+   Шкала плавная: минимум на 360px, максимум на 1440px,
+   без скачков на брейкпоинтах. Меняйте размеры ТОЛЬКО здесь.
+   ============================================================ */
+
+/* Manrope — локально (без Google Fonts: быстрее и без передачи IP за рубеж) */
+@font-face{
+  font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;
+  src:url('../fonts/manrope-cyrillic-wght-normal.woff2') format('woff2');
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+}
+@font-face{
+  font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;
+  src:url('../fonts/manrope-latin-wght-normal.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+20BD,U+2122,U+2190-2199,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+/* Запасной шрифт с метриками Manrope: пока шрифт грузится, строки не «прыгают» */
+@font-face{
+  font-family:'Manrope Fallback';
+  src:local('Arial'),local('Helvetica'),local('Liberation Sans');
+  size-adjust:100%;ascent-override:107%;descent-override:30%;line-gap-override:0%;
+}
+
+:root{
+  --font:'Manrope','Manrope Fallback',Arial,sans-serif;
+
+  /* Типографика: clamp(мин, плавно, макс) — 360px → 1440px */
+  --fs-label:  clamp(11px, 10.67px + .093vw, 12px);   /* КАПС-подписи, eyebrow, кнопки */
+  --fs-caption:clamp(12px, 11.67px + .093vw, 13px);   /* сноски, мелкие пояснения */
+  --fs-small:  clamp(13px, 12.33px + .185vw, 15px);   /* описания в карточках */
+  --fs-body:   clamp(15px, 14.33px + .185vw, 17px);   /* основной текст */
+  --fs-lead:   clamp(17px, 16px + .278vw, 20px);      /* лид-абзацы */
+  --fs-h4:     clamp(18px, 16.67px + .37vw, 22px);    /* мелкие заголовки, значения */
+  --fs-h3:     clamp(22px, 17.33px + 1.296vw, 36px);  /* заголовки карточек и аккордеонов */
+  --fs-num:    clamp(30px, 22.67px + 2.037vw, 52px);  /* цены, крупные цифры */
+  --fs-h2s:    clamp(32px, 24px + 2.222vw, 56px);     /* подзаголовки поверх фото */
+  --fs-h2:     clamp(38px, 22.67px + 4.259vw, 84px);  /* заголовки секций */
+  --fs-h1:     clamp(46px, 24px + 6.111vw, 112px);    /* заголовок первого экрана */
+  --fs-display:clamp(58px, 24px + 9.444vw, 160px);    /* акцидентные надписи */
+
+  /* Сетка и ритм */
+  --ui-pad:clamp(20px, 10.67px + 2.593vw, 48px);      /* боковые поля */
+  --space-section:clamp(64px, 38.67px + 7.037vw, 140px);
+  --space-head:clamp(28px, 18.67px + 2.593vw, 56px);  /* от заголовка секции до контента */
+  --header-h:72px;
+}
+@media(min-width:900px){:root{--header-h:88px}}
+
 
 :root{
   --ui-black:#050505;
@@ -10,23 +58,30 @@
   --ui-line:#aaa59a;
   --ui-line-soft:#d5d1c7;
   --ui-accent:#b1a27a;
-  --ui-pad:20px;
   --ui-max:1440px;
 }
 *{box-sizing:border-box}
+/* База: запрет автоувеличения шрифта в iOS/Android при повороте — частая причина «скачущих» размеров */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:var(--font);overflow-x:clip}
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+[id]{scroll-margin-top:calc(var(--header-h) + 16px)}
+:focus-visible{outline:2px solid var(--ui-accent);outline-offset:3px}
 .ui-wrap{width:min(100%,var(--ui-max));margin-inline:auto;padding-inline:var(--ui-pad)}
-.ui-eyebrow{margin:0 0 12px;font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#77736a}
-.ui-title{margin:0;font:300 clamp(48px,12vw,88px)/.9 'Manrope',Arial,sans-serif;letter-spacing:-.065em}
-.ui-lead{max-width:680px;margin:18px 0 0;color:var(--ui-muted);font:300 15px/1.58 'Manrope',Arial,sans-serif}
+.ui-eyebrow{margin:0 0 12px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.15em;text-transform:uppercase;color:#77736a}
+.ui-title{margin:0;font:300 var(--fs-h2)/.9 var(--font);letter-spacing:-.065em}
+.ui-lead{max-width:680px;margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.58 var(--font)}
 .ui-btn{
   min-height:54px;padding:0 16px;border:1px solid var(--ui-ink);border-radius:0;background:transparent;color:var(--ui-ink);
   display:inline-flex;align-items:center;justify-content:space-between;gap:22px;text-decoration:none;
-  font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;cursor:pointer
 }
-.ui-btn--dark{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
-.ui-btn--light{background:#fff;color:var(--ui-ink);border-color:#fff}
+/* .ui-btn.ui-btn--* — специфичность 0,2,0: иначе `.product-page a{color:inherit}` делал текст кнопки невидимым */
+.ui-btn.ui-btn--dark{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
+.ui-btn.ui-btn--light{background:#fff;color:var(--ui-ink);border-color:#fff}
 .ui-section-head{display:grid;gap:18px;margin-bottom:32px}
-.ui-section-head>p{max-width:650px;margin:0;color:var(--ui-muted);font:300 14px/1.58 'Manrope',Arial,sans-serif}
+.ui-section-head>p{max-width:650px;margin:0;color:var(--ui-muted);font:300 var(--fs-body)/1.58 var(--font)}
 
 /* Reusable product card */
 .product-card{
@@ -38,7 +93,7 @@
 .product-card__index{
   position:absolute;top:12px;left:12px;min-width:30px;height:30px;padding:0 8px;display:grid;place-items:center;
   background:rgba(247,247,243,.94);border:1px solid rgba(17,17,15,.18);
-  font:600 9px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em
+  font:600 var(--fs-caption)/1 var(--font);letter-spacing:.08em
 }
 .product-card__scheme{
   position:absolute;right:12px;bottom:12px;width:92px;padding:8px;background:rgba(247,247,243,.94);
@@ -48,29 +103,30 @@
 .product-card__scheme svg *{fill:none;stroke:#111;stroke-width:1.15;vector-effect:non-scaling-stroke}
 .product-card__body{display:flex;flex-direction:column;flex:1;padding:16px 14px 14px}
 .product-card__top{display:flex;justify-content:space-between;gap:12px;align-items:start}
-.product-card__code{font:500 10px/1.2 'Manrope',Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
-.product-card__size{color:#77736a;font:400 9px/1.2 'Manrope',Arial,sans-serif;letter-spacing:.06em;text-align:right}
-.product-card h3{margin:28px 0 0;font:300 28px/.95 'Manrope',Arial,sans-serif;letter-spacing:-.05em}
-.product-card__desc{margin:10px 0 0;color:#646057;font:300 12px/1.5 'Manrope',Arial,sans-serif}
+.product-card__code{font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.11em;text-transform:uppercase}
+.product-card__size{color:#77736a;font:400 var(--fs-caption)/1.2 var(--font);letter-spacing:.06em;text-align:right}
+.product-card h3{margin:28px 0 0;font:300 var(--fs-h3)/.95 var(--font);letter-spacing:-.05em}
+.product-card__desc{margin:10px 0 0;color:#646057;font:300 var(--fs-small)/1.5 var(--font)}
 .product-card__variants{display:grid;gap:10px;margin-top:20px;padding-top:13px;border-top:1px solid var(--ui-line-soft)}
-.product-card__variant-row{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:center}
-.product-card__variant-row>small{color:#807b72;font:600 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.product-card__variant-row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;align-items:center}
+.product-card__chips,.product-card__swatches{min-width:0}
+.product-card__variant-row>small{color:#807b72;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
 .product-card__swatches{display:flex;align-items:center;gap:6px}
 .product-card__swatch{width:20px;height:20px;border:1px solid rgba(17,17,15,.28);background:var(--sw);position:relative}
 .product-card__swatch[data-label]:after{
   content:attr(data-label);position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);
   padding:5px 6px;background:#111;color:#fff;white-space:nowrap;opacity:0;pointer-events:none;
-  font:500 8px/1 'Manrope',Arial,sans-serif
+  font:500 var(--fs-caption)/1 var(--font)
 }
 .product-card__swatch:hover:after{opacity:1}
 .product-card__chips{display:flex;flex-wrap:wrap;gap:5px}
-.product-card__chip{padding:5px 7px;border:1px solid #c7c3ba;color:#625f58;font:500 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.product-card__chip{padding:5px 7px;border:1px solid #c7c3ba;color:#625f58;font:500 var(--fs-label)/1 var(--font);letter-spacing:.05em;text-transform:uppercase}
 .product-card__foot{
   display:flex;align-items:end;justify-content:space-between;gap:14px;margin-top:auto;padding-top:19px
 }
-.product-card__price small{display:block;color:#807b72;font:500 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
-.product-card__price strong{display:block;margin-top:5px;font:300 20px/1 'Manrope',Arial,sans-serif;letter-spacing:-.04em}
-.product-card__link{display:flex;align-items:center;gap:8px;font:600 9px/1 'Manrope',Arial,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.product-card__price small{display:block;color:#807b72;font:500 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.product-card__price strong{display:block;margin-top:5px;font:300 var(--fs-h4)/1 var(--font);letter-spacing:-.04em}
+.product-card__link{display:flex;align-items:center;gap:8px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.07em;text-transform:uppercase}
 .product-card--dark{background:#0b0b0a;color:#fff;border-color:#0b0b0a}
 .product-card--dark .product-card__desc{color:#aaa79f}
 .product-card--dark .product-card__variants{border-color:#353530}
@@ -82,15 +138,13 @@
   .product-card__link{transition:opacity .2s}.product-card:hover .product-card__link{opacity:.58}
 }
 @media(min-width:768px){
-  :root{--ui-pad:36px}
   .ui-section-head{grid-template-columns:1fr .75fr;gap:60px;align-items:end;margin-bottom:42px}
-  .ui-section-head>p{justify-self:end;font-size:15px}
+  .ui-section-head>p{justify-self:end;font-size:var(--fs-body)}
   .product-card__body{padding:20px 18px 18px}
-  .product-card h3{font-size:32px}
-  .product-card__desc{font-size:13px}
-  .product-card__price strong{font-size:23px}
+  .product-card h3{font-size:var(--fs-h3)}
+  .product-card__desc{font-size:var(--fs-small)}
+  .product-card__price strong{font-size:var(--fs-h4)}
 }
-@media(min-width:1100px){:root{--ui-pad:48px}}
 
 /* Shared teaser state */
 .product-card--soon .product-card__media img{filter:grayscale(.15) brightness(.66)}
@@ -101,6 +155,6 @@
 .product-card__soon span{
   display:inline-block;padding:10px 12px;border:1px solid rgba(255,255,255,.75);
   background:rgba(5,5,5,.48);backdrop-filter:blur(8px);
-  font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase
 }
 .product-card--soon .product-card__link{opacity:.7}

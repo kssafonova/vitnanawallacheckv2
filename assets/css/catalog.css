@@ -1,21 +1,21 @@
 @import url('./components.css');
 
-.catalog-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:'Manrope',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.catalog-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
 .catalog-page *{box-sizing:border-box}
 .catalog-page a{color:inherit;text-decoration:none}
 .catalog-page button{font:inherit}
 
 .catalog-hero{padding:62px 0 52px;background:var(--ui-bg);border-bottom:1px solid var(--ui-line)}
-.catalog-hero__top{display:flex;justify-content:space-between;gap:20px;margin-bottom:44px;color:#77736a;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
-.catalog-hero h1{max-width:9ch;margin:0;font:300 clamp(56px,15vw,104px)/.82 'Manrope',Arial,sans-serif;letter-spacing:-.075em}
-.catalog-hero__lead{max-width:690px;margin:26px 0 0;color:#5f5b54;font:300 16px/1.58 'Manrope',Arial,sans-serif}
+.catalog-hero__top{display:flex;justify-content:space-between;gap:20px;margin-bottom:44px;color:#77736a;font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase}
+.catalog-hero h1{max-width:9ch;margin:0;font:300 var(--fs-h1)/.82 var(--font);letter-spacing:-.075em}
+.catalog-hero__lead{max-width:690px;margin:26px 0 0;color:#5f5b54;font:300 var(--fs-body)/1.58 var(--font)}
 .catalog-switch{
   display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-top:38px;border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)
 }
 .catalog-switch::-webkit-scrollbar{display:none}
 .catalog-switch a{
   flex:1 0 138px;min-height:56px;padding:0 13px;border-right:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);
-  display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:10px;letter-spacing:.08em;text-transform:uppercase
+  display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase
 }
 .catalog-switch a:first-child{background:#111;color:#fff}
 
@@ -28,8 +28,8 @@
   margin-top:30px;padding:18px 0;border-top:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);
   display:grid;gap:16px
 }
-.catalog-section__aside strong{font-size:20px;font-weight:300;letter-spacing:-.035em}
-.catalog-section__aside p{margin:0;color:#66615a;font-size:12px;line-height:1.55}
+.catalog-section__aside strong{font-size:var(--fs-h4);font-weight:300;letter-spacing:-.035em}
+.catalog-section__aside p{margin:0;color:#66615a;font-size:var(--fs-small);line-height:1.55}
 .catalog-section--dark .catalog-section__aside{border-color:#343430}
 .catalog-section--dark .catalog-section__aside p{color:#97948c}
 
@@ -37,22 +37,22 @@
   margin-top:34px;padding-top:20px;border-top:1px solid var(--ui-line);
   display:grid;gap:14px
 }
-.catalog-family-note h3{margin:0;font-size:30px;font-weight:300;letter-spacing:-.045em}
-.catalog-family-note p{max-width:640px;margin:0;color:#67635b;font-size:13px;line-height:1.55}
+.catalog-family-note h3{margin:0;font-size:var(--fs-h3);font-weight:300;letter-spacing:-.045em}
+.catalog-family-note p{max-width:640px;margin:0;color:#67635b;font-size:var(--fs-small);line-height:1.55}
 
 .catalog-service{padding:74px 0 86px;background:var(--ui-paper)}
 .catalog-service__grid{display:grid;gap:34px}
-.catalog-service h2{max-width:8ch;margin:0;font:300 clamp(52px,13vw,88px)/.88 'Manrope',Arial,sans-serif;letter-spacing:-.07em}
+.catalog-service h2{max-width:8ch;margin:0;font:300 var(--fs-h2)/.88 var(--font);letter-spacing:-.07em}
 .catalog-service__rows{border-top:1px solid var(--ui-line)}
 .catalog-service__rows>div{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--ui-line)}
-.catalog-service__rows span{font-size:9px;color:#7a766e}
-.catalog-service__rows b{font-size:18px;font-weight:300}
-.catalog-service__rows p{grid-column:2;margin:4px 0 0;color:#66615a;font-size:11px;line-height:1.5}
+.catalog-service__rows span{font-size:var(--fs-caption);color:#7a766e}
+.catalog-service__rows b{font-size:var(--fs-lead);font-weight:300}
+.catalog-service__rows p{grid-column:2;margin:4px 0 0;color:#66615a;font-size:var(--fs-caption);line-height:1.5}
 
 @media(min-width:768px){
   .catalog-hero{padding:88px 0 70px}
   .catalog-hero__top{margin-bottom:65px}
-  .catalog-hero__lead{font-size:18px}
+  .catalog-hero__lead{font-size:var(--fs-lead)}
   .catalog-switch{max-width:620px}
   .catalog-section{padding:104px 0 116px}
   .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ui-line)}
@@ -64,7 +64,7 @@
 }
 @media(min-width:1100px){
   .catalog-hero{padding:108px 0 78px}
-  .catalog-section__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .catalog-section__grid{grid-template-columns:repeat(4,minmax(0,1fr))} /* 4 карточки HS = один ряд, без пустых серых ячеек */
   .catalog-section--dark .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .catalog-service__grid{gap:120px}
 }
