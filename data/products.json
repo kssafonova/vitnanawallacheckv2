@@ -1,1101 +1,305 @@
 {
+  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = цвета × схемы каждой модели. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото по цветам: assets/images/products/<model>/<color.slug>.webp (подхватываются автоматически).",
   "models": [
     {
       "model": "HS2",
       "cat": "hs-portaly",
+      "system": "HS",
+      "status": "available",
+      "code": "HS / 30",
+      "name": "Классический выход",
       "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
+      "card_desc": "Одна подвижная створка уходит вдоль фиксированной. Для гостиной, кухни-столовой и ежедневного выхода на террасу.",
+      "story": "Большой стеклянный проём без распашной створки.",
+      "lead": "Двухсекционный подъёмно-раздвижной портал для ежедневного выхода из гостиной или кухни-столовой на террасу. Активная створка движется параллельно фиксированной и не занимает пространство комнаты.",
+      "use": "Гостиная · кухня-столовая · терраса",
+      "opening": "≈ 50% проёма",
       "price": 375000,
+      "width": 3000,
+      "height": 2300,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "profile": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
       "track": "2-полозная",
       "frame_depth": "158 мм",
       "sash_depth": "70 мм",
       "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/terrace.webp",
-      "colors": [
-        [
-          "Белый",
-          "9016",
-          "belyi"
-        ],
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ]
-      ],
-      "schemes": [
-        [
-          "A1",
-          "Схема A1 · активная створка слева",
-          "aktivnaya-sleva"
-        ],
-        [
-          "B1",
-          "Схема B1 · активная створка справа",
-          "aktivnaya-sprava"
-        ]
-      ],
+      "glass": "44 мм · двухкамерный",
       "limits": [
         "Створка до 3000 мм по ширине",
         "Створка до 3100 мм по высоте",
         "Вес створки до 400 кг"
       ],
-      "glass": "44 мм · двухкамерный"
+      "image": "assets/images/products/hs_2_closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "colors": [
+        {
+          "name": "Белый",
+          "ral": "9016",
+          "slug": "belyi",
+          "hex": "#f2f2ed"
+        },
+        {
+          "name": "Антрацит",
+          "ral": "7016",
+          "slug": "antratsit",
+          "hex": "#383b3a"
+        }
+      ],
+      "scheme_title": "Открывание",
+      "schemes": [
+        {
+          "code": "A1",
+          "label": "Схема A1 · активная створка слева",
+          "short": "слева",
+          "slug": "aktivnaya-sleva"
+        },
+        {
+          "code": "B1",
+          "label": "Схема B1 · активная створка справа",
+          "short": "справа",
+          "slug": "aktivnaya-sprava"
+        }
+      ]
     },
     {
       "model": "HS3",
       "cat": "hs-portaly",
+      "system": "HS",
+      "status": "available",
+      "code": "HS / 36",
+      "name": "Широкий проход",
       "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3600 × 2300 мм",
+      "card_desc": "Две активные створки собираются у одной стороны и освобождают ориентировочно две трети проёма.",
+      "story": "Две активные створки — больше открытого пространства.",
+      "lead": "Трёхсекционный HS-портал для широкого выхода на террасу. Две активные створки позволяют освободить большую часть фасадного проёма, сохраняя спокойную панорамную композицию.",
+      "use": "Большая гостиная · терраса · веранда",
+      "opening": "до ≈ 66% проёма",
       "price": 489000,
+      "width": 3600,
+      "height": 2300,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
+      "profile": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
       "track": "3-полозная",
       "frame_depth": "246 мм",
       "sash_depth": "70 мм",
       "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/house.webp",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Графит",
-          "7024",
-          "grafit"
-        ]
-      ],
-      "schemes": [
-        [
-          "D1",
-          "Схема D1 · 2 активные + 1 фиксированная",
-          "shema-d1"
-        ]
-      ],
+      "glass": "44 мм · двухкамерный",
       "limits": [
         "Створка до 3000 мм по ширине",
         "Створка до 3100 мм по высоте",
         "Вес створки до 400 кг"
       ],
-      "glass": "44 мм · двухкамерный"
+      "image": "assets/images/systems/hs-overview.jpg",
+      "architecture": "assets/images/projects/house.webp",
+      "colors": [
+        {
+          "name": "Антрацит",
+          "ral": "7016",
+          "slug": "antratsit",
+          "hex": "#383b3a"
+        },
+        {
+          "name": "Графит",
+          "ral": "7024",
+          "slug": "grafit",
+          "hex": "#4b4d4c"
+        }
+      ],
+      "scheme_title": "Открывание",
+      "schemes": [
+        {
+          "code": "D1",
+          "label": "Схема D1 · 2 активные + 1 фиксированная",
+          "short": "2 + 1",
+          "slug": "dve-aktivnye-odna-fiksirovannaya"
+        }
+      ]
     },
     {
       "model": "HS4",
       "cat": "hs-portaly",
+      "system": "HS",
+      "status": "available",
+      "code": "HS / 48",
+      "name": "Открывание от центра",
       "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "4800 × 2300 мм",
+      "card_desc": "Две центральные створки расходятся к краям. Для главного выхода на террасу и большого симметричного фасада.",
+      "story": "Симметричный портал для главного фасада дома.",
+      "lead": "Четырёхсекционная конфигурация с двумя центральными активными створками. Подходит для широкого панорамного фасада и главного выхода на террасу, когда важна симметрия.",
+      "use": "Главный фасад · большая терраса · дом с видом",
+      "opening": "≈ 50% проёма",
       "price": 620000,
+      "width": 4800,
+      "height": 2300,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
+      "profile": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
       "track": "2-полозная",
       "frame_depth": "158 мм",
       "sash_depth": "70 мм",
       "filling": "10–50 мм",
+      "glass": "44 мм · двухкамерный",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
       "image": "assets/images/projects/terrace.webp",
       "architecture": "assets/images/projects/interior.webp",
       "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
+        {
+          "name": "Антрацит",
+          "ral": "7016",
+          "slug": "antratsit",
+          "hex": "#383b3a"
+        },
+        {
+          "name": "Чёрный",
+          "ral": "9005",
+          "slug": "chernyi",
+          "hex": "#111111"
+        }
       ],
+      "scheme_title": "Открывание",
       "schemes": [
-        [
-          "A7",
-          "Схема A7 · открывание от центра",
-          "otkryvanie-ot-centra"
-        ]
-      ],
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный"
+        {
+          "code": "A7",
+          "label": "Схема A7 · открывание от центра",
+          "short": "от центра",
+          "slug": "otkryvanie-ot-centra"
+        }
+      ]
     },
     {
       "model": "FS3",
       "cat": "fs-portaly",
+      "system": "FS",
+      "status": "soon",
+      "code": "FS / 27",
+      "name": "Три складные створки",
       "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
+      "card_desc": "Компактный пакет створок у левой или правой стороны проёма.",
+      "story": "Створки складываются к краю и освобождают почти весь проём.",
+      "lead": "Компактная складная система для террасы или веранды. Три створки собираются пакетом у одной стороны и оставляют максимально открытый проход.",
+      "use": "Терраса · веранда · летняя кухня",
+      "opening": "почти весь проём",
       "price": 540000,
+      "width": 2700,
+      "height": 2300,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "profile": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
       "track": "Fold&Slide",
       "frame_depth": "70 мм",
       "sash_depth": "80 мм",
       "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/terrace.webp",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "330-L",
-          "Схема 330 · складывание влево",
-          "shema-330-skladyvanie-vlevo"
-        ],
-        [
-          "330-R",
-          "Схема 330 · зеркально вправо",
-          "shema-330-skladyvanie-vpravo"
-        ]
-      ],
+      "glass": "40 мм · двухкамерный",
       "limits": [
         "Складная створка 480–930 мм",
         "Высота створки 630–2830 мм",
         "Вес створки до 100 кг",
         "Рама до 6000 мм"
       ],
-      "glass": "40 мм · двухкамерный"
+      "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "colors": [
+        {
+          "name": "Антрацит",
+          "ral": "7016",
+          "slug": "antratsit",
+          "hex": "#383b3a"
+        },
+        {
+          "name": "Чёрный",
+          "ral": "9005",
+          "slug": "chernyi",
+          "hex": "#111111"
+        }
+      ],
+      "scheme_title": "Складывание",
+      "schemes": [
+        {
+          "code": "330-L",
+          "label": "Схема 330 · складывание влево",
+          "short": "влево",
+          "slug": "skladyvanie-vlevo"
+        },
+        {
+          "code": "330-R",
+          "label": "Схема 330 · зеркально вправо",
+          "short": "вправо",
+          "slug": "skladyvanie-vpravo"
+        }
+      ]
     },
     {
       "model": "FS4",
       "cat": "fs-portaly",
+      "system": "FS",
+      "status": "soon",
+      "code": "FS / 36",
+      "name": "Схема 3 + 1",
       "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
+      "card_desc": "Три складные створки собираются с одной стороны, отдельная проходная — с другой.",
+      "story": "Большой складной фасад с отдельной проходной створкой.",
+      "lead": "Четырёхсекционный складной портал: три створки собираются пакетом, одна может работать как отдельная проходная. Для просторных террас и веранд.",
+      "use": "Терраса · веранда · павильон",
+      "opening": "почти весь проём",
       "price": 610000,
+      "width": 3600,
+      "height": 2300,
       "sections": 4,
       "subtitle": "Схема 431 · 3 + 1",
+      "profile": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
       "track": "Fold&Slide",
       "frame_depth": "70 мм",
       "sash_depth": "80 мм",
       "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/house.webp",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "431-L",
-          "Схема 431 · 3 влево + 1 вправо",
-          "shema-431-3-vlevo-1-vpravo"
-        ],
-        [
-          "431-R",
-          "Схема 431 · зеркально 1 влево + 3 вправо",
-          "shema-431-1-vlevo-3-vpravo"
-        ]
-      ],
+      "glass": "40 мм · двухкамерный",
       "limits": [
         "Проходная створка 480–1230 мм",
         "Складная створка 480–930 мм",
         "Высота створки 630–2830 мм",
         "Вес створки до 100 кг"
       ],
-      "glass": "40 мм · двухкамерный"
-    }
-  ],
-  "variants": [
-    {
-      "model": "HS2",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
-      "price": 375000,
-      "sections": 2,
-      "subtitle": "1 активная + 1 фиксированная",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Белый",
-          "9016",
-          "belyi"
-        ],
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ]
-      ],
-      "schemes": [
-        [
-          "A1",
-          "Схема A1 · активная створка слева",
-          "aktivnaya-sleva"
-        ],
-        [
-          "B1",
-          "Схема B1 · активная створка справа",
-          "aktivnaya-sprava"
-        ]
-      ],
-      "color": "Белый",
-      "ral": "9016",
-      "color_slug": "belyi",
-      "scheme_code": "A1",
-      "scheme_label": "Схема A1 · активная створка слева",
-      "scheme_slug": "aktivnaya-sleva",
-      "sku": "STD-HS2-S158-3000X2300-9016-A1",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sleva/"
-    },
-    {
-      "model": "HS2",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
-      "price": 375000,
-      "sections": 2,
-      "subtitle": "1 активная + 1 фиксированная",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Белый",
-          "9016",
-          "belyi"
-        ],
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ]
-      ],
-      "schemes": [
-        [
-          "A1",
-          "Схема A1 · активная створка слева",
-          "aktivnaya-sleva"
-        ],
-        [
-          "B1",
-          "Схема B1 · активная створка справа",
-          "aktivnaya-sprava"
-        ]
-      ],
-      "color": "Белый",
-      "ral": "9016",
-      "color_slug": "belyi",
-      "scheme_code": "B1",
-      "scheme_label": "Схема B1 · активная створка справа",
-      "scheme_slug": "aktivnaya-sprava",
-      "sku": "STD-HS2-S158-3000X2300-9016-B1",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sprava/"
-    },
-    {
-      "model": "HS2",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
-      "price": 375000,
-      "sections": 2,
-      "subtitle": "1 активная + 1 фиксированная",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Белый",
-          "9016",
-          "belyi"
-        ],
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ]
-      ],
-      "schemes": [
-        [
-          "A1",
-          "Схема A1 · активная створка слева",
-          "aktivnaya-sleva"
-        ],
-        [
-          "B1",
-          "Схема B1 · активная створка справа",
-          "aktivnaya-sprava"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "A1",
-      "scheme_label": "Схема A1 · активная створка слева",
-      "scheme_slug": "aktivnaya-sleva",
-      "sku": "STD-HS2-S158-3000X2300-7016-A1",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sleva/"
-    },
-    {
-      "model": "HS2",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
-      "price": 375000,
-      "sections": 2,
-      "subtitle": "1 активная + 1 фиксированная",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Белый",
-          "9016",
-          "belyi"
-        ],
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ]
-      ],
-      "schemes": [
-        [
-          "A1",
-          "Схема A1 · активная створка слева",
-          "aktivnaya-sleva"
-        ],
-        [
-          "B1",
-          "Схема B1 · активная створка справа",
-          "aktivnaya-sprava"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "B1",
-      "scheme_label": "Схема B1 · активная створка справа",
-      "scheme_slug": "aktivnaya-sprava",
-      "sku": "STD-HS2-S158-3000X2300-7016-B1",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sprava/"
-    },
-    {
-      "model": "HS3",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3600 × 2300 мм",
-      "price": 489000,
-      "sections": 3,
-      "subtitle": "2 активные + 1 фиксированная",
-      "track": "3-полозная",
-      "frame_depth": "246 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
+      "image": "assets/images/products/fs_4_closed.webp",
       "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
       "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Графит",
-          "7024",
-          "grafit"
-        ]
+        {
+          "name": "Антрацит",
+          "ral": "7016",
+          "slug": "antratsit",
+          "hex": "#383b3a"
+        },
+        {
+          "name": "Чёрный",
+          "ral": "9005",
+          "slug": "chernyi",
+          "hex": "#111111"
+        }
       ],
+      "scheme_title": "Схема",
       "schemes": [
-        [
-          "D1",
-          "Схема D1 · 2 активные + 1 фиксированная",
-          "shema-d1"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "D1",
-      "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
-      "scheme_slug": "dve-aktivnye-odna-fiksirovannaya",
-      "sku": "STD-HS3-S158-3600X2300-7016-D1",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/"
-    },
-    {
-      "model": "HS3",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3600 × 2300 мм",
-      "price": 489000,
-      "sections": 3,
-      "subtitle": "2 активные + 1 фиксированная",
-      "track": "3-полозная",
-      "frame_depth": "246 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Графит",
-          "7024",
-          "grafit"
-        ]
-      ],
-      "schemes": [
-        [
-          "D1",
-          "Схема D1 · 2 активные + 1 фиксированная",
-          "shema-d1"
-        ]
-      ],
-      "color": "Графит",
-      "ral": "7024",
-      "color_slug": "grafit",
-      "scheme_code": "D1",
-      "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
-      "scheme_slug": "dve-aktivnye-odna-fiksirovannaya",
-      "sku": "STD-HS3-S158-3600X2300-7024-D1",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-dve-aktivnye-odna-fiksirovannaya/"
-    },
-    {
-      "model": "HS4",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "4800 × 2300 мм",
-      "price": 620000,
-      "sections": 4,
-      "subtitle": "2 активные + 2 фиксированные",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/projects/terrace.webp",
-      "architecture": "assets/images/projects/interior.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "A7",
-          "Схема A7 · открывание от центра",
-          "otkryvanie-ot-centra"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "A7",
-      "scheme_label": "Схема A7 · открывание от центра",
-      "scheme_slug": "otkryvanie-ot-centra",
-      "sku": "STD-HS4-S158-4800X2300-7016-A7",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/"
-    },
-    {
-      "model": "HS4",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "4800 × 2300 мм",
-      "price": 620000,
-      "sections": 4,
-      "subtitle": "2 активные + 2 фиксированные",
-      "track": "2-полозная",
-      "frame_depth": "158 мм",
-      "sash_depth": "70 мм",
-      "filling": "10–50 мм",
-      "image": "assets/images/projects/terrace.webp",
-      "architecture": "assets/images/projects/interior.webp",
-      "limits": [
-        "Створка до 3000 мм по ширине",
-        "Створка до 3100 мм по высоте",
-        "Вес створки до 400 кг"
-      ],
-      "glass": "44 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "A7",
-          "Схема A7 · открывание от центра",
-          "otkryvanie-ot-centra"
-        ]
-      ],
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "scheme_code": "A7",
-      "scheme_label": "Схема A7 · открывание от центра",
-      "scheme_slug": "otkryvanie-ot-centra",
-      "sku": "STD-HS4-S158-4800X2300-9005-A7",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/"
-    },
-    {
-      "model": "FS3",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
-      "price": 540000,
-      "sections": 3,
-      "subtitle": "Схема 330 · 3 складные створки",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг",
-        "Рама до 6000 мм"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "330-L",
-          "Схема 330 · складывание влево",
-          "shema-330-skladyvanie-vlevo"
-        ],
-        [
-          "330-R",
-          "Схема 330 · зеркально вправо",
-          "shema-330-skladyvanie-vpravo"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "330-L",
-      "scheme_label": "Схема 330 · складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "sku": "STD-FS3-S70-2700X2300-7016-330-L",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/"
-    },
-    {
-      "model": "FS3",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
-      "price": 540000,
-      "sections": 3,
-      "subtitle": "Схема 330 · 3 складные створки",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг",
-        "Рама до 6000 мм"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "330-L",
-          "Схема 330 · складывание влево",
-          "shema-330-skladyvanie-vlevo"
-        ],
-        [
-          "330-R",
-          "Схема 330 · зеркально вправо",
-          "shema-330-skladyvanie-vpravo"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "330-R",
-      "scheme_label": "Схема 330 · зеркально вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "sku": "STD-FS3-S70-2700X2300-7016-330-R",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/"
-    },
-    {
-      "model": "FS3",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
-      "price": 540000,
-      "sections": 3,
-      "subtitle": "Схема 330 · 3 складные створки",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг",
-        "Рама до 6000 мм"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "330-L",
-          "Схема 330 · складывание влево",
-          "shema-330-skladyvanie-vlevo"
-        ],
-        [
-          "330-R",
-          "Схема 330 · зеркально вправо",
-          "shema-330-skladyvanie-vpravo"
-        ]
-      ],
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "scheme_code": "330-L",
-      "scheme_label": "Схема 330 · складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "sku": "STD-FS3-S70-2700X2300-9005-330-L",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/"
-    },
-    {
-      "model": "FS3",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
-      "price": 540000,
-      "sections": 3,
-      "subtitle": "Схема 330 · 3 складные створки",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/terrace.webp",
-      "limits": [
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг",
-        "Рама до 6000 мм"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "330-L",
-          "Схема 330 · складывание влево",
-          "shema-330-skladyvanie-vlevo"
-        ],
-        [
-          "330-R",
-          "Схема 330 · зеркально вправо",
-          "shema-330-skladyvanie-vpravo"
-        ]
-      ],
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "scheme_code": "330-R",
-      "scheme_label": "Схема 330 · зеркально вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "sku": "STD-FS3-S70-2700X2300-9005-330-R",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/"
-    },
-    {
-      "model": "FS4",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
-      "price": 610000,
-      "sections": 4,
-      "subtitle": "Схема 431 · 3 + 1",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Проходная створка 480–1230 мм",
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "431-L",
-          "Схема 431 · 3 влево + 1 вправо",
-          "shema-431-3-vlevo-1-vpravo"
-        ],
-        [
-          "431-R",
-          "Схема 431 · зеркально 1 влево + 3 вправо",
-          "shema-431-1-vlevo-3-vpravo"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "431-L",
-      "scheme_label": "Схема 431 · 3 влево + 1 вправо",
-      "scheme_slug": "tri-vlevo-odna-vpravo",
-      "sku": "STD-FS4-S70-3600X2300-7016-431-L",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-tri-vlevo-odna-vpravo/"
-    },
-    {
-      "model": "FS4",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
-      "price": 610000,
-      "sections": 4,
-      "subtitle": "Схема 431 · 3 + 1",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Проходная створка 480–1230 мм",
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "431-L",
-          "Схема 431 · 3 влево + 1 вправо",
-          "shema-431-3-vlevo-1-vpravo"
-        ],
-        [
-          "431-R",
-          "Схема 431 · зеркально 1 влево + 3 вправо",
-          "shema-431-1-vlevo-3-vpravo"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "431-R",
-      "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
-      "scheme_slug": "odna-vlevo-tri-vpravo",
-      "sku": "STD-FS4-S70-3600X2300-7016-431-R",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-odna-vlevo-tri-vpravo/"
-    },
-    {
-      "model": "FS4",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
-      "price": 610000,
-      "sections": 4,
-      "subtitle": "Схема 431 · 3 + 1",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Проходная створка 480–1230 мм",
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "431-L",
-          "Схема 431 · 3 влево + 1 вправо",
-          "shema-431-3-vlevo-1-vpravo"
-        ],
-        [
-          "431-R",
-          "Схема 431 · зеркально 1 влево + 3 вправо",
-          "shema-431-1-vlevo-3-vpravo"
-        ]
-      ],
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "scheme_code": "431-L",
-      "scheme_label": "Схема 431 · 3 влево + 1 вправо",
-      "scheme_slug": "tri-vlevo-odna-vpravo",
-      "sku": "STD-FS4-S70-3600X2300-9005-431-L",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-tri-vlevo-odna-vpravo/"
-    },
-    {
-      "model": "FS4",
-      "cat": "fs-portaly",
-      "title": "Складной портал",
-      "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
-      "price": 610000,
-      "sections": 4,
-      "subtitle": "Схема 431 · 3 + 1",
-      "track": "Fold&Slide",
-      "frame_depth": "70 мм",
-      "sash_depth": "80 мм",
-      "filling": "20–60 мм",
-      "image": "assets/images/systems/fs-view.webp",
-      "architecture": "assets/images/projects/house.webp",
-      "limits": [
-        "Проходная створка 480–1230 мм",
-        "Складная створка 480–930 мм",
-        "Высота створки 630–2830 мм",
-        "Вес створки до 100 кг"
-      ],
-      "glass": "40 мм · двухкамерный",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Чёрный",
-          "9005",
-          "chernyi"
-        ]
-      ],
-      "schemes": [
-        [
-          "431-L",
-          "Схема 431 · 3 влево + 1 вправо",
-          "shema-431-3-vlevo-1-vpravo"
-        ],
-        [
-          "431-R",
-          "Схема 431 · зеркально 1 влево + 3 вправо",
-          "shema-431-1-vlevo-3-vpravo"
-        ]
-      ],
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "scheme_code": "431-R",
-      "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
-      "scheme_slug": "odna-vlevo-tri-vpravo",
-      "sku": "STD-FS4-S70-3600X2300-9005-431-R",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-odna-vlevo-tri-vpravo/"
+        {
+          "code": "431-L",
+          "label": "Схема 431 · 3 влево + 1 вправо",
+          "short": "3 + 1",
+          "slug": "tri-vlevo-odna-vpravo"
+        },
+        {
+          "code": "431-R",
+          "label": "Схема 431 · зеркально 1 влево + 3 вправо",
+          "short": "1 + 3",
+          "slug": "odna-vlevo-tri-vpravo"
+        }
+      ]
     }
   ]
 }
