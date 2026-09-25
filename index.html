@@ -25,18 +25,7 @@
 <link href="assets/css/site.css" rel="stylesheet"/><link href="assets/css/calculator.css" rel="stylesheet"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><meta name="robots" content="noindex,nofollow"/>
 </head>
 <body>
-<header class="site-header">
-<div class="site-header__inner">
-<a aria-label="PORTAL SYSTEMS" class="brand" href="#top"><span>PORTAL SYSTEMS</span></a>
-<nav aria-label="Основная навигация" class="desktop-nav"><a href="#systems">Системы</a><a href="#projects">Проекты</a><a href="#why">Почему мы</a><a href="#calculator">Калькулятор</a><a href="#contact">Контакты</a></nav>
-<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Открыть меню" class="menu-btn" type="button"><span></span></button>
-</div>
-</header>
-<div aria-hidden="true" class="mobile-menu" id="mobileMenu">
-<nav><a href="#systems">Системы <span>↘</span></a><a href="#projects">Проекты <span>↘</span></a><a href="#why">Почему PORTAL SYSTEMS <span>↘</span></a><a href="#calculator">Калькулятор <span>↘</span></a><a href="#process">Процесс <span>↘</span></a><a href="#contact">Контакты <span>↘</span></a></nav>
-<div class="mobile-menu__meta"><a href="#contact">Телефон</a><a href="#contact">E-mail</a><span>Москва и Московская область</span></div>
-<a class="btn btn--fill mobile-menu__cta" href="#calculator">Рассчитать проект <span>→</span></a>
-</div>
+<site-menu data-base="./"></site-menu>
 <main id="top">
 <section class="hero">
 <div class="hero__media"><img alt="Современный загородный дом с панорамным остеклением" decoding="async" loading="eager" src="assets/images/hero/hero-house.webp"/></div>
@@ -77,7 +66,7 @@
 <input aria-label="Открывание HS-портала" class="sysx-range" id="hsRange" max="100" min="0" type="range" value="0"/>
 <div class="sysx-motion-steps" id="hsSteps"><div class="sysx-motion-step is-active"><strong>01</strong><span>Разблокировать</span></div><div class="sysx-motion-step"><strong>02</strong><span>Приподнять</span></div><div class="sysx-motion-step"><strong>03</strong><span>Сдвинуть</span></div></div>
 </div>
-<div class="sysx-actions"><a class="sysx-link" href="#calculator"><span>Рассчитать</span><span>→</span></a><a class="sysx-link" href="#why"><span>Подробнее</span><span>→</span></a></div>
+<div class="sysx-actions"><a class="sysx-link" href="#calculator"><span>Рассчитать</span><span>→</span></a><a class="sysx-link" href="systems/hs/"><span>Подробнее</span><span>→</span></a></div>
 </div>
 </div></div></div>
 </article>
@@ -275,10 +264,10 @@
 <details class="faq-item"><summary><span>Чем HS отличается от FS?</span><span class="circle-toggle"></span></summary><p>У HS створка сдвигается вдоль соседнего полотна. У FS створки складываются к краю проёма и позволяют открыть большую часть ширины.</p></details>
 <details class="faq-item"><summary><span>Можно ли проектировать остекление до завершения строительства?</span><span class="circle-toggle"></span></summary><p>Да. На этапе строительства проще заранее согласовать размеры проёмов, основание под портал, уровень пола и водоотвод.</p></details>
 </div></div></section>
-<section class="resources"><div class="wrap"><p class="eyebrow">Для проекта</p><h2>Полезное</h2><p>Основные разделы, которые помогут сравнить решения и подготовиться к разговору с инженером.</p><div class="resources__links"><a class="resource-link" href="#calculator"><span>Калькулятор стоимости</span><span>→</span></a><a class="resource-link" href="#systems"><span>Раздвижные системы</span><span>→</span></a><a class="resource-link" href="#projects"><span>Проекты</span><span>→</span></a><a class="resource-link" href="#faq"><span>Вопросы и ответы</span><span>→</span></a></div></div></section>
+<section class="resources"><div class="wrap"><p class="eyebrow">Для проекта</p><h2>Полезное</h2><p>Основные разделы, которые помогут сравнить решения и подготовиться к разговору с инженером.</p><div class="resources__links"><a class="resource-link" href="#calculator"><span>Калькулятор стоимости</span><span>→</span></a><a class="resource-link" href="systems/hs/"><span>HS · подъёмно-раздвижная</span><span>→</span></a><a class="resource-link" href="#projects"><span>Проекты</span><span>→</span></a><a class="resource-link" href="#faq"><span>Вопросы и ответы</span><span>→</span></a></div></div></section>
 <section class="contact" id="contact"><div class="wrap contact__inner"><div><p class="eyebrow">Ваш проект</p><h2>Начнём с проёма</h2><p class="contact__copy">Пришлите размеры, план дома или фотографию. Инженер предложит подходящую систему и подготовит предварительную смету.</p><p><a href="#contact">Телефон</a><br/><a href="#contact">E-mail</a></p></div><form class="contact-form" id="contactForm"><input aria-hidden="true" autocomplete="off" name="website" style="position:absolute;left:-9999px;opacity:0;pointer-events:none" tabindex="-1" type="text"/><label class="field"><span>Имя</span><input autocomplete="name" name="name" placeholder="Ваше имя" required=""/></label><label class="field"><span>Телефон</span><input autocomplete="tel" name="phone" placeholder="+7 999 000-00-00" required=""/></label><label class="field"><span>Комментарий</span><textarea name="comment" placeholder="Размеры проёма, тип дома, пожелания"></textarea></label><button class="btn" type="submit">Получить расчёт <span>→</span></button><p class="form-status" id="formStatus"></p></form></div></section>
 </main>
-<footer class="footer"><div class="wrap"><div class="footer__brand">PORTAL SYSTEMS</div><div class="footer__grid"><div><h3>Системы</h3><a href="#systems">Подъёмно-раздвижная</a><a href="#systems">Складная раздвижная</a><a href="#systems">Панорамные окна</a></div><div><h3>Проект</h3><a href="#projects">Проекты</a><a href="#calculator">Калькулятор</a><a href="#process">Как мы работаем</a></div><div><h3>Компания</h3><a href="#why">Почему PORTAL SYSTEMS</a><a href="#faq">FAQ</a><a href="#contact">Контакты</a></div><div><h3>Москва и МО</h3><a href="#contact">Телефон</a><a href="#contact">E-mail</a><p>Панорамное остекление под ключ</p></div></div><div class="footer__bottom"><span>© PORTAL SYSTEMS</span><span>Архитектурное остекление</span></div></div></footer>
+<site-footer data-base="./"></site-footer>
 
 
 <!-- exact production calculator-dialog.js -->
@@ -286,4 +275,6 @@
 <!-- exact production calculator-effects.js -->
 
 
+<script src="assets/js/components/site-menu.js"></script>
+<script src="assets/js/components/site-footer.js"></script>
 <script src="assets/js/site.js"></script><script src="assets/js/calculator.js"></script><script src="assets/js/calculator-dialog.js"></script><script src="assets/js/calculator-mobile.js"></script><script src="assets/js/systems.js"></script></body></html>
