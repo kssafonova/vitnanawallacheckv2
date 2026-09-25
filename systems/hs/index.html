@@ -33,8 +33,7 @@
 <nav class="hs-localnav" aria-label="Разделы страницы">
   <a href="#range">Готовые HS</a>
   <a href="#schemes">Схемы</a>
-  <a href="#mechanism">Механика</a>
-  <a href="#sealing">Герметичность</a>
+  <a href="#engineering">Механика + герметичность</a>
   <a href="#glass">Стекло</a>
   <a href="#projects">Проекты</a>
 </nav>
@@ -127,7 +126,7 @@
           <div class="hs-product__meta"><span>HS / 36</span><span>3600 × 2300 мм</span></div>
           <h3>Широкий панорамный проём</h3>
           <p>2 подвижные + 1 фиксированная секция. Для фасада, где нужен больший проход и больше стекла.</p>
-          <div class="hs-product__tags"><span>3 секции</span><span>2 активные</span><span>RAL</span></div>
+          <div class="hs-product__tags"><span>3 секции</span><span>2 активные</span><span>влево / вправо</span></div>
           <div class="hs-product__foot"><strong>от 489 000 ₽</strong><span>Смотреть ↗</span></div>
         </div>
       </a>
@@ -166,30 +165,50 @@
 <section class="hs-schemes" id="schemes">
   <div class="hs-container">
     <div class="hs-section-head hs-section-head--dark">
-      <div><p class="hs-kicker">03 · Схемы</p><h2>Как может открываться</h2></div>
-      <p>Выберите конфигурацию. На схеме показаны активные секции, направление движения и ориентировочный свободный проход.</p>
+      <div><p class="hs-kicker">03 · Схемы</p><h2>Сколько проёма откроется</h2></div>
+      <p>Выберите нашу готовую конфигурацию и сразу посмотрите направление движения, ориентировочную долю открытия и как эта схема выглядит в фасаде.</p>
     </div>
 
     <div class="hs-scheme-ui" data-scheme-ui>
-      <div class="hs-scheme-tabs" role="tablist" aria-label="Доступные конфигурации HS">
-        <button class="is-active" type="button" role="tab" aria-selected="true" data-scheme="hs30-left"><span>HS / 30</span><small>активная слева</small></button>
-        <button type="button" role="tab" aria-selected="false" data-scheme="hs30-right"><span>HS / 30</span><small>активная справа</small></button>
-        <button type="button" role="tab" aria-selected="false" data-scheme="hs36"><span>HS / 36</span><small>2 активные</small></button>
-        <button type="button" role="tab" aria-selected="false" data-scheme="hs48"><span>HS / 48</span><small>от центра</small></button>
+      <div class="hs-scheme-toolbar">
+        <div class="hs-scheme-tabs" role="tablist" aria-label="Доступные конфигурации HS">
+          <button class="is-active" type="button" role="tab" aria-selected="true" data-scheme="hs30-left"><span>HS / 30</span><small>активная слева</small></button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs30-right"><span>HS / 30</span><small>активная справа</small></button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-left"><span>HS / 36</span><small>2 активные влево</small></button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-right"><span>HS / 36</span><small>2 активные вправо</small></button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs48"><span>HS / 48</span><small>от центра</small></button>
+        </div>
+        <div class="hs-scheme-mode" role="group" aria-label="Режим просмотра">
+          <button class="is-active" type="button" data-scheme-view="diagram" aria-pressed="true">Схема</button>
+          <button type="button" data-scheme-view="facade" aria-pressed="false">На фасаде</button>
+        </div>
       </div>
 
       <div class="hs-scheme-stage">
-        <canvas id="hsSchemeCanvas" aria-label="Интерактивная схема доступных вариантов открывания HS"></canvas>
-        <div class="hs-scheme-stage__label"><span data-scheme-name>HS / 30 · активная слева</span><span data-scheme-size>3000 × 2300 мм</span></div>
+        <canvas id="hsSchemeCanvas" aria-label="Интерактивная визуализация вариантов открывания HS"></canvas>
+        <div class="hs-scheme-stage__label">
+          <span data-scheme-name>HS / 30 · активная слева</span>
+          <span data-scheme-size>3000 × 2300 мм</span>
+        </div>
       </div>
 
       <div class="hs-scheme-meta">
         <div><small>Секции</small><strong data-scheme-sections>2</strong></div>
         <div><small>Подвижные</small><strong data-scheme-active>1</strong></div>
-        <div><small>Открывание</small><strong data-scheme-opening>вправо</strong></div>
-        <div><small>Проход</small><strong data-scheme-passage>≈ 50%</strong></div>
+        <div><small>Направление</small><strong data-scheme-opening>вправо</strong></div>
+        <div><small>Открытая часть</small><strong data-scheme-openpct>до ≈ 50%</strong></div>
+        <div><small>Ориентир прохода</small><strong data-scheme-passage>до ≈ 1500 мм</strong></div>
+        <div><small>Базовый проём</small><strong data-scheme-fit>3000 × 2300 мм</strong></div>
       </div>
-      <p class="hs-note">Схемы показывают принцип движения. Точную геометрию, допустимые размеры и свободный проход подтверждаем после расчёта конструкции.</p>
+
+      <div class="hs-scheme-summary">
+        <div>
+          <small>Как будет смотреться</small>
+          <strong data-scheme-use>Классический двухсекционный выход на террасу</strong>
+        </div>
+        <a href="../../index.html#calculator">Другой размер? Спроектировать HS / PROJECT <span>→</span></a>
+      </div>
+      <p class="hs-note">Открытая часть и ширина прохода показаны как ориентир по геометрии схемы. Фактический чистый проход зависит от ширины профиля, перехлёстов створок и конкретной комплектации — его фиксируем в инженерном расчёте.</p>
     </div>
   </div>
 </section>
@@ -209,17 +228,19 @@
   </figure>
 </section>
 
-<section class="hs-section hs-section--dark" id="mechanism">
+<section class="hs-section hs-section--dark hs-engineering" id="engineering">
+  <span id="mechanism" class="hs-anchor-alias" aria-hidden="true"></span>
+  <span id="sealing" class="hs-anchor-alias" aria-hidden="true"></span>
   <div class="hs-container">
     <div class="hs-section-head hs-section-head--dark">
-      <div><p class="hs-kicker">04 · Механика</p><h2>Поднять. Сдвинуть. Закрыть.</h2></div>
-      <p>Потяните створку прямо на схеме. Canvas показывает сам принцип Lift&Slide: сначала створка разгружается от прижима, затем движется по кареткам.</p>
+      <div><p class="hs-kicker">04 · Механика + герметичность</p><h2>Сначала скользит.<br>Потом прижимается.</h2></div>
+      <p>В этом и есть смысл HS-механики: при открывании створка поднимается на каретки и легко движется, а при закрывании опускается обратно к контуру уплотнений.</p>
     </div>
 
-    <div class="hs-mechanism">
+    <div class="hs-engineering__top">
       <div class="hs-canvas-shell" data-hs-canvas>
         <div class="hs-canvas-stage">
-          <canvas id="hsSystemCanvas" aria-label="Интерактивная схема подъёмно-раздвижного портала"></canvas>
+          <canvas id="hsSystemCanvas" aria-label="Интерактивная схема подъёма, сдвига и закрывания HS-портала"></canvas>
           <div class="hs-canvas-hint">потяните створку →</div>
         </div>
         <div class="hs-canvas-foot">
@@ -227,24 +248,16 @@
           <button type="button" data-hs-toggle>Открыть</button>
         </div>
       </div>
-      <div class="hs-steps">
-        <article><small>01</small><b>Поворот ручки</b><p>Механизм переводит створку из закрытого положения.</p></article>
-        <article><small>02</small><b>Подъём на каретки</b><p>Вес принимает роликовая система.</p></article>
-        <article><small>03</small><b>Параллельный сдвиг</b><p>Створка движется вдоль соседней секции.</p></article>
-        <article><small>04</small><b>Опускание и прижим</b><p>При закрывании створка возвращается к контуру уплотнений.</p></article>
+
+      <div class="hs-engineering-steps">
+        <article><small>01</small><svg viewBox="0 0 32 32"><path d="M11 6h10v20H11z"/><path d="M18 16h6M21 13l3 3-3 3"/></svg><div><b>Поворот ручки</b><p>Механизм разгружает створку от закрытого прижима.</p></div></article>
+        <article><small>02</small><svg viewBox="0 0 32 32"><circle cx="11" cy="23" r="4"/><circle cx="21" cy="23" r="4"/><path d="M7 19h18M16 17V7M12 11l4-4 4 4"/></svg><div><b>Подъём на каретки</b><p>Вес стеклянного полотна принимает роликовая система.</p></div></article>
+        <article><small>03</small><svg viewBox="0 0 32 32"><rect x="5" y="7" width="22" height="18"/><path d="M9 17h14M19 13l4 4-4 4"/></svg><div><b>Параллельный сдвиг</b><p>Створка движется вдоль соседней секции без зоны распахивания.</p></div></article>
+        <article><small>04</small><svg viewBox="0 0 32 32"><path d="M6 8h20v17H6z"/><path d="M10 21h12M16 8v8M12 13l4 4 4-4"/></svg><div><b>Опускание + прижим</b><p>При закрывании створка возвращается к уплотнениям по контуру.</p></div></article>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="hs-section hs-section--paper" id="sealing">
-  <div class="hs-container">
-    <div class="hs-section-head">
-      <div><p class="hs-kicker">05 · Герметичность</p><h2>Раздвижной — не значит «щель»</h2></div>
-      <p>Герметичность создаёт не одно стекло. Важна вся конструкция: прижим створки, контуры уплотнений, пороговый узел и точная регулировка после монтажа.</p>
-    </div>
-
-    <div class="hs-sealing-layout">
+    <div class="hs-engineering__seal">
       <div class="hs-seal-drawing">
         <svg viewBox="0 0 620 420" role="img" aria-label="Условный технический разрез нижнего узла HS-портала">
           <path class="frame" d="M75 58h190v225H75zM355 58h190v225H355z"/>
@@ -255,25 +268,30 @@
           <path class="water" d="M395 349c26 13 56 15 88 7m-19-14 19 14-16 18"/>
           <path class="air" d="M86 205c-28 0-36 28-58 28m15-12-15 12 15 11"/>
         </svg>
-        <div class="hs-seal-drawing__legend"><span>условная схема узла</span><span>не монтажный чертёж</span></div>
+        <div class="hs-seal-drawing__legend"><span>условная схема нижнего узла</span><span>не монтажный чертёж</span></div>
       </div>
 
-      <div class="hs-seal-list">
-        <article><span>01</span><div><b>Прижим</b><p>В закрытом положении створка опускается и возвращается к уплотнениям.</p></div></article>
-        <article><span>02</span><div><b>Уплотнения</b><p>Контуры по периметру уменьшают продувание и участвуют в герметизации конструкции.</p></div></article>
-        <article><span>03</span><div><b>Порог и вода</b><p>Узел согласовываем с чистовым полом, гидроизоляцией и наружным водоотводом.</p></div></article>
-        <article><span>04</span><div><b>Монтаж</b><p>После установки проверяем геометрию, ход створок, прижим и примыкания.</p></div></article>
+      <div class="hs-seal-list hs-seal-list--dark">
+        <article><span>01</span><div><b>Контур уплотнений</b><p>Уплотнения работают по периметру закрытой конструкции и участвуют в защите от продувания.</p></div></article>
+        <article><span>02</span><div><b>Пороговый узел</b><p>Согласовываем его с чистовым полом, гидроизоляцией и наружным водоотводом.</p></div></article>
+        <article><span>03</span><div><b>Точная геометрия</b><p>Для тяжёлой створки особенно важны ровное основание, сборка и регулировка механизма.</p></div></article>
+        <article><span>04</span><div><b>Финальная регулировка</b><p>После монтажа проверяем ход, закрывание, прижим и примыкания по всему контуру.</p></div></article>
       </div>
     </div>
-    <div class="hs-spec-callout"><strong>Класс 4</strong><span>воздухопроницаемость профильной базы готовых конфигураций*</span></div>
-    <p class="hs-note">* Итоговые характеристики конкретной конструкции зависят от размера, заполнения, схемы и качества монтажного узла.</p>
+
+    <div class="hs-engineering__facts">
+      <div><small>Воздухопроницаемость базы</small><strong>класс 4*</strong></div>
+      <div><small>Что влияет на итог</small><strong>профиль · стекло · узел · монтаж</strong></div>
+      <div><small>Проверяем на объекте</small><strong>геометрию · пол · водоотвод</strong></div>
+    </div>
+    <p class="hs-note hs-note--dark">* Характеристика относится к профильной базе готовых конфигураций. Итоговые свойства конкретного портала зависят от размера, заполнения, схемы и монтажного узла.</p>
   </div>
 </section>
 
 <section class="hs-custom">
   <div class="hs-custom__media"><img loading="lazy" decoding="async" src="../../assets/images/company/production.webp" alt="Производство алюминиевых портальных систем"></div>
   <div class="hs-custom__copy">
-    <p class="hs-kicker">06 · Под проект</p>
+    <p class="hs-kicker">05 · Под проект</p>
     <h2>Дом не должен подстраиваться под каталог.</h2>
     <p>Для нестандартного проёма собираем конструкцию как инженерный комплект: проверяем геометрию, вес стекла, чистовой пол, направление открывания и монтажные узлы.</p>
     <div class="hs-custom__grid">
@@ -291,7 +309,7 @@
 <section class="hs-section" id="glass">
   <div class="hs-container">
     <div class="hs-section-head">
-      <div><p class="hs-kicker">07 · Стеклопакет</p><h2>Формула под задачу, а не «один тип стекла»</h2></div>
+      <div><p class="hs-kicker">06 · Стеклопакет</p><h2>Формула под задачу, а не «один тип стекла»</h2></div>
       <p>Безопасность, акустика, солнцезащита и энергосбережение могут сочетаться в одном стеклопакете. Для крупных створок обязательно считаем его массу.</p>
     </div>
 
@@ -322,7 +340,7 @@
 <section class="hs-section hs-section--paper">
   <div class="hs-container">
     <div class="hs-section-head">
-      <div><p class="hs-kicker">08 · Сценарии</p><h2>Где HS особенно уместен</h2></div>
+      <div><p class="hs-kicker">07 · Сценарии</p><h2>Где HS особенно уместен</h2></div>
       <p>Не ограничиваем систему «террасой». HS работает везде, где нужен большой открываемый стеклянный проём и чистая архитектура.</p>
     </div>
 
@@ -350,7 +368,7 @@
 <section class="hs-section hs-section--dark" id="projects">
   <div class="hs-container">
     <div class="hs-section-head hs-section-head--dark">
-      <div><p class="hs-kicker">09 · Проекты</p><h2>Система внутри архитектуры</h2></div>
+      <div><p class="hs-kicker">08 · Проекты</p><h2>Система внутри архитектуры</h2></div>
       <p>Показываем не «окно крупным планом», а то, как раздвижной портал работает вместе с фасадом, интерьером и участком.</p>
     </div>
 
@@ -376,7 +394,7 @@
 <section class="hs-section" id="specs">
   <div class="hs-container">
     <div class="hs-section-head">
-      <div><p class="hs-kicker">10 · Технические ориентиры</p><h2>Что проверяем до производства</h2></div>
+      <div><p class="hs-kicker">09 · Технические ориентиры</p><h2>Что проверяем до производства</h2></div>
       <p>Предельные значения — не готовый размер заказа. Сначала считаем вес заполнения, геометрию створки и схему движения.</p>
     </div>
     <div class="hs-spec-grid">
@@ -396,7 +414,7 @@
 <section class="hs-section hs-section--paper" id="faq">
   <div class="hs-container">
     <div class="hs-section-head">
-      <div><p class="hs-kicker">11 · FAQ</p><h2>Перед проектом</h2></div>
+      <div><p class="hs-kicker">10 · FAQ</p><h2>Перед проектом</h2></div>
       <p>Коротко о вопросах, которые чаще всего возникают до замера.</p>
     </div>
     <div class="hs-faq">
@@ -412,7 +430,7 @@
 <section class="hs-contact" id="contact">
   <div class="hs-container hs-contact__grid">
     <div class="hs-contact__copy">
-      <p class="hs-kicker">12 · Ваш проект</p>
+      <p class="hs-kicker">11 · Ваш проект</p>
       <h2>Начнём с проёма.</h2>
       <p>Пришлите размер, фото или план дома. Предложим схему HS, проверим ключевые ограничения и подготовим предварительную комплектацию.</p>
       <div class="hs-contact__next">
