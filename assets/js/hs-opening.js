@@ -10,25 +10,25 @@
       code: 'HS/30', width: 3000, height: 2300, def: 'right',
       variants: {
         left:  { label: 'Слева',  sections: 2, moving: [0], targets: [1], passage: 1500, ratio: .5,
-                 dir: 'левая,<br>сдвигается вправо', use: 'выхода на террасу,<br>из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sleva/' },
+                 dir: 'левая,<br> сдвигается вправо', use: 'выхода на террасу,<br> из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sleva/' },
         right: { label: 'Справа', sections: 2, moving: [1], targets: [0], passage: 1500, ratio: .5,
-                 dir: 'правая,<br>сдвигается влево', use: 'выхода на террасу,<br>из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sprava/' }
+                 dir: 'правая,<br> сдвигается влево', use: 'выхода на террасу,<br> из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sprava/' }
       }
     },
     hs36: {
       code: 'HS/36', width: 3600, height: 2300, def: 'right',
       variants: {
         left:  { label: 'Слева',  sections: 3, moving: [0, 1], targets: [2, 2], passage: 2400, ratio: .667,
-                 dir: 'две левые,<br>сдвигаются вправо', use: 'широкого выхода<br>на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' },
+                 dir: 'две левые,<br> сдвигаются вправо', use: 'широкого выхода<br> на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' },
         right: { label: 'Справа', sections: 3, moving: [1, 2], targets: [0, 0], passage: 2400, ratio: .667,
-                 dir: 'две правые,<br>сдвигаются влево', use: 'широкого выхода<br>на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' }
+                 dir: 'две правые,<br> сдвигаются влево', use: 'широкого выхода<br> на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' }
       }
     },
     hs48: {
       code: 'HS/48', width: 4800, height: 2300, def: 'center',
       variants: {
         center: { label: 'От центра', sections: 4, moving: [1, 2], targets: [0, 3], passage: 2400, ratio: .5,
-                  dir: 'две центральные<br>расходятся', use: 'главного выхода,<br>большой террасы', href: CAT + 'alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/' }
+                  dir: 'две центральные<br> расходятся', use: 'главного выхода,<br> большой террасы', href: CAT + 'alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/' }
       }
     }
   };
