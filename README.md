@@ -1,3 +1,3 @@
-# Unified mobile-first prototype
+# Portal Systems v3
 
-One design system. Shared tokens/components/forms. Breakpoints: 391/600/821/1180. SEO fields blank; noindex enabled.
+Mobile-first architectural glazing prototype. Shared design tokens, components and forms. SEO intentionally blank / noindex.

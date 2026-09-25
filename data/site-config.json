@@ -10,14 +10,9 @@
     "canonical": "",
     "og_title": "",
     "og_description": "",
-    "og_image": "",
-    "json_ld": []
+    "og_image": ""
   },
-  "merchant": {
-    "enabled": false,
-    "feed_url": "",
-    "seller": "",
-    "delivery": "",
-    "pickup": ""
+  "forms": {
+    "endpoint": ""
   }
 }

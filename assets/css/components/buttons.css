@@ -1,0 +1,5 @@
+.btn{min-height:var(--control-h);display:inline-flex;align-items:center;justify-content:space-between;gap:20px;padding:0 18px;border:1px solid currentColor;border-radius:0;background:transparent;font-size:11px;line-height:1;text-transform:uppercase;letter-spacing:.08em;transition:.18s}
+.btn:hover{background:var(--c-ink);color:#fff;border-color:var(--c-ink)}
+.btn--light{background:#fff;color:#111;border-color:#fff}.btn--light:hover{background:var(--c-paper);color:#111;border-color:var(--c-paper)}
+.btn--dark{background:var(--c-ink);color:#fff;border-color:var(--c-ink)}.btn--dark:hover{background:#2b2b29}
+.text-link{display:inline-flex;align-items:center;gap:16px;padding-bottom:5px;border-bottom:1px solid currentColor;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
