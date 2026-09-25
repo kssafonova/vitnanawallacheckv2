@@ -57,3 +57,28 @@
   .hs-seal-grid b{font-size:17px}
   .hs-seal-grid p{font-size:12px}
 }
+
+
+/* RU mobile-first product comparison: swipe ready configurations */
+@media(max-width:759px){
+  .hs-config-grid{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    border:0;
+    padding-bottom:4px
+  }
+  .hs-config-grid::-webkit-scrollbar{display:none}
+  .hs-config{
+    flex:0 0 82%;
+    min-height:286px;
+    scroll-snap-align:start;
+    border:1px solid var(--hs-line)
+  }
+  .hs-config+.hs-config{margin-left:0}
+  .hs-config h3{font-size:21px;line-height:1.05}
+  .hs-config p{font-size:12px;line-height:1.45}
+  .hs-config__price{font-size:15px}
+}
