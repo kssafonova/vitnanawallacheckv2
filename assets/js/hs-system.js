@@ -66,7 +66,7 @@
         [ax+aw*.27,ax+aw*.73].forEach(x=>{ctx.beginPath();ctx.arc(x,wheelY,5,0,Math.PI*2);ctx.fill();ctx.stroke()});
 
         if(p<.08){ctx.strokeStyle='#9a8660';ctx.lineWidth=2;ctx.strokeRect(ax-3,ay-3,aw+6,paneH+6)}
-        state.textContent=p<.02?'Закрыто':p>.98?'Открыто':Math.round(p*100)+'%';
+        state.textContent=p<.02?'Закрыто':p<.15?'Разгрузка / подъём':p>.98?'Открыто':'Сдвиг · '+Math.round(p*100)+'%';
         toggle.textContent=p>.5?'Закрыть':'Открыть';
       };
 
