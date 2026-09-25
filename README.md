@@ -1,23 +1,10 @@
-# Portal Systems — prototype
+# Portal Systems — static prototype
 
-Анонимизированный прототип каталога панорамных портальных систем.
+Anonymous GitHub Pages build of the portal-systems UI prototype.
 
-## Что включено
-- mobile-first главная страница;
-- каталог из 5 базовых моделей: HS2, HS3, HS4, FS3, FS4;
-- ALUMARK S158 + Roto Patio Lift для HS;
-- ALUMARK S70 + Roto Patio Fold для FS;
-- цветовые вариации внутри карточки;
-- отдельный SKU по направлению открывания L/R;
-- фиксированные цены, статус `В наличии`, срок `14 дней`;
-- калькулятор и демо-форма;
-- подготовленные, но отключённые SEO / merchant поля.
+- No production brand, domain, phone, email or legal details.
+- SEO fields are intentionally blank and `noindex,nofollow` is kept in the HTML.
+- Merchant/Yandex data fields are prepared but disabled.
+- Product variants use color + opening direction as SKU dimensions.
 
-## Важно
-В репозитории намеренно отсутствуют реальные бренд, домен, телефон, email, юридические реквизиты и production SEO. `robots.txt` закрывает прототип от индексации.
-
-## Где лежат будущие данные
-- `config/site.php` — бренд, домен, контакты, SEO toggles;
-- `config/catalog.php` — модели, цены, цвета, SKU;
-- `config/merchant.php` — пустые поля под YML / Яндекс Товары;
-- `catalog/_product.php` — единый шаблон товарной страницы.
+Prepared data placeholders: `data/site-config.json`.

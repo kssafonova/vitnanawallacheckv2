@@ -1,0 +1,23 @@
+{
+  "brand": "",
+  "site_url": "",
+  "phone": "",
+  "email": "",
+  "seo": {
+    "enabled": false,
+    "title": "",
+    "description": "",
+    "canonical": "",
+    "og_title": "",
+    "og_description": "",
+    "og_image": "",
+    "json_ld": []
+  },
+  "merchant": {
+    "enabled": false,
+    "feed_url": "",
+    "seller_name": "",
+    "delivery": {},
+    "offers": []
+  }
+}

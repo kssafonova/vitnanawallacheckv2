@@ -1,5 +1,0 @@
-<section aria-label="Избранные проекты" class="projects">
-<article class="project"><img alt="Комплексное панорамное остекление загородного дома" decoding="async" loading="lazy" src="/assets/images/projects/house.webp"/><div class="project__copy"><small>Проект 01 · Комплексное остекление</small><h3>Дом с панорамным фасадом</h3><p>Единый контур остекления с крупными светопрозрачными плоскостями и выходом на участок.</p></div></article>
-<article class="project"><img alt="Панорамное остекление в пол" decoding="async" loading="lazy" src="/assets/images/projects/interior.webp"/><div class="project__copy"><small>Проект 02 · Панорамные окна</small><h3>Свет во всю высоту</h3><p>Окна в пол с минимальным визуальным шумом и акцентом на вид из интерьера.</p></div></article>
-<article class="project"><img alt="HS-портал на террасу" decoding="async" loading="lazy" src="/assets/images/projects/terrace.webp"/><div class="project__copy"><small>Проект 03 · HS-портал</small><h3>Выход на террасу</h3><p>Тёплый подъёмно-раздвижной портал для ежедневного прохода из жилой зоны.</p></div></article>
-</section>
