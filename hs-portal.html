@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>HS-портал — подъёмно-раздвижная система | PORTAL SYSTEMS</title>
+<link href="assets/css/site.css" rel="stylesheet"/>
+<link href="assets/css/product.css" rel="stylesheet"/>
+<link href="canvas/HS_canvas/styles.css" rel="stylesheet"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<meta name="robots" content="noindex,nofollow"/>
+<style>
+.hs-crumbs{padding:14px 20px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:#77746d}
+.hs-crumbs a{color:#77746d}.hs-crumbs span{margin:0 7px;color:#aaa69c}
+.hs-hero{position:relative;min-height:64vh;background:#0d0d0d;color:#fff;overflow:hidden}
+.hs-hero__media{position:absolute;inset:0;background:linear-gradient(160deg,#2b2b28,#111 55%,#050505)}
+.hs-hero__body{position:relative;z-index:1;min-height:64vh;display:flex;flex-direction:column;justify-content:flex-end;padding:44px 20px 30px}
+.hs-hero__kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c9bb91;margin:0 0 16px}
+.hs-hero h1{margin:0;max-width:640px;font-size:clamp(34px,9vw,62px);line-height:.96;font-weight:300;letter-spacing:-.045em}
+.hs-hero p{max-width:460px;margin:18px 0 0;color:#c7c7c1;font-size:15px;line-height:1.5}
+.hs-hero__actions{display:flex;flex-direction:column;gap:10px;margin-top:26px}
+@media(min-width:640px){.hs-hero__actions{flex-direction:row}}
+.hs-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:52px;padding:0 20px;border:1px solid currentColor;font-size:13px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:#fff}
+.hs-btn--fill{background:#c9bb91;border-color:#c9bb91;color:#111}
+.hs-quick{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#2a2a27;border:1px solid #2a2a27}
+.hs-quick div{background:#111;padding:16px 14px}
+.hs-quick span{display:block;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#918e86}
+.hs-quick strong{display:block;margin-top:6px;font-size:17px;font-weight:300;color:#fff;letter-spacing:-.02em}
+.hs-section{padding:56px 0}
+.hs-wrap{width:min(100% - 40px,1320px);margin:0 auto;padding-inline:20px}
+.hs-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#88784e;margin:0 0 12px}
+.hs-h2{margin:0 0 8px;font-size:clamp(26px,7vw,42px);line-height:1;font-weight:300;letter-spacing:-.05em}
+.hs-lead{margin:0 0 28px;max-width:640px;color:#5a5750;font-size:14.5px;line-height:1.55}
+.hs-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d8d5cc;border:1px solid #d8d5cc}
+.hs-feat{background:#fff;padding:20px 16px}
+.hs-feat svg{width:26px;height:26px;margin-bottom:12px;color:#111}
+.hs-feat h3{margin:0 0 6px;font-size:14px;font-weight:500;letter-spacing:-.01em}
+.hs-feat p{margin:0;font-size:12px;line-height:1.45;color:#6b6860}
+.hs-canvas-wrap{border:1px solid #d8d5cc;background:#f5f4f0}
+.hs-canvas-wrap .hs-demo{padding:28px 20px 34px}
+.hs-steps{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.hs-steps::-webkit-scrollbar{display:none}
+.hs-step{flex:0 0 78%;scroll-snap-align:start;border:1px solid #d8d5cc;padding:18px;background:#fff}
+.hs-step b{display:block;font-size:11px;color:#88784e;letter-spacing:.1em;margin-bottom:10px}
+.hs-step h3{margin:0 0 6px;font-size:15px;font-weight:500}
+.hs-step p{margin:0;font-size:12.5px;line-height:1.5;color:#6b6860}
+@media(min-width:760px){.hs-steps{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}.hs-step{flex:auto}}
+.hs-config-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hs-config{display:block;border:1px solid #d8d5cc;padding:16px 14px;text-decoration:none;color:#111;background:#fff}
+.hs-config svg{width:100%;height:34px;margin-bottom:10px;color:#171717}
+.hs-config b{display:block;font-size:13.5px;font-weight:500}
+.hs-config span{display:block;margin-top:4px;font-size:11px;color:#77746d}
+.hs-config em{display:block;margin-top:10px;font-size:10px;font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:#88784e}
+.hs-custom{border:1px solid #d8d5cc;background:#111;color:#fff;padding:26px 20px;display:grid;gap:16px}
+.hs-custom h3{margin:0;font-size:22px;font-weight:300;letter-spacing:-.03em;max-width:420px}
+.hs-custom p{margin:0;color:#c7c7c1;font-size:13.5px;line-height:1.55;max-width:460px}
+.hs-app-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#d8d5cc;border:1px solid #d8d5cc}
+.hs-app{background:#fff;padding:18px 14px;display:flex;flex-direction:column;gap:10px}
+.hs-app svg{width:24px;height:24px;color:#111}
+.hs-app b{font-size:13px;font-weight:500}
+.hs-app span{font-size:11.5px;color:#6b6860;line-height:1.4}
+.hs-glass-grid{display:grid;gap:12px}
+@media(min-width:760px){.hs-glass-grid{grid-template-columns:repeat(3,1fr)}}
+.hs-glass{border:1px solid #d8d5cc;padding:18px 16px;background:#fff}
+.hs-glass b{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.hs-glass p{margin:0;font-size:12px;color:#6b6860;line-height:1.5}
+.hs-proj-row{display:flex;overflow-x:auto;gap:14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.hs-proj-row::-webkit-scrollbar{display:none}
+.hs-proj{flex:0 0 82%;scroll-snap-align:start;border:1px solid #d8d5cc;background:#fff;overflow:hidden}
+.hs-proj-media{aspect-ratio:4/3;background:linear-gradient(150deg,#d9d2c4,#a89f8e)}
+.hs-proj-body{padding:14px 14px 16px}
+.hs-proj-body b{display:block;font-size:13.5px;font-weight:500}
+.hs-proj-body span{display:block;margin-top:4px;font-size:11px;color:#77746d}
+@media(min-width:900px){.hs-proj-row{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}.hs-proj{flex:auto}}
+.hs-specs{width:100%;border-collapse:collapse;font-size:12.5px}
+.hs-specs tr{border-bottom:1px solid #e3e0d8}
+.hs-specs td{padding:11px 4px;color:#403e39}
+.hs-specs td:first-child{color:#88784e;width:46%}
+.hs-mobile-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(17,17,17,.97);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;backdrop-filter:blur(6px)}
+@media(min-width:1000px){.hs-mobile-cta{display:none}}
+.hs-mobile-cta a{flex:1;display:flex;align-items:center;justify-content:center;min-height:46px;background:#c9bb91;color:#111;text-decoration:none;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+body{padding-bottom:70px}
+@media(min-width:1000px){body{padding-bottom:0}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="site-header__inner">
+<a aria-label="PORTAL SYSTEMS" class="brand" href="index.html#top"><span>PORTAL SYSTEMS</span></a>
+<nav aria-label="Основная навигация" class="desktop-nav"><a href="index.html#systems">Системы</a><a href="index.html#projects">Проекты</a><a href="index.html#why">Почему мы</a><a href="calculator.html">Калькулятор</a><a href="index.html#contact">Контакты</a></nav>
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Открыть меню" class="menu-btn" type="button"><span></span></button>
+</div>
+</header>
+<div aria-hidden="true" class="mobile-menu" id="mobileMenu">
+<nav><a href="index.html#systems">Системы <span>↘</span></a><a href="index.html#projects">Проекты <span>↘</span></a><a href="index.html#why">Почему PORTAL SYSTEMS <span>↘</span></a><a href="calculator.html">Калькулятор <span>↘</span></a><a href="index.html#contact">Контакты <span>↘</span></a></nav>
+</div>
+<div class="hs-crumbs"><a href="index.html">главная</a><span>/</span><a href="index.html#systems">системы</a><span>/</span>HS-портал</div>
+<main>
+<section class="hs-hero">
+<div class="hs-hero__media"></div>
+<div class="hs-hero__body">
+<p class="hs-hero__kicker">HS · подъёмно-раздвижная система</p>
+<h1>Плавное открывание больших проёмов</h1>
+<p>Створка вращением ручки поднимается над нижним уплотнителем и уходит по направляющим без усилия — независимо от веса в сотни килограмм. гостиная открывается на террасу без высокого порога и лишних рам.</p>
+<div class="hs-hero__actions">
+<a class="hs-btn hs-btn--fill" href="calculator.html?type=HS">рассчитать стоимость →</a>
+<a class="hs-btn" href="#projects">смотреть проекты</a>
+</div>
+</div>
+</section>
+<div class="hs-quick">
+<div><span>ширина проёма</span><strong>до 19 500 мм</strong></div>
+<div><span>вес створки</span><strong>до 440 кг</strong></div>
+<div><span>заполнение</span><strong>до 54 мм</strong></div>
+<div><span>контур</span><strong>тёплый / холодный</strong></div>
+</div>
+<section class="hs-section">
+<div class="hs-wrap">
+<p class="hs-eyebrow">ключевые особенности</p>
+<h2 class="hs-h2">почему выбирают HS</h2>
+<p class="hs-lead">Система совмещает масштаб проёма с удобством ежедневного использования.</p>
+<div class="hs-feat-grid">
+<div class="hs-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 20.5h18"/></svg><h3>Низкий порог</h3><p>Порог 0–19 мм — выход на террасу без ступени, с коляской и гидроизоляцией водоотвода.</p></div>
+<div class="hs-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12h11l-3-3m3 3-3 3"/><rect x="17" y="5" width="3" height="14"/></svg><h3>Плавный ход</h3><p>Створка приподнимается на ролики и скользит одним движением — независимо от размера и веса.</p></div>
+<div class="hs-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg><h3>тёплый контур</h3><p>Профиль с терморазрывом для круглогодичного проживания или холодный для сезонной террасы.</p></div>
+<div class="hs-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg><h3>Защита от взлома</h3><p>Многоточечная фурнитура и усиленные стеклопакеты — для первого этажа.</p></div>
+</div>
+</div>
+</section>
+<section class="hs-section">
+<div class="hs-wrap">
+<p class="hs-eyebrow">механизм</p>
+<h2 class="hs-h2">видите, как это работает</h2>
+<p class="hs-lead">Потяните ползунок или самой схеме мышкой.</p>
+<div class="hs-canvas-wrap">
+<section class="hs-demo" id="hsPortalDemo" aria-labelledby="hsTitle2">
+<header class="hs-demo__header">
+<div class="hs-demo__intro">
+<p class="hs-demo__eyebrow">интерактивная схема</p>
+<h1 class="hs-demo__title" id="hsTitle2" style="font-size:clamp(24px,6vw,40px)">Подъём-сдвиг</h1>
+</div>
+<div class="hs-demo__status" aria-live="polite"><span class="hs-demo__status-label">положение</span><strong id="portalState">закрыто</strong></div>
+</header>
+<div class="hs-demo__stage" id="portalStage">
+<canvas id="portalCanvas" aria-label="Анимация открывания HS-портала"></canvas>
+<div class="hs-demo__hint" aria-hidden="true"><span>←</span><span>потяните</span><span>→</span></div>
+</div>
+<div class="hs-demo__controls">
+<div class="hs-demo__range-wrap">
+<div class="hs-demo__range-labels" aria-hidden="true"><span>закрыто</span><span>открыто</span></div>
+<input class="hs-demo__range" id="portalProgress" type="range" min="0" max="100" step="1" value="0" aria-label="степень открытия"/>
+</div>
+<button class="hs-demo__toggle" id="portalToggle" type="button">открыть</button>
+</div>
+</section>
+</div>
+<div class="hs-steps" style="margin-top:18px">
+<div class="hs-step"><b>01</b><h3>Подъём</h3><p>Ручка или привод причмыкает створку на 5–8 мм.</p></div>
+<div class="hs-step"><b>02</b><h3>Скольжение</h3><p>Роликовые каретки принимают вес.</p></div>
+<div class="hs-step"><b>03</b><h3>Посадка</h3><p>Створка опускается на уплотнители.</p></div>
+</div>
+</div>
+</section>
+<section class="hs-section" style="background:#f5f4f0">
+<div class="hs-wrap">
+<p class="hs-eyebrow">готовые решения</p>
+<h2 class="hs-h2">доступные конфигурации</h2>
+<div class="hs-config-grid">
+<a class="hs-config" href="calculator.html?type=HS&preset=hs-panorama"><svg viewBox="0 0 84 40"><rect x="3" y="3" width="37" height="34" fill="none" stroke="currentColor"/><rect x="44" y="3" width="37" height="34" fill="none" stroke="currentColor"/></svg><b>Панорама</b><span>2 створки</span><em>открытие ≈ 50%</em></a>
+<a class="hs-config" href="calculator.html?type=HS&preset=hs-wide"><svg viewBox="0 0 84 40"><rect x="3" y="3" width="24" height="34" fill="none" stroke="currentColor"/><rect x="29" y="3" width="24" height="34" fill="none" stroke="currentColor"/><rect x="55" y="3" width="26" height="34" fill="none" stroke="currentColor"/></svg><b>Широкий проход</b><span>3 створки</span><em>открытие ≈ 67%</em></a>
+<a class="hs-config" href="calculator.html?type=HS&preset=hs-center"><svg viewBox="0 0 84 40"><rect x="3" y="3" width="18" height="34" fill="none" stroke="currentColor"/><rect x="23" y="3" width="18" height="34" fill="none" stroke="currentColor"/><rect x="43" y="3" width="18" height="34" fill="none" stroke="currentColor"/><rect x="63" y="3" width="18" height="34" fill="none" stroke="currentColor"/></svg><b>Симметричный</b><span>4 створки</span><em>открытие ≈ 50%</em></a>
+<a class="hs-config" href="calculator.html?type=HS&preset=hs-grand"><svg viewBox="0 0 84 40"><rect x="3" y="3" width="11" height="34" fill="none" stroke="currentColor"/><rect x="16" y="3" width="11" height="34" fill="none" stroke="currentColor"/><rect x="29" y="3" width="11" height="34" fill="none" stroke="currentColor"/><rect x="42" y="3" width="11" height="34" fill="none" stroke="currentColor"/><rect x="55" y="3" width="11" height="34" fill="none" stroke="currentColor"/><rect x="68" y="3" width="13" height="34" fill="none" stroke="currentColor"/></svg><b>Премиум панорама</b><span>6 створок</span><em>открытие ≈ 67%</em></a>
+</div>
+<div class="hs-custom" style="margin-top:14px">
+<h3>Нужен нестандартный размер?</h3>
+<p>Производим HS-порталы под индивидуальный проект дома. Пришлите план — подготовим смету индивидуально.</p>
+<a class="hs-btn hs-btn--fill" href="index.html#contact" style="width:max-content">отправить проект →</a>
+</div>
+</div>
+</section>
+<section class="hs-section">
+<div class="hs-wrap">
+<p class="hs-eyebrow">где применяется</p>
+<h2 class="hs-h2">типы объектов</h2>
+<div class="hs-app-grid">
+<div class="hs-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><b>Загородный дом</b><span>гостиная → участок</span></div>
+<div class="hs-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="14"/><path d="M3 12h18M9 6v14"/></svg><b>Терраса и веранда</b><span>сезонная или тёплая</span></div>
+<div class="hs-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v20M4 12h16M6 6l12 12M18 6L6 18"/></svg><b>Зимний сад</b><span>максимум света</span></div>
+<div class="hs-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M9 21V9"/></svg><b>Коммерция</b><span>рестораны, шоу-румы</span></div>
+</div>
+</div>
+</section>
+<section class="hs-section" style="background:#f5f4f0">
+<div class="hs-wrap">
+<p class="hs-eyebrow">стекло</p>
+<h2 class="hs-h2">стеклопакеты</h2>
+<div class="hs-glass-grid">
+<div class="hs-glass"><b>Закалённое</b><p>Базовая безопасность по периметру.</p></div>
+<div class="hs-glass"><b>Триплекс</b><p>Многослойное безопасное стекло.</p></div>
+<div class="hs-glass"><b>Мультифункция</b><p>Тепло зимой, меньше нагрева летом.</p></div>
+</div>
+</div>
+</section>
+<section class="hs-section" id="projects">
+<div class="hs-wrap">
+<p class="hs-eyebrow">реализации</p>
+<h2 class="hs-h2">реальные дома с HS</h2>
+<div class="hs-proj-row">
+<div class="hs-proj"><div class="hs-proj-media"></div><div class="hs-proj-body"><b>Дом 186 м², Новая Рига</b><span>HS-портал 5,4 м · антрацит</span></div></div>
+<div class="hs-proj"><div class="hs-proj-media"></div><div class="hs-proj-body"><b>Садовый террас 60 м²</b><span>Симметричный HS · 4 створки</span></div></div>
+<div class="hs-proj"><div class="hs-proj-media"></div><div class="hs-proj-body"><b>Гостиная с вторым светом</b><span>Фиксация + HS-портал</span></div></div>
+</div>
+</div>
+</section>
+<section class="hs-section" style="background:#f5f4f0">
+<div class="hs-wrap">
+<p class="hs-eyebrow">технические данные</p>
+<h2 class="hs-h2">характеристики системы</h2>
+<table class="hs-specs">
+<tr><td>Макс. ширина проёма</td><td>до 19 500 мм</td></tr>
+<tr><td>Макс. высота створки</td><td>до 3385 мм</td></tr>
+<tr><td>Макс. ширина створки</td><td>до 3235 мм</td></tr>
+<tr><td>Макс. вес створки</td><td>до 440 кг</td></tr>
+<tr><td>Заполнение</td><td>от 10 до 54 мм</td></tr>
+<tr><td>Порог</td><td>0–19 мм</td></tr>
+<tr><td>Системы</td><td>тёплая и холодная</td></tr>
+<tr><td>Конфигурации</td><td>2, 3, 4 и 6 створок</td></tr>
+</table>
+</div>
+</section>
+<section class="contact" id="contact"><div class="wrap contact__inner"><div><p class="eyebrow">ваш проект</p><h2>начнём с проёма</h2><p class="contact__copy">Пришлите размеры или план дома.</p></div><form class="contact-form" id="contactForm"><input aria-hidden="true" autocomplete="off" name="website" style="position:absolute;left:-9999px;opacity:0;pointer-events:none" tabindex="-1" type="text"/><label class="field"><span>имя</span><input autocomplete="name" name="name" placeholder="ваше имя" required=""/></label><label class="field"><span>телефон</span><input autocomplete="tel" name="phone" placeholder="+7 999 000-00-00" required=""/></label><label class="field"><span>комментарий</span><textarea name="comment" placeholder="размеры проёма"></textarea></label><button class="btn" type="submit">получить расчёт <span>→</span></button><p class="form-status" id="formStatus"></p></form></div></section>
+</main>
+<footer class="footer"><div class="wrap"><div class="footer__brand">PORTAL SYSTEMS</div><div class="footer__grid"><div><h3>системы</h3><a href="hs-portal.html">Подъёмно-раздвижная</a><a href="index.html#systems">Складная раздвижная</a><a href="index.html#systems">Панорамные окна</a></div><div><h3>проект</h3><a href="index.html#projects">Проекты</a><a href="calculator.html">Калькулятор</a></div><div><h3>компания</h3><a href="index.html#why">Почему PORTAL SYSTEMS</a><a href="index.html#faq">FAQ</a></div><div><h3>Москва и МО</h3><a href="index.html#contact">телефон</a><a href="index.html#contact">e-mail</a></div></div><div class="footer__bottom"><span>© PORTAL SYSTEMS</span><span>архитектурное остекление</span></div></div></footer>
+<div class="hs-mobile-cta"><a href="calculator.html?type=HS">рассчитать HS →</a></div>
+<script src="assets/js/site.js"></script>
+<script src="canvas/HS_canvas/hs-portal.js"></script>
+</body>
+</html>
