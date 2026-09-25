@@ -11,8 +11,8 @@
   --hs-line-soft:#d8d4ca;
   --hs-accent:#b1a27a;
   --hs-dark:#11110f;
-  --hs-pad:var(--ui-pad);
-  --hs-max:1440px;
+  --hs-pad:max(var(--ui-pad),4.5vw);
+  --hs-max:1680px;
   --hs-h1:var(--fs-h1);
   --hs-h2:var(--fs-h2);
   --hs-h3:var(--fs-h4);
