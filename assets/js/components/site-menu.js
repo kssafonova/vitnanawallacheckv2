@@ -6,23 +6,23 @@
       const base=normBase(this.dataset.base),root=this.attachShadow({mode:'open'});
       root.innerHTML=\`
       <style>
-      :host{display:block;position:relative;z-index:100;font-family:'Manrope',Arial,sans-serif;color:#fff}
+      :host{display:block;position:relative;z-index:120;font-family:'Manrope',Arial,sans-serif;color:#fff}
       *{box-sizing:border-box}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}
-      .head{height:136px;background:#050505;border-bottom:1px solid rgba(255,255,255,.32);display:flex;align-items:center}
-      .in{width:min(100%,1440px);margin:auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-      .brand{display:flex;align-items:center;gap:18px;min-width:0;font-size:14px;letter-spacing:.34em;white-space:nowrap}
-      .brand:before,.brand:after{content:"";width:1px;height:74px;background:rgba(255,255,255,.42)}
-      .nav{display:none;align-items:center;gap:30px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-      .nav a{position:relative;padding:10px 0}.nav a:after{content:"";position:absolute;left:0;right:100%;bottom:4px;height:1px;background:currentColor;transition:.22s}.nav a:hover:after{right:0}
-      .menu{width:52px;height:52px;border:0;background:transparent;position:relative;cursor:pointer}
-      .menu i,.menu:before,.menu:after{content:"";position:absolute;left:8px;right:8px;height:1px;background:#fff;transition:.25s}.menu:before{top:15px}.menu i{top:25px}.menu:after{top:35px}
-      .menu[aria-expanded="true"]:before{top:25px;transform:rotate(45deg)}.menu[aria-expanded="true"] i{opacity:0}.menu[aria-expanded="true"]:after{top:25px;transform:rotate(-45deg)}
-      .panel{position:fixed;inset:136px 0 0;background:#050505;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.23s;overflow:auto}
-      .panel.open{opacity:1;visibility:visible;transform:none}.panel-in{width:min(100%,1440px);margin:auto;padding:28px 20px 44px}
-      .links a{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.22);font-size:30px;line-height:1;letter-spacing:-.04em}
-      .meta{display:grid;gap:10px;margin-top:34px;color:#a8a8a1;font-size:13px;line-height:1.5}
-      .cta{margin-top:24px;min-height:54px;padding:0 16px;border:1px solid #c9bb91;background:#c9bb91;color:#111;display:flex;align-items:center;justify-content:space-between;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-      @media(min-width:900px){.head{height:104px}.in{padding:0 40px}.brand:before,.brand:after{height:60px}.nav{display:flex}.menu{display:none}.panel{display:none}}
+      .head{height:72px;background:#050505;border-bottom:1px solid rgba(255,255,255,.18);display:flex;align-items:center}
+      .in{width:min(100%,1440px);margin:auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+      .brand{font-size:11px;font-weight:500;letter-spacing:.22em;white-space:nowrap}
+      .nav{display:none;align-items:center;gap:27px;font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+      .nav a{position:relative;padding:10px 0;color:#deddd8}.nav a:after{content:"";position:absolute;left:0;right:100%;bottom:4px;height:1px;background:currentColor;transition:.22s}.nav a:hover:after{right:0}
+      .menu{width:44px;height:44px;border:0;background:transparent;position:relative;cursor:pointer}
+      .menu i,.menu:before,.menu:after{content:"";position:absolute;left:9px;right:9px;height:1px;background:#fff;transition:.25s}.menu:before{top:14px}.menu i{top:22px}.menu:after{top:30px}
+      .menu[aria-expanded="true"]:before{top:22px;transform:rotate(45deg)}.menu[aria-expanded="true"] i{opacity:0}.menu[aria-expanded="true"]:after{top:22px;transform:rotate(-45deg)}
+      .panel{position:fixed;inset:72px 0 0;background:#050505;opacity:0;visibility:hidden;transform:translateY(-5px);transition:.22s;overflow:auto}
+      .panel.open{opacity:1;visibility:visible;transform:none}.panel-in{width:min(100%,1440px);margin:auto;padding:10px 20px 38px}
+      .links a{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid rgba(255,255,255,.18);font-size:clamp(30px,9vw,46px);line-height:.92;font-weight:300;letter-spacing:-.05em}
+      .links a span:last-child{font-size:15px;color:#85827a}
+      .meta{display:grid;gap:7px;margin-top:28px;color:#85827a;font-size:9px;line-height:1.5;letter-spacing:.07em;text-transform:uppercase}
+      .cta{margin-top:20px;min-height:52px;padding:0 14px;border:1px solid #e5e2d9;color:#fff;display:flex;align-items:center;justify-content:space-between;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+      @media(min-width:900px){.head{height:88px}.in{padding:0 48px}.brand{font-size:12px}.nav{display:flex}.menu{display:none}.panel{display:none}}
       </style>
       <header class="head"><div class="in">
         <a class="brand" href="\${base}index.html#top">PORTAL SYSTEMS</a>
