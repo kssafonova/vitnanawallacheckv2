@@ -82,6 +82,10 @@
       const colorOptions=family.filter(item=>item.scheme_slug===v.scheme_slug);
       const schemeOptions=family.filter(item=>item.color_slug===v.color_slug);
       const isHS=v.model.startsWith('HS');
+      if(!isHS){
+        window.location.replace(base+'systems/fs/');
+        return;
+      }
       const customHref=isHS?base+'systems/hs/#hs-calculator':base+'index.html#calculator';
       const systemHref=isHS?base+'systems/hs/':base+'index.html#systems';
 
