@@ -122,7 +122,15 @@
           "short": "2 + 1",
           "slug": "dve-aktivnye-odna-fiksirovannaya"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_3_closed.webp",
+        "open": "assets/images/products/hs_3_opened.webp",
+        "scheme": "D1",
+        "flip": true,
+        "align": true,
+        "_note": "На рендере активные створки справа, в схеме D1 — слева: flip. Открытый кадр снят с другой точки: align выравнивает его по раме закрытого."
+      }
     },
     {
       "model": "HS4",
@@ -178,7 +186,12 @@
           "short": "от центра",
           "slug": "otkryvanie-ot-centra"
         }
-      ]
+      ],
+      "render": {
+        "closed": "assets/images/products/hs_4_closed.webp",
+        "scheme": "A7",
+        "_note": "Открытого рендера пока нет."
+      }
     },
     {
       "model": "FS3",

@@ -92,8 +92,8 @@
       "scheme_title": "Открывание",
       "price": 489000,
       "available": true,
-      "image": "assets/images/systems/hs-overview.jpg",
-      "image_open": null,
+      "image": "assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya.webp",
+      "image_open": "assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
@@ -111,8 +111,8 @@
       "scheme_title": "Открывание",
       "price": 489000,
       "available": true,
-      "image": "assets/images/systems/hs-overview.jpg",
-      "image_open": null,
+      "image": "assets/images/products/hs3/grafit-dve-aktivnye-odna-fiksirovannaya.webp",
+      "image_open": "assets/images/products/hs3/grafit-dve-aktivnye-odna-fiksirovannaya-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
@@ -130,7 +130,7 @@
       "scheme_title": "Открывание",
       "price": 620000,
       "available": true,
-      "image": "assets/images/projects/terrace.webp",
+      "image": "assets/images/products/hs4/antratsit-otkryvanie-ot-centra.webp",
       "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/"
     },
@@ -149,7 +149,7 @@
       "scheme_title": "Открывание",
       "price": 620000,
       "available": true,
-      "image": "assets/images/projects/terrace.webp",
+      "image": "assets/images/products/hs4/chernyi-otkryvanie-ot-centra.webp",
       "image_open": null,
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/"
     },

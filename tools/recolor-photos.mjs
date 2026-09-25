@@ -40,13 +40,16 @@ for (const m of data.models) {
   if (!base) throw new Error(`${m.model}: схема ${m.render.scheme} из render не найдена`);
   for (const s of m.schemes) {
     // Та же схема — как есть; зеркальная пара — отражение; другая раскладка створок из этого рендера не получится
-    const flip = s.code !== base.code && mirrored(s.code) !== mirrored(base.code);
-    if (s.code !== base.code && !flip) { console.log(`пропуск ${m.model} ${s.code}: на рендере другая раскладка`); continue; }
+    // render.flip — рендер снят зеркально относительно схемы render.scheme (например, активные створки не с той стороны)
+    const flip = (s.code !== base.code && mirrored(s.code) !== mirrored(base.code)) !== !!m.render.flip;
+    if (s.code !== base.code && mirrored(s.code) === mirrored(base.code)) { console.log(`пропуск ${m.model} ${s.code}: на рендере другая раскладка`); continue; }
     for (const c of m.colors) {
       // open можно не указывать: если открытый кадр не соответствует схеме, лучше без него, чем с неверным
       for (const state of ['closed', 'open'].filter(st => m.render[st])) {
         jobs.push({
           src: m.render[state], flip, rgb: hexRgb(c.hex),
+          // render.align — открытый кадр снят с другой точки: выравниваем его по раме закрытого
+          ref: state === 'open' && m.render.align ? m.render.closed : null,
           out: `assets/images/products/${m.model.toLowerCase()}/${c.slug}-${s.slug}${state === 'open' ? '-open' : ''}.webp`,
           label: `${m.code} ${c.name} ${s.code} ${state === 'open' ? 'открыто' : 'закрыто'}`,
         });
@@ -56,14 +59,70 @@ for (const m of data.models) {
 }
 if (!jobs.length) { console.log('Нет моделей с полем render.'); process.exit(0); }
 
-// Выполняется в браузере: перекраска на canvas, результат — webp
-async function recolor({ src, rgb, flip }) {
-  const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+// Выполняется в браузере: [выравнивание по раме] → [отражение] → перекраска → формат 4:5. Результат — webp.
+async function recolor({ src, ref, rgb, flip }) {
+  const load = u => new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = u; });
+  const pixels = img => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d'); x.drawImage(img, 0, 0); return x.getImageData(0, 0, c.width, c.height); };
+  // Углы рамы: крайние тёмные малонасыщенные пиксели по диагоналям (рама — плоский прямоугольник в перспективе)
+  const corners = d => {
+    const { width: W, height: H, data: a } = d;
+    let tl = [0, 0, 1e9], tr = [0, 0, -1e9], br = [0, 0, -1e9], bl = [0, 0, 1e9];
+    for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) {
+      const i = (y * W + x) * 4, r = a[i], g = a[i + 1], b = a[i + 2];
+      if ((r * .299 + g * .587 + b * .114) / 255 > .33 || Math.max(r, g, b) - Math.min(r, g, b) > 45) continue;
+      if (x + y < tl[2]) tl = [x, y, x + y];
+      if (x - y > tr[2]) tr = [x, y, x - y];
+      if (x + y > br[2]) br = [x, y, x + y];
+      if (x - y < bl[2]) bl = [x, y, x - y];
+    }
+    return [tl, tr, br, bl].map(p => [p[0], p[1]]);
+  };
+  // Гомография по 4 парам точек (решение 8×8 методом Гаусса): from → to
+  const homography = (from, to) => {
+    const A = [], B = [];
+    from.forEach(([x, y], k) => {
+      const [u, v] = to[k];
+      A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+      A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+    });
+    for (let i = 0; i < 8; i++) {
+      let mx = i; for (let r = i + 1; r < 8; r++) if (Math.abs(A[r][i]) > Math.abs(A[mx][i])) mx = r;
+      [A[i], A[mx]] = [A[mx], A[i]]; [B[i], B[mx]] = [B[mx], B[i]];
+      for (let r = 0; r < 8; r++) if (r !== i) { const f = A[r][i] / A[i][i]; for (let c = i; c < 8; c++) A[r][c] -= f * A[i][c]; B[r] -= f * B[i]; }
+    }
+    return B.map((b, i) => b / A[i][i]).concat(1);
+  };
+
+  const img = await load(src);
+  let base = pixels(img);
+  let info = null;
+  if (ref) {
+    const target = pixels(await load(ref));
+    const cDst = corners(target), cSrc = corners(base);
+    const h = homography(cDst, cSrc);            // для каждого пикселя результата — где он в исходном кадре
+    const W = target.width, H = target.height, out = new ImageData(W, H), s = base.data, SW = base.width, SH = base.height;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const w = h[6] * x + h[7] * y + 1;
+      let u = (h[0] * x + h[1] * y + h[2]) / w, v = (h[3] * x + h[4] * y + h[5]) / w;
+      u = Math.min(SW - 1.001, Math.max(0, u)); v = Math.min(SH - 1.001, Math.max(0, v));
+      const x0 = u | 0, y0 = v | 0, fx = u - x0, fy = v - y0, o = (y * W + x) * 4;
+      for (let ch = 0; ch < 3; ch++) {
+        const p = (yy, xx) => s[(yy * SW + xx) * 4 + ch];
+        out.data[o + ch] = (p(y0, x0) * (1 - fx) + p(y0, x0 + 1) * fx) * (1 - fy) + (p(y0 + 1, x0) * (1 - fx) + p(y0 + 1, x0 + 1) * fx) * fy;
+      }
+      out.data[o + 3] = 255;
+    }
+    base = out;
+    info = { dst: cDst, src: cSrc };
+  }
+
   const c = document.createElement('canvas');
-  c.width = img.width; c.height = img.height;
+  c.width = base.width; c.height = base.height;
   const x = c.getContext('2d');
+  const tmp = document.createElement('canvas'); tmp.width = base.width; tmp.height = base.height; tmp.getContext('2d').putImageData(base, 0, 0);
   if (flip) { x.translate(c.width, 0); x.scale(-1, 1); }
-  x.drawImage(img, 0, 0);
+  x.drawImage(tmp, 0, 0);
+  x.setTransform(1, 0, 0, 1, 0, 0);
   const d = x.getImageData(0, 0, c.width, c.height), a = d.data;
   const [r0, g0, b0] = rgb;
   const light = (r0 * .299 + g0 * .587 + b0 * .114) / 255 > .5;
@@ -81,7 +140,33 @@ async function recolor({ src, rgb, flip }) {
     a[i + 2] = b + (Math.min(255, b0 * k) - b) * m;
   }
   x.putImageData(d, 0, 0);
-  return c.toDataURL('image/webp', .86);
+
+  // Горизонтальный кадр → 4:5, как у остальных фото, чтобы в квадратной карточке рама не обрезалась по бокам.
+  // Поле сверху и снизу: крайняя строка кадра плавно переходит в её средний цвет — без полос и швов
+  let result = c;
+  if (c.width > c.height) {
+    const W = c.width, H = c.height, H2 = Math.round(W * 1.25), pad = Math.round((H2 - H) / 2);
+    const out = document.createElement('canvas'); out.width = W; out.height = H2;
+    const o = out.getContext('2d');
+    o.drawImage(c, 0, pad);
+    const src = x.getImageData(0, 0, W, H).data;
+    const fill = (row, y0, rows, towardEdge) => {
+      const line = [], avg = [0, 0, 0];
+      for (let i = 0; i < W; i++) for (let ch = 0; ch < 3; ch++) { const v = src[(row * W + i) * 4 + ch]; line.push(v); avg[ch] += v / W; }
+      const img = o.createImageData(W, rows);
+      for (let yy = 0; yy < rows; yy++) {
+        const dist = towardEdge ? rows - yy : yy + 1;                 // расстояние от кадра в строках
+        const t = Math.min(1, dist / (pad * .35));                    // полосы гаснут на первой трети поля
+        for (let i = 0; i < W; i++) for (let ch = 0; ch < 3; ch++) img.data[(yy * W + i) * 4 + ch] = line[i * 3 + ch] * (1 - t) + avg[ch] * t;
+        for (let i = 0; i < W; i++) img.data[(yy * W + i) * 4 + 3] = 255;
+      }
+      o.putImageData(img, 0, y0);
+    };
+    fill(0, 0, pad, true);
+    fill(H - 1, pad + H, H2 - pad - H, false);
+    result = out;
+  }
+  return { url: result.toDataURL('image/webp', .86), info };
 }
 
 const { chromium } = await loadPlaywright();
@@ -95,7 +180,8 @@ const dataUrl = f => {
 };
 const done = [];
 for (const j of jobs) {
-  const url = await page.evaluate(recolor, { src: dataUrl(j.src), rgb: j.rgb, flip: j.flip });
+  const { url, info } = await page.evaluate(recolor, { src: dataUrl(j.src), ref: j.ref ? dataUrl(j.ref) : null, rgb: j.rgb, flip: j.flip });
+  if (info && !done.some(d => d.src === j.src)) console.log(`  выравнивание по раме: углы ${JSON.stringify(info.src)} → ${JSON.stringify(info.dst)}`);
   const file = path.join(ROOT, j.out);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, Buffer.from(url.split(',')[1], 'base64'));
