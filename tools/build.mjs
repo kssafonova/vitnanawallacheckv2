@@ -394,8 +394,9 @@ outputs.set('data/catalog.json', JSON.stringify({
   _comment: 'Сгенерировано tools/build.mjs из data/products.json — не редактировать вручную.',
   variants: variants.map(v => ({
     sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m),
-    color: `${v.c.name} RAL ${v.c.ral}`, scheme: v.s.label, price: v.m.price, available: v.available,
-    image: v.image, url: v.path,
+    color: `${v.c.name} RAL ${v.c.ral}`, color_slug: v.c.slug, hex: v.c.hex,
+    scheme: v.s.label, scheme_slug: v.s.slug, scheme_short: v.s.short, scheme_title: v.m.scheme_title,
+    price: v.m.price, available: v.available, image: v.image, url: v.path,
   })),
 }, null, 2) + '\n');
 

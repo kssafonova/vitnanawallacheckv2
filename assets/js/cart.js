@@ -16,26 +16,38 @@
   let catalog=new Map();
 
   const lines=()=>cart.items().map(i=>({...i,v:catalog.get(i.sku)})).filter(i=>i.v);
+  // Варианты той же модели: другие цвета при той же схеме и другие схемы при том же цвете
+  const siblings=(v,key)=>[...catalog.values()].filter(x=>x.model===v.model&&(key==='color'?x.scheme_slug===v.scheme_slug:x.color_slug===v.color_slug));
+
+  const itemHtml=({sku,qty,v})=>{
+    const colors=siblings(v,'color'),schemes=siblings(v,'scheme');
+    const swatches=colors.map(x=>`<button type="button" class="m-card__swatch${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" style="--sw:${esc(x.hex)}" title="${esc(x.color)}" aria-label="Цвет ${esc(x.color)}" aria-pressed="${x.sku===sku}"></button>`).join('');
+    const chips=schemes.length>1?`<div class="m-card__chips">${schemes.map(x=>`<button type="button" class="m-card__chip${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" aria-pressed="${x.sku===sku}">${esc(x.scheme_short)}</button>`).join('')}</div>`:'';
+    return `
+      <li class="cart-item" data-sku="${esc(sku)}">
+        <a class="cart-item__img" href="${base+esc(v.url)}"><img src="${base+esc(v.image)}" alt="${esc(v.code)} · ${esc(v.name)}" loading="lazy"></a>
+        <div class="cart-item__body">
+          <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>от, ${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
+          <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
+          <p class="cart-item__meta">${esc(v.size)} · арт. ${esc(sku)}</p>
+          <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(v.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
+          <div class="m-card__opt"><span class="m-card__label">${esc(v.scheme_title)}: <b>${esc(v.scheme_short)}</b></span>${chips}</div>
+          <div class="cart-item__foot">
+            <div class="cart-item__qty" role="group" aria-label="Количество">
+              <button type="button" data-qty="-1" aria-label="Уменьшить количество">−</button><output>${qty}</output><button type="button" data-qty="1" aria-label="Увеличить количество"${qty>=99?' disabled':''}>+</button>
+            </div>
+            <button class="cart-item__remove" type="button" data-remove>Удалить</button>
+          </div>
+        </div>
+      </li>`;
+  };
 
   const render=()=>{
     const items=lines();
     root.hidden=!items.length;
     empty.hidden=!!items.length;
     if(!items.length)return;
-    list.innerHTML=items.map(({sku,qty,v})=>`
-      <li class="cart-item" data-sku="${esc(sku)}">
-        <a class="cart-item__img" href="${base+esc(v.url)}"><img src="${base+esc(v.image)}" alt="" loading="lazy"></a>
-        <div class="cart-item__info">
-          <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
-          <p class="cart-item__meta">${esc(v.size)} · ${esc(v.color)}<br>${esc(v.scheme)}</p>
-          <p class="cart-item__sku">Артикул ${esc(sku)}</p>
-        </div>
-        <div class="cart-item__qty" role="group" aria-label="Количество">
-          <button type="button" data-qty="-1" aria-label="Уменьшить количество">−</button><output>${qty}</output><button type="button" data-qty="1" aria-label="Увеличить количество"${qty>=99?' disabled':''}>+</button>
-        </div>
-        <div class="cart-item__price"><small>от</small><strong>${money(v.price*qty)}</strong></div>
-        <button class="cart-item__remove" type="button" data-remove>Удалить</button>
-      </li>`).join('');
+    list.innerHTML=items.map(itemHtml).join('');
     const count=items.reduce((n,i)=>n+i.qty,0);
     root.querySelector('[data-cart-count]').textContent=count;
     root.querySelector('[data-cart-total]').textContent='от '+money(items.reduce((n,i)=>n+i.v.price*i.qty,0));
@@ -48,6 +60,8 @@
     const q=e.target.closest('[data-qty]');
     if(q){const it=cart.items().find(i=>i.sku===sku);cart.set(sku,(it?it.qty:0)+Number(q.dataset.qty))}
     if(e.target.closest('[data-remove]'))cart.remove(sku);
+    const to=e.target.closest('[data-to]');
+    if(to)cart.replace(sku,to.dataset.to);
   });
   window.addEventListener('ps-cart-change',render);
   window.addEventListener('storage',e=>{if(e.key==='ps-cart')render()});

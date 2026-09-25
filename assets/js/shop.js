@@ -31,6 +31,15 @@
       write(items);
     },
     remove(sku){write(read().filter(i=>i.sku!==sku))},
+    // Смена варианта (цвет/схема) в корзине; если такой артикул уже есть — количество складывается
+    replace(from,to){
+      if(from===to)return;
+      const items=read(),a=items.find(i=>i.sku===from);
+      if(!a)return;
+      const b=items.find(i=>i.sku===to);
+      if(b){b.qty=Math.min(99,b.qty+a.qty);items.splice(items.indexOf(a),1)}else a.sku=to;
+      write(items);
+    },
     clear(){write([])}
   };
   window.PSCart=cart;
