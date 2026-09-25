@@ -49,19 +49,17 @@
   border-top:1px solid var(--hx-line-2);border-left:1px solid var(--hx-line-2)
 }
 .hsx-chapter{
-  min-width:0;min-height:66px;padding:12px 13px;border:0;
+  min-width:0;min-height:56px;padding:12px 13px;border:0;
   border-right:1px solid var(--hx-line-2);border-bottom:1px solid var(--hx-line-2);
   background:transparent;color:#605b54;text-align:left;cursor:pointer;
-  display:grid;grid-template-columns:26px minmax(0,1fr);align-content:start;gap:0 8px;
+  display:grid;grid-template-columns:26px minmax(0,1fr);align-content:center;gap:0 8px;
   transition:background .2s,color .2s
 }
 .hsx-chapter__n{color:#8e887f;font-size:var(--fs-label);padding-top:3px}
 .hsx-chapter__name{font-size:var(--fs-body);line-height:1.15;color:inherit}
-.hsx-chapter__sub{grid-column:2;margin-top:5px;color:#a09a91;font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.05em;text-transform:uppercase}
 .hsx-chapter:hover{background:rgba(17,17,15,.035)}
 .hsx-chapter.is-active{background:var(--hx-ink);color:#fff}
 .hsx-chapter.is-active .hsx-chapter__n{color:#fff}
-.hsx-chapter.is-active .hsx-chapter__sub{color:rgba(255,255,255,.55)}
 .hsx-chapter:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
 
 .hsx-panel{display:none;padding-top:clamp(18px,2.4vw,30px)}
@@ -95,8 +93,6 @@
 .hsx-footnote{margin:12px 0 0;color:#8e8a82;font-size:var(--fs-caption);line-height:1.45}
 
 /* 02 Стеклопакеты */
-.hsx-glass{display:grid;gap:16px;padding:6px 0 24px}
-.hsx-glass__art svg{display:block;width:100%;height:auto;max-height:340px}
 .hsx-glass__legend{
   list-style:none;margin:0;padding:12px 0 0;border-top:1px solid var(--hx-line);
   display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--hx-text);font-size:var(--fs-caption)
@@ -180,23 +176,11 @@
 .hsx-strip strong{font:300 var(--fs-num)/1 var(--font);letter-spacing:-.05em}
 .hsx-strip p{margin:0;color:#a8a59e;font-size:var(--fs-small);line-height:1.45}
 
-/* механизм: холст из hs-system.js */
-.hsx-visual-box.hs-canvas-shell{display:flex;flex-direction:column;background:var(--hx-panel)}
-.hsx-visual-box .hs-canvas-stage{position:relative;flex:1;min-height:280px;aspect-ratio:auto;touch-action:none;cursor:ew-resize}
-.hsx-visual-box #hsSystemCanvas{display:block;width:100%;height:100%}
-.hsx-mech-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 12px;border-top:1px solid var(--hx-line)}
-.hsx-mech-legend{display:flex;align-items:center;gap:6px;color:#5f5a53;font:600 var(--fs-label)/1 var(--font);letter-spacing:.05em;text-transform:uppercase}
-.hsx-mech-legend i{display:inline-block;width:10px;height:10px;border:1px solid #3a3a38;margin-left:8px}
-.hsx-mech-legend i:first-child{margin-left:0}
-.hsx-mech-legend i.is-active{background:#dbe3e3}
-.hsx-mech-state{margin-left:auto;color:var(--hx-muted);font-size:var(--fs-caption)}
-.hsx-mech-btn{min-height:40px;padding:0 16px;border:0;background:var(--hx-ink);color:#fff;cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
-
 @media(min-width:768px){
   .hsx-spec__head{grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:clamp(28px,6vw,110px)}
   .hsx-spec__intro{justify-self:end;margin-bottom:6px}
   .hsx-stats,.hsx-chapters{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .hsx-chapter{min-height:72px}
+  .hsx-chapter{min-height:48px;padding:10px 18px;grid-template-columns:40px minmax(0,1fr)}
   .hsx-panel__head{grid-template-columns:minmax(0,.9fr) minmax(320px,1.1fr);gap:48px}
   .hsx-frames{grid-template-columns:1fr 1fr}
   .hsx-frame{min-height:420px;padding:28px 28px 0}
@@ -317,7 +301,6 @@
 .hsx-visual-box.is-seal{min-height:0;aspect-ratio:1/1}
 .hsx-visual-box.is-seal .hsx-seal{inset:44px 14px 40px}
 .hsx-caption.is-right{top:12px;bottom:auto}
-.hsx-mech-btn{flex:1 0 100%;min-height:48px}
 @media(min-width:768px){
   .hsx-frame{min-height:420px}
   .hsx-glass__legend{display:flex}
@@ -325,6 +308,78 @@
   .hsx-visual-box.is-seal{aspect-ratio:auto;min-height:420px}
   .hsx-visual-box.is-seal .hsx-seal{inset:52px 48px 56px 44px}
   .hsx-caption.is-right{top:auto;bottom:10px}
-  .hsx-mech-btn{flex:0 0 auto;min-height:44px}
 }
 @media(min-width:1100px){.hsx-visual-box.is-seal{min-height:500px}}
+
+/* ---------- 02 Стеклопакеты: текст слева, фото пакета справа ---------- */
+.hsx-gl{display:grid;gap:18px;padding-bottom:22px}
+.hsx-gl__intro .hsx-panel__lead{margin-top:14px}
+.hsx-gl__fig{margin:0}
+.hsx-gl__art{position:relative}
+.hsx-gl__art img,.hsx-mech__fig img{
+  display:block;width:100%;height:auto;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%,#000 92%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%,#000 92%,transparent);
+  mask-composite:intersect
+}
+.hsx-gl__n,.hsx-gl__v,.hsx-gl__cam,.hsx-gl__dim span{
+  position:absolute;color:#4a4742;font:500 var(--fs-label)/1 var(--font);letter-spacing:.04em;white-space:nowrap
+}
+.hsx-gl__n{left:var(--x);top:4%}
+.hsx-gl__v,.hsx-gl__cam{display:none}
+.hsx-gl__dim{position:absolute;left:8.3%;right:17.6%;bottom:9%;border-bottom:1px solid #7d7a73}
+.hsx-gl__dim::before,.hsx-gl__dim::after{content:"";position:absolute;bottom:-5px;width:1px;height:9px;background:#7d7a73}
+.hsx-gl__dim::before{left:0}.hsx-gl__dim::after{right:0}
+.hsx-gl__dim span{left:50%;top:6px;transform:translateX(-50%);letter-spacing:0}
+.hsx-gl__fig figcaption{margin-top:12px}
+
+/* ---------- 04 Как работает: текст, фото, шаги с картинками ---------- */
+.hsx-mech{display:grid;gap:22px}
+.hsx-mech__intro .hsx-panel__lead{margin-top:14px}
+.hsx-mech__fig{margin:0}
+.hsx-mech__dims{position:relative;height:34px}
+.hsx-mech__dims span{
+  position:absolute;left:var(--a);width:calc(var(--b) - var(--a));top:0;padding-top:10px;
+  border-top:1px solid #8d8980;text-align:center;color:#5f5b55;
+  font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap
+}
+.hsx-mech__dims span::before,.hsx-mech__dims span::after{content:"";position:absolute;top:-5px;width:1px;height:9px;background:#8d8980}
+.hsx-mech__dims span::before{left:0}.hsx-mech__dims span::after{right:0}
+.hsx-steps{list-style:none;margin:0;padding:0;border-top:1px solid var(--hx-line)}
+.hsx-steps li{
+  display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 14px;align-items:center;
+  padding:12px 0;border-bottom:1px solid var(--hx-line)
+}
+.hsx-steps img{grid-row:1 / span 2;display:block;width:76px;height:76px;object-fit:cover;background:#e9e6de}
+.hsx-steps__n{align-self:end;color:#948e84;font-size:var(--fs-label)}
+.hsx-steps li>div{align-self:start}
+.hs-page .hsx-steps h4{margin:0;font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.hsx-steps p{margin:4px 0 0;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.4}
+
+@media(min-width:768px){
+  .hsx-gl__v{display:block;left:var(--x);top:54%;transform:translate(-50%,-50%) rotate(-90deg);letter-spacing:.02em}
+  .hsx-gl__cam{display:block;left:var(--x1);width:calc(var(--x2) - var(--x1));top:37%;padding-bottom:10px;text-align:center;text-transform:uppercase;letter-spacing:.06em}
+  .hsx-gl__cam::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:#7d7a73}
+  .hsx-gl__cam::before{content:"";position:absolute;left:-1px;right:-1px;bottom:-5px;height:10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 10'%3E%3Cpath d='M7 1 1 5l6 4' fill='none' stroke='%237d7a73'/%3E%3C/svg%3E") left center/8px 10px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 10'%3E%3Cpath d='M1 1l6 4-6 4' fill='none' stroke='%237d7a73'/%3E%3C/svg%3E") right center/8px 10px no-repeat}
+  .hsx-gl__n{top:6%}
+  .hsx-steps{display:grid;grid-template-columns:1fr 1fr;column-gap:28px}
+  .hsx-steps li{grid-template-columns:96px minmax(0,1fr)}
+  .hsx-steps img{width:96px;height:96px}
+}
+@media(min-width:900px){
+  .hsx-gl__fig figcaption{display:none}
+}
+@media(min-width:1100px){
+  .hsx-gl{grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:40px;align-items:center;padding:8px 0 28px}
+  .hsx-mech{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr) minmax(0,.92fr);gap:36px;align-items:start}
+  .hsx-mech__intro{padding-top:12px}
+  .hsx-mech__fig{padding-top:6px}
+  .hsx-steps{display:block;border-top:0;border-left:1px solid var(--hx-line);padding-left:20px}
+  .hsx-steps li{grid-template-columns:28px 100px minmax(0,1fr);gap:0 18px;padding:12px 0}
+  .hsx-steps li:first-child{padding-top:0}
+  .hsx-steps li:last-child{border-bottom:0}
+  .hsx-steps img{grid-row:1;grid-column:2;width:100px;height:100px}
+  .hsx-steps__n{grid-row:1;grid-column:1;align-self:start;padding-top:4px}
+  .hsx-steps li>div{grid-column:3;align-self:center}
+}

@@ -95,10 +95,10 @@
     </div>
 
     <div class="hsx-chapters" role="tablist" aria-label="Характеристики HS-портала">
-      <button class="hsx-chapter is-active" type="button" role="tab" data-spec-tab="tech" aria-selected="true"><span class="hsx-chapter__n">01</span><span class="hsx-chapter__name">Профиль</span><span class="hsx-chapter__sub">рама и створка</span></button>
-      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="glass" aria-selected="false"><span class="hsx-chapter__n">02</span><span class="hsx-chapter__name">Стеклопакеты</span><span class="hsx-chapter__sub">44 мм и варианты</span></button>
-      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="sealing" aria-selected="false"><span class="hsx-chapter__n">03</span><span class="hsx-chapter__name">Герметичность и порог</span><span class="hsx-chapter__sub">воздух · вода · монтаж</span></button>
-      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="mechanism" aria-selected="false"><span class="hsx-chapter__n">04</span><span class="hsx-chapter__name">Как работает</span><span class="hsx-chapter__sub">подъём и сдвиг</span></button>
+      <button class="hsx-chapter is-active" type="button" role="tab" data-spec-tab="tech" aria-selected="true"><span class="hsx-chapter__n">01</span><span class="hsx-chapter__name">Профиль</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="glass" aria-selected="false"><span class="hsx-chapter__n">02</span><span class="hsx-chapter__name">Стеклопакеты</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="sealing" aria-selected="false"><span class="hsx-chapter__n">03</span><span class="hsx-chapter__name">Герметичность и порог</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="mechanism" aria-selected="false"><span class="hsx-chapter__n">04</span><span class="hsx-chapter__name">Как работает</span></button>
     </div>
 
     <!-- 01 Профиль -->
@@ -154,43 +154,25 @@
 
     <!-- 02 Стеклопакеты -->
     <section class="hs-spec-panel hsx-panel" data-spec-panel="glass">
-      <div class="hsx-panel__head">
-        <div><p class="hsx-eyebrow">Стеклопакеты для HS-портала</p><h3 class="hsx-panel__title">Стеклопакет 44&nbsp;мм: как&nbsp;устроен</h3></div>
-        <p class="hsx-panel__lead">«44 мм» — это общая толщина пакета, а не толщина одного стекла. Внутри — три стекла и две герметичные камеры, разделённые дистанционными рамками.</p>
-      </div>
-      <div class="hsx-glass">
-        <div class="hsx-glass__art"><svg aria-hidden="true" focusable="false" viewBox="0 0 830 300">
-            <defs>
-              <linearGradient id="gA" x1="0" x2="1"><stop stop-color="#8fb4b9" stop-opacity=".65"/><stop offset=".2" stop-color="#eff5f3" stop-opacity=".55"/><stop offset="1" stop-color="#f9fbf9" stop-opacity=".16"/></linearGradient>
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
-            </defs>
-            <ellipse cx="460" cy="238" rx="300" ry="34" fill="#b7b5ad" opacity=".22" filter="url(#shadow)"/>
-            <g transform="translate(70,22)">
-              <g transform="translate(0,10)">
-                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
-                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
-                
-              </g>
-              <g transform="translate(280,0)">
-                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
-                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
-                
-              </g>
-              <g transform="translate(560,-10)">
-                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
-                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
-                
-              </g>
-              <g font-size="10" fill="#3b3b38"></g>
-              <g stroke="#777" stroke-width="1" fill="none"><line x1="118" y1="120" x2="258" y2="120"/><line x1="138" y1="115" x2="118" y2="120"/><line x1="238" y1="115" x2="258" y2="120"/><line x1="398" y1="110" x2="538" y2="110"/><line x1="418" y1="105" x2="398" y2="110"/><line x1="518" y1="105" x2="538" y2="110"/></g>
-              <g font-size="9" fill="#5f5d58"></g>
-              <line x1="0" y1="248" x2="655" y2="248" stroke="#666"/><line x1="0" y1="243" x2="0" y2="253" stroke="#666"/><line x1="655" y1="243" x2="655" y2="253" stroke="#666"/>
-              
-            </g>
-          </svg></div>
-        <ol class="hsx-glass__legend">
-          <li><b>01</b> наружное стекло</li><li><i>камера 1</i></li><li><b>02</b> среднее стекло</li><li><i>камера 2</i></li><li><b>03</b> внутреннее стекло</li><li class="is-total">Всего: 44 мм</li>
-        </ol>
+      <div class="hsx-gl">
+        <div class="hsx-gl__intro">
+          <h3 class="hsx-panel__title">Стеклопакет 44&nbsp;мм: как&nbsp;устроен</h3>
+          <p class="hsx-panel__lead">«44 мм» — это общая толщина пакета, а не толщина одного стекла. Внутри — три стекла и две герметичные камеры, разделённые дистанционными рамками.</p>
+        </div>
+        <figure class="hsx-gl__fig">
+          <div class="hsx-gl__art">
+            <img src="../../assets/images/systems/hs-glass-44.webp" width="1560" height="580" loading="lazy" decoding="async" alt="Три стекла стеклопакета 44 мм, разнесённые, чтобы были видны камеры и дистанционные рамки">
+            <span class="hsx-gl__n" style="--x:10.3%">01</span><span class="hsx-gl__n" style="--x:46.3%">02</span><span class="hsx-gl__n" style="--x:81.3%">03</span>
+            <span class="hsx-gl__v" style="--x:5.2%">наружное стекло</span><span class="hsx-gl__v" style="--x:49.4%">среднее стекло</span><span class="hsx-gl__v" style="--x:85%">внутреннее стекло</span>
+            <span class="hsx-gl__cam" style="--x1:29.2%;--x2:42.6%">камера 1</span><span class="hsx-gl__cam" style="--x1:60.3%;--x2:77.7%">камера 2</span>
+            <span class="hsx-gl__dim"><span>44 мм</span></span>
+          </div>
+          <figcaption>
+            <ol class="hsx-glass__legend">
+              <li><b>01</b> наружное стекло</li><li><i>камера 1</i></li><li><b>02</b> среднее стекло</li><li><i>камера 2</i></li><li><b>03</b> внутреннее стекло</li><li class="is-total">Всего: 44 мм</li>
+            </ol>
+          </figcaption>
+        </figure>
       </div>
       <div class="hsx-glass-options">
         <article class="hsx-glass-option">
@@ -198,15 +180,15 @@
           <dl class="hsx-mini"><div><dt>Количество стёкол</dt><dd>3</dd></div><div><dt>Герметичные камеры</dt><dd>2</dd></div><div><dt>Дистанционные рамки</dt><dd>по периметру камер</dd></div><div><dt>Общая толщина</dt><dd>44 мм</dd></div></dl>
         </article>
         <article class="hsx-glass-option">
-          <span class="hsx-eyebrow">02</span><h4>Безопасность</h4><p>Та же двухкамерная логика, но одно или несколько стёкол усиливаются под зону риска.</p>
-          <dl class="hsx-mini"><div><dt>Закалённое стекло</dt><dd>повышенная стойкость к удару</dd></div><div><dt>Триплекс</dt><dd>удерживает осколки после разрушения</dd></div><div><dt>Комбинации</dt><dd>с климатическими покрытиями</dd></div></dl>
+          <span class="hsx-eyebrow">02</span><h4>Безопасность</h4><p>Собирается на той же двухкамерной логике, но одно или несколько стёкол усиливаются под зону риска.</p>
+          <dl class="hsx-mini"><div><dt>Закалённое стекло</dt><dd>повышенная стойкость к удару</dd></div><div><dt>Триплекс</dt><dd>удерживает осколки после разрушения</dd></div><div><dt>Комбинации</dt><dd>можно комбинировать с климатическими покрытиями</dd></div></dl>
         </article>
         <article class="hsx-glass-option">
           <span class="hsx-eyebrow">03</span><h4>Климат</h4><p>Для жилого дома и больших солнечных фасадов — пакет с функциональными покрытиями.</p>
-          <dl class="hsx-mini"><div><dt>Мультифункциональное покрытие</dt><dd>энергосбережение</dd></div><div><dt>Подбор по ориентации фасада</dt><dd>юг / восток / запад / север</dd></div><div><dt>Совместимость</dt><dd>с триплексом и закалённым стеклом</dd></div></dl>
+          <dl class="hsx-mini"><div><dt>Мультифункциональное покрытие</dt><dd>энергосбережение</dd></div><div><dt>Подбор по ориентации фасада</dt><dd>юг / восток / запад / север</dd></div><div><dt>Совместимость</dt><dd>с триплексом и закалённым стеклом</dd></div><div><dt>Задача</dt><dd>управлять теплопотерями и перегревом</dd></div></dl>
         </article>
       </div>
-      <div class="hsx-checks"><span>Что проверяем перед запуском в производство</span><span class="hsx-pill">Размер стекла</span><span class="hsx-pill">Масса створки</span><span class="hsx-pill">Ветровая нагрузка</span><span class="hsx-pill">Безопасность прохода</span><span class="hsx-pill">Ориентация фасада</span></div>
+      <div class="hsx-checks"><span>Что мы проверяем перед запуском в производство</span><span class="hsx-pill">Размер стекла</span><span class="hsx-pill">Масса створки</span><span class="hsx-pill">Ветровая нагрузка</span><span class="hsx-pill">Безопасность прохода</span><span class="hsx-pill">Ориентация фасада</span></div>
     </section>
 
     <!-- 03 Герметичность -->
@@ -242,27 +224,21 @@
 
     <!-- 04 Как работает -->
     <section class="hs-spec-panel hsx-panel" data-spec-panel="mechanism">
-      <div class="hsx-panel__head">
-        <div><p class="hsx-eyebrow">Подъёмно-раздвижной механизм</p><h3 class="hsx-panel__title">Как работает HS-портал</h3></div>
-        <p class="hsx-panel__lead">Поворот ручки сначала приподнимает створку и разгружает контур уплотнений. После этого створка движется по направляющей параллельно фасаду.</p>
-      </div>
-      <div class="hsx-split">
-        <div class="hsx-visual-box hs-canvas-shell" data-hs-canvas>
-          <div class="hs-canvas-stage">
-            <canvas id="hsSystemCanvas" aria-label="Интерактивная схема работы HS-портала"></canvas>
-          </div>
-          <div class="hsx-mech-foot">
-            <span class="hsx-mech-legend"><i></i>неподвижная<i class="is-active"></i>подвижная</span>
-            <span class="hsx-mech-state" data-hs-state>Закрыто</span>
-            <button class="hsx-mech-btn" type="button" data-hs-toggle>Открыть</button>
-          </div>
+      <div class="hsx-mech">
+        <div class="hsx-mech__intro">
+          <h3 class="hsx-panel__title">Как работает HS-портал</h3>
+          <p class="hsx-panel__lead">Подъёмно-раздвижной механизм позволяет легко открывать большие и тяжёлые створки. Поворот ручки поднимает створку, разгружает уплотнения, после чего она плавно движется по направляющей параллельно фасаду.</p>
         </div>
-        <div class="hsx-rows">
-          <article><span>01</span><div><h4>Повернуть ручку</h4><p>Фурнитура переводит створку из закрытого состояния.</p></div></article>
-          <article><span>02</span><div><h4>Приподнять створку</h4><p>Вес переносится на роликовые каретки, прижим к уплотнениям снимается.</p></div></article>
-          <article><span>03</span><div><h4>Сдвинуть</h4><p>Створка плавно движется вдоль соседней секции по направляющей.</p></div></article>
-          <article><span>04</span><div><h4>Закрыть и прижать</h4><p>В обратном положении створка опускается и возвращается к контуру уплотнений.</p></div></article>
-        </div>
+        <figure class="hsx-mech__fig">
+          <img src="../../assets/images/systems/hs-mechanism.webp" width="1300" height="956" loading="lazy" decoding="async" alt="HS-портал из двух створок: слева глухая, справа подвижная с ручкой и роликовыми каретками">
+          <figcaption class="hsx-mech__dims"><span style="--a:5%;--b:44%">глухая створка</span><span style="--a:44.4%;--b:93%">подвижная створка</span></figcaption>
+        </figure>
+        <ol class="hsx-steps">
+          <li><img src="../../assets/images/systems/hs-steps/hs-step-1.webp" width="240" height="240" loading="lazy" alt=""><span class="hsx-steps__n">01</span><div><h4>Повернуть ручку</h4><p>Фурнитура переводит створку из закрытого состояния.</p></div></li>
+          <li><img src="../../assets/images/systems/hs-steps/hs-step-2.webp" width="240" height="240" loading="lazy" alt=""><span class="hsx-steps__n">02</span><div><h4>Приподнять створку</h4><p>Вес переносится на роликовые каретки, прижим к уплотнениям снимается.</p></div></li>
+          <li><img src="../../assets/images/systems/hs-steps/hs-step-3.webp" width="240" height="240" loading="lazy" alt=""><span class="hsx-steps__n">03</span><div><h4>Сдвинуть</h4><p>Створка плавно движется вдоль соседней секции по направляющей.</p></div></li>
+          <li><img src="../../assets/images/systems/hs-steps/hs-step-4.webp" width="240" height="240" loading="lazy" alt=""><span class="hsx-steps__n">04</span><div><h4>Закрыть и прижать</h4><p>В обратном положении створка опускается и возвращается к контуру уплотнений.</p></div></li>
+        </ol>
       </div>
     </section>
   </div>
