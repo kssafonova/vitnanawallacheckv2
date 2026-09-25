@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FS-портал — интерактивная анимация | PORTAL SYSTEMS</title>
+  <meta name="description" content="Интерактивная демонстрация механизма открывания складного FS-портала.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="fs-demo" id="fsPortalDemo" aria-labelledby="fsTitle">
+      <header class="fs-demo__header">
+        <div class="fs-demo__intro">
+          <p class="fs-demo__eyebrow">FS · складная система</p>
+          <h1 class="fs-demo__title" id="fsTitle">Откройте проём почти полностью</h1>
+          <p class="fs-demo__lead">
+            Потяните по визуализации или используйте ползунок — створки складываются гармошкой к левой стороне.
+          </p>
+        </div>
+
+        <div class="fs-demo__status" aria-live="polite">
+          <span class="fs-demo__status-label">Положение</span>
+          <strong id="portalState">Закрыто</strong>
+        </div>
+      </header>
+
+      <div class="fs-demo__stage" id="portalStage">
+        <canvas
+          id="portalCanvas"
+          aria-label="Интерактивная анимация открывания складного FS-портала"
+        ></canvas>
+
+        <div class="fs-demo__hint" aria-hidden="true">
+          <span>←</span>
+          <span>Потяните</span>
+          <span>→</span>
+        </div>
+      </div>
+
+      <div class="fs-demo__controls">
+        <div class="fs-demo__range-wrap">
+          <div class="fs-demo__range-labels" aria-hidden="true">
+            <span>Закрыто</span>
+            <span>Открыто</span>
+          </div>
+
+          <input
+            class="fs-demo__range"
+            id="portalProgress"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            aria-label="Степень открытия FS-портала"
+          >
+        </div>
+
+        <button class="fs-demo__toggle" id="portalToggle" type="button">
+          Открыть
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./fs-portal.js"></script>
+</body>
+</html>

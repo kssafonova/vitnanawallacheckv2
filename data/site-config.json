@@ -1,6 +1,8 @@
 {
   "brand": "",
   "site_url": "",
+  "phone": "",
+  "email": "",
   "seo": {
     "enabled": false,
     "title": "",

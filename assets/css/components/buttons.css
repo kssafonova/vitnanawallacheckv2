@@ -1,3 +1,0 @@
-.btn{min-height:var(--control-h);display:inline-flex;align-items:center;justify-content:space-between;gap:20px;padding:0 16px;border:1px solid currentColor;border-radius:0;background:transparent;font-size:12px;line-height:1;text-transform:uppercase;letter-spacing:.045em;cursor:pointer}
-.btn--dark{background:var(--black);border-color:var(--black);color:#fff}.btn--light{background:#fff;border-color:#fff;color:#111}.btn--accent{background:var(--accent);border-color:var(--accent);color:#111}.btn--full{width:100%}
-.text-link{display:inline-flex;align-items:center;gap:9px;font-size:11px;line-height:1;text-transform:uppercase;letter-spacing:.06em}

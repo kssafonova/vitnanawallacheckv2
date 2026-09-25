@@ -1,17 +1,14 @@
-# Portal Systems v6
+# Portal Systems v7
 
-Anonymous mobile-first prototype.
+Rebuild based on the supplied PROJECT + Systems + ALUMARK product-card references.
 
-Key changes:
-- product hero is light;
-- all primary characteristics are inside a compact top accordion;
-- SKU geometry corrected against technical documentation;
-- HS2: S158 A1 / B1;
-- HS3: S158 D1 only;
-- HS4: S158 A7, centre opening, no left/right fake variants;
-- FS3: Roto Fold 330 + mirrored execution;
-- FS4: Roto Fold 431 + mirrored execution;
-- no sliders / carousels / snap rails;
-- SEO fields intentionally blank; noindex remains enabled.
-
-Technical sources are listed in `data/technical-specs.json`.
+- same global mobile-first dimensions as the supplied main project;
+- shared header/footer/lead-form web components;
+- main page preserves the supplied project design and calculator;
+- Systems uses the same dark accordion component as the supplied reference;
+- catalog uses compact architectural cards, 2 columns on mobile;
+- product top is light and compact, with characteristics in the top dropdown;
+- technical scheme/canvas below on dark background;
+- 16 technically corrected SKU routes;
+- SEO fields blank, robots noindex;
+- public brand, contacts and legal identifiers intentionally omitted.

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HS-портал — интерактивная анимация | PORTAL SYSTEMS</title>
+  <meta name="description" content="Интерактивная демонстрация механизма открывания подъёмно-сдвижного HS-портала.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hs-demo" id="hsPortalDemo" aria-labelledby="hsTitle">
+      <header class="hs-demo__header">
+        <div class="hs-demo__intro">
+          <p class="hs-demo__eyebrow">HS · подъёмно-сдвижная система</p>
+          <h1 class="hs-demo__title" id="hsTitle">Плавное открывание больших проёмов</h1>
+          <p class="hs-demo__lead">
+            Потяните по визуализации или используйте ползунок — активная створка сначала слегка поднимается,
+            затем плавно уходит вправо по направляющим.
+          </p>
+        </div>
+
+        <div class="hs-demo__status" aria-live="polite">
+          <span class="hs-demo__status-label">Положение</span>
+          <strong id="portalState">Закрыто</strong>
+        </div>
+      </header>
+
+      <div class="hs-demo__stage" id="portalStage">
+        <canvas
+          id="portalCanvas"
+          aria-label="Интерактивная анимация открывания HS-портала"
+        ></canvas>
+
+        <div class="hs-demo__hint" aria-hidden="true">
+          <span>←</span>
+          <span>Потяните</span>
+          <span>→</span>
+        </div>
+      </div>
+
+      <div class="hs-demo__controls">
+        <div class="hs-demo__range-wrap">
+          <div class="hs-demo__range-labels" aria-hidden="true">
+            <span>Закрыто</span>
+            <span>Открыто</span>
+          </div>
+
+          <input
+            class="hs-demo__range"
+            id="portalProgress"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            aria-label="Степень открытия HS-портала"
+          >
+        </div>
+
+        <button class="hs-demo__toggle" id="portalToggle" type="button">
+          Открыть
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./hs-portal.js"></script>
+</body>
+</html>

@@ -495,9 +495,9 @@
       "color_slug": "antratsit",
       "scheme_code": "D1",
       "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
-      "scheme_slug": "shema-d1",
+      "scheme_slug": "dve-aktivnye-odna-fiksirovannaya",
       "sku": "STD-HS3-S158-3600X2300-7016-D1",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-shema-d1/"
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
       "model": "HS3",
@@ -545,9 +545,9 @@
       "color_slug": "grafit",
       "scheme_code": "D1",
       "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
-      "scheme_slug": "shema-d1",
+      "scheme_slug": "dve-aktivnye-odna-fiksirovannaya",
       "sku": "STD-HS3-S158-3600X2300-7024-D1",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-shema-d1/"
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-dve-aktivnye-odna-fiksirovannaya/"
     },
     {
       "model": "HS4",
@@ -701,9 +701,9 @@
       "color_slug": "antratsit",
       "scheme_code": "330-L",
       "scheme_label": "Схема 330 · складывание влево",
-      "scheme_slug": "shema-330-skladyvanie-vlevo",
+      "scheme_slug": "skladyvanie-vlevo",
       "sku": "STD-FS3-S70-2700X2300-7016-330-L",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-shema-330-skladyvanie-vlevo/"
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/"
     },
     {
       "model": "FS3",
@@ -757,9 +757,9 @@
       "color_slug": "antratsit",
       "scheme_code": "330-R",
       "scheme_label": "Схема 330 · зеркально вправо",
-      "scheme_slug": "shema-330-skladyvanie-vpravo",
+      "scheme_slug": "skladyvanie-vpravo",
       "sku": "STD-FS3-S70-2700X2300-7016-330-R",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-shema-330-skladyvanie-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/"
     },
     {
       "model": "FS3",
@@ -813,9 +813,9 @@
       "color_slug": "chernyi",
       "scheme_code": "330-L",
       "scheme_label": "Схема 330 · складывание влево",
-      "scheme_slug": "shema-330-skladyvanie-vlevo",
+      "scheme_slug": "skladyvanie-vlevo",
       "sku": "STD-FS3-S70-2700X2300-9005-330-L",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-shema-330-skladyvanie-vlevo/"
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/"
     },
     {
       "model": "FS3",
@@ -869,9 +869,9 @@
       "color_slug": "chernyi",
       "scheme_code": "330-R",
       "scheme_label": "Схема 330 · зеркально вправо",
-      "scheme_slug": "shema-330-skladyvanie-vpravo",
+      "scheme_slug": "skladyvanie-vpravo",
       "sku": "STD-FS3-S70-2700X2300-9005-330-R",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-shema-330-skladyvanie-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/"
     },
     {
       "model": "FS4",
@@ -925,9 +925,9 @@
       "color_slug": "antratsit",
       "scheme_code": "431-L",
       "scheme_label": "Схема 431 · 3 влево + 1 вправо",
-      "scheme_slug": "shema-431-3-vlevo-1-vpravo",
+      "scheme_slug": "tri-vlevo-odna-vpravo",
       "sku": "STD-FS4-S70-3600X2300-7016-431-L",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-shema-431-3-vlevo-1-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-tri-vlevo-odna-vpravo/"
     },
     {
       "model": "FS4",
@@ -981,9 +981,9 @@
       "color_slug": "antratsit",
       "scheme_code": "431-R",
       "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
-      "scheme_slug": "shema-431-1-vlevo-3-vpravo",
+      "scheme_slug": "odna-vlevo-tri-vpravo",
       "sku": "STD-FS4-S70-3600X2300-7016-431-R",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-shema-431-1-vlevo-3-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-odna-vlevo-tri-vpravo/"
     },
     {
       "model": "FS4",
@@ -1037,9 +1037,9 @@
       "color_slug": "chernyi",
       "scheme_code": "431-L",
       "scheme_label": "Схема 431 · 3 влево + 1 вправо",
-      "scheme_slug": "shema-431-3-vlevo-1-vpravo",
+      "scheme_slug": "tri-vlevo-odna-vpravo",
       "sku": "STD-FS4-S70-3600X2300-9005-431-L",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-shema-431-3-vlevo-1-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-tri-vlevo-odna-vpravo/"
     },
     {
       "model": "FS4",
@@ -1093,9 +1093,9 @@
       "color_slug": "chernyi",
       "scheme_code": "431-R",
       "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
-      "scheme_slug": "shema-431-1-vlevo-3-vpravo",
+      "scheme_slug": "odna-vlevo-tri-vpravo",
       "sku": "STD-FS4-S70-3600X2300-9005-431-R",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-shema-431-1-vlevo-3-vpravo/"
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-odna-vlevo-tri-vpravo/"
     }
   ]
 }

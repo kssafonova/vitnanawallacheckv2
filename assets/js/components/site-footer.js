@@ -1,7 +1,3 @@
-class SiteFooter extends HTMLElement{
-  connectedCallback(){
-    const root=this.getAttribute('root')||'';
-    this.innerHTML=`<footer class="site-footer"><div class="container"><div class="site-footer__brand">PORTAL SYSTEMS</div><div class="site-footer__grid"><div><h4>Системы</h4><a href="${root}systems/sliding/">HS-порталы</a><a href="${root}catalog/#fs">FS-порталы</a></div><div><h4>Каталог</h4><a href="${root}catalog/">Готовые решения</a><a href="${root}#contact">Индивидуальный проект</a></div><div><h4>Проекты</h4><a href="${root}#projects">Архитектура</a><a href="${root}#approach">Подход</a></div><div><h4>Информация</h4><a href="${root}#contact">Контакты</a><a href="#">Политика</a></div></div><div class="site-footer__bottom">© 2026 · Prototype · SEO disabled</div></div></footer>`;
-  }
-}
+class SiteFooter extends HTMLElement {
+ connectedCallback(){const root=this.getAttribute('root')||'';this.innerHTML=`<footer class="footer"><div class="wrap"><div class="footer__brand">PORTAL SYSTEMS</div><div class="footer__grid"><div><h3>Системы</h3><a href="${root}systems/">HS · Подъёмно-раздвижная</a><a href="${root}systems/">FS · Складная</a><a href="${root}systems/">Панорамные окна</a></div><div><h3>Каталог</h3><a href="${root}catalog/#hs">HS-порталы</a><a href="${root}catalog/#fs">FS-порталы</a><a href="${root}index.html#calculator">Другой размер</a></div><div><h3>Проект</h3><a href="${root}index.html#projects">Проекты</a><a href="${root}index.html#process">Как мы работаем</a><a href="${root}index.html#faq">FAQ</a></div><div><h3>Регион</h3><p>Москва и Московская область</p><p>Контакты будут добавлены перед публикацией</p></div></div><div class="footer__bottom"><span>Prototype · noindex</span><span>Architectural glazing</span></div></div></footer>`}}
 customElements.define('site-footer',SiteFooter);

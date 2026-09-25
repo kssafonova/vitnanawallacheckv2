@@ -1,16 +1,11 @@
-class SiteHeader extends HTMLElement{
+class SiteHeader extends HTMLElement {
   connectedCallback(){
     const root=this.getAttribute('root')||'';
-    this.innerHTML=`<header class="site-header"><div class="site-header__inner">
-      <a class="site-brand" href="${root}"><span class="site-brand__word">PORTAL SYSTEMS</span></a>
-      <nav class="site-nav" aria-label="Основная навигация"><a href="${root}systems/sliding/">Системы</a><a href="${root}catalog/">Каталог</a><a href="${root}#projects">Проекты</a><a href="${root}#approach">Подход</a><a href="${root}#contact">Контакты</a></nav>
-      <button class="menu-btn" type="button" aria-expanded="false" aria-label="Открыть меню"><span></span><span></span><span></span></button>
-    </div></header><div class="mobile-menu"><nav><a href="${root}systems/sliding/">Системы <span>↘</span></a><a href="${root}catalog/">Каталог <span>↘</span></a><a href="${root}#projects">Проекты <span>↘</span></a><a href="${root}#approach">Подход <span>↘</span></a><a href="${root}#contact">Контакты <span>↘</span></a></nav><div class="mobile-menu__meta">Москва и МО<br>Контакты будут добавлены перед публикацией.</div></div>`;
-    const btn=this.querySelector('.menu-btn'),menu=this.querySelector('.mobile-menu');
-    const close=()=>{btn?.setAttribute('aria-expanded','false');menu?.classList.remove('is-open');document.body.classList.remove('menu-open')};
-    btn?.addEventListener('click',()=>{const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));menu.classList.toggle('is-open',!open);document.body.classList.toggle('menu-open',!open)});
-    menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+    this.innerHTML=`<header class="site-header"><div class="site-header__inner"><a class="brand" href="${root}index.html" aria-label="На главную"><span>PORTAL SYSTEMS</span></a><nav class="desktop-nav" aria-label="Основная навигация"><a href="${root}systems/">Системы</a><a href="${root}catalog/">Каталог</a><a href="${root}index.html#projects">Проекты</a><a href="${root}index.html#calculator">Калькулятор</a><a href="${root}index.html#contact">Контакты</a></nav><button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span></button></div></header><div class="mobile-menu" aria-hidden="true"><nav><a href="${root}systems/">Системы <span>↘</span></a><a href="${root}catalog/">Каталог <span>↘</span></a><a href="${root}index.html#projects">Проекты <span>↘</span></a><a href="${root}index.html#calculator">Калькулятор <span>↘</span></a><a href="${root}index.html#contact">Контакты <span>↘</span></a></nav><div class="mobile-menu__meta"><span>Москва и Московская область</span><span>Контакты будут добавлены перед публикацией</span></div><a class="btn btn--fill mobile-menu__cta" href="${root}index.html#calculator">Рассчитать проект <span>→</span></a></div>`;
+    const btn=this.querySelector('.menu-btn'), menu=this.querySelector('.mobile-menu');
+    const set=open=>{btn.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-hidden',String(!open));menu.classList.toggle('is-open',open);document.body.classList.toggle('menu-open',open)};
+    btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true'));
+    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>set(false)));
   }
 }
 customElements.define('site-header',SiteHeader);
