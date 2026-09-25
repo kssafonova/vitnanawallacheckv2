@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+
+:root{
+  --ui-black:#050505;
+  --ui-ink:#11110f;
+  --ui-paper:#ebe8dc;
+  --ui-bg:#f7f7f3;
+  --ui-white:#fff;
+  --ui-muted:#6f6c64;
+  --ui-line:#aaa59a;
+  --ui-line-soft:#d5d1c7;
+  --ui-accent:#b1a27a;
+  --ui-pad:20px;
+  --ui-max:1440px;
+}
+*{box-sizing:border-box}
+.ui-wrap{width:min(100%,var(--ui-max));margin-inline:auto;padding-inline:var(--ui-pad)}
+.ui-eyebrow{margin:0 0 12px;font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#77736a}
+.ui-title{margin:0;font:300 clamp(48px,12vw,88px)/.9 'Manrope',Arial,sans-serif;letter-spacing:-.065em}
+.ui-lead{max-width:680px;margin:18px 0 0;color:var(--ui-muted);font:300 15px/1.58 'Manrope',Arial,sans-serif}
+.ui-btn{
+  min-height:54px;padding:0 16px;border:1px solid var(--ui-ink);border-radius:0;background:transparent;color:var(--ui-ink);
+  display:inline-flex;align-items:center;justify-content:space-between;gap:22px;text-decoration:none;
+  font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer
+}
+.ui-btn--dark{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
+.ui-btn--light{background:#fff;color:var(--ui-ink);border-color:#fff}
+.ui-section-head{display:grid;gap:18px;margin-bottom:32px}
+.ui-section-head>p{max-width:650px;margin:0;color:var(--ui-muted);font:300 14px/1.58 'Manrope',Arial,sans-serif}
+
+/* Reusable product card */
+.product-card{
+  display:flex;flex-direction:column;min-width:0;background:#fff;color:var(--ui-ink);
+  border:1px solid var(--ui-line);text-decoration:none;overflow:hidden
+}
+.product-card__media{position:relative;aspect-ratio:1.12/1;overflow:hidden;background:#e6e3da}
+.product-card__media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .55s ease,filter .55s ease}
+.product-card__index{
+  position:absolute;top:12px;left:12px;min-width:30px;height:30px;padding:0 8px;display:grid;place-items:center;
+  background:rgba(247,247,243,.94);border:1px solid rgba(17,17,15,.18);
+  font:600 9px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em
+}
+.product-card__scheme{
+  position:absolute;right:12px;bottom:12px;width:92px;padding:8px;background:rgba(247,247,243,.94);
+  border:1px solid rgba(17,17,15,.12)
+}
+.product-card__scheme svg{display:block;width:100%;height:auto}
+.product-card__scheme svg *{fill:none;stroke:#111;stroke-width:1.15;vector-effect:non-scaling-stroke}
+.product-card__body{display:flex;flex-direction:column;flex:1;padding:16px 14px 14px}
+.product-card__top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.product-card__code{font:500 10px/1.2 'Manrope',Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+.product-card__size{color:#77736a;font:400 9px/1.2 'Manrope',Arial,sans-serif;letter-spacing:.06em;text-align:right}
+.product-card h3{margin:28px 0 0;font:300 28px/.95 'Manrope',Arial,sans-serif;letter-spacing:-.05em}
+.product-card__desc{margin:10px 0 0;color:#646057;font:300 12px/1.5 'Manrope',Arial,sans-serif}
+.product-card__variants{display:grid;gap:10px;margin-top:20px;padding-top:13px;border-top:1px solid var(--ui-line-soft)}
+.product-card__variant-row{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:center}
+.product-card__variant-row>small{color:#807b72;font:600 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.product-card__swatches{display:flex;align-items:center;gap:6px}
+.product-card__swatch{width:20px;height:20px;border:1px solid rgba(17,17,15,.28);background:var(--sw);position:relative}
+.product-card__swatch[data-label]:after{
+  content:attr(data-label);position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);
+  padding:5px 6px;background:#111;color:#fff;white-space:nowrap;opacity:0;pointer-events:none;
+  font:500 8px/1 'Manrope',Arial,sans-serif
+}
+.product-card__swatch:hover:after{opacity:1}
+.product-card__chips{display:flex;flex-wrap:wrap;gap:5px}
+.product-card__chip{padding:5px 7px;border:1px solid #c7c3ba;color:#625f58;font:500 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.product-card__foot{
+  display:flex;align-items:end;justify-content:space-between;gap:14px;margin-top:auto;padding-top:19px
+}
+.product-card__price small{display:block;color:#807b72;font:500 8px/1 'Manrope',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.product-card__price strong{display:block;margin-top:5px;font:300 20px/1 'Manrope',Arial,sans-serif;letter-spacing:-.04em}
+.product-card__link{display:flex;align-items:center;gap:8px;font:600 9px/1 'Manrope',Arial,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.product-card--dark{background:#0b0b0a;color:#fff;border-color:#0b0b0a}
+.product-card--dark .product-card__desc{color:#aaa79f}
+.product-card--dark .product-card__variants{border-color:#353530}
+.product-card--dark .product-card__variant-row>small{color:#77746d}
+.product-card--dark .product-card__chip{border-color:#3b3a36;color:#cac7bf}
+
+@media(hover:hover){
+  .product-card:hover .product-card__media img{transform:scale(1.025);filter:saturate(.88)}
+  .product-card__link{transition:opacity .2s}.product-card:hover .product-card__link{opacity:.58}
+}
+@media(min-width:768px){
+  :root{--ui-pad:36px}
+  .ui-section-head{grid-template-columns:1fr .75fr;gap:60px;align-items:end;margin-bottom:42px}
+  .ui-section-head>p{justify-self:end;font-size:15px}
+  .product-card__body{padding:20px 18px 18px}
+  .product-card h3{font-size:32px}
+  .product-card__desc{font-size:13px}
+  .product-card__price strong{font-size:23px}
+}
+@media(min-width:1100px){:root{--ui-pad:48px}}
