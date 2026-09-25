@@ -2398,3 +2398,681 @@ body.hs-page{
     padding:30px!important;
   }
 }
+
+
+/* ============================================================
+   HS MOBILE-FIRST RESET — simple, consistent, 2×2 where useful
+   This final layer intentionally normalizes legacy rules above.
+   ============================================================ */
+
+/* One mobile type scale */
+.hs-page{
+  --hs-section-title:36px;
+  --hs-section-line:.96;
+  --hs-mobile-gap:12px;
+}
+.hs-page .eyebrow,
+.hs-page .hs-kicker{
+  font-size:8px!important;
+  line-height:1.2!important;
+  letter-spacing:.12em!important;
+}
+.hs-page .home-approach h2,
+.hs-page .hs-section-head h2,
+.hs-page .calc-head .section-title,
+.hs-page .projects-intro h2,
+.hs-page .hs-home-process__title h2,
+.hs-page .hs-home-contact__copy h2{
+  font-size:36px!important;
+  line-height:.96!important;
+  letter-spacing:-.05em!important;
+}
+.hs-page h3{
+  text-wrap:balance;
+}
+.hs-container,
+.hs-page .wrap{
+  padding-left:16px!important;
+  padding-right:16px!important;
+}
+
+/* Softer section rhythm on phones */
+.hs-specification,
+.hs-schemes,
+.hs-stock,
+.hs-calculator,
+.hs-home-process{
+  padding-top:64px!important;
+  padding-bottom:68px!important;
+}
+.hs-section-head{
+  gap:12px!important;
+  margin-bottom:24px!important;
+}
+.hs-section-head>p:last-child{
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+
+/* Hero: reduce information density */
+.hs-hero-products{
+  margin-top:20px!important;
+}
+.hs-hero-product{
+  min-height:62px!important;
+  padding:9px 10px!important;
+}
+.hs-hero-product small{font-size:6px!important}
+.hs-hero-product strong,
+.hs-hero-product b{font-size:10px!important}
+.hs-hero-products__all{
+  min-height:38px!important;
+  font-size:7px!important;
+}
+
+/* Specification nav = real 2×2, no horizontal scrolling */
+.hs-spec-nav{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  overflow:visible!important;
+  border-left:1px solid var(--hs-line)!important;
+}
+.hs-spec-nav button{
+  width:auto!important;
+  min-width:0!important;
+  flex:none!important;
+  min-height:68px!important;
+  padding:10px!important;
+  grid-template-columns:22px minmax(0,1fr)!important;
+  gap:6px!important;
+  border-right:1px solid var(--hs-line)!important;
+  border-bottom:1px solid var(--hs-line)!important;
+}
+.hs-spec-nav button:nth-child(n+3){border-top:0}
+.hs-spec-nav button span{font-size:7px!important}
+.hs-spec-nav button b{font-size:11px!important;line-height:1.15!important}
+.hs-spec-nav button small{font-size:6px!important;line-height:1.2!important}
+.hs-spec-panels{padding-top:18px!important}
+
+/* Top technical stats = compact 2×2 */
+.hs-dna{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  margin-bottom:18px!important;
+}
+.hs-dna>div{
+  min-height:88px!important;
+  padding:10px!important;
+}
+.hs-dna small{font-size:6px!important}
+.hs-dna strong{
+  margin-top:12px!important;
+  font-size:27px!important;
+}
+.hs-dna span{
+  margin-top:5px!important;
+  font-size:7px!important;
+}
+
+/* Frame types: stacked on mobile — large numbers need breathing room */
+.hs-frame-types{
+  grid-template-columns:1fr!important;
+}
+.hs-frame-type{
+  min-height:300px!important;
+  padding:14px!important;
+}
+.hs-frame-type__copy>small{font-size:7px!important}
+.hs-frame-type__size{
+  margin-top:13px!important;
+}
+.hs-frame-type__size strong{
+  font-size:72px!important;
+}
+.hs-frame-type__size span{font-size:8px!important}
+.hs-frame-type h3{
+  margin-top:14px!important;
+  font-size:18px!important;
+}
+.hs-frame-type p{
+  max-width:250px!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+.hs-frame-type svg{
+  width:58%!important;
+  right:-3%!important;
+}
+
+/* Facts / limits = 2×2 */
+.hs-profile-facts,
+.hs-performance-band{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.hs-profile-facts>div,
+.hs-performance-band>div{
+  min-height:98px!important;
+  padding:10px!important;
+}
+.hs-profile-facts small,
+.hs-performance-band small{font-size:6px!important}
+.hs-profile-facts strong,
+.hs-performance-band strong{
+  margin-top:10px!important;
+  font-size:14px!important;
+  line-height:1.15!important;
+}
+.hs-profile-facts p{
+  margin-top:5px!important;
+  font-size:8px!important;
+  line-height:1.4!important;
+}
+
+/* Secondary headings: no giant “boom” text */
+.hs-glass-intro h3,
+.hs-sealing-intro h3,
+.hs-mechanism-head h3{
+  font-size:28px!important;
+  line-height:.98!important;
+  max-width:15ch!important;
+}
+.hs-glass-intro>div:first-child>p:last-child,
+.hs-sealing-intro>p,
+.hs-mechanism-head>p{
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+
+/* Glass is swipeable and simple on phone */
+.hs-glass-stack{
+  min-height:190px!important;
+  padding:9px!important;
+}
+.hs-glass-packages--detailed{
+  display:flex!important;
+  gap:8px!important;
+  overflow-x:auto!important;
+  scroll-snap-type:x mandatory!important;
+  background:transparent!important;
+}
+.hs-glass-packages--detailed article{
+  flex:0 0 84%!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:13px!important;
+  scroll-snap-align:start;
+}
+.hs-glass-packages--detailed h3{
+  margin-top:18px!important;
+  font-size:19px!important;
+}
+.hs-glass-packages--detailed p{font-size:10px!important}
+.hs-glass-packages--detailed li{
+  padding:7px 0!important;
+  font-size:8px!important;
+}
+.hs-glass-packages--detailed small{
+  font-size:7px!important;
+}
+
+/* Sealing: drawing + short list, less visual noise */
+.hs-sealing-intro{gap:12px!important;margin-bottom:18px!important}
+.hs-spec-sealing--wow{grid-template-columns:1fr!important}
+.hs-seal-chain article{
+  grid-template-columns:26px 1fr!important;
+  padding:12px 0!important;
+}
+.hs-seal-chain b{font-size:14px!important}
+.hs-seal-chain p{font-size:9px!important}
+.hs-sealing-result{
+  padding:14px!important;
+  gap:10px!important;
+}
+.hs-sealing-result strong{font-size:34px!important}
+.hs-sealing-result p{font-size:9px!important}
+
+/* Mechanism: vertical and calm */
+.hs-mechanism-head{gap:10px!important;margin-bottom:16px!important}
+.hs-mechanism-layout{
+  grid-template-columns:1fr!important;
+}
+.hs-mechanism-layout .hs-canvas-stage{
+  min-height:260px!important;
+  aspect-ratio:1.25/1!important;
+}
+.hs-mechanism-steps article{
+  min-height:74px!important;
+  grid-template-columns:28px 1fr!important;
+  padding:12px!important;
+}
+.hs-mechanism-steps b{font-size:14px!important}
+.hs-mechanism-steps p{font-size:9px!important}
+
+/* Schemes: controls fit phone width without tiny text */
+.hs-family-tabs button{
+  min-height:60px!important;
+  padding:9px 7px!important;
+}
+.hs-family-tabs span{font-size:12px!important}
+.hs-family-tabs small{font-size:6px!important}
+.hs-variant-row{padding:9px!important}
+.hs-variant-tabs button{
+  min-height:34px!important;
+  padding:0 8px!important;
+  font-size:7px!important;
+}
+.hs-scheme-controls{
+  grid-template-columns:1fr!important;
+}
+.hs-scheme-state{
+  border-left:0!important;
+  border-top:1px solid #c2beb4!important;
+}
+.hs-scheme-mode button,
+.hs-scheme-state button{
+  min-height:36px!important;
+  font-size:7px!important;
+}
+.hs-scheme-stage{
+  min-height:310px!important;
+  aspect-ratio:1/1!important;
+}
+.hs-scheme-legend{
+  max-width:calc(100% - 20px);
+  gap:5px 8px!important;
+}
+.hs-scheme-draghint{
+  bottom:36px!important;
+  white-space:nowrap;
+}
+.hs-scheme-result__lead{
+  padding:14px!important;
+}
+.hs-scheme-result__lead strong{
+  font-size:38px!important;
+}
+.hs-scheme-result__grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.hs-scheme-result__grid>div{
+  min-height:72px!important;
+  padding:9px!important;
+}
+.hs-scheme-result__grid small{font-size:6px!important}
+.hs-scheme-result__grid strong{font-size:10px!important}
+
+/* READY SOLUTIONS: 2 × 2 on mobile, intentionally simplified */
+.hs-stock-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:1px!important;
+  background:var(--hs-line)!important;
+}
+.hs-stock-grid .product-card{
+  min-width:0!important;
+  border:0!important;
+}
+.hs-stock-grid .product-card__media{
+  aspect-ratio:1.18/1!important;
+}
+.hs-stock-grid .product-card__index{
+  top:7px!important;
+  left:7px!important;
+  min-width:24px!important;
+  height:24px!important;
+  padding:0 5px!important;
+  font-size:7px!important;
+}
+.hs-stock-grid .product-card__scheme{
+  right:6px!important;
+  bottom:6px!important;
+  width:54px!important;
+  padding:4px!important;
+}
+.hs-stock-grid .product-card__body{
+  padding:10px 8px 9px!important;
+}
+.hs-stock-grid .product-card__top{
+  display:block!important;
+}
+.hs-stock-grid .product-card__code{
+  font-size:8px!important;
+}
+.hs-stock-grid .product-card__size{
+  display:block!important;
+  margin-top:4px!important;
+  text-align:left!important;
+  font-size:7px!important;
+}
+.hs-stock-grid .product-card h3{
+  margin:13px 0 0!important;
+  font-size:16px!important;
+  line-height:1!important;
+}
+.hs-stock-grid .product-card__desc,
+.hs-stock-grid .product-card__variants{
+  display:none!important;
+}
+.hs-stock-grid .product-card__foot{
+  margin-top:16px!important;
+  padding-top:9px!important;
+  border-top:1px solid var(--ui-line-soft)!important;
+  gap:6px!important;
+  align-items:center!important;
+}
+.hs-stock-grid .product-card__price small{font-size:6px!important}
+.hs-stock-grid .product-card__price strong{
+  margin-top:3px!important;
+  font-size:14px!important;
+  white-space:nowrap;
+}
+.hs-stock-grid .product-card__link{
+  font-size:0!important;
+  gap:0!important;
+}
+.hs-stock-grid .product-card__link span{
+  font-size:16px!important;
+}
+.hs-stock-grid .product-card--dark .product-card__foot{
+  border-color:#343430!important;
+}
+
+/* Calculator: compact 2×2 controls where possible */
+.hs-calculator .calc-head{
+  padding-left:16px!important;
+  padding-right:16px!important;
+}
+.hs-calculator .calculator-stage{
+  padding-left:16px!important;
+  padding-right:16px!important;
+}
+.hs-calculator .hs-calc__form,
+.hs-calculator .hs-calc__result{
+  padding:14px!important;
+}
+.hs-calculator .hs-calc-group{
+  padding:14px 0!important;
+}
+.hs-calculator .hs-calc-label{
+  margin-bottom:9px!important;
+  font-size:8px!important;
+}
+.hs-calculator .hs-calc-dimensions{
+  gap:12px!important;
+}
+.hs-calculator .hs-calc-dimensions input{
+  min-height:46px!important;
+  font-size:22px!important;
+}
+.hs-calculator .sash-grid,
+.hs-calculator .hs-calc-options--3{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.hs-calculator .sash-card,
+.hs-calculator .hs-calc-options button{
+  min-height:82px!important;
+  padding:9px 7px!important;
+}
+.hs-calculator .sash-card:nth-child(3),
+.hs-calculator .hs-calc-options--3 button:nth-child(3){
+  grid-column:1/-1;
+}
+.hs-calculator .sash-card__number{font-size:22px!important}
+.hs-calculator .sash-card__label,
+.hs-calculator .hs-calc-options b{font-size:11px!important}
+.hs-calculator .sash-card__opening,
+.hs-calculator .hs-calc-options small{font-size:7px!important}
+.hs-calculator .glazing-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.hs-calculator .glazing-card{
+  min-height:72px!important;
+  padding:8px!important;
+  grid-template-columns:26px minmax(0,1fr)!important;
+  gap:7px!important;
+}
+.hs-calculator .glazing-card:nth-child(3){grid-column:1/-1}
+.hs-calculator .glazing-card__icon{
+  width:26px!important;height:26px!important;
+}
+.hs-calculator .glazing-card strong{font-size:10px!important}
+.hs-calculator .glazing-card small{display:none!important}
+.hs-calculator .glazing-card em{font-size:6px!important}
+.hs-calculator .color-grid,
+.hs-calculator .hs-calc-colors{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+.hs-calculator .color-swatch{
+  min-height:58px!important;
+  padding:7px!important;
+}
+.hs-calculator .color-swatch__dot{
+  width:18px!important;height:18px!important;
+}
+.hs-calculator .color-swatch span{font-size:7px!important}
+.hs-calculator .hs-calc-addons label{
+  min-height:52px!important;
+  padding:9px 0!important;
+}
+.hs-calculator .hs-calc-addons b{font-size:11px!important}
+.hs-calculator .hs-calc-addons small{font-size:8px!important}
+.hs-calculator .hs-calc-preview{
+  min-height:180px!important;
+  padding:14px!important;
+}
+.hs-calculator .hs-calc-preview__frame{
+  height:120px!important;
+}
+.hs-calculator .hs-calc-result__price strong{
+  font-size:42px!important;
+}
+.hs-calculator .hs-calc-result__facts{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+.hs-calculator .hs-calc-result__facts>div{
+  padding:8px!important;
+}
+.hs-calculator .hs-calc-result__facts small{font-size:6px!important}
+.hs-calculator .hs-calc-result__facts b{font-size:9px!important}
+
+/* Process: one compact list, no oversized editorial composition */
+.hs-home-process__grid{gap:24px!important}
+.hs-home-process__steps article{
+  grid-template-columns:28px 1fr!important;
+  gap:10px!important;
+  padding:15px 0!important;
+}
+.hs-home-process__steps h3{
+  font-size:18px!important;
+}
+.hs-home-process__steps p{
+  grid-column:2!important;
+  margin-top:4px!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+
+/* Contact: keep it simple on mobile */
+.hs-home-contact{
+  min-height:auto!important;
+}
+.hs-home-contact__grid{
+  min-height:auto!important;
+  padding-top:58px!important;
+  padding-bottom:58px!important;
+  gap:30px!important;
+}
+.hs-home-contact__copy>p{
+  margin-top:16px!important;
+  font-size:12px!important;
+  line-height:1.5!important;
+}
+.hs-home-contact__form{
+  padding:16px!important;
+}
+
+/* Progressive enhancement: tablet */
+@media(min-width:600px){
+  .hs-page{--hs-section-title:44px}
+  .hs-container,
+  .hs-page .wrap{
+    padding-left:28px!important;
+    padding-right:28px!important;
+  }
+  .hs-spec-nav{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .hs-frame-types{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .hs-frame-type{
+    min-height:390px!important;
+  }
+  .hs-frame-type__size strong{font-size:92px!important}
+  .hs-glass-packages--detailed{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    overflow:visible!important;
+    gap:1px!important;
+    background:var(--hs-line)!important;
+  }
+  .hs-glass-packages--detailed article{
+    min-width:0!important;
+    width:auto!important;
+    flex:none!important;
+  }
+  .hs-stock-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .hs-stock-grid .product-card__desc{
+    display:block!important;
+    font-size:10px!important;
+  }
+  .hs-calculator .calc-head,
+  .hs-calculator .calculator-stage{
+    padding-left:28px!important;
+    padding-right:28px!important;
+  }
+}
+
+/* Progressive enhancement: desktop */
+@media(min-width:900px){
+  .hs-page{--hs-section-title:58px}
+  .hs-page .home-approach h2,
+  .hs-page .hs-section-head h2,
+  .hs-page .calc-head .section-title,
+  .hs-page .projects-intro h2,
+  .hs-page .hs-home-process__title h2,
+  .hs-page .hs-home-contact__copy h2{
+    font-size:58px!important;
+  }
+  .hs-container,
+  .hs-page .wrap{
+    padding-left:48px!important;
+    padding-right:48px!important;
+  }
+  .hs-specification,
+  .hs-schemes,
+  .hs-stock,
+  .hs-calculator,
+  .hs-home-process{
+    padding-top:100px!important;
+    padding-bottom:108px!important;
+  }
+  .hs-dna{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .hs-profile-facts,
+  .hs-performance-band{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .hs-frame-type{
+    min-height:470px!important;
+    padding:22px!important;
+  }
+  .hs-frame-type__size strong{font-size:120px!important}
+  .hs-mechanism-head{
+    grid-template-columns:.85fr .75fr!important;
+  }
+  .hs-mechanism-layout{
+    grid-template-columns:1.15fr .85fr!important;
+  }
+  .hs-scheme-controls{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .hs-scheme-state{
+    border-left:1px solid #c2beb4!important;
+    border-top:0!important;
+  }
+  .hs-stock-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+  .hs-stock-grid .product-card__media{
+    aspect-ratio:1.12/1!important;
+  }
+  .hs-stock-grid .product-card__body{
+    padding:16px 14px 14px!important;
+  }
+  .hs-stock-grid .product-card__top{
+    display:flex!important;
+  }
+  .hs-stock-grid .product-card__size{
+    margin-top:0!important;
+    text-align:right!important;
+    font-size:9px!important;
+  }
+  .hs-stock-grid .product-card h3{
+    margin-top:22px!important;
+    font-size:24px!important;
+  }
+  .hs-stock-grid .product-card__desc,
+  .hs-stock-grid .product-card__variants{
+    display:block!important;
+  }
+  .hs-stock-grid .product-card__variants{
+    display:grid!important;
+  }
+  .hs-stock-grid .product-card__price strong{
+    font-size:19px!important;
+  }
+  .hs-stock-grid .product-card__link{
+    font-size:8px!important;
+  }
+  .hs-stock-grid .product-card__link span{
+    font-size:inherit!important;
+  }
+  .hs-calculator .calc-head,
+  .hs-calculator .calculator-stage{
+    padding-left:48px!important;
+    padding-right:48px!important;
+  }
+  .hs-calculator .hs-calc{
+    grid-template-columns:minmax(0,1.16fr) minmax(320px,.84fr)!important;
+  }
+  .hs-calculator .sash-grid,
+  .hs-calculator .hs-calc-options--3{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  .hs-calculator .sash-card:nth-child(3),
+  .hs-calculator .hs-calc-options--3 button:nth-child(3){
+    grid-column:auto;
+  }
+  .hs-calculator .glazing-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  .hs-calculator .glazing-card:nth-child(3){grid-column:auto}
+  .hs-calculator .glazing-card small{display:block!important}
+  .hs-home-process__grid{
+    grid-template-columns:.78fr 1.42fr!important;
+    gap:72px!important;
+  }
+  .hs-home-process__steps article{
+    grid-template-columns:44px .7fr 1.3fr!important;
+    gap:18px!important;
+    padding:24px 0!important;
+  }
+  .hs-home-process__steps p{
+    grid-column:3!important;
+    margin:0!important;
+    font-size:13px!important;
+  }
+}
