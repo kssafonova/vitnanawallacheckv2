@@ -349,3 +349,9 @@
 @media(prefers-reduced-motion:reduce){
   .hero__kicker,.hero h1,.hero__copy,.hero__actions,.hero__stats{animation:none}
 }
+
+
+/* Legacy process grid reset after homepage component migration */
+.process .steps{display:block;grid-template-columns:none}
+.process .step{border-right:0}
+.process .step:last-child{border-bottom:1px solid var(--ui-line)}
