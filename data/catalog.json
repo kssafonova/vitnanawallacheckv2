@@ -245,7 +245,7 @@
       "price": 610000,
       "available": false,
       "image": "assets/images/products/fs4/antratsit-tri-vlevo-odna-vpravo.webp",
-      "image_open": "assets/images/products/fs4/antratsit-tri-vlevo-odna-vpravo-open.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-tri-vlevo-odna-vpravo/"
     },
     {
@@ -264,7 +264,7 @@
       "price": 610000,
       "available": false,
       "image": "assets/images/products/fs4/antratsit-odna-vlevo-tri-vpravo.webp",
-      "image_open": "assets/images/products/fs4/antratsit-odna-vlevo-tri-vpravo-open.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-odna-vlevo-tri-vpravo/"
     },
     {
@@ -283,7 +283,7 @@
       "price": 610000,
       "available": false,
       "image": "assets/images/products/fs4/chernyi-tri-vlevo-odna-vpravo.webp",
-      "image_open": "assets/images/products/fs4/chernyi-tri-vlevo-odna-vpravo-open.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-tri-vlevo-odna-vpravo/"
     },
     {
@@ -302,7 +302,7 @@
       "price": 610000,
       "available": false,
       "image": "assets/images/products/fs4/chernyi-odna-vlevo-tri-vpravo.webp",
-      "image_open": "assets/images/products/fs4/chernyi-odna-vlevo-tri-vpravo-open.webp",
+      "image_open": null,
       "url": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-odna-vlevo-tri-vpravo/"
     }
   ]

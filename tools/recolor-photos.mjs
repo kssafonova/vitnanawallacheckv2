@@ -43,7 +43,8 @@ for (const m of data.models) {
     const flip = s.code !== base.code && mirrored(s.code) !== mirrored(base.code);
     if (s.code !== base.code && !flip) { console.log(`пропуск ${m.model} ${s.code}: на рендере другая раскладка`); continue; }
     for (const c of m.colors) {
-      for (const state of ['closed', 'open']) {
+      // open можно не указывать: если открытый кадр не соответствует схеме, лучше без него, чем с неверным
+      for (const state of ['closed', 'open'].filter(st => m.render[st])) {
         jobs.push({
           src: m.render[state], flip, rgb: hexRgb(c.hex),
           out: `assets/images/products/${m.model.toLowerCase()}/${c.slug}-${s.slug}${state === 'open' ? '-open' : ''}.webp`,
@@ -100,6 +101,14 @@ for (const j of jobs) {
   fs.writeFileSync(file, Buffer.from(url.split(',')[1], 'base64'));
   done.push({ ...j, url });
   console.log(`✓ ${j.out}  (${j.label})`);
+}
+// Удаляем старые файлы в папках обработанных моделей, которых нет в этом запуске (например, снятый открытый вид)
+const produced = new Set(done.map(j => path.join(ROOT, j.out)));
+for (const dir of new Set([...produced].map(f => path.dirname(f)))) {
+  for (const f of fs.readdirSync(dir)) {
+    const full = path.join(dir, f);
+    if (f.endsWith('.webp') && !produced.has(full)) { fs.rmSync(full); console.log(`удалён ${path.relative(ROOT, full)}`); }
+  }
 }
 if (preview) {
   await page.setViewportSize({ width: 1600, height: 900 });

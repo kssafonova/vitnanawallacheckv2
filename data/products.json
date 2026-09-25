@@ -307,8 +307,8 @@
       ],
       "render": {
         "closed": "assets/images/products/fs_4_closed.webp",
-        "open": "assets/images/products/fs_4_opened.webp",
-        "scheme": "431-L"
+        "scheme": "431-R",
+        "_note": "Закрытый кадр: ручка на стыке 1-й и 2-й створки слева — это 431-R (1 влево + 3 вправо). Открытый кадр fs_4_opened.webp не подходит: все створки сложены влево, нет отдельной проходной — нужен новый рендер 3 + 1."
       }
     }
   ]
