@@ -1,0 +1,14 @@
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--c-bg)}
+body{margin:0;min-width:20rem;background:var(--c-bg);color:var(--c-ink);font-family:var(--font-sans);font-size:var(--fs-16);font-weight:300;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.is-menu-open{overflow:hidden}
+img,picture,video,canvas,svg{display:block;max-width:100%}
+img{width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+ul,ol{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4,p,figure,dl,dd{margin:0}
+summary{list-style:none}
+summary::-webkit-details-marker{display:none}
+:focus-visible{outline:1px solid currentColor;outline-offset:3px}

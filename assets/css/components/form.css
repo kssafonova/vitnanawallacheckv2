@@ -1,0 +1,9 @@
+.lead-form{display:grid;gap:.8rem}
+.form-field{display:grid;gap:.45rem}
+.form-field label{font-size:var(--fs-10);letter-spacing:.1em;text-transform:uppercase;color:var(--c-muted)}
+.form-field input,.form-field textarea{width:100%;min-height:var(--control-h);padding:0 0;border:0;border-bottom:1px solid var(--c-line);border-radius:0;background:transparent;outline:0;font-size:var(--fs-16);font-weight:300}
+.form-field textarea{min-height:7rem;padding-top:1rem;resize:vertical}
+.form-field input:focus,.form-field textarea:focus{border-bottom-color:var(--c-ink)}
+.form-consent{font-size:var(--fs-10);line-height:1.45;color:var(--c-muted)}
+.form-status{min-height:1.2rem;font-size:var(--fs-11);color:var(--c-muted)}
+@media(min-width:48rem){.lead-form--inline{grid-template-columns:1fr 1fr auto;align-items:end}.lead-form--inline .form-consent,.lead-form--inline .form-status{grid-column:1/-1}}

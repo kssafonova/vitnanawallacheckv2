@@ -1,0 +1,1 @@
+const buttons=[...document.querySelectorAll('[data-filter]')];const cards=[...document.querySelectorAll('[data-family]')];buttons.forEach(b=>b.addEventListener('click',()=>{const f=b.dataset.filter;buttons.forEach(x=>x.classList.toggle('is-active',x===b));cards.forEach(c=>c.hidden=!(f==='all'||c.dataset.family===f))}));

@@ -1,0 +1,5 @@
+.button{min-height:var(--control-h);display:inline-flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:0 1rem;border:1px solid currentColor;background:transparent;color:inherit;font-size:var(--fs-10);font-weight:400;letter-spacing:.09em;text-transform:uppercase;border-radius:var(--radius)}
+.button--dark{background:var(--c-dark);color:#fff;border-color:var(--c-dark)}
+.button--light{background:#fff;color:#111;border-color:#fff}
+.button--full{width:100%}
+.text-link{display:inline-flex;align-items:center;justify-content:space-between;gap:1.2rem;padding:.65rem 0;border-bottom:1px solid currentColor;font-size:var(--fs-10);letter-spacing:.1em;text-transform:uppercase}

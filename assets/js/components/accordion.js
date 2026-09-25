@@ -1,0 +1,1 @@
+document.addEventListener('click',e=>{const btn=e.target.closest('[data-accordion-trigger]');if(!btn)return;const item=btn.closest('.accordion__item');const open=item.hasAttribute('open');item.toggleAttribute('open',!open);btn.setAttribute('aria-expanded',String(!open))});

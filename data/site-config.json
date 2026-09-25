@@ -12,12 +12,5 @@
     "og_description": "",
     "og_image": "",
     "json_ld": []
-  },
-  "merchant": {
-    "enabled": false,
-    "feed_url": "",
-    "seller": "",
-    "delivery": "",
-    "pickup": ""
   }
 }

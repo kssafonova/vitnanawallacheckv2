@@ -1,0 +1,14 @@
+.accordion{border-top:1px solid currentColor}
+.accordion__item{border-bottom:1px solid currentColor}
+.accordion__trigger{width:100%;display:grid;grid-template-columns:2rem minmax(0,1fr) 2.6rem;gap:1rem;align-items:start;padding:1.25rem 0;border:0;background:transparent;text-align:left}
+.accordion__index{padding-top:.25rem;font-size:var(--fs-12);color:var(--c-muted)}
+.section--dark .accordion__index{color:var(--c-muted-on-dark)}
+.accordion__title{font-size:1.7rem;line-height:1.02;font-weight:300;letter-spacing:-.04em}
+.accordion__summary{display:block;margin-top:.55rem;font-size:var(--fs-14);line-height:1.45;color:var(--c-muted)}
+.section--dark .accordion__summary{color:var(--c-muted-on-dark)}
+.accordion__icon{width:2.6rem;height:2.6rem;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;position:relative}
+.accordion__icon::before,.accordion__icon::after{content:"";position:absolute;width:.55rem;height:1px;background:currentColor;transition:transform .2s ease}
+.accordion__icon::after{transform:rotate(90deg)}
+.accordion__item[open] .accordion__icon::after{transform:rotate(0)}
+.accordion__panel{padding:0 0 1.5rem 3rem}
+@media(min-width:56rem){.accordion__trigger{grid-template-columns:3rem minmax(20rem,.8fr) minmax(18rem,.7fr) 2.8rem;gap:1.5rem;padding:1.5rem 0}.accordion__title{font-size:2.25rem}.accordion__summary{margin:0;align-self:center}.accordion__panel{padding-left:4.5rem}}

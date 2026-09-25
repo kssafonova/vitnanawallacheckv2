@@ -1,14 +1,14 @@
-# Portal Systems v7
+# Clean Vitrocsa-structure mobile-first build
 
-Rebuild based on the supplied PROJECT + Systems + ALUMARK product-card references.
+Greenfield rebuild. No legacy CSS imported.
 
-- same global mobile-first dimensions as the supplied main project;
-- shared header/footer/lead-form web components;
-- main page preserves the supplied project design and calculator;
-- Systems uses the same dark accordion component as the supplied reference;
-- catalog uses compact architectural cards, 2 columns on mobile;
-- product top is light and compact, with characteristics in the top dropdown;
-- technical scheme/canvas below on dark background;
-- 16 technically corrected SKU routes;
-- SEO fields blank, robots noindex;
-- public brand, contacts and legal identifiers intentionally omitted.
+Architecture:
+- tokens.css
+- reset.css
+- base.css
+- layout.css
+- component CSS files
+- page CSS files
+- shared Web Components for header/footer/lead form
+
+Pages follow the content hierarchy of Vitrocsa rather than reusing their source code. SEO fields are intentionally blank and robots blocks indexing.

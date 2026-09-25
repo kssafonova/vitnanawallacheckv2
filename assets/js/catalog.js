@@ -1,1 +1,0 @@
-(()=>{const filters=[...document.querySelectorAll('[data-filter]')],cards=[...document.querySelectorAll('.pcard')];filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('is-active'));btn.classList.add('is-active');const f=btn.dataset.filter;cards.forEach(c=>c.hidden=f!=='all'&&c.dataset.family!==f)}))})();
