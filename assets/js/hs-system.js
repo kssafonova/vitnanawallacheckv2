@@ -146,288 +146,307 @@
     const ctx=canvas?.getContext('2d',{alpha:true});
     const schemeButtons=[...schemeRoot.querySelectorAll('[data-scheme]')];
     const viewButtons=[...schemeRoot.querySelectorAll('[data-scheme-view]')];
+    const stateButtons=[...schemeRoot.querySelectorAll('[data-scheme-state]')];
+    const sizeButtons=[...schemeRoot.querySelectorAll('[data-size-chip]')];
 
     const fields={
       name:schemeRoot.querySelector('[data-scheme-name]'),
+      status:schemeRoot.querySelector('[data-scheme-status]'),
       size:schemeRoot.querySelector('[data-scheme-size]'),
+      passage:schemeRoot.querySelector('[data-scheme-passage]'),
+      openPct:schemeRoot.querySelector('[data-scheme-openpct]'),
+      width:schemeRoot.querySelector('[data-scheme-width]'),
+      height:schemeRoot.querySelector('[data-scheme-height]'),
       sections:schemeRoot.querySelector('[data-scheme-sections]'),
       active:schemeRoot.querySelector('[data-scheme-active]'),
       opening:schemeRoot.querySelector('[data-scheme-opening]'),
-      openPct:schemeRoot.querySelector('[data-scheme-openpct]'),
-      passage:schemeRoot.querySelector('[data-scheme-passage]'),
-      fit:schemeRoot.querySelector('[data-scheme-fit]'),
-      use:schemeRoot.querySelector('[data-scheme-use]')
+      use:schemeRoot.querySelector('[data-scheme-use]'),
+      summary:schemeRoot.querySelector('[data-scheme-summary]')
     };
 
     const schemes={
       'hs30-left':{
         name:'HS / 30 · активная слева',
-        size:'3000 × 2300 мм',
-        sections:2,active:1,
+        width:3000,height:2300,sections:2,active:1,
+        moving:[0],fixed:[1],targets:[1],
         opening:'створка → вправо',
-        openPct:'до ≈ 50%',
-        passage:'до ≈ 1500 мм',
-        fit:'3000 × 2300 мм',
-        use:'Классический двухсекционный выход на террасу',
-        fixed:[1],moving:[0],dirs:[1],
-        openingSide:'left'
+        passage:'≈ 1500 мм*',openPct:'около 50% проёма',
+        openSlots:[0,1],
+        use:'Выход на террасу',
+        summary:'Классический двухсекционный портал: одна створка уходит за соседнюю секцию и освобождает примерно половину проёма.'
       },
       'hs30-right':{
         name:'HS / 30 · активная справа',
-        size:'3000 × 2300 мм',
-        sections:2,active:1,
+        width:3000,height:2300,sections:2,active:1,
+        moving:[1],fixed:[0],targets:[0],
         opening:'створка ← влево',
-        openPct:'до ≈ 50%',
-        passage:'до ≈ 1500 мм',
-        fit:'3000 × 2300 мм',
-        use:'Зеркальный вариант для планировки с проходом справа',
-        fixed:[0],moving:[1],dirs:[-1],
-        openingSide:'right'
+        passage:'≈ 1500 мм*',openPct:'около 50% проёма',
+        openSlots:[1,2],
+        use:'Выход на террасу',
+        summary:'Зеркальная схема: проход формируется справа, а активная створка уходит к левой фиксированной секции.'
       },
       'hs36-left':{
-        name:'HS / 36 · две створки открываются влево',
-        size:'3600 × 2300 мм',
-        sections:3,active:2,
-        opening:'2 створки ← влево',
-        openPct:'до ≈ 66%',
-        passage:'до ≈ 2400 мм',
-        fit:'3600 × 2300 мм',
-        use:'Широкий проход; пакет створок собирается у левой стороны',
-        fixed:[0],moving:[1,2],dirs:[-1,-1],
-        openingSide:'right-wide'
+        name:'HS / 36 · 2 активные слева',
+        width:3600,height:2300,sections:3,active:2,
+        moving:[0,1],fixed:[2],targets:[2,2],
+        opening:'2 створки → вправо',
+        passage:'≈ 2400 мм*',openPct:'около 66% проёма',
+        openSlots:[0,2],
+        use:'Широкий выход на террасу',
+        summary:'Две активные створки расположены слева и при открывании собираются у правой фиксированной секции, освобождая примерно две трети проёма.'
       },
       'hs36-right':{
-        name:'HS / 36 · две створки открываются вправо',
-        size:'3600 × 2300 мм',
-        sections:3,active:2,
-        opening:'2 створки → вправо',
-        openPct:'до ≈ 66%',
-        passage:'до ≈ 2400 мм',
-        fit:'3600 × 2300 мм',
-        use:'Широкий проход; пакет створок собирается у правой стороны',
-        fixed:[2],moving:[0,1],dirs:[1,1],
-        openingSide:'left-wide'
+        name:'HS / 36 · 2 активные справа',
+        width:3600,height:2300,sections:3,active:2,
+        moving:[1,2],fixed:[0],targets:[0,0],
+        opening:'2 створки ← влево',
+        passage:'≈ 2400 мм*',openPct:'около 66% проёма',
+        openSlots:[1,3],
+        use:'Широкий выход на террасу',
+        summary:'Две активные створки расположены справа и при открывании собираются у левой фиксированной секции, оставляя широкий свободный проход.'
       },
       'hs48':{
         name:'HS / 48 · открывание от центра',
-        size:'4800 × 2300 мм',
-        sections:4,active:2,
+        width:4800,height:2300,sections:4,active:2,
+        moving:[1,2],fixed:[0,3],targets:[0,3],
         opening:'← от центра →',
-        openPct:'до ≈ 50%',
-        passage:'до ≈ 2400 мм',
-        fit:'4800 × 2300 мм',
-        use:'Симметричный центральный выход для большого панорамного фасада',
-        fixed:[0,3],moving:[1,2],dirs:[-1,1],
-        openingSide:'center'
+        passage:'≈ 2400 мм*',openPct:'около 50% проёма',
+        openSlots:[1,3],
+        use:'Главный панорамный выход',
+        summary:'Две центральные створки расходятся к краям и открывают симметричный проход примерно на половину ширины фасада.'
       }
     };
 
     let current='hs30-left';
     let view='diagram';
-    let transition=1;
+    let openProgress=0;
+    let openTarget=0;
     let raf=0;
 
-    const arrow=(x1,y,x2,color='#151615')=>{
-      ctx.strokeStyle=color;
-      ctx.fillStyle=color;
-      ctx.lineWidth=1.35;
-      ctx.beginPath();
-      ctx.moveTo(x1,y);
-      ctx.lineTo(x2,y);
-      ctx.stroke();
-      const dir=Math.sign(x2-x1)||1;
-      ctx.beginPath();
-      ctx.moveTo(x2,y);
-      ctx.lineTo(x2-dir*7,y-5);
-      ctx.lineTo(x2-dir*7,y+5);
-      ctx.closePath();
-      ctx.fill();
+    const line=(x1,y1,x2,y2,color='#77736a',width=1)=>{
+      ctx.strokeStyle=color;ctx.lineWidth=width;
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
     };
 
-    const drawPane=(x,y,w,h,{moving=false,fixed=false,label=true}={})=>{
-      const grad=ctx.createLinearGradient(x,y,x+w,y+h);
-      grad.addColorStop(0,moving?'rgba(247,251,250,.96)':'rgba(219,227,226,.74)');
-      grad.addColorStop(1,moving?'rgba(175,198,201,.42)':'rgba(241,242,238,.7)');
-      ctx.fillStyle=grad;
-      ctx.fillRect(x,y,w,h);
-      ctx.strokeStyle=moving?'#161716':'#626661';
+    const arrowHead=(x,y,dir,color='#77736a')=>{
+      ctx.fillStyle=color;
+      ctx.beginPath();
+      if(dir==='left'){ctx.moveTo(x,y);ctx.lineTo(x+6,y-4);ctx.lineTo(x+6,y+4)}
+      else if(dir==='right'){ctx.moveTo(x,y);ctx.lineTo(x-6,y-4);ctx.lineTo(x-6,y+4)}
+      else if(dir==='up'){ctx.moveTo(x,y);ctx.lineTo(x-4,y+6);ctx.lineTo(x+4,y+6)}
+      else{ctx.moveTo(x,y);ctx.lineTo(x-4,y-6);ctx.lineTo(x+4,y-6)}
+      ctx.closePath();ctx.fill();
+    };
+
+    const dimensionH=(x1,x2,y,label)=>{
+      line(x1,y,x2,y,'#756f63',1);
+      arrowHead(x1,y,'left','#756f63');
+      arrowHead(x2,y,'right','#756f63');
+      ctx.fillStyle='#665f55';
+      ctx.font='9px Arial';
+      ctx.textAlign='center';
+      ctx.fillText(label,(x1+x2)/2,y-7);
+    };
+
+    const dimensionV=(x,y1,y2,label)=>{
+      line(x,y1,x,y2,'#756f63',1);
+      arrowHead(x,y1,'up','#756f63');
+      arrowHead(x,y2,'down','#756f63');
+      ctx.save();
+      ctx.translate(x-8,(y1+y2)/2);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillStyle='#665f55';
+      ctx.font='9px Arial';
+      ctx.textAlign='center';
+      ctx.fillText(label,0,0);
+      ctx.restore();
+    };
+
+    const glassFill=(x,y,w,h,moving)=>{
+      const g=ctx.createLinearGradient(x,y,x+w,y+h);
+      g.addColorStop(0,moving?'rgba(245,250,249,.96)':'rgba(220,228,226,.78)');
+      g.addColorStop(1,moving?'rgba(166,192,196,.46)':'rgba(241,242,238,.74)');
+      ctx.fillStyle=g;ctx.fillRect(x,y,w,h);
+    };
+
+    const drawPane=(x,y,w,h,{moving=false,fixed=false,stack=0}={})=>{
+      glassFill(x,y,w,h,moving);
+      ctx.strokeStyle=moving?'#171816':'#5f625e';
       ctx.lineWidth=moving?2:1.2;
       ctx.strokeRect(x,y,w,h);
-      if(fixed&&label){
-        ctx.fillStyle='rgba(17,17,15,.5)';
-        ctx.font='8px Arial';
-        ctx.textAlign='center';
+      if(stack){
+        ctx.strokeStyle='rgba(17,17,15,.24)';
+        ctx.strokeRect(x+stack,y+stack,w,h);
+      }
+      if(fixed&&openProgress<.08){
+        ctx.fillStyle='rgba(17,17,15,.45)';
+        ctx.font='8px Arial';ctx.textAlign='center';
         ctx.fillText('FIX',x+w/2,y+h*.52);
       }
     };
 
-    const openingRect=(s,left,top,frameW,frameH)=>{
-      const pane=frameW/s.sections;
-      if(s.openingSide==='left')return {x:left,y:top,w:pane,h:frameH};
-      if(s.openingSide==='right')return {x:left+pane,y:top,w:pane,h:frameH};
-      if(s.openingSide==='right-wide')return {x:left+pane,y:top,w:pane*2,h:frameH};
-      if(s.openingSide==='left-wide')return {x:left,y:top,w:pane*2,h:frameH};
-      if(s.openingSide==='center')return {x:left+pane,y:top,w:pane*2,h:frameH};
-      return {x:left,y:top,w:0,h:frameH};
+    const animateOpen=()=>{
+      cancelAnimationFrame(raf);
+      if(reduce){openProgress=openTarget;draw();return}
+      const step=()=>{
+        openProgress+=(openTarget-openProgress)*.12;
+        if(Math.abs(openTarget-openProgress)<.002){
+          openProgress=openTarget;draw();return;
+        }
+        draw();raf=requestAnimationFrame(step);
+      };
+      step();
+    };
+
+    const geometry=()=>{
+      const w=canvas.clientWidth,h=canvas.clientHeight;
+      const mobile=w<640;
+      const left=mobile?w*.09:w*.12;
+      const right=mobile?w*.94:w*.91;
+      const top=mobile?h*.19:h*.16;
+      const bottom=mobile?h*.70:h*.72;
+      return {w,h,mobile,left,right,top,bottom,frameW:right-left,frameH:bottom-top};
+    };
+
+    const paneSlots=(s,g)=>{
+      const slotW=g.frameW/s.sections;
+      return Array.from({length:s.sections},(_,i)=>g.left+i*slotW);
+    };
+
+    const openingRect=(s,g)=>{
+      const slotW=g.frameW/s.sections;
+      return {
+        x:g.left+s.openSlots[0]*slotW,
+        y:g.top,
+        w:(s.openSlots[1]-s.openSlots[0])*slotW,
+        h:g.frameH
+      };
+    };
+
+    const drawPortal=(s,g,{facade=false}={})=>{
+      const slots=paneSlots(s,g);
+      const slotW=g.frameW/s.sections;
+      const inset=facade?3:5;
+      const paneW=slotW-inset*2;
+      const paneH=g.frameH-inset*2;
+      const open=openingRect(s,g);
+
+      if(openProgress>.03){
+        ctx.fillStyle=facade?'rgba(201,190,160,.20)':'rgba(169,157,121,.16)';
+        ctx.fillRect(open.x+2,open.y+2,open.w-4,open.h-4);
+        ctx.strokeStyle=facade?'rgba(142,126,85,.55)':'#9f916e';
+        ctx.lineWidth=1.3;ctx.setLineDash([6,5]);
+        ctx.strokeRect(open.x+2,open.y+2,open.w-4,open.h-4);
+        ctx.setLineDash([]);
+      }
+
+      ctx.strokeStyle='#202120';
+      ctx.lineWidth=facade?4:(g.mobile?5:7);
+      ctx.strokeRect(g.left,g.top,g.frameW,g.frameH);
+
+      // fixed panes first
+      for(const fi of s.fixed){
+        drawPane(slots[fi]+inset,g.top+inset,paneW,paneH,{fixed:true});
+      }
+
+      // moving panes animate all the way to their target slot
+      s.moving.forEach((mi,k)=>{
+        const targetSlot=s.targets[k];
+        const stackOffset=(s.targets.filter(t=>t===targetSlot).length>1)
+          ? (k-(s.moving.length-1)/2)*(g.mobile?5:8)
+          : 0;
+        const from=slots[mi]+inset;
+        const to=slots[targetSlot]+inset+stackOffset;
+        const x=lerp(from,to,ease(openProgress));
+        drawPane(x,g.top+inset,paneW,paneH,{moving:true,stack:openProgress>.85?Math.sign(stackOffset)*2:0});
+
+        if(openProgress<.88){
+          const dir=to>from?1:-1;
+          const y=g.top+g.frameH*.62;
+          const x1=x+paneW*(dir>0?.25:.75);
+          const x2=x+paneW*(dir>0?.72:.28);
+          line(x1,y,x2,y,'#171816',1.25);
+          arrowHead(x2,y,dir>0?'right':'left','#171816');
+        }
+
+        ctx.fillStyle='#171816';
+        const handleX=x+(to>=from?paneW*.12:paneW*.88-2);
+        ctx.fillRect(handleX,g.top+paneH*.44,2,Math.max(20,paneH*.13));
+      });
+
+      return open;
     };
 
     const drawDiagram=()=>{
-      const w=canvas.clientWidth,h=canvas.clientHeight;
-      const s=schemes[current];
-      ctx.fillStyle='#e9e6de';
-      ctx.fillRect(0,0,w,h);
+      const s=schemes[current],g=geometry();
+      ctx.fillStyle='#e9e6de';ctx.fillRect(0,0,g.w,g.h);
 
-      const pad=w<640?w*.065:w*.09;
-      const left=pad,right=w-pad,top=h*.14,bottom=h*.69;
-      const frameW=right-left,frameH=bottom-top;
-      const gap=Math.max(4,frameW*.009);
-      const paneW=(frameW-gap*(s.sections-1))/s.sections;
-      const t=ease(transition);
+      const open=drawPortal(s,g);
 
-      ctx.strokeStyle='#202120';
-      ctx.lineWidth=w<640?5:7;
-      ctx.strokeRect(left,top,frameW,frameH);
+      // overall opening dimensions
+      dimensionH(g.left,g.right,g.top-28,s.width+' мм');
+      dimensionV(g.left-24,g.top,g.bottom,s.height+' мм');
 
-      for(let i=0;i<s.sections;i++){
-        const baseX=left+i*(paneW+gap);
-        const moving=s.moving.includes(i);
-        const mi=s.moving.indexOf(i);
-        const dir=moving?(s.dirs[mi]||1):0;
-        const shift=moving?dir*Math.min(paneW*.12,w*.025)*t:0;
-        const x=baseX+4+shift,y=top+4,pw=paneW-8,ph=frameH-8;
+      // opening dimension
+      const y=g.bottom+28;
+      dimensionH(open.x+3,open.x+open.w-3,y,s.passage.replace('*',''));
 
-        drawPane(x,y,pw,ph,{moving,fixed:s.fixed.includes(i)});
-
-        if(moving){
-          const yy=y+ph*.61;
-          arrow(dir>0?x+pw*.22:x+pw*.78,yy,dir>0?x+pw*.75:x+pw*.25);
-          ctx.fillStyle='#151615';
-          const handleX=dir>0?x+pw*.12:x+pw*.88-2;
-          ctx.fillRect(handleX,y+ph*.43,2,Math.max(20,ph*.13));
-        }
-      }
-
-      const open=openingRect(s,left,top,frameW,frameH);
-      ctx.fillStyle='rgba(169,157,121,.13)';
-      ctx.fillRect(open.x,open.y,open.w,open.h);
-      ctx.strokeStyle='#9f916e';
-      ctx.lineWidth=1.4;
-      ctx.setLineDash([5,5]);
-      ctx.strokeRect(open.x+2,open.y+2,Math.max(0,open.w-4),Math.max(0,open.h-4));
-      ctx.setLineDash([]);
-
-      const dimY=bottom+24;
-      ctx.strokeStyle='#8a857a';
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.moveTo(open.x,dimY);
-      ctx.lineTo(open.x+open.w,dimY);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(open.x,dimY-5);ctx.lineTo(open.x,dimY+5);
-      ctx.moveTo(open.x+open.w,dimY-5);ctx.lineTo(open.x+open.w,dimY+5);
-      ctx.stroke();
-      ctx.fillStyle='#6d695f';
-      ctx.font=(w<640?'8px':'9px')+' Arial';
+      ctx.fillStyle='#6e695f';
+      ctx.font=(g.mobile?'8px':'9px')+' Arial';
       ctx.textAlign='center';
-      ctx.fillText('ОРИЕНТИР ОТКРЫТОЙ ЧАСТИ '+s.openPct.replace('до ≈ ',''),open.x+open.w/2,dimY+16);
+      ctx.fillText(openProgress>.88?'СВОБОДНАЯ ЗОНА ПРОХОДА':'ОТКРЫВАЕМАЯ ЗОНА',open.x+open.w/2,y+16);
 
-      ctx.fillStyle='#77736a';
-      ctx.font=(w<640?'8px':'9px')+' Arial';
       ctx.textAlign='left';
-      ctx.fillText('СХЕМА ДВИЖЕНИЯ',left,top-18);
+      ctx.fillText('ГОТОВЫЙ ПРОЁМ',g.left,g.top-43);
       ctx.textAlign='right';
-      ctx.fillText(s.sections+' СЕКЦ.',right,top-18);
-    };
-
-    const drawFacadePortal=(x,y,w,h,s,open)=>{
-      ctx.strokeStyle='#1c1d1b';
-      ctx.lineWidth=4;
-      ctx.strokeRect(x,y,w,h);
-
-      const paneW=w/s.sections;
-      if(!open){
-        for(let i=0;i<s.sections;i++){
-          drawPane(x+i*paneW+3,y+3,paneW-6,h-6,{moving:s.moving.includes(i),fixed:s.fixed.includes(i),label:false});
-        }
-        return;
-      }
-
-      const op=openingRect(s,x,y,w,h);
-      ctx.fillStyle='rgba(214,207,188,.28)';
-      ctx.fillRect(op.x+3,op.y+3,Math.max(0,op.w-6),Math.max(0,op.h-6));
-
-      for(const fi of s.fixed){
-        drawPane(x+fi*paneW+3,y+3,paneW-6,h-6,{fixed:true,label:false});
-      }
-
-      if(s.openingSide==='left'){
-        drawPane(x+paneW+5,y+7,paneW-10,h-14,{moving:true,label:false});
-      }else if(s.openingSide==='right'){
-        drawPane(x+5,y+7,paneW-10,h-14,{moving:true,label:false});
-      }else if(s.openingSide==='right-wide'){
-        drawPane(x+5,y+7,paneW-10,h-14,{moving:true,label:false});
-        drawPane(x+9,y+11,paneW-18,h-22,{moving:true,label:false});
-      }else if(s.openingSide==='left-wide'){
-        drawPane(x+(s.sections-1)*paneW+5,y+7,paneW-10,h-14,{moving:true,label:false});
-        drawPane(x+(s.sections-1)*paneW+9,y+11,paneW-18,h-22,{moving:true,label:false});
-      }else if(s.openingSide==='center'){
-        drawPane(x+5,y+7,paneW-10,h-14,{moving:true,label:false});
-        drawPane(x+(s.sections-1)*paneW+5,y+7,paneW-10,h-14,{moving:true,label:false});
-      }
+      ctx.fillText(openProgress>.5?'ОТКРЫТО':'ЗАКРЫТО',g.right,g.top-43);
     };
 
     const drawFacade=()=>{
-      const w=canvas.clientWidth,h=canvas.clientHeight;
       const s=schemes[current];
+      const g0=geometry();
+      const {w,h,mobile}=g0;
 
       const sky=ctx.createLinearGradient(0,0,0,h);
-      sky.addColorStop(0,'#d9ddda');
-      sky.addColorStop(.48,'#efeee8');
-      sky.addColorStop(.49,'#c8c0ad');
-      sky.addColorStop(1,'#b5aa94');
-      ctx.fillStyle=sky;
-      ctx.fillRect(0,0,w,h);
+      sky.addColorStop(0,'#cfd5d2');
+      sky.addColorStop(.52,'#ecebe5');
+      sky.addColorStop(.53,'#c9c0ae');
+      sky.addColorStop(1,'#b3a58f');
+      ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
 
-      const mobile=w<640;
-      const wallX=w*.05,wallY=h*.1,wallW=w*.9,wallH=h*.72;
-      ctx.fillStyle='#e4e1d8';
-      ctx.fillRect(wallX,wallY,wallW,wallH);
+      const wallX=w*.04,wallY=h*.09,wallW=w*.92,wallH=h*.72;
+      ctx.fillStyle='#e1ded4';ctx.fillRect(wallX,wallY,wallW,wallH);
+      ctx.fillStyle='#c8bca7';ctx.fillRect(0,h*.81,w,h*.19);
 
-      ctx.fillStyle='#cbc3b3';
-      ctx.fillRect(0,h*.82,w,h*.18);
-      ctx.strokeStyle='rgba(80,74,65,.22)';
-      ctx.lineWidth=1;
-      for(let i=0;i<7;i++){
-        const yy=h*.82+i*h*.025;
-        ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke();
+      line(0,h*.81,w,h*.81,'rgba(65,60,53,.28)',1);
+      for(let i=1;i<7;i++) line(0,h*.81+i*h*.027,w,h*.81+i*h*.027,'rgba(65,60,53,.13)',1);
+
+      const portalW=wallW*(mobile?.88:.72);
+      const portalH=wallH*.62;
+      const left=wallX+(wallW-portalW)/2;
+      const top=wallY+wallH*.23;
+      const g={w,h,mobile,left,right:left+portalW,top,bottom:top+portalH,frameW:portalW,frameH:portalH};
+
+      drawPortal(s,g,{facade:true});
+
+      ctx.fillStyle='#57534c';
+      ctx.font=(mobile?'8px':'9px')+' Arial';
+      ctx.textAlign='left';
+      ctx.fillText(s.width+' × '+s.height+' мм',left,top-14);
+      ctx.textAlign='right';
+      ctx.fillText(openProgress>.5?'ОТКРЫТО · '+s.openPct.toUpperCase():'ЗАКРЫТО',left+portalW,top-14);
+
+      if(openProgress>.55){
+        const op=openingRect(s,g);
+        ctx.fillStyle='rgba(255,255,255,.82)';
+        ctx.fillRect(op.x+op.w*.08,top+portalH*.42,op.w*.84,32);
+        ctx.fillStyle='#282720';
+        ctx.font=(mobile?'8px':'10px')+' Arial';
+        ctx.textAlign='center';
+        ctx.fillText('ПРОХОД '+s.passage.replace('*',''),op.x+op.w/2,top+portalH*.42+20);
       }
 
-      const gap=mobile?w*.035:w*.05;
-      const portalY=wallY+wallH*.24;
-      const portalH=wallH*.56;
-
-      if(mobile){
-        const cardW=(wallW-gap)/2;
-        drawFacadePortal(wallX,portalY,cardW,portalH,s,false);
-        drawFacadePortal(wallX+cardW+gap,portalY,cardW,portalH,s,true);
-        ctx.fillStyle='#5f5b53';
-        ctx.font='8px Arial';
-        ctx.textAlign='left';
-        ctx.fillText('ЗАКРЫТО',wallX,portalY-10);
-        ctx.fillText('ОТКРЫТО',wallX+cardW+gap,portalY-10);
-      }else{
-        const cardW=(wallW-gap)/2;
-        drawFacadePortal(wallX,portalY,cardW,portalH,s,false);
-        drawFacadePortal(wallX+cardW+gap,portalY,cardW,portalH,s,true);
-        ctx.fillStyle='#5f5b53';
-        ctx.font='9px Arial';
-        ctx.textAlign='left';
-        ctx.fillText('ЗАКРЫТО',wallX,portalY-13);
-        ctx.fillText('ОТКРЫТО · '+s.openPct.toUpperCase(),wallX+cardW+gap,portalY-13);
-      }
-
-      ctx.fillStyle='rgba(17,17,15,.5)';
+      ctx.fillStyle='rgba(17,17,15,.46)';
       ctx.font=(mobile?'8px':'9px')+' Arial';
       ctx.textAlign='right';
       ctx.fillText('УСЛОВНЫЙ ВИД В ФАСАДЕ',wallX+wallW,wallY+16);
@@ -438,8 +457,7 @@
       const w=canvas.clientWidth,h=canvas.clientHeight;
       if(!w||!h)return;
       ctx.clearRect(0,0,w,h);
-      if(view==='facade')drawFacade();
-      else drawDiagram();
+      view==='facade'?drawFacade():drawDiagram();
     };
 
     const resize=()=>{
@@ -454,53 +472,62 @@
 
     const updateMeta=s=>{
       fields.name.textContent=s.name;
-      fields.size.textContent=s.size;
+      fields.status.textContent=openTarget>.5?'Открыто':'Закрыто';
+      fields.size.textContent=s.width+' × '+s.height+' мм';
+      fields.passage.textContent=s.passage;
+      fields.openPct.textContent=s.openPct;
+      fields.width.textContent=s.width+' мм';
+      fields.height.textContent=s.height+' мм';
       fields.sections.textContent=s.sections;
       fields.active.textContent=s.active;
       fields.opening.textContent=s.opening;
-      fields.openPct.textContent=s.openPct;
-      fields.passage.textContent=s.passage;
-      fields.fit.textContent=s.fit;
       fields.use.textContent=s.use;
+      fields.summary.textContent=s.summary;
+
+      sizeButtons.forEach(b=>b.classList.toggle('is-active',Number(b.dataset.sizeChip)===s.width));
     };
 
-    const animateIn=()=>{
-      cancelAnimationFrame(raf);
-      if(reduce){transition=1;draw();return}
-      transition=0;
-      const start=performance.now();
-      const step=now=>{
-        transition=clamp((now-start)/480);
-        draw();
-        if(transition<1)raf=requestAnimationFrame(step);
-      };
-      raf=requestAnimationFrame(step);
+    const setState=state=>{
+      openTarget=state==='open'?1:0;
+      stateButtons.forEach(b=>{
+        const on=b.dataset.schemeState===state;
+        b.classList.toggle('is-active',on);
+        b.setAttribute('aria-pressed',String(on));
+      });
+      fields.status.textContent=state==='open'?'Открыто':'Закрыто';
+      animateOpen();
     };
 
-    schemeButtons.forEach(btn=>btn.addEventListener('click',()=>{
-      const key=btn.dataset.scheme;
-      if(!schemes[key]||key===current)return;
+    const setScheme=key=>{
+      if(!schemes[key])return;
       current=key;
       schemeButtons.forEach(b=>{
-        const on=b===btn;
+        const on=b.dataset.scheme===key;
         b.classList.toggle('is-active',on);
         b.setAttribute('aria-selected',String(on));
       });
       updateMeta(schemes[current]);
-      animateIn();
+      draw();
+    };
+
+    schemeButtons.forEach(btn=>btn.addEventListener('click',()=>setScheme(btn.dataset.scheme)));
+
+    sizeButtons.forEach(btn=>btn.addEventListener('click',()=>{
+      const target=btn.dataset.targetScheme;
+      if(target)setScheme(target);
     }));
 
     viewButtons.forEach(btn=>btn.addEventListener('click',()=>{
-      const next=btn.dataset.schemeView;
-      if(!next||next===view)return;
-      view=next;
+      view=btn.dataset.schemeView||'diagram';
       viewButtons.forEach(b=>{
         const on=b===btn;
         b.classList.toggle('is-active',on);
         b.setAttribute('aria-pressed',String(on));
       });
-      animateIn();
+      draw();
     }));
+
+    stateButtons.forEach(btn=>btn.addEventListener('click',()=>setState(btn.dataset.schemeState)));
 
     updateMeta(schemes[current]);
     if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);
