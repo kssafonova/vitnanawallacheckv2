@@ -1,10 +1,12 @@
-# Portal Systems — static prototype
+# Portal Systems — Russian market mobile-first prototype
 
-Anonymous GitHub Pages build of the portal-systems UI prototype.
+Anonymous static prototype for GitHub Pages.
 
-- No production brand, domain, phone, email or legal details.
-- SEO fields are intentionally blank and `noindex,nofollow` is kept in the HTML.
-- Merchant/Yandex data fields are prepared but disabled.
-- Product variants use color + opening direction as SKU dimensions.
-
-Prepared data placeholders: `data/site-config.json`.
+- 5 base product models and 20 concrete SKU routes
+- human-readable Russian transliterated URLs
+- mobile product catalog grid 2×2
+- sticky horizontal anchor navigation on product pages
+- swipe gallery and compact horizontal content rails instead of long mobile pages
+- SKU-specific opening canvas with scrub control
+- SEO / OpenGraph / canonical / merchant fields prepared but intentionally empty
+- robots: noindex/disallow during prototype stage
