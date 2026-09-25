@@ -91,3 +91,16 @@
   .product-card__price strong{font-size:23px}
 }
 @media(min-width:1100px){:root{--ui-pad:48px}}
+
+/* Shared teaser state */
+.product-card--soon .product-card__media img{filter:grayscale(.15) brightness(.66)}
+.product-card__soon{
+  position:absolute;inset:0;z-index:4;display:grid;place-items:center;padding:18px;
+  background:rgba(5,5,5,.28);color:#fff;text-align:center;pointer-events:none
+}
+.product-card__soon span{
+  display:inline-block;padding:10px 12px;border:1px solid rgba(255,255,255,.75);
+  background:rgba(5,5,5,.48);backdrop-filter:blur(8px);
+  font:600 10px/1 'Manrope',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase
+}
+.product-card--soon .product-card__link{opacity:.7}
