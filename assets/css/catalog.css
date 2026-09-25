@@ -1,0 +1,14 @@
+.catalog-page{margin:0;background:#f5f4ef;color:#111;font-family:Arial,Helvetica,sans-serif}
+.catalog-hero{background:#050505;color:#fff;padding:42px 0 32px}
+.catalog-hero h1{margin:0;font-size:clamp(48px,13vw,88px);line-height:.88;font-weight:300;letter-spacing:-.07em}
+.catalog-hero p{margin:20px 0 0;max-width:720px;color:#c7c7c1;font-size:15px;line-height:1.5}
+.catalog-wrap{width:min(100%,1440px);margin:auto;padding-inline:20px}
+.catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:#c9c6bc;border:1px solid #c9c6bc;margin:20px 0 72px}
+.catalog-card{display:block;background:#fff;color:#111;min-width:0;text-decoration:none}
+.catalog-card__media{position:relative;aspect-ratio:.88/1;overflow:hidden;background:#ddd}.catalog-card__media img{width:100%;height:100%;object-fit:cover}
+.catalog-card__tag{position:absolute;top:9px;left:9px;color:#fff;font-size:8px;letter-spacing:.13em;text-transform:uppercase;text-shadow:0 1px 5px rgba(0,0,0,.3)}
+.catalog-card__scheme{position:absolute;right:8px;bottom:8px;width:72px;padding:6px;background:rgba(247,247,243,.93)}.catalog-card__scheme svg{width:100%;height:auto}.catalog-card__scheme *{fill:none;stroke:#111;stroke-width:1;vector-effect:non-scaling-stroke}
+.catalog-card__body{padding:11px 9px 12px}.catalog-card__system{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#77746d}
+.catalog-card h2{margin:7px 0 0;min-height:2.15em;font-size:17px;line-height:1.02;font-weight:300;letter-spacing:-.04em}.catalog-card__meta{margin-top:10px;padding-top:9px;border-top:1px solid #d2d0c7;color:#67645d;font-size:9px;line-height:1.35}
+.catalog-card__foot{display:flex;justify-content:space-between;align-items:end;gap:8px;margin-top:12px}.catalog-card__price{font-size:17px;font-weight:300;letter-spacing:-.04em}.catalog-card__arrow{width:30px;height:30px;border:1px solid #111;border-radius:50%;display:grid;place-items:center}
+@media(min-width:768px){.catalog-wrap{padding-inline:36px}.catalog-hero{padding:64px 0 44px}.catalog-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:28px}.catalog-card__body{padding:16px 14px 15px}.catalog-card h2{font-size:23px}.catalog-card__price{font-size:22px}}
