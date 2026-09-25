@@ -1,8 +1,6 @@
 (()=>{
  const menuBtn=document.querySelector('.menu-btn'), menu=document.getElementById('mobileMenu');
- const setMenu=open=>{menuBtn.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-hidden',String(!open));menu.classList.toggle('is-open',open);document.body.classList.toggle('menu-open',open)};
- menuBtn.addEventListener('click',()=>setMenu(menuBtn.getAttribute('aria-expanded')!=='true'));
- menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+ if(menuBtn&&menu){const setMenu=open=>{menuBtn.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-hidden',String(!open));menu.classList.toggle('is-open',open);document.body.classList.toggle('menu-open',open)};menuBtn.addEventListener('click',()=>setMenu(menuBtn.getAttribute('aria-expanded')!=='true'));menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));}
 
  const systemItems=[...document.querySelectorAll('.system')];
  systemItems.forEach(item=>item.addEventListener('toggle',()=>{if(item.open) systemItems.forEach(other=>{if(other!==item) other.open=false})}));
@@ -24,7 +22,8 @@
   status.textContent='';
   fd.append('source','contact');
   try{
-   const res=await fetch('forms/send.php',{method:'POST',body:fd,headers:{'X-Requested-With':'XMLHttpRequest'}});
+   const endpoint=form.dataset.endpoint||'forms/send.php';
+   const res=await fetch(endpoint,{method:'POST',body:fd,headers:{'X-Requested-With':'XMLHttpRequest'}});
    const data=await res.json();
    if(!res.ok||!data.ok) throw new Error(data.message||'Ошибка отправки');
    status.textContent='Спасибо. Заявка отправлена инженеру.';
