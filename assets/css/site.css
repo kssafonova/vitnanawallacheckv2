@@ -355,3 +355,65 @@
 .process .steps{display:block;grid-template-columns:none}
 .process .step{border-right:0}
 .process .step:last-child{border-bottom:1px solid var(--ui-line)}
+
+
+/* ============================================================
+   SYSTEM PRODUCT STRIPS + SIMPLIFIED LOWER HOMEPAGE
+   ============================================================ */
+.sysx-card-strip{
+  grid-column:1/-1;
+  display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;margin-top:24px;padding-bottom:2px
+}
+.sysx-card-strip::-webkit-scrollbar{display:none}
+.sysx-card-strip .sysx-product-card{
+  flex:0 0 82%;scroll-snap-align:start;color:#111
+}
+.sysx-card-strip .product-card__media{aspect-ratio:1.38/1}
+.sysx-card-strip .product-card__body{padding:13px 12px}
+.sysx-card-strip .product-card__code{font-size:9px}
+.sysx-card-strip .product-card__size{font-size:8px}
+.sysx-card-strip .product-card__desc{font-size:11px;line-height:1.45}
+.sysx-card-strip .product-card__price strong{font-size:17px}
+.sysx-card-strip .product-card__link{font-size:8px}
+.sysx-link--soon{color:#d3c59d;border-color:#d3c59d}
+
+/* FS is visible as a future product, not selectable in calculator */
+.calculator-v18-scope .type-card.is-coming-soon{
+  position:relative;opacity:.52;cursor:not-allowed;filter:saturate(.3)
+}
+.calculator-v18-scope .type-card.is-coming-soon:hover{transform:none}
+.calculator-v18-scope .type-card__soon{
+  display:inline-block;margin-top:9px;padding:5px 7px;border:1px solid currentColor;
+  font-size:8px;font-style:normal;font-weight:600;letter-spacing:.08em;text-transform:uppercase
+}
+
+/* Projects always stay a horizontal architectural scroll */
+.projects{
+  display:flex!important;grid-template-columns:none!important;grid-template-rows:none!important;
+  gap:1px;overflow-x:auto!important;scroll-snap-type:x mandatory;
+  scrollbar-width:none;background:#1b1b1a
+}
+.projects::-webkit-scrollbar{display:none}
+.project{
+  flex:0 0 min(88vw,760px)!important;min-height:72svh!important;scroll-snap-align:start
+}
+.project:first-child{grid-row:auto!important}
+.projects-intro{padding-bottom:30px}
+.projects__cta{padding-top:22px}
+
+/* Lower half is intentionally tighter after content reduction */
+.process{padding-top:96px}
+.calc-section{margin-top:0}
+.contact{margin-top:0}
+
+@media(min-width:768px){
+  .sysx-card-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;gap:1px;background:#363632}
+  .sysx-card-strip .sysx-product-card{min-width:0;border:0}
+  .project{flex-basis:min(64vw,780px)!important;min-height:74svh!important}
+}
+@media(min-width:1100px){
+  .sysx-card-strip{margin-top:34px}
+  .sysx-card-strip .product-card__media{aspect-ratio:1.62/1}
+  .project{flex-basis:min(52vw,820px)!important;min-height:76vh!important}
+}
