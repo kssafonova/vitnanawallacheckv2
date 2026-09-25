@@ -165,50 +165,93 @@
 <section class="hs-schemes" id="schemes">
   <div class="hs-container">
     <div class="hs-section-head hs-section-head--dark">
-      <div><p class="hs-kicker">03 · Схемы</p><h2>Сколько проёма откроется</h2></div>
-      <p>Выберите нашу готовую конфигурацию и сразу посмотрите направление движения, ориентировочную долю открытия и как эта схема выглядит в фасаде.</p>
+      <div>
+        <p class="hs-kicker">03 · Выбор схемы</p>
+        <h2>Какой проход вы получите</h2>
+      </div>
+      <p>Выберите готовую конфигурацию и посмотрите её в работе: сколько секций остаётся закрытыми, куда уходят створки и какая часть проёма освобождается.</p>
     </div>
 
     <div class="hs-scheme-ui" data-scheme-ui>
-      <div class="hs-scheme-toolbar">
+      <div class="hs-scheme-picker">
         <div class="hs-scheme-tabs" role="tablist" aria-label="Доступные конфигурации HS">
-          <button class="is-active" type="button" role="tab" aria-selected="true" data-scheme="hs30-left"><span>HS / 30</span><small>активная слева</small></button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs30-right"><span>HS / 30</span><small>активная справа</small></button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-left"><span>HS / 36</span><small>2 активные влево</small></button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-right"><span>HS / 36</span><small>2 активные вправо</small></button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs48"><span>HS / 48</span><small>от центра</small></button>
+          <button class="is-active" type="button" role="tab" aria-selected="true" data-scheme="hs30-left">
+            <span>HS / 30</span><small>активная слева</small>
+          </button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs30-right">
+            <span>HS / 30</span><small>активная справа</small>
+          </button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-left">
+            <span>HS / 36</span><small>2 активные слева</small>
+          </button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-right">
+            <span>HS / 36</span><small>2 активные справа</small>
+          </button>
+          <button type="button" role="tab" aria-selected="false" data-scheme="hs48">
+            <span>HS / 48</span><small>от центра</small>
+          </button>
         </div>
+      </div>
+
+      <div class="hs-scheme-controls">
         <div class="hs-scheme-mode" role="group" aria-label="Режим просмотра">
           <button class="is-active" type="button" data-scheme-view="diagram" aria-pressed="true">Схема</button>
-          <button type="button" data-scheme-view="facade" aria-pressed="false">На фасаде</button>
+          <button type="button" data-scheme-view="facade" aria-pressed="false">В фасаде</button>
+        </div>
+        <div class="hs-scheme-state" role="group" aria-label="Состояние портала">
+          <button class="is-active" type="button" data-scheme-state="closed" aria-pressed="true">Закрыто</button>
+          <button type="button" data-scheme-state="open" aria-pressed="false">Открыто</button>
         </div>
       </div>
 
       <div class="hs-scheme-stage">
-        <canvas id="hsSchemeCanvas" aria-label="Интерактивная визуализация вариантов открывания HS"></canvas>
-        <div class="hs-scheme-stage__label">
+        <canvas id="hsSchemeCanvas" aria-label="Интерактивная визуализация открывания HS-портала"></canvas>
+        <div class="hs-scheme-stage__top">
           <span data-scheme-name>HS / 30 · активная слева</span>
-          <span data-scheme-size>3000 × 2300 мм</span>
+          <span class="hs-scheme-status" data-scheme-status>Закрыто</span>
+        </div>
+        <div class="hs-scheme-stage__bottom">
+          <span>готовый проём</span>
+          <strong data-scheme-size>3000 × 2300 мм</strong>
         </div>
       </div>
 
-      <div class="hs-scheme-meta">
-        <div><small>Секции</small><strong data-scheme-sections>2</strong></div>
-        <div><small>Подвижные</small><strong data-scheme-active>1</strong></div>
-        <div><small>Направление</small><strong data-scheme-opening>вправо</strong></div>
-        <div><small>Открытая часть</small><strong data-scheme-openpct>до ≈ 50%</strong></div>
-        <div><small>Ориентир прохода</small><strong data-scheme-passage>до ≈ 1500 мм</strong></div>
-        <div><small>Базовый проём</small><strong data-scheme-fit>3000 × 2300 мм</strong></div>
+      <div class="hs-scheme-result">
+        <div class="hs-scheme-result__lead">
+          <small>Открываемая часть</small>
+          <strong data-scheme-passage>≈ 1500 мм*</strong>
+          <span data-scheme-openpct>около 50% проёма</span>
+        </div>
+        <div class="hs-scheme-result__grid">
+          <div><small>Готовая ширина</small><strong data-scheme-width>3000 мм</strong></div>
+          <div><small>Готовая высота</small><strong data-scheme-height>2300 мм</strong></div>
+          <div><small>Секции</small><strong data-scheme-sections>2</strong></div>
+          <div><small>Активные</small><strong data-scheme-active>1</strong></div>
+          <div><small>Движение</small><strong data-scheme-opening>вправо</strong></div>
+          <div><small>Сценарий</small><strong data-scheme-use>Выход на террасу</strong></div>
+        </div>
+      </div>
+
+      <div class="hs-scheme-available">
+        <div>
+          <small>Готовые проёмы</small>
+          <strong>Ширина</strong>
+        </div>
+        <button class="is-active" type="button" data-size-chip="3000" data-target-scheme="hs30-left">3000 мм</button>
+        <button type="button" data-size-chip="3600" data-target-scheme="hs36-left">3600 мм</button>
+        <button type="button" data-size-chip="4800" data-target-scheme="hs48">4800 мм</button>
+        <div class="hs-scheme-available__height"><small>Высота готовых</small><strong>2300 мм</strong></div>
       </div>
 
       <div class="hs-scheme-summary">
         <div>
-          <small>Как будет смотреться</small>
-          <strong data-scheme-use>Классический двухсекционный выход на террасу</strong>
+          <small>Как это выглядит в архитектуре</small>
+          <strong data-scheme-summary>Классический двухсекционный портал: половина фасада остаётся стеклянной, вторая освобождается для прохода.</strong>
         </div>
-        <a href="../../index.html#calculator">Другой размер? Спроектировать HS / PROJECT <span>→</span></a>
+        <a href="../../index.html#calculator">Нужен другой размер? <span>HS / PROJECT →</span></a>
       </div>
-      <p class="hs-note">Открытая часть и ширина прохода показаны как ориентир по геометрии схемы. Фактический чистый проход зависит от ширины профиля, перехлёстов створок и конкретной комплектации — его фиксируем в инженерном расчёте.</p>
+
+      <p class="hs-note">* Показан ориентир по геометрии схемы. Фактический чистый проход немного меньше из-за ширины профиля, нахлёстов и монтажных зазоров и фиксируется в инженерном расчёте. Другие ширины и высоты проектируем индивидуально.</p>
     </div>
   </div>
 </section>
