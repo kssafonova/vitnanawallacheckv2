@@ -1,9 +1,12 @@
 class AnchorNav extends HTMLElement{
   connectedCallback(){
-    const links=[...this.querySelectorAll('a[href^="#"]')];
-    const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    const setActive=(id)=>{links.forEach(a=>a.classList.toggle('is-active',a.getAttribute('href')==='#'+id));const current=links.find(a=>a.classList.contains('is-active'));current?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})};
-    if(sections.length){const io=new IntersectionObserver(entries=>{entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio).slice(0,1).forEach(e=>setActive(e.target.id))},{rootMargin:'-130px 0px -60% 0px',threshold:[.01,.15,.35]});sections.forEach(s=>io.observe(s));}
+    const raw=(this.getAttribute('items')||'').split('|').map(x=>x.trim()).filter(Boolean);
+    const items=raw.map(x=>{const [id,label]=x.split(':');return{id,label:label||id}});
+    this.innerHTML=`<nav class="anchor-nav" aria-label="Навигация по странице"><div class="anchor-nav__track">${items.map((x,i)=>`<a href="#${x.id}" class="${i===0?'is-active':''}">${x.label}</a>`).join('')}</div></nav>`;
+    const links=[...this.querySelectorAll('a')],sections=items.map(x=>document.getElementById(x.id)).filter(Boolean);
+    if(!('IntersectionObserver' in window))return;
+    const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('is-active',a.getAttribute('href')==='#'+e.target.id));this.querySelector('a.is-active')?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}})},{rootMargin:'-110px 0px -65% 0px',threshold:.01});
+    sections.forEach(s=>io.observe(s));
   }
 }
 customElements.define('anchor-nav',AnchorNav);

@@ -1,8 +1,6 @@
 {
   "brand": "",
   "site_url": "",
-  "phone": "",
-  "email": "",
   "seo": {
     "enabled": false,
     "title": "",
@@ -10,9 +8,14 @@
     "canonical": "",
     "og_title": "",
     "og_description": "",
-    "og_image": ""
+    "og_image": "",
+    "json_ld": []
   },
-  "forms": {
-    "endpoint": ""
+  "merchant": {
+    "enabled": false,
+    "feed_url": "",
+    "seller": "",
+    "delivery": "",
+    "pickup": ""
   }
 }

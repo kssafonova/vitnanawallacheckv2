@@ -1,2 +1,0 @@
-import '../components/site-header.js';import '../components/site-footer.js';import '../components/lead-form.js';import '../components/anchor-nav.js';import {mountOpeningCanvas} from '../components/opening-canvas.js';
-const canvas=document.querySelector('[data-opening-canvas]');if(canvas){const data=JSON.parse(canvas.dataset.openingCanvas);mountOpeningCanvas(canvas,data,document.querySelector('[data-opening-range]'))}

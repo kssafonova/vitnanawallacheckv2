@@ -1,6 +1,5 @@
-.form{display:grid;gap:16px}.form__grid{display:grid;gap:16px}.field{display:grid;gap:8px}.field>span{font-size:10px;line-height:1;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted)}
-.field input,.field textarea,.field select{width:100%;height:var(--control-h);padding:0 14px;border:1px solid var(--c-line);border-radius:0;background:transparent;outline:none;font-size:15px}.field textarea{height:104px;padding-block:14px;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--c-ink)}
-.form__consent{display:flex;align-items:flex-start;gap:10px;color:var(--c-muted);font-size:11px;line-height:1.45}.form__consent input{margin-top:2px}.form__status{min-height:18px;margin:0;color:var(--c-muted);font-size:12px}
+.form{display:grid;gap:16px}.form__grid{display:grid;gap:16px}.field{display:grid;gap:8px}.field>span{font-size:10px;line-height:1;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea,.field select{width:100%;height:var(--control-h);padding:0 14px;border:1px solid var(--line);border-radius:0;background:transparent;outline:none;font-size:15px}.field textarea{height:108px;padding-block:14px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--ink)}
+.form__consent{display:flex;align-items:flex-start;gap:10px;color:var(--muted);font-size:11px;line-height:1.45}.form__consent input{margin-top:2px}.form__status{min-height:18px;margin:0;color:var(--muted);font-size:12px}
 .form--dark .field>span,.form--dark .form__consent,.form--dark .form__status{color:#aaa9a3}.form--dark .field input,.form--dark .field textarea{color:#fff;border-color:#4a4a47}.form--dark .field input:focus,.form--dark .field textarea:focus{border-color:#fff}
-@media(min-width:760px){.form__grid--2{grid-template-columns:1fr 1fr}}
+@media(min-width:600px){.form__grid--2{grid-template-columns:1fr 1fr}}

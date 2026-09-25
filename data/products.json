@@ -2,16 +2,15 @@
   "models": [
     {
       "model": "HS2",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3000 × 2300 мм",
-      "size_slug": "3000x2300",
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
       "image": "assets/images/products/hs-2-closed.webp",
-      "image2": "assets/images/projects/house.webp",
       "colors": [
         [
           "Белый",
@@ -24,7 +23,7 @@
           "antratsit"
         ]
       ],
-      "variants": [
+      "schemes": [
         [
           "ACTIVE-L",
           "Активная створка слева",
@@ -39,16 +38,15 @@
     },
     {
       "model": "HS3",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3600 × 2300 мм",
-      "size_slug": "3600x2300",
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
       "image": "assets/images/systems/hs-overview.jpg",
-      "image2": "assets/images/projects/house.webp",
       "colors": [
         [
           "Антрацит",
@@ -61,31 +59,30 @@
           "grafit"
         ]
       ],
-      "variants": [
+      "schemes": [
         [
           "PARK-L",
-          "Парковка створок слева",
-          "parkovka-sleva"
+          "Фиксированная справа",
+          "fiksirovannaya-sprava"
         ],
         [
           "PARK-R",
-          "Парковка створок справа",
-          "parkovka-sprava"
+          "Фиксированная слева",
+          "fiksirovannaya-sleva"
         ]
       ]
     },
     {
       "model": "HS4",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "4800 × 2300 мм",
-      "size_slug": "4800x2300",
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
       "image": "assets/images/projects/terrace.webp",
-      "image2": "assets/images/projects/terrace.webp",
       "colors": [
         [
           "Антрацит",
@@ -98,31 +95,25 @@
           "chernyi"
         ]
       ],
-      "variants": [
+      "schemes": [
         [
-          "MASTER-L",
-          "Основная створка слева",
-          "osnovnaya-stvorka-sleva"
-        ],
-        [
-          "MASTER-R",
-          "Основная створка справа",
-          "osnovnaya-stvorka-sprava"
+          "CENTER",
+          "Открывание от центра",
+          "otkryvanie-ot-centra"
         ]
       ]
     },
     {
       "model": "FS3",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "2700 × 2300 мм",
-      "size_slug": "2700x2300",
       "price": 540000,
       "sections": 3,
-      "subtitle": "3 складные створки",
-      "image": "assets/images/projects/interior.webp",
-      "image2": "assets/images/projects/house.webp",
+      "subtitle": "Схема 330 · 3 складные створки",
+      "image": "assets/images/systems/fs-view.webp",
       "colors": [
         [
           "Антрацит",
@@ -135,7 +126,7 @@
           "chernyi"
         ]
       ],
-      "variants": [
+      "schemes": [
         [
           "STACK-L",
           "Складывание влево",
@@ -150,16 +141,15 @@
     },
     {
       "model": "FS4",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "3600 × 2300 мм",
-      "size_slug": "3600x2300",
       "price": 610000,
       "sections": 4,
-      "subtitle": "3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 складные + 1 проходная",
       "image": "assets/images/systems/fs-view.webp",
-      "image2": "assets/images/projects/terrace.webp",
       "colors": [
         [
           "Антрацит",
@@ -172,7 +162,7 @@
           "chernyi"
         ]
       ],
-      "variants": [
+      "schemes": [
         [
           "STACK-L",
           "Складывание влево",
@@ -188,404 +178,786 @@
   ],
   "variants": [
     {
-      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-L",
+      "model": "HS2",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
+      "size": "3000 × 2300 мм",
+      "price": 375000,
+      "sections": 2,
+      "subtitle": "1 активная + 1 фиксированная",
+      "image": "assets/images/products/hs-2-closed.webp",
+      "colors": [
+        [
+          "Белый",
+          "9016",
+          "belyi"
+        ],
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ]
+      ],
+      "schemes": [
+        [
+          "ACTIVE-L",
+          "Активная створка слева",
+          "aktivnaya-stvorka-sleva"
+        ],
+        [
+          "ACTIVE-R",
+          "Активная створка справа",
+          "aktivnaya-stvorka-sprava"
+        ]
+      ],
+      "color": "Белый",
+      "ral": "9016",
+      "color_slug": "belyi",
+      "scheme_code": "ACTIVE-L",
+      "scheme_label": "Активная створка слева",
+      "scheme_slug": "aktivnaya-stvorka-sleva",
       "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-stvorka-sleva/",
+      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-L"
+    },
+    {
       "model": "HS2",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3000 × 2300 мм",
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
       "image": "assets/images/products/hs-2-closed.webp",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Белый",
+          "9016",
+          "belyi"
+        ],
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ]
+      ],
+      "schemes": [
+        [
+          "ACTIVE-L",
+          "Активная створка слева",
+          "aktivnaya-stvorka-sleva"
+        ],
+        [
+          "ACTIVE-R",
+          "Активная створка справа",
+          "aktivnaya-stvorka-sprava"
+        ]
+      ],
       "color": "Белый",
       "ral": "9016",
       "color_slug": "belyi",
-      "variant_code": "ACTIVE-L",
-      "variant_label": "Активная створка слева",
-      "variant_slug": "aktivnaya-stvorka-sleva"
-    },
-    {
-      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-R",
+      "scheme_code": "ACTIVE-R",
+      "scheme_label": "Активная створка справа",
+      "scheme_slug": "aktivnaya-stvorka-sprava",
       "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-stvorka-sprava/",
+      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-R"
+    },
+    {
       "model": "HS2",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3000 × 2300 мм",
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
       "image": "assets/images/products/hs-2-closed.webp",
-      "image2": "assets/images/projects/house.webp",
-      "color": "Белый",
-      "ral": "9016",
-      "color_slug": "belyi",
-      "variant_code": "ACTIVE-R",
-      "variant_label": "Активная створка справа",
-      "variant_slug": "aktivnaya-stvorka-sprava"
-    },
-    {
-      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-L",
+      "colors": [
+        [
+          "Белый",
+          "9016",
+          "belyi"
+        ],
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ]
+      ],
+      "schemes": [
+        [
+          "ACTIVE-L",
+          "Активная створка слева",
+          "aktivnaya-stvorka-sleva"
+        ],
+        [
+          "ACTIVE-R",
+          "Активная створка справа",
+          "aktivnaya-stvorka-sprava"
+        ]
+      ],
+      "color": "Антрацит",
+      "ral": "7016",
+      "color_slug": "antratsit",
+      "scheme_code": "ACTIVE-L",
+      "scheme_label": "Активная створка слева",
+      "scheme_slug": "aktivnaya-stvorka-sleva",
       "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-stvorka-sleva/",
+      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-L"
+    },
+    {
       "model": "HS2",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3000 × 2300 мм",
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
       "image": "assets/images/products/hs-2-closed.webp",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Белый",
+          "9016",
+          "belyi"
+        ],
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ]
+      ],
+      "schemes": [
+        [
+          "ACTIVE-L",
+          "Активная створка слева",
+          "aktivnaya-stvorka-sleva"
+        ],
+        [
+          "ACTIVE-R",
+          "Активная створка справа",
+          "aktivnaya-stvorka-sprava"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "ACTIVE-L",
-      "variant_label": "Активная створка слева",
-      "variant_slug": "aktivnaya-stvorka-sleva"
-    },
-    {
-      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-R",
+      "scheme_code": "ACTIVE-R",
+      "scheme_label": "Активная створка справа",
+      "scheme_slug": "aktivnaya-stvorka-sprava",
       "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-stvorka-sprava/",
-      "model": "HS2",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3000 × 2300 мм",
-      "price": 375000,
-      "sections": 2,
-      "subtitle": "1 активная + 1 фиксированная",
-      "image": "assets/images/products/hs-2-closed.webp",
-      "image2": "assets/images/projects/house.webp",
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "variant_code": "ACTIVE-R",
-      "variant_label": "Активная створка справа",
-      "variant_slug": "aktivnaya-stvorka-sprava"
+      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-R"
     },
     {
-      "sku": "STD-HS3-S158-3600X2300-7016-PARK-L",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-parkovka-sleva/",
       "model": "HS3",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3600 × 2300 мм",
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
       "image": "assets/images/systems/hs-overview.jpg",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Графит",
+          "7024",
+          "grafit"
+        ]
+      ],
+      "schemes": [
+        [
+          "PARK-L",
+          "Фиксированная справа",
+          "fiksirovannaya-sprava"
+        ],
+        [
+          "PARK-R",
+          "Фиксированная слева",
+          "fiksirovannaya-sleva"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "PARK-L",
-      "variant_label": "Парковка створок слева",
-      "variant_slug": "parkovka-sleva"
+      "scheme_code": "PARK-L",
+      "scheme_label": "Фиксированная справа",
+      "scheme_slug": "fiksirovannaya-sprava",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-fiksirovannaya-sprava/",
+      "sku": "STD-HS3-S158-3600X2300-7016-PARK-L"
     },
     {
-      "sku": "STD-HS3-S158-3600X2300-7016-PARK-R",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-parkovka-sprava/",
       "model": "HS3",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3600 × 2300 мм",
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
       "image": "assets/images/systems/hs-overview.jpg",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Графит",
+          "7024",
+          "grafit"
+        ]
+      ],
+      "schemes": [
+        [
+          "PARK-L",
+          "Фиксированная справа",
+          "fiksirovannaya-sprava"
+        ],
+        [
+          "PARK-R",
+          "Фиксированная слева",
+          "fiksirovannaya-sleva"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "PARK-R",
-      "variant_label": "Парковка створок справа",
-      "variant_slug": "parkovka-sprava"
+      "scheme_code": "PARK-R",
+      "scheme_label": "Фиксированная слева",
+      "scheme_slug": "fiksirovannaya-sleva",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-fiksirovannaya-sleva/",
+      "sku": "STD-HS3-S158-3600X2300-7016-PARK-R"
     },
     {
-      "sku": "STD-HS3-S158-3600X2300-7024-PARK-L",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-parkovka-sleva/",
       "model": "HS3",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3600 × 2300 мм",
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
       "image": "assets/images/systems/hs-overview.jpg",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Графит",
+          "7024",
+          "grafit"
+        ]
+      ],
+      "schemes": [
+        [
+          "PARK-L",
+          "Фиксированная справа",
+          "fiksirovannaya-sprava"
+        ],
+        [
+          "PARK-R",
+          "Фиксированная слева",
+          "fiksirovannaya-sleva"
+        ]
+      ],
       "color": "Графит",
       "ral": "7024",
       "color_slug": "grafit",
-      "variant_code": "PARK-L",
-      "variant_label": "Парковка створок слева",
-      "variant_slug": "parkovka-sleva"
+      "scheme_code": "PARK-L",
+      "scheme_label": "Фиксированная справа",
+      "scheme_slug": "fiksirovannaya-sprava",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-fiksirovannaya-sprava/",
+      "sku": "STD-HS3-S158-3600X2300-7024-PARK-L"
     },
     {
-      "sku": "STD-HS3-S158-3600X2300-7024-PARK-R",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-parkovka-sprava/",
       "model": "HS3",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "3600 × 2300 мм",
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
       "image": "assets/images/systems/hs-overview.jpg",
-      "image2": "assets/images/projects/house.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Графит",
+          "7024",
+          "grafit"
+        ]
+      ],
+      "schemes": [
+        [
+          "PARK-L",
+          "Фиксированная справа",
+          "fiksirovannaya-sprava"
+        ],
+        [
+          "PARK-R",
+          "Фиксированная слева",
+          "fiksirovannaya-sleva"
+        ]
+      ],
       "color": "Графит",
       "ral": "7024",
       "color_slug": "grafit",
-      "variant_code": "PARK-R",
-      "variant_label": "Парковка створок справа",
-      "variant_slug": "parkovka-sprava"
+      "scheme_code": "PARK-R",
+      "scheme_label": "Фиксированная слева",
+      "scheme_slug": "fiksirovannaya-sleva",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-fiksirovannaya-sleva/",
+      "sku": "STD-HS3-S158-3600X2300-7024-PARK-R"
     },
     {
-      "sku": "STD-HS4-S158-4800X2300-7016-MASTER-L",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-osnovnaya-stvorka-sleva/",
       "model": "HS4",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "4800 × 2300 мм",
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
       "image": "assets/images/projects/terrace.webp",
-      "image2": "assets/images/projects/terrace.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "CENTER",
+          "Открывание от центра",
+          "otkryvanie-ot-centra"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "MASTER-L",
-      "variant_label": "Основная створка слева",
-      "variant_slug": "osnovnaya-stvorka-sleva"
+      "scheme_code": "CENTER",
+      "scheme_label": "Открывание от центра",
+      "scheme_slug": "otkryvanie-ot-centra",
+      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/",
+      "sku": "STD-HS4-S158-4800X2300-7016"
     },
     {
-      "sku": "STD-HS4-S158-4800X2300-7016-MASTER-R",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-osnovnaya-stvorka-sprava/",
       "model": "HS4",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
+      "cat": "hs-portaly",
+      "title": "HS-портал",
+      "profile": "ALUMARK S158",
       "hardware": "Roto Patio Lift",
       "size": "4800 × 2300 мм",
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
       "image": "assets/images/projects/terrace.webp",
-      "image2": "assets/images/projects/terrace.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "CENTER",
+          "Открывание от центра",
+          "otkryvanie-ot-centra"
+        ]
+      ],
+      "color": "Чёрный",
+      "ral": "9005",
+      "color_slug": "chernyi",
+      "scheme_code": "CENTER",
+      "scheme_label": "Открывание от центра",
+      "scheme_slug": "otkryvanie-ot-centra",
+      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/",
+      "sku": "STD-HS4-S158-4800X2300-9005"
+    },
+    {
+      "model": "FS3",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
+      "size": "2700 × 2300 мм",
+      "price": 540000,
+      "sections": 3,
+      "subtitle": "Схема 330 · 3 складные створки",
+      "image": "assets/images/systems/fs-view.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "MASTER-R",
-      "variant_label": "Основная створка справа",
-      "variant_slug": "osnovnaya-stvorka-sprava"
-    },
-    {
-      "sku": "STD-HS4-S158-4800X2300-9005-MASTER-L",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-osnovnaya-stvorka-sleva/",
-      "model": "HS4",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "4800 × 2300 мм",
-      "price": 620000,
-      "sections": 4,
-      "subtitle": "2 активные + 2 фиксированные",
-      "image": "assets/images/projects/terrace.webp",
-      "image2": "assets/images/projects/terrace.webp",
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "variant_code": "MASTER-L",
-      "variant_label": "Основная створка слева",
-      "variant_slug": "osnovnaya-stvorka-sleva"
-    },
-    {
-      "sku": "STD-HS4-S158-4800X2300-9005-MASTER-R",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-osnovnaya-stvorka-sprava/",
-      "model": "HS4",
-      "category": "hs-portaly",
-      "system": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "4800 × 2300 мм",
-      "price": 620000,
-      "sections": 4,
-      "subtitle": "2 активные + 2 фиксированные",
-      "image": "assets/images/projects/terrace.webp",
-      "image2": "assets/images/projects/terrace.webp",
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "variant_code": "MASTER-R",
-      "variant_label": "Основная створка справа",
-      "variant_slug": "osnovnaya-stvorka-sprava"
-    },
-    {
-      "sku": "STD-FS3-S70-2700X2300-7016-STACK-L",
+      "scheme_code": "STACK-L",
+      "scheme_label": "Складывание влево",
+      "scheme_slug": "skladyvanie-vlevo",
       "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/",
+      "sku": "STD-FS3-S70-2700X2300-7016-STACK-L"
+    },
+    {
       "model": "FS3",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "2700 × 2300 мм",
       "price": 540000,
       "sections": 3,
-      "subtitle": "3 складные створки",
-      "image": "assets/images/projects/interior.webp",
-      "image2": "assets/images/projects/house.webp",
+      "subtitle": "Схема 330 · 3 складные створки",
+      "image": "assets/images/systems/fs-view.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "STACK-L",
-      "variant_label": "Складывание влево",
-      "variant_slug": "skladyvanie-vlevo"
-    },
-    {
-      "sku": "STD-FS3-S70-2700X2300-7016-STACK-R",
+      "scheme_code": "STACK-R",
+      "scheme_label": "Складывание вправо",
+      "scheme_slug": "skladyvanie-vpravo",
       "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/",
+      "sku": "STD-FS3-S70-2700X2300-7016-STACK-R"
+    },
+    {
       "model": "FS3",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "2700 × 2300 мм",
       "price": 540000,
       "sections": 3,
-      "subtitle": "3 складные створки",
-      "image": "assets/images/projects/interior.webp",
-      "image2": "assets/images/projects/house.webp",
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "variant_code": "STACK-R",
-      "variant_label": "Складывание вправо",
-      "variant_slug": "skladyvanie-vpravo"
-    },
-    {
-      "sku": "STD-FS3-S70-2700X2300-9005-STACK-L",
+      "subtitle": "Схема 330 · 3 складные створки",
+      "image": "assets/images/systems/fs-view.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
+      "color": "Чёрный",
+      "ral": "9005",
+      "color_slug": "chernyi",
+      "scheme_code": "STACK-L",
+      "scheme_label": "Складывание влево",
+      "scheme_slug": "skladyvanie-vlevo",
       "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/",
+      "sku": "STD-FS3-S70-2700X2300-9005-STACK-L"
+    },
+    {
       "model": "FS3",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "2700 × 2300 мм",
       "price": 540000,
       "sections": 3,
-      "subtitle": "3 складные створки",
-      "image": "assets/images/projects/interior.webp",
-      "image2": "assets/images/projects/house.webp",
+      "subtitle": "Схема 330 · 3 складные створки",
+      "image": "assets/images/systems/fs-view.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "variant_code": "STACK-L",
-      "variant_label": "Складывание влево",
-      "variant_slug": "skladyvanie-vlevo"
-    },
-    {
-      "sku": "STD-FS3-S70-2700X2300-9005-STACK-R",
+      "scheme_code": "STACK-R",
+      "scheme_label": "Складывание вправо",
+      "scheme_slug": "skladyvanie-vpravo",
       "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/",
-      "model": "FS3",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "2700 × 2300 мм",
-      "price": 540000,
-      "sections": 3,
-      "subtitle": "3 складные створки",
-      "image": "assets/images/projects/interior.webp",
-      "image2": "assets/images/projects/house.webp",
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "variant_code": "STACK-R",
-      "variant_label": "Складывание вправо",
-      "variant_slug": "skladyvanie-vpravo"
+      "sku": "STD-FS3-S70-2700X2300-9005-STACK-R"
     },
     {
-      "sku": "STD-FS4-S70-3600X2300-7016-STACK-L",
+      "model": "FS4",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
+      "size": "3600 × 2300 мм",
+      "price": 610000,
+      "sections": 4,
+      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "image": "assets/images/systems/fs-view.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
+      "color": "Антрацит",
+      "ral": "7016",
+      "color_slug": "antratsit",
+      "scheme_code": "STACK-L",
+      "scheme_label": "Складывание влево",
+      "scheme_slug": "skladyvanie-vlevo",
       "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-skladyvanie-vlevo/",
+      "sku": "STD-FS4-S70-3600X2300-7016-STACK-L"
+    },
+    {
       "model": "FS4",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 складные + 1 проходная",
       "image": "assets/images/systems/fs-view.webp",
-      "image2": "assets/images/projects/terrace.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "variant_code": "STACK-L",
-      "variant_label": "Складывание влево",
-      "variant_slug": "skladyvanie-vlevo"
-    },
-    {
-      "sku": "STD-FS4-S70-3600X2300-7016-STACK-R",
+      "scheme_code": "STACK-R",
+      "scheme_label": "Складывание вправо",
+      "scheme_slug": "skladyvanie-vpravo",
       "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-skladyvanie-vpravo/",
+      "sku": "STD-FS4-S70-3600X2300-7016-STACK-R"
+    },
+    {
       "model": "FS4",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 складные + 1 проходная",
       "image": "assets/images/systems/fs-view.webp",
-      "image2": "assets/images/projects/terrace.webp",
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "variant_code": "STACK-R",
-      "variant_label": "Складывание вправо",
-      "variant_slug": "skladyvanie-vpravo"
-    },
-    {
-      "sku": "STD-FS4-S70-3600X2300-9005-STACK-L",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
+      "color": "Чёрный",
+      "ral": "9005",
+      "color_slug": "chernyi",
+      "scheme_code": "STACK-L",
+      "scheme_label": "Складывание влево",
+      "scheme_slug": "skladyvanie-vlevo",
       "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-skladyvanie-vlevo/",
-      "model": "FS4",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
-      "size": "3600 × 2300 мм",
-      "price": 610000,
-      "sections": 4,
-      "subtitle": "3 складные + 1 проходная",
-      "image": "assets/images/systems/fs-view.webp",
-      "image2": "assets/images/projects/terrace.webp",
-      "color": "Чёрный",
-      "ral": "9005",
-      "color_slug": "chernyi",
-      "variant_code": "STACK-L",
-      "variant_label": "Складывание влево",
-      "variant_slug": "skladyvanie-vlevo"
+      "sku": "STD-FS4-S70-3600X2300-9005-STACK-L"
     },
     {
-      "sku": "STD-FS4-S70-3600X2300-9005-STACK-R",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-skladyvanie-vpravo/",
       "model": "FS4",
-      "category": "fs-portaly",
-      "system": "ALUMARK S70",
+      "cat": "fs-portaly",
+      "title": "Складной портал",
+      "profile": "ALUMARK S70",
       "hardware": "Roto Patio Fold",
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 складные + 1 проходная",
       "image": "assets/images/systems/fs-view.webp",
-      "image2": "assets/images/projects/terrace.webp",
+      "colors": [
+        [
+          "Антрацит",
+          "7016",
+          "antratsit"
+        ],
+        [
+          "Чёрный",
+          "9005",
+          "chernyi"
+        ]
+      ],
+      "schemes": [
+        [
+          "STACK-L",
+          "Складывание влево",
+          "skladyvanie-vlevo"
+        ],
+        [
+          "STACK-R",
+          "Складывание вправо",
+          "skladyvanie-vpravo"
+        ]
+      ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "variant_code": "STACK-R",
-      "variant_label": "Складывание вправо",
-      "variant_slug": "skladyvanie-vpravo"
+      "scheme_code": "STACK-R",
+      "scheme_label": "Складывание вправо",
+      "scheme_slug": "skladyvanie-vpravo",
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-skladyvanie-vpravo/",
+      "sku": "STD-FS4-S70-3600X2300-9005-STACK-R"
     }
   ]
 }
