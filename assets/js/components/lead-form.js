@@ -1,4 +1,0 @@
-class LeadForm extends HTMLElement {
- connectedCallback(){const compact=this.hasAttribute('inline');this.innerHTML=`<form class="lead-form${compact?' lead-form--inline':''}" action="${this.getAttribute('action')||'#'}" method="post"><div class="form-field"><label>Имя</label><input name="name" autocomplete="name" required></div><div class="form-field"><label>Телефон</label><input name="phone" inputmode="tel" autocomplete="tel" required></div><button class="button button--dark" type="submit">${this.getAttribute('button')||'Получить расчёт'} <span>→</span></button><p class="form-consent">Нажимая кнопку, вы соглашаетесь на обработку данных.</p><div class="form-status" aria-live="polite"></div></form>`;const f=this.querySelector('form'),status=this.querySelector('.form-status');f.addEventListener('submit',e=>{if(f.action.endsWith('#')){e.preventDefault();status.textContent='Форма подготовлена к подключению обработчика.'}})}
-}
-customElements.define('lead-form',LeadForm);
