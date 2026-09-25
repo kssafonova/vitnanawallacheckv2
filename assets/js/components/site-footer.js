@@ -6,7 +6,7 @@
       const base=normBase(this.dataset.base),root=this.attachShadow({mode:'open'});
       root.innerHTML=\`
       <style>
-      :host{display:block;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}a{color:inherit;text-decoration:none}
+      :host{display:block;font-family:'Manrope',Arial,sans-serif}*{box-sizing:border-box}a{color:inherit;text-decoration:none}
       .footer{background:#050505;color:#fff;padding:58px 20px 22px;border-top:1px solid #272727}.in{width:min(100%,1440px);margin:auto}
       .brand{font-size:clamp(38px,12vw,110px);line-height:.82;font-weight:300;letter-spacing:-.065em;padding-bottom:32px;border-bottom:1px solid #333}
       .grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 18px;padding:32px 0 40px}
