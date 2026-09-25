@@ -1,0 +1,1 @@
+<section class="projects-intro" id="projects"><div class="wrap"><h2><span>Highlighted</span>Projects</h2><p>Проекты, где светопрозрачные конструкции становятся частью архитектуры: открывают вид, увеличивают естественный свет и связывают интерьер с террасой и участком.</p></div></section>

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+# Prototype: indexing intentionally disabled.

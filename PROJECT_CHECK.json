@@ -1,0 +1,19 @@
+{
+  "project": "portal-systems-prototype",
+  "anonymous": true,
+  "seo_enabled": false,
+  "merchant_enabled": false,
+  "catalog_models": [
+    "HS2",
+    "HS3",
+    "HS4",
+    "FS3",
+    "FS4"
+  ],
+  "variants": [
+    "color",
+    "direction"
+  ],
+  "availability": "in_stock",
+  "lead_time_days": 14
+}
