@@ -189,8 +189,10 @@
       ],
       "render": {
         "closed": "assets/images/products/hs_4_closed.webp",
+        "open": "assets/images/products/hs_4_opened.webp",
         "scheme": "A7",
-        "_note": "Открытого рендера пока нет."
+        "align": true,
+        "_note": "Открытый кадр выравнивается по раме закрытого. На закрытом рендере ручки серебристые, на открытом — чёрные."
       }
     },
     {

@@ -131,7 +131,7 @@
       "price": 620000,
       "available": true,
       "image": "assets/images/products/hs4/antratsit-otkryvanie-ot-centra.webp",
-      "image_open": null,
+      "image_open": "assets/images/products/hs4/antratsit-otkryvanie-ot-centra-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/"
     },
     {
@@ -150,7 +150,7 @@
       "price": 620000,
       "available": true,
       "image": "assets/images/products/hs4/chernyi-otkryvanie-ot-centra.webp",
-      "image_open": null,
+      "image_open": "assets/images/products/hs4/chernyi-otkryvanie-ot-centra-open.webp",
       "url": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/"
     },
     {
