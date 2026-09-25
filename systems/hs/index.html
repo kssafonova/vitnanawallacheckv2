@@ -11,6 +11,7 @@
 <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/site.css">
 <link rel="stylesheet" href="../../assets/css/hs-system.css">
+<link rel="stylesheet" href="../../assets/css/hs-blocks.css">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="HS-порталы — большие проёмы, лёгкое открывание">
@@ -79,237 +80,252 @@
   </div>
 </section>
 
-<section class="hs-specification" id="specification">
+<section class="hs-specification hsx-spec" id="specification">
   <div class="wrap hs-container">
-    <div class="hs-section-head hs-section-head--anatomy">
-      <div>
-        <p class="eyebrow hs-kicker">02 · Характеристики</p>
-        <h2>HS-портал: характеристики и устройство</h2>
+    <header class="hsx-spec__head">
+      <div><p class="hsx-eyebrow">02 · Характеристики</p><h2 class="hsx-spec__title">HS-портал: характеристики и&nbsp;устройство</h2></div>
+      <p class="hsx-spec__intro">Основные размеры профиля, варианты стеклопакетов, герметичность, порог и работа подъёмно-раздвижного механизма — без лишней терминологии.</p>
+    </header>
+
+    <div class="hsx-stats" aria-label="Ключевые характеристики">
+      <div class="hsx-stat"><span class="hsx-eyebrow">Рама</span><strong>158 / 246</strong><span>мм · 2 / 3 направляющих</span></div>
+      <div class="hsx-stat"><span class="hsx-eyebrow">Створка</span><strong>70</strong><span>мм · профиль створки</span></div>
+      <div class="hsx-stat"><span class="hsx-eyebrow">Заполнение</span><strong>10–50</strong><span>мм · допустимый диапазон системы</span></div>
+      <div class="hsx-stat"><span class="hsx-eyebrow">Створка</span><strong>до 400</strong><span>кг · диапазон фурнитуры*</span></div>
+    </div>
+
+    <div class="hsx-chapters" role="tablist" aria-label="Характеристики HS-портала">
+      <button class="hsx-chapter is-active" type="button" role="tab" data-spec-tab="tech" aria-selected="true"><span class="hsx-chapter__n">01</span><span class="hsx-chapter__name">Профиль</span><span class="hsx-chapter__sub">рама и створка</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="glass" aria-selected="false"><span class="hsx-chapter__n">02</span><span class="hsx-chapter__name">Стеклопакеты</span><span class="hsx-chapter__sub">44 мм и варианты</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="sealing" aria-selected="false"><span class="hsx-chapter__n">03</span><span class="hsx-chapter__name">Герметичность и порог</span><span class="hsx-chapter__sub">воздух · вода · монтаж</span></button>
+      <button class="hsx-chapter" type="button" role="tab" data-spec-tab="mechanism" aria-selected="false"><span class="hsx-chapter__n">04</span><span class="hsx-chapter__name">Как работает</span><span class="hsx-chapter__sub">подъём и сдвиг</span></button>
+    </div>
+
+    <!-- 01 Профиль -->
+    <section class="hs-spec-panel hsx-panel is-active" data-spec-panel="tech">
+      <div class="hsx-frames">
+        <article class="hsx-frame">
+          <span class="hsx-eyebrow">Двухполозная рама</span>
+          <div class="hsx-frame__big">158<small>мм</small></div>
+          <h3>2 направляющие</h3>
+          <p>Базовый вариант для большинства схем HS: одна линия движения и одна соседняя секция.</p>
+          <div class="hsx-frame__art"><svg aria-hidden="true" focusable="false" viewBox="0 0 620 205" role="img">
+              <defs><linearGradient id="glass1" x1="0" x2="1"><stop offset="0" stop-color="#eef1ef"/><stop offset="1" stop-color="#fbfbf7"/></linearGradient></defs>
+              <line x1="20" y1="181" x2="600" y2="181" stroke="#8e8c86" stroke-width="1"/>
+              <g stroke="#696762" fill="none" stroke-width="2">
+                <rect x="95" y="60" width="180" height="115" fill="url(#glass1)"/>
+                <rect x="325" y="39" width="190" height="136" fill="url(#glass1)"/>
+                <path d="M89 174h436M98 174v-28h14v28M267 174v-31h12v31M318 174v-34h13v34M511 174v-34h13v34"/>
+                <circle cx="205" cy="164" r="10"/><circle cx="233" cy="164" r="10"/><circle cx="414" cy="164" r="10"/><circle cx="442" cy="164" r="10"/>
+              </g>
+              <g stroke="#b9b7b0" stroke-width="1"><line x1="160" y1="105" x2="180" y2="84"/><line x1="390" y1="102" x2="410" y2="80"/></g>
+            </svg></div>
+        </article>
+        <article class="hsx-frame">
+          <span class="hsx-eyebrow">Трёхполозная рама</span>
+          <div class="hsx-frame__big">246<small>мм</small></div>
+          <h3>3 направляющие</h3>
+          <p>Более глубокая рама для многопольных схем, когда створки должны работать на трёх уровнях.</p>
+          <div class="hsx-frame__art"><svg aria-hidden="true" focusable="false" viewBox="0 0 620 205" role="img">
+              <defs><linearGradient id="glass2" x1="0" x2="1"><stop offset="0" stop-color="#eef1ef"/><stop offset="1" stop-color="#fbfbf7"/></linearGradient></defs>
+              <line x1="10" y1="181" x2="608" y2="181" stroke="#8e8c86" stroke-width="1"/>
+              <g stroke="#696762" fill="none" stroke-width="2">
+                <rect x="70" y="78" width="145" height="97" fill="url(#glass2)"/>
+                <rect x="236" y="55" width="145" height="120" fill="url(#glass2)"/>
+                <rect x="402" y="29" width="145" height="146" fill="url(#glass2)"/>
+                <path d="M65 174h490M76 174v-27h13v27M208 174v-27h13v27M232 174v-31h13v31M374 174v-31h13v31M398 174v-34h13v34M540 174v-34h13v34"/>
+                <circle cx="128" cy="164" r="9"/><circle cx="154" cy="164" r="9"/><circle cx="294" cy="164" r="9"/><circle cx="320" cy="164" r="9"/><circle cx="463" cy="164" r="9"/><circle cx="489" cy="164" r="9"/>
+              </g>
+            </svg></div>
+        </article>
       </div>
-      <p>Основные размеры профиля, варианты стеклопакетов, герметичность, порог и работа подъёмно-раздвижного механизма — без лишней терминологии.</p>
-    </div>
+      <div class="hsx-facts">
+        <div class="hsx-fact-cell"><span class="hsx-eyebrow">Створка</span><strong>70 мм</strong><span>Глубина профиля створки.</span></div>
+        <div class="hsx-fact-cell"><span class="hsx-eyebrow">Стеклопакет / заполнение</span><strong>10–50 мм</strong><span>Допустимый диапазон системы.</span></div>
+        <div class="hsx-fact-cell"><span class="hsx-eyebrow">Материал</span><strong>Алюминий с терморазрывом</strong><span>Для крупных тёплых светопрозрачных конструкций.</span></div>
+        <div class="hsx-fact-cell"><span class="hsx-eyebrow">Глухая часть</span><strong>Можно в общей раме</strong><span>Без отдельной оконной системы.</span></div>
+        <div class="hsx-fact-cell is-dark"><span class="hsx-eyebrow">Воздухопроницаемость</span><strong>класс 4*</strong></div>
+        <div class="hsx-fact-cell is-dark"><span class="hsx-eyebrow">Звукоизоляция</span><strong>до Rw 40 дБ*</strong></div>
+        <div class="hsx-fact-cell is-dark"><span class="hsx-eyebrow">Размер створки</span><strong>до 3000 × 3100 мм*</strong></div>
+        <div class="hsx-fact-cell is-dark"><span class="hsx-eyebrow">Масса створки</span><strong>до 400 кг*</strong></div>
+      </div>
+      <p class="hsx-footnote">* Технические ориентиры профильной системы и применяемой Lift&amp;Slide-фурнитуры. Для конкретного HS-портала параметры подтверждаем после расчёта размера, стеклопакета и монтажного узла.</p>
+    </section>
 
-    <div class="hs-dna" aria-label="Ключевые технические ориентиры">
-      <div><small>Рама</small><strong>158 / 246</strong><span>мм · 2 / 3 направляющие</span></div>
-      <div><small>Створка</small><strong>70</strong><span>мм · профиль створки</span></div>
-      <div><small>Заполнение</small><strong>10–50</strong><span>мм · допустимый диапазон системы</span></div>
-      <div><small>Створка</small><strong>до 400</strong><span>кг · диапазон фурнитуры*</span></div>
-    </div>
+    <!-- 02 Стеклопакеты -->
+    <section class="hs-spec-panel hsx-panel" data-spec-panel="glass">
+      <div class="hsx-panel__head">
+        <div><p class="hsx-eyebrow">Стеклопакеты для HS-портала</p><h3 class="hsx-panel__title">Стеклопакет 44&nbsp;мм: как&nbsp;устроен</h3></div>
+        <p class="hsx-panel__lead">«44 мм» — это общая толщина пакета, а не толщина одного стекла. Внутри — три стекла и две герметичные камеры, разделённые дистанционными рамками.</p>
+      </div>
+      <div class="hsx-glass">
+        <div class="hsx-glass__art"><svg aria-hidden="true" focusable="false" viewBox="0 0 830 300">
+            <defs>
+              <linearGradient id="gA" x1="0" x2="1"><stop stop-color="#8fb4b9" stop-opacity=".65"/><stop offset=".2" stop-color="#eff5f3" stop-opacity=".55"/><stop offset="1" stop-color="#f9fbf9" stop-opacity=".16"/></linearGradient>
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+            </defs>
+            <ellipse cx="460" cy="238" rx="300" ry="34" fill="#b7b5ad" opacity=".22" filter="url(#shadow)"/>
+            <g transform="translate(70,22)">
+              <g transform="translate(0,10)">
+                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
+                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
+                
+              </g>
+              <g transform="translate(280,0)">
+                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
+                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
+                
+              </g>
+              <g transform="translate(560,-10)">
+                <polygon points="0,40 95,10 95,210 0,230" fill="url(#gA)" stroke="#58757a" stroke-width="2"/>
+                <rect x="2" y="215" width="94" height="15" fill="#85847f" opacity=".8"/>
+                
+              </g>
+              <g font-size="10" fill="#3b3b38"></g>
+              <g stroke="#777" stroke-width="1" fill="none"><line x1="118" y1="120" x2="258" y2="120"/><line x1="138" y1="115" x2="118" y2="120"/><line x1="238" y1="115" x2="258" y2="120"/><line x1="398" y1="110" x2="538" y2="110"/><line x1="418" y1="105" x2="398" y2="110"/><line x1="518" y1="105" x2="538" y2="110"/></g>
+              <g font-size="9" fill="#5f5d58"></g>
+              <line x1="0" y1="248" x2="655" y2="248" stroke="#666"/><line x1="0" y1="243" x2="0" y2="253" stroke="#666"/><line x1="655" y1="243" x2="655" y2="253" stroke="#666"/>
+              
+            </g>
+          </svg></div>
+        <ol class="hsx-glass__legend">
+          <li><b>01</b> наружное стекло</li><li><i>камера 1</i></li><li><b>02</b> среднее стекло</li><li><i>камера 2</i></li><li><b>03</b> внутреннее стекло</li><li class="is-total">Всего: 44 мм</li>
+        </ol>
+      </div>
+      <div class="hsx-glass-options">
+        <article class="hsx-glass-option">
+          <span class="hsx-eyebrow">01</span><h4>Стандарт 44</h4><p>Базовый двухкамерный пакет для готовых конфигураций.</p>
+          <dl class="hsx-mini"><div><dt>Количество стёкол</dt><dd>3</dd></div><div><dt>Герметичные камеры</dt><dd>2</dd></div><div><dt>Дистанционные рамки</dt><dd>по периметру камер</dd></div><div><dt>Общая толщина</dt><dd>44 мм</dd></div></dl>
+        </article>
+        <article class="hsx-glass-option">
+          <span class="hsx-eyebrow">02</span><h4>Безопасность</h4><p>Та же двухкамерная логика, но одно или несколько стёкол усиливаются под зону риска.</p>
+          <dl class="hsx-mini"><div><dt>Закалённое стекло</dt><dd>повышенная стойкость к удару</dd></div><div><dt>Триплекс</dt><dd>удерживает осколки после разрушения</dd></div><div><dt>Комбинации</dt><dd>с климатическими покрытиями</dd></div></dl>
+        </article>
+        <article class="hsx-glass-option">
+          <span class="hsx-eyebrow">03</span><h4>Климат</h4><p>Для жилого дома и больших солнечных фасадов — пакет с функциональными покрытиями.</p>
+          <dl class="hsx-mini"><div><dt>Мультифункциональное покрытие</dt><dd>энергосбережение</dd></div><div><dt>Подбор по ориентации фасада</dt><dd>юг / восток / запад / север</dd></div><div><dt>Совместимость</dt><dd>с триплексом и закалённым стеклом</dd></div></dl>
+        </article>
+      </div>
+      <div class="hsx-checks"><span>Что проверяем перед запуском в производство</span><span class="hsx-pill">Размер стекла</span><span class="hsx-pill">Масса створки</span><span class="hsx-pill">Ветровая нагрузка</span><span class="hsx-pill">Безопасность прохода</span><span class="hsx-pill">Ориентация фасада</span></div>
+    </section>
 
-    <div class="hs-spec-nav" role="tablist" aria-label="Характеристики HS-портала">
-      <button class="is-active" type="button" data-spec-tab="tech" aria-selected="true"><span>01</span><b>Профиль</b><small>рама и створка</small></button>
-      <button type="button" data-spec-tab="glass" aria-selected="false"><span>02</span><b>Стеклопакеты</b><small>44 мм и варианты</small></button>
-      <button type="button" data-spec-tab="sealing" aria-selected="false"><span>03</span><b>Герметичность и порог</b><small>воздух · вода · монтаж</small></button>
-      <button type="button" data-spec-tab="mechanism" aria-selected="false"><span>04</span><b>Как работает</b><small>подъём и сдвиг</small></button>
-    </div>
-
-    <div class="hs-spec-panels">
-      <section class="hs-spec-panel is-active" data-spec-panel="tech">
-        <div class="hs-frame-types">
-          <article class="hs-frame-type">
-            <div class="hs-frame-type__copy">
-              <small>Двухполозная рама</small>
-              <div class="hs-frame-type__size"><strong>158</strong><span>мм</span></div>
-              <h3>2 направляющие</h3>
-              <p>Базовый вариант для большинства схем HS: одна линия движения и одна соседняя секция.</p>
-            </div>
-            <svg viewBox="0 0 420 240" role="img" aria-label="Условная схема двухполозной рамы 158 мм">
-              <path d="M42 182h336M64 151h292M90 92h104v59H90zM226 62h104v89H226z"/>
-              <path class="accent" d="M88 171h108M224 171h108"/>
-              <circle cx="122" cy="165" r="10"/><circle cx="162" cy="165" r="10"/><circle cx="258" cy="165" r="10"/><circle cx="298" cy="165" r="10"/>
-            </svg>
-          </article>
-
-          <article class="hs-frame-type">
-            <div class="hs-frame-type__copy">
-              <small>Трёхполозная рама</small>
-              <div class="hs-frame-type__size"><strong>246</strong><span>мм</span></div>
-              <h3>3 направляющие</h3>
-              <p>Более глубокая рама для многополозных схем, когда створки должны работать на трёх уровнях.</p>
-            </div>
-            <svg viewBox="0 0 420 240" role="img" aria-label="Условная схема трёхполозной рамы 246 мм">
-              <path d="M36 182h348M54 151h312M70 105h82v46H70zM169 82h82v69H169zM268 58h82v93H268z"/>
-              <path class="accent" d="M68 171h86M167 171h86M266 171h86"/>
-              <circle cx="96" cy="165" r="9"/><circle cx="128" cy="165" r="9"/><circle cx="195" cy="165" r="9"/><circle cx="227" cy="165" r="9"/><circle cx="294" cy="165" r="9"/><circle cx="326" cy="165" r="9"/>
-            </svg>
-          </article>
-        </div>
-
-        <div class="hs-profile-facts">
-          <div><small>Створка</small><strong>70 мм</strong><p>Глубина профиля створки.</p></div>
-          <div><small>Стеклопакет / заполнение</small><strong>10–50 мм</strong><p>Допустимый диапазон системы.</p></div>
-          <div><small>Материал</small><strong>Алюминий с терморазрывом</strong><p>Для крупных тёплых светопрозрачных конструкций.</p></div>
-          <div><small>Глухая часть</small><strong>Можно в общей раме</strong><p>Без отдельной оконной системы.</p></div>
-        </div>
-
-        <div class="hs-performance-band">
-          <div><small>Воздухопроницаемость</small><strong>класс 4*</strong></div>
-          <div><small>Звукоизоляция</small><strong>до Rw 40 дБ*</strong></div>
-          <div><small>Размер створки</small><strong>до 3000 × 3100 мм*</strong></div>
-          <div><small>Масса створки</small><strong>до 400 кг*</strong></div>
-        </div>
-
-        <p class="hs-note">* Технические ориентиры профильной системы и применяемой Lift&amp;Slide-фурнитуры. Для конкретного HS-портала параметры подтверждаем после расчёта размера, стеклопакета и монтажного узла.</p>
-      </section>
-
-      <section class="hs-spec-panel" data-spec-panel="glass">
-        <div class="hs-glass-intro">
-          <div>
-            <p class="hs-glass-intro__label">Стеклопакеты для HS-портала</p>
-            <h3>Стеклопакет 44 мм: как устроен</h3>
-            <p>«44 мм» — это общая толщина пакета, а не толщина одного стекла. Внутри — три стекла и две герметичные камеры, разделённые дистанционными рамками.</p>
+    <!-- 03 Герметичность -->
+    <section class="hs-spec-panel hsx-panel" data-spec-panel="sealing">
+      <div class="hsx-panel__head">
+        <div><p class="hsx-eyebrow">Герметичность HS-портала</p><h3 class="hsx-panel__title">Уплотнения, порог и&nbsp;отвод воды</h3></div>
+        <p class="hsx-panel__lead">Герметичность зависит не только от профиля: важны прижим створки, уплотнения, нижний порог, дренаж и монтажное примыкание.</p>
+      </div>
+      <div class="hsx-split">
+        <div class="hsx-visual-box">
+          <div class="hsx-seal" aria-hidden="true">
+            <div class="hsx-seal__frame is-left"></div><div class="hsx-seal__frame is-right"></div>
+            <div class="hsx-seal__line is-one"></div><div class="hsx-seal__line is-two"></div>
+            <div class="hsx-seal__track"></div>
+            <div class="hsx-seal__roller is-a"></div><div class="hsx-seal__roller is-b"></div>
+            <div class="hsx-seal__drain"></div><div class="hsx-seal__drip"></div>
+            <span class="hsx-callout is-1">1</span><span class="hsx-callout is-2">2</span><span class="hsx-callout is-3">3</span><span class="hsx-callout is-4">4</span>
           </div>
-          <div class="hs-glass-stack" aria-label="Схема двухкамерного стеклопакета">
-            <span class="glass-sheet"><i>01</i><b>наружное стекло</b></span>
-            <span class="glass-gap"><i>камера 1</i></span>
-            <span class="glass-sheet"><i>02</i><b>среднее стекло</b></span>
-            <span class="glass-gap"><i>камера 2</i></span>
-            <span class="glass-sheet"><i>03</i><b>внутреннее стекло</b></span>
+          <span class="hsx-caption">Условная схема узла</span><span class="hsx-caption is-right">Не монтажный чертёж</span>
+        </div>
+        <div class="hsx-rows">
+          <article><span>01</span><div><h4>Прижим по контуру</h4><p>При закрывании Lift&amp;Slide створка опускается и возвращается к рабочему контуру уплотнений.</p></div></article>
+          <article><span>02</span><div><h4>Нижний пороговый узел</h4><p>Положение порога согласуем с чистовым полом. Низкий визуальный порог не отменяет требований к гидроизоляции.</p></div></article>
+          <article><span>03</span><div><h4>Дренаж и наружная вода</h4><p>Вода, попавшая в зону нижнего профиля, должна иметь предусмотренный путь наружу — его нельзя перекрывать отделкой.</p></div></article>
+          <article><span>04</span><div><h4>Монтажное примыкание</h4><p>Даже хороший профиль не компенсирует неверную геометрию основания, монтажный шов или наружное примыкание.</p></div></article>
+        </div>
+      </div>
+      <div class="hsx-strip">
+        <div><span class="hsx-eyebrow">Воздухопроницаемость базы</span><strong>Класс 4*</strong></div>
+        <p>Это характеристика испытанной профильной системы. Герметичность готового портала зависит ещё и от стеклопакета, изготовления, регулировки и монтажа.</p>
+      </div>
+    </section>
+
+    <!-- 04 Как работает -->
+    <section class="hs-spec-panel hsx-panel" data-spec-panel="mechanism">
+      <div class="hsx-panel__head">
+        <div><p class="hsx-eyebrow">Подъёмно-раздвижной механизм</p><h3 class="hsx-panel__title">Как работает HS-портал</h3></div>
+        <p class="hsx-panel__lead">Поворот ручки сначала приподнимает створку и разгружает контур уплотнений. После этого створка движется по направляющей параллельно фасаду.</p>
+      </div>
+      <div class="hsx-split">
+        <div class="hsx-visual-box hs-canvas-shell" data-hs-canvas>
+          <div class="hs-canvas-stage">
+            <canvas id="hsSystemCanvas" aria-label="Интерактивная схема работы HS-портала"></canvas>
           </div>
-        </div>
-
-        <div class="hs-glass-packages hs-glass-packages--detailed">
-          <article>
-            <span>01 · BASE</span><h3>Стандарт 44</h3>
-            <p>Базовый двухкамерный пакет для готовых конфигураций.</p>
-            <ul><li>3 стекла</li><li>2 герметичные камеры</li><li>дистанционные рамки по периметру камер</li><li>толщина пакета — 44 мм</li></ul>
-            <small>Толщины отдельных стёкол и камер фиксируем после проверки размера створки.</small>
-          </article>
-          <article>
-            <span>02 · SAFE</span><h3>Безопасность</h3>
-            <p>Собирается на той же двухкамерной логике, но одно или несколько стёкол усиливаются под зону риска.</p>
-            <ul><li>закалённое стекло — повышенная стойкость к удару</li><li>триплекс — удерживает осколки после разрушения</li><li>можно комбинировать с климатическими покрытиями</li></ul>
-            <small>Для крупных створок и активного прохода состав определяем расчётом.</small>
-          </article>
-          <article>
-            <span>03 · CLIMATE</span><h3>Климат</h3>
-            <p>Для жилого дома и больших солнечных фасадов — пакет с функциональными покрытиями.</p>
-            <ul><li>мультифункциональное / энергосберегающее покрытие</li><li>2 герметичные камеры</li><li>подбор по ориентации фасада и площади стекла</li><li>при необходимости совмещаем с триплексом</li></ul>
-            <small>Задача — управлять теплопотерями и солнечными притоками, а не просто «затемнить стекло».</small>
-          </article>
-        </div>
-
-        <div class="hs-glass-note">
-          <b>Что мы проверяем перед запуском в производство</b>
-          <span>размер стекла</span><span>массу створки</span><span>ветровую нагрузку</span><span>безопасность прохода</span><span>ориентацию фасада</span>
-        </div>
-      </section>
-
-      <section class="hs-spec-panel" data-spec-panel="sealing">
-        <div class="hs-sealing-intro">
-          <div><p class="hs-sealing-kicker">Герметичность HS-портала</p><h3>Уплотнения, порог и отвод воды</h3></div>
-          <p>Герметичность зависит не только от профиля: важны прижим створки, уплотнения, нижний порог, дренаж и монтажное примыкание.</p>
-        </div>
-
-        <div class="hs-spec-sealing hs-spec-sealing--wow">
-          <div class="hs-seal-drawing">
-            <svg viewBox="0 0 720 480" role="img" aria-label="Условная схема герметичности HS-портала">
-              <path class="frame" d="M86 70h210v268H86zM400 70h210v268H400z"/>
-              <path class="glass" d="M126 95h130v205H126zM440 95h130v205H440z"/>
-              <path class="rail" d="M52 338h616v72H52zM80 363h534"/>
-              <path class="seal" d="M282 98v201M383 98v201M290 326h84"/>
-              <circle class="wheel" cx="154" cy="338" r="18"/><circle class="wheel" cx="224" cy="338" r="18"/>
-              <path class="water" d="M462 410c37 16 74 17 112 5m-21-13 21 13-18 19"/>
-              <circle class="call" cx="284" cy="140" r="18"/><text x="284" y="145">1</text>
-              <circle class="call" cx="337" cy="326" r="18"/><text x="337" y="331">2</text>
-              <circle class="call" cx="530" cy="405" r="18"/><text x="530" y="410">3</text>
-              <circle class="call" cx="635" cy="336" r="18"/><text x="635" y="341">4</text>
-            </svg>
-            <div class="hs-seal-drawing__legend"><span>условная схема узла</span><span>не монтажный чертёж</span></div>
-          </div>
-
-          <div class="hs-seal-chain">
-            <article><span>01</span><div><b>Прижим по контуру</b><p>При закрывании Lift&amp;Slide створка опускается и возвращается к рабочему контуру уплотнений.</p></div></article>
-            <article><span>02</span><div><b>Нижний пороговый узел</b><p>Положение порога согласуем с чистовым полом. Низкий визуальный порог не отменяет требования к гидроизоляции.</p></div></article>
-            <article><span>03</span><div><b>Дренаж и наружная вода</b><p>Вода, попавшая в зону нижнего профиля, должна иметь предусмотренный путь наружу — его нельзя перекрывать отделкой.</p></div></article>
-            <article><span>04</span><div><b>Монтажное примыкание</b><p>Даже хороший профиль не компенсирует неверную геометрию основания, монтажный шов или наружное примыкание.</p></div></article>
+          <div class="hsx-mech-foot">
+            <span class="hsx-mech-legend"><i></i>неподвижная<i class="is-active"></i>подвижная</span>
+            <span class="hsx-mech-state" data-hs-state>Закрыто</span>
+            <button class="hsx-mech-btn" type="button" data-hs-toggle>Открыть</button>
           </div>
         </div>
-
-        <div class="hs-sealing-result">
-          <div><small>Воздухопроницаемость базы</small><strong>Класс 4*</strong></div>
-          <p>Это характеристика испытанной профильной системы. Герметичность готового портала зависит ещё и от стеклопакета, изготовления, регулировки и монтажа.</p>
+        <div class="hsx-rows">
+          <article><span>01</span><div><h4>Повернуть ручку</h4><p>Фурнитура переводит створку из закрытого состояния.</p></div></article>
+          <article><span>02</span><div><h4>Приподнять створку</h4><p>Вес переносится на роликовые каретки, прижим к уплотнениям снимается.</p></div></article>
+          <article><span>03</span><div><h4>Сдвинуть</h4><p>Створка плавно движется вдоль соседней секции по направляющей.</p></div></article>
+          <article><span>04</span><div><h4>Закрыть и прижать</h4><p>В обратном положении створка опускается и возвращается к контуру уплотнений.</p></div></article>
         </div>
-      </section>
-
-      <section class="hs-spec-panel" data-spec-panel="mechanism">
-        <div class="hs-mechanism-head">
-          <div><p class="hs-sealing-kicker">Подъёмно-раздвижной механизм</p><h3>Как работает HS-портал</h3></div>
-          <p>Поворот ручки сначала приподнимает створку и разгружает контур уплотнений. После этого створка движется по направляющей параллельно фасаду.</p>
-        </div>
-
-        <div class="hs-mechanism-layout">
-          <div class="hs-canvas-shell" data-hs-canvas>
-            <div class="hs-canvas-stage">
-              <canvas id="hsSystemCanvas" aria-label="Интерактивная схема работы HS-портала"></canvas>
-              <div class="hs-canvas-hint">потяните створку →</div>
-              <div class="hs-canvas-legend"><span><i class="is-active"></i>активная</span><span><i></i>фиксированная</span></div>
-            </div>
-            <div class="hs-canvas-foot"><span data-hs-state>Закрыто</span><button type="button" data-hs-toggle>Открыть</button></div>
-          </div>
-
-          <div class="hs-mechanism-steps">
-            <article><span>01</span><div><b>Повернуть ручку</b><p>Фурнитура переводит створку из закрытого состояния.</p></div></article>
-            <article><span>02</span><div><b>Приподнять створку</b><p>Вес переносится на роликовые каретки, прижим к уплотнениям снимается.</p></div></article>
-            <article><span>03</span><div><b>Сдвинуть</b><p>Створка плавно движется вдоль соседней секции по направляющей.</p></div></article>
-            <article><span>04</span><div><b>Закрыть и прижать</b><p>В обратном положении створка опускается и возвращается к контуру уплотнений.</p></div></article>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </section>
 
-<section class="hs-schemes" id="schemes">
+<section class="hs-schemes hsx-open" id="schemes" data-hsx-open>
   <div class="wrap hs-container">
-    <div class="hs-section-head hs-section-head--schemes">
-      <div><p class="eyebrow hs-kicker">03 · Схемы открывания</p><h2>Схемы HS-порталов</h2></div>
-      <p>Выберите размер и направление открывания. Интерактивная схема показывает движение створок и ориентировочную ширину прохода.</p>
+    <div class="hsx-open__head">
+      <div><p class="hsx-eyebrow">03 · Схемы открывания</p><h2 class="hsx-open__title">Как открывается дверь</h2></div>
+      <div class="hsx-open__copy">
+        <p>Выберите ширину и сторону — схема показывает, как движутся створки и какой проход получится.</p>
+        <p class="hsx-open__note">Интерактивная схема помогает подобрать конфигурацию под ваш проём. Точные размеры и компоновку инженер подтвердит на замере.</p>
+      </div>
     </div>
 
-    <div class="hs-scheme-ui" data-scheme-ui>
-      <div class="hs-scheme-picker">
-        <div class="hs-family-tabs" role="tablist" aria-label="Размер HS-портала">
-          <button class="is-active" type="button" role="tab" aria-selected="true" data-family="hs30"><span>HS / 30</span><small>3000 × 2300 мм</small></button>
-          <button type="button" role="tab" aria-selected="false" data-family="hs36"><span>HS / 36</span><small>3600 × 2300 мм</small></button>
-          <button type="button" role="tab" aria-selected="false" data-family="hs48"><span>HS / 48</span><small>4800 × 2300 мм</small></button>
-        </div>
-        <div class="hs-variant-row">
-          <span class="hs-variant-label">Вариант открывания</span>
-          <div class="hs-variant-tabs" role="tablist" aria-label="Варианты открывания" data-variant-tabs></div>
+    <div class="hsx-controls">
+      <div>
+        <div class="hsx-label" id="hsxWidthLabel">Ширина проёма</div>
+        <div class="hsx-seg" role="group" aria-labelledby="hsxWidthLabel" data-hsx-widths>
+          <button type="button" class="hsx-width" data-family="hs30" aria-pressed="true"><strong>3,0 м</strong><span>2 створки</span></button>
+          <button type="button" class="hsx-width" data-family="hs36" aria-pressed="false"><strong>3,6 м</strong><span>3 створки</span></button>
+          <button type="button" class="hsx-width" data-family="hs48" aria-pressed="false"><strong>4,8 м</strong><span>4 створки</span></button>
         </div>
       </div>
+      <div>
+        <div class="hsx-label" id="hsxSideLabel">Активная створка</div>
+        <div class="hsx-seg hsx-seg--sides" role="group" aria-labelledby="hsxSideLabel" data-hsx-sides></div>
+      </div>
+    </div>
 
-      <div class="hs-scheme-controls">
-        <div class="hs-scheme-mode"><button class="is-active" type="button" data-scheme-view="diagram">Техническая схема</button><button type="button" data-scheme-view="facade">В фасаде</button></div>
-        <div class="hs-scheme-state"><button class="is-active" type="button" data-scheme-state="closed">0%</button><button type="button" data-scheme-state="half">50%</button><button type="button" data-scheme-state="open">100%</button></div>
-      </div>
-      <div class="hs-scheme-scrub">
-        <span>Закрыто</span>
-        <input type="range" min="0" max="100" value="0" step="1" data-scheme-progress aria-label="Степень открытия HS">
-        <span>Открыто</span>
-      </div>
+    <div class="hsx-tabs" role="tablist" aria-label="Вид">
+      <button type="button" role="tab" aria-selected="true" data-hsx-view="scheme">Схема</button>
+      <button type="button" role="tab" aria-selected="false" data-hsx-view="interior">В интерьере</button>
+    </div>
 
-      <div class="hs-scheme-stage" data-scheme-stage>
-        <canvas id="hsSchemeCanvas" aria-label="Интерактивная визуализация схем HS"></canvas>
-        <div class="hs-scheme-stage__top"><span data-scheme-name>HS / 30 · активная слева</span><span class="hs-scheme-status" data-scheme-status>Закрыто</span></div>
-        <div class="hs-scheme-legend"><span><i class="active"></i>активная</span><span><i class="fixed"></i>фиксированная</span><span><i class="passage"></i>свободный проход</span></div>
-        <div class="hs-scheme-draghint">← перетащите состояние →</div>
-        <div class="hs-scheme-stage__bottom"><span>готовый проём</span><strong data-scheme-size>3000 × 2300 мм</strong></div>
-      </div>
+    <div class="hsx-visual" data-hsx-visual>
+      <img class="hsx-visual__bg" src="../../assets/images/systems/hs-overview.jpg" alt="" loading="lazy" decoding="async">
+      <img class="hsx-visual__interior" src="../../assets/images/projects/terrace.webp" alt="Раздвижная дверь HS в интерьере загородного дома" loading="lazy" decoding="async">
+      <canvas data-hsx-canvas aria-label="Схема открывания: потяните, чтобы открыть"></canvas>
+    </div>
 
-      <div class="hs-scheme-result">
-        <div class="hs-scheme-result__lead"><small>Геометрический ориентир прохода</small><strong data-scheme-passage>≈ 1500 мм*</strong><span data-scheme-openpct>около 50% проёма</span><div class="hs-open-meter"><i data-scheme-meter></i></div></div>
-        <div class="hs-scheme-result__grid">
-          <div><small>Ширина</small><strong data-scheme-width>3000 мм</strong></div>
-          <div><small>Высота</small><strong data-scheme-height>2300 мм</strong></div>
-          <div><small>Секции</small><strong data-scheme-sections>2</strong></div>
-          <div><small>Активные</small><strong data-scheme-active>1</strong></div>
-          <div><small>Движение</small><strong data-scheme-opening>вправо</strong></div>
-          <div><small>Сценарий</small><strong data-scheme-use>Выход на террасу</strong></div>
-        </div>
+    <div class="hsx-slider">
+      <span>Закрыто</span>
+      <input type="range" min="0" max="100" step="1" value="0" aria-label="Степень открытия" data-hsx-range>
+      <span>Открыто</span>
+    </div>
+
+    <div class="hsx-result">
+      <div class="hsx-result__main">
+        <div class="hsx-result__k">Свободный проход</div>
+        <div class="hsx-passage">≈ <span data-hsx-passage>1 500</span> <small>мм</small></div>
+        <div class="hsx-result__pct" data-hsx-percent>50% ширины проёма</div>
       </div>
-      <p class="hs-note">* Геометрический ориентир. Фактический чистый проход зависит от профиля, нахлёстов и монтажных зазоров.</p>
+      <div class="hsx-fact"><b>Размер проёма</b><span data-hsx-size>3 000 × 2 300 мм</span></div>
+      <div class="hsx-fact"><b>Створки</b><span data-hsx-leaves>2</span></div>
+      <div class="hsx-fact"><b>Активная створка</b><span data-hsx-dir>правая,<br>сдвигается влево</span></div>
+      <div class="hsx-fact"><b>Подходит для</b><span data-hsx-use>выхода на террасу,<br>из гостиной</span></div>
+    </div>
+
+    <div class="hsx-actions">
+      <a class="hsx-primary" href="../../catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sprava/" data-hsx-cta><span>Выбрать HS/30</span><i aria-hidden="true">→</i></a>
+      <a class="hsx-secondary" href="#stock">Все готовые решения HS →</a>
+      <p class="hsx-note">* Проход указан ориентировочно. Финальную геометрию и монтажный узел подтверждает инженер.</p>
     </div>
   </div>
 </section>
@@ -555,5 +571,6 @@
 <script src="../../assets/js/shop.js"></script>
 
 <script src="../../assets/js/hs-system.js"></script>
+<script src="../../assets/js/hs-opening.js"></script>
 </body>
 </html>
