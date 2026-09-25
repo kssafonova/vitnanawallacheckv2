@@ -1,11 +1,17 @@
-# Portal Systems v4
+# Portal Systems v6
 
-Stable mobile-first design system rebuilt from the previously approved site style and the structural pattern of Vitrocsa Sliding.
+Anonymous mobile-first prototype.
 
-- shared components: header, footer, buttons, forms, cards, anchor navigation;
-- one token system for all breakpoints;
-- catalog 2x2 on mobile;
-- product anchor rail and swipe gallery;
-- system page structure: intro → key features → range → comparison → projects → resources;
-- HS4 has no fake left/right direction: only center opening;
-- SEO fields intentionally blank; noindex enabled.
+Key changes:
+- product hero is light;
+- all primary characteristics are inside a compact top accordion;
+- SKU geometry corrected against technical documentation;
+- HS2: S158 A1 / B1;
+- HS3: S158 D1 only;
+- HS4: S158 A7, centre opening, no left/right fake variants;
+- FS3: Roto Fold 330 + mirrored execution;
+- FS4: Roto Fold 431 + mirrored execution;
+- no sliders / carousels / snap rails;
+- SEO fields intentionally blank; noindex remains enabled.
+
+Technical sources are listed in `data/technical-specs.json`.

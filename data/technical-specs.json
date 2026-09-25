@@ -1,0 +1,42 @@
+{
+  "notes": [
+    "S158 scheme geometry mapped from SCHTANDART reference diagrams.",
+    "Roto Patio Lift compatibility with S158 confirmed by TBM hardware guide.",
+    "S70 Fold dimensions use Roto aluminium limits, not the older PVC/Rehau limits in the SCHTANDART installation article.",
+    "Roto Fold scheme digits: total leaves / leaves opening left / leaves opening right; all schemes may be mirrored."
+  ],
+  "sources": [
+    {
+      "name": "SCHTANDART S158",
+      "url": "https://online.schtandart.com/sites/default/files/webfiles/help/help/Newtopic201.html"
+    },
+    {
+      "name": "ALUMARK S158",
+      "url": "https://alumark.ru/razdvizhnye-serii/s158"
+    },
+    {
+      "name": "TBM Roto for S158",
+      "url": "https://www.tbm.ru/upload/iblock/ed7/ed7570a8cf87c57e6b51bc987a04d76e.pdf"
+    },
+    {
+      "name": "Roto Patio Lift",
+      "url": "https://ftt.roto-frank.com/int-en/products/details/roto-patio-lift/"
+    },
+    {
+      "name": "TBM CAD/BIM S70",
+      "url": "https://www.tbm.ru/exclusive/alumark/docs/cad-bim"
+    },
+    {
+      "name": "ALUMARK S70",
+      "url": "https://alumark.ru/s70"
+    },
+    {
+      "name": "Roto Patio Fold",
+      "url": "https://ftt.roto-frank.com/int-en/products/details/roto-patio-fold/"
+    },
+    {
+      "name": "Roto Fold schemes",
+      "url": "https://doc.roto.ru/Files/Fold/Roto_Fold_montage_PVC-Holz.pdf"
+    }
+  ]
+}

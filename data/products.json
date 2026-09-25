@@ -10,7 +10,12 @@
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/products/hs-2-closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
       "colors": [
         [
           "Белый",
@@ -25,16 +30,22 @@
       ],
       "schemes": [
         [
-          "ACTIVE-L",
-          "Активная створка слева",
-          "aktivnaya-stvorka-sleva"
+          "A1",
+          "Схема A1 · активная створка слева",
+          "aktivnaya-sleva"
         ],
         [
-          "ACTIVE-R",
-          "Активная створка справа",
-          "aktivnaya-stvorka-sprava"
+          "B1",
+          "Схема B1 · активная створка справа",
+          "aktivnaya-sprava"
         ]
-      ]
+      ],
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный"
     },
     {
       "model": "HS3",
@@ -46,7 +57,12 @@
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
+      "track": "3-полозная",
+      "frame_depth": "246 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/systems/hs-overview.jpg",
+      "architecture": "assets/images/projects/house.webp",
       "colors": [
         [
           "Антрацит",
@@ -61,16 +77,17 @@
       ],
       "schemes": [
         [
-          "PARK-L",
-          "Фиксированная справа",
-          "fiksirovannaya-sprava"
-        ],
-        [
-          "PARK-R",
-          "Фиксированная слева",
-          "fiksirovannaya-sleva"
+          "D1",
+          "Схема D1 · 2 активные + 1 фиксированная",
+          "shema-d1"
         ]
-      ]
+      ],
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный"
     },
     {
       "model": "HS4",
@@ -82,7 +99,12 @@
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/projects/terrace.webp",
+      "architecture": "assets/images/projects/interior.webp",
       "colors": [
         [
           "Антрацит",
@@ -97,11 +119,17 @@
       ],
       "schemes": [
         [
-          "CENTER",
-          "Открывание от центра",
+          "A7",
+          "Схема A7 · открывание от центра",
           "otkryvanie-ot-centra"
         ]
-      ]
+      ],
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный"
     },
     {
       "model": "FS3",
@@ -113,7 +141,12 @@
       "price": 540000,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
       "colors": [
         [
           "Антрацит",
@@ -128,16 +161,23 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "330-L",
+          "Схема 330 · складывание влево",
+          "shema-330-skladyvanie-vlevo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "330-R",
+          "Схема 330 · зеркально вправо",
+          "shema-330-skladyvanie-vpravo"
         ]
-      ]
+      ],
+      "limits": [
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг",
+        "Рама до 6000 мм"
+      ],
+      "glass": "40 мм · двухкамерный"
     },
     {
       "model": "FS4",
@@ -148,8 +188,13 @@
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 + 1",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/house.webp",
       "colors": [
         [
           "Антрацит",
@@ -164,16 +209,23 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "431-L",
+          "Схема 431 · 3 влево + 1 вправо",
+          "shema-431-3-vlevo-1-vpravo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "431-R",
+          "Схема 431 · зеркально 1 влево + 3 вправо",
+          "shema-431-1-vlevo-3-vpravo"
         ]
-      ]
+      ],
+      "limits": [
+        "Проходная створка 480–1230 мм",
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг"
+      ],
+      "glass": "40 мм · двухкамерный"
     }
   ],
   "variants": [
@@ -187,7 +239,18 @@
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/products/hs-2-closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Белый",
@@ -202,24 +265,24 @@
       ],
       "schemes": [
         [
-          "ACTIVE-L",
-          "Активная створка слева",
-          "aktivnaya-stvorka-sleva"
+          "A1",
+          "Схема A1 · активная створка слева",
+          "aktivnaya-sleva"
         ],
         [
-          "ACTIVE-R",
-          "Активная створка справа",
-          "aktivnaya-stvorka-sprava"
+          "B1",
+          "Схема B1 · активная створка справа",
+          "aktivnaya-sprava"
         ]
       ],
       "color": "Белый",
       "ral": "9016",
       "color_slug": "belyi",
-      "scheme_code": "ACTIVE-L",
-      "scheme_label": "Активная створка слева",
-      "scheme_slug": "aktivnaya-stvorka-sleva",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-stvorka-sleva/",
-      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-L"
+      "scheme_code": "A1",
+      "scheme_label": "Схема A1 · активная створка слева",
+      "scheme_slug": "aktivnaya-sleva",
+      "sku": "STD-HS2-S158-3000X2300-9016-A1",
+      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sleva/"
     },
     {
       "model": "HS2",
@@ -231,7 +294,18 @@
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/products/hs-2-closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Белый",
@@ -246,24 +320,24 @@
       ],
       "schemes": [
         [
-          "ACTIVE-L",
-          "Активная створка слева",
-          "aktivnaya-stvorka-sleva"
+          "A1",
+          "Схема A1 · активная створка слева",
+          "aktivnaya-sleva"
         ],
         [
-          "ACTIVE-R",
-          "Активная створка справа",
-          "aktivnaya-stvorka-sprava"
+          "B1",
+          "Схема B1 · активная створка справа",
+          "aktivnaya-sprava"
         ]
       ],
       "color": "Белый",
       "ral": "9016",
       "color_slug": "belyi",
-      "scheme_code": "ACTIVE-R",
-      "scheme_label": "Активная створка справа",
-      "scheme_slug": "aktivnaya-stvorka-sprava",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-stvorka-sprava/",
-      "sku": "STD-HS2-S158-3000X2300-9016-ACTIVE-R"
+      "scheme_code": "B1",
+      "scheme_label": "Схема B1 · активная створка справа",
+      "scheme_slug": "aktivnaya-sprava",
+      "sku": "STD-HS2-S158-3000X2300-9016-B1",
+      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sprava/"
     },
     {
       "model": "HS2",
@@ -275,7 +349,18 @@
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/products/hs-2-closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Белый",
@@ -290,24 +375,24 @@
       ],
       "schemes": [
         [
-          "ACTIVE-L",
-          "Активная створка слева",
-          "aktivnaya-stvorka-sleva"
+          "A1",
+          "Схема A1 · активная створка слева",
+          "aktivnaya-sleva"
         ],
         [
-          "ACTIVE-R",
-          "Активная створка справа",
-          "aktivnaya-stvorka-sprava"
+          "B1",
+          "Схема B1 · активная створка справа",
+          "aktivnaya-sprava"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "ACTIVE-L",
-      "scheme_label": "Активная створка слева",
-      "scheme_slug": "aktivnaya-stvorka-sleva",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-stvorka-sleva/",
-      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-L"
+      "scheme_code": "A1",
+      "scheme_label": "Схема A1 · активная створка слева",
+      "scheme_slug": "aktivnaya-sleva",
+      "sku": "STD-HS2-S158-3000X2300-7016-A1",
+      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sleva/"
     },
     {
       "model": "HS2",
@@ -319,7 +404,18 @@
       "price": 375000,
       "sections": 2,
       "subtitle": "1 активная + 1 фиксированная",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/products/hs-2-closed.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Белый",
@@ -334,24 +430,24 @@
       ],
       "schemes": [
         [
-          "ACTIVE-L",
-          "Активная створка слева",
-          "aktivnaya-stvorka-sleva"
+          "A1",
+          "Схема A1 · активная створка слева",
+          "aktivnaya-sleva"
         ],
         [
-          "ACTIVE-R",
-          "Активная створка справа",
-          "aktivnaya-stvorka-sprava"
+          "B1",
+          "Схема B1 · активная створка справа",
+          "aktivnaya-sprava"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "ACTIVE-R",
-      "scheme_label": "Активная створка справа",
-      "scheme_slug": "aktivnaya-stvorka-sprava",
-      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-stvorka-sprava/",
-      "sku": "STD-HS2-S158-3000X2300-7016-ACTIVE-R"
+      "scheme_code": "B1",
+      "scheme_label": "Схема B1 · активная створка справа",
+      "scheme_slug": "aktivnaya-sprava",
+      "sku": "STD-HS2-S158-3000X2300-7016-B1",
+      "slug": "catalog/hs-portaly/alumark-s158-3000x2300-antratsit-aktivnaya-sprava/"
     },
     {
       "model": "HS3",
@@ -363,7 +459,18 @@
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
+      "track": "3-полозная",
+      "frame_depth": "246 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/systems/hs-overview.jpg",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -378,24 +485,19 @@
       ],
       "schemes": [
         [
-          "PARK-L",
-          "Фиксированная справа",
-          "fiksirovannaya-sprava"
-        ],
-        [
-          "PARK-R",
-          "Фиксированная слева",
-          "fiksirovannaya-sleva"
+          "D1",
+          "Схема D1 · 2 активные + 1 фиксированная",
+          "shema-d1"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "PARK-L",
-      "scheme_label": "Фиксированная справа",
-      "scheme_slug": "fiksirovannaya-sprava",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-fiksirovannaya-sprava/",
-      "sku": "STD-HS3-S158-3600X2300-7016-PARK-L"
+      "scheme_code": "D1",
+      "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
+      "scheme_slug": "shema-d1",
+      "sku": "STD-HS3-S158-3600X2300-7016-D1",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-shema-d1/"
     },
     {
       "model": "HS3",
@@ -407,7 +509,18 @@
       "price": 489000,
       "sections": 3,
       "subtitle": "2 активные + 1 фиксированная",
+      "track": "3-полозная",
+      "frame_depth": "246 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/systems/hs-overview.jpg",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -422,112 +535,19 @@
       ],
       "schemes": [
         [
-          "PARK-L",
-          "Фиксированная справа",
-          "fiksirovannaya-sprava"
-        ],
-        [
-          "PARK-R",
-          "Фиксированная слева",
-          "fiksirovannaya-sleva"
-        ]
-      ],
-      "color": "Антрацит",
-      "ral": "7016",
-      "color_slug": "antratsit",
-      "scheme_code": "PARK-R",
-      "scheme_label": "Фиксированная слева",
-      "scheme_slug": "fiksirovannaya-sleva",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-antratsit-fiksirovannaya-sleva/",
-      "sku": "STD-HS3-S158-3600X2300-7016-PARK-R"
-    },
-    {
-      "model": "HS3",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3600 × 2300 мм",
-      "price": 489000,
-      "sections": 3,
-      "subtitle": "2 активные + 1 фиксированная",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Графит",
-          "7024",
-          "grafit"
-        ]
-      ],
-      "schemes": [
-        [
-          "PARK-L",
-          "Фиксированная справа",
-          "fiksirovannaya-sprava"
-        ],
-        [
-          "PARK-R",
-          "Фиксированная слева",
-          "fiksirovannaya-sleva"
+          "D1",
+          "Схема D1 · 2 активные + 1 фиксированная",
+          "shema-d1"
         ]
       ],
       "color": "Графит",
       "ral": "7024",
       "color_slug": "grafit",
-      "scheme_code": "PARK-L",
-      "scheme_label": "Фиксированная справа",
-      "scheme_slug": "fiksirovannaya-sprava",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-fiksirovannaya-sprava/",
-      "sku": "STD-HS3-S158-3600X2300-7024-PARK-L"
-    },
-    {
-      "model": "HS3",
-      "cat": "hs-portaly",
-      "title": "HS-портал",
-      "profile": "ALUMARK S158",
-      "hardware": "Roto Patio Lift",
-      "size": "3600 × 2300 мм",
-      "price": 489000,
-      "sections": 3,
-      "subtitle": "2 активные + 1 фиксированная",
-      "image": "assets/images/systems/hs-overview.jpg",
-      "colors": [
-        [
-          "Антрацит",
-          "7016",
-          "antratsit"
-        ],
-        [
-          "Графит",
-          "7024",
-          "grafit"
-        ]
-      ],
-      "schemes": [
-        [
-          "PARK-L",
-          "Фиксированная справа",
-          "fiksirovannaya-sprava"
-        ],
-        [
-          "PARK-R",
-          "Фиксированная слева",
-          "fiksirovannaya-sleva"
-        ]
-      ],
-      "color": "Графит",
-      "ral": "7024",
-      "color_slug": "grafit",
-      "scheme_code": "PARK-R",
-      "scheme_label": "Фиксированная слева",
-      "scheme_slug": "fiksirovannaya-sleva",
-      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-fiksirovannaya-sleva/",
-      "sku": "STD-HS3-S158-3600X2300-7024-PARK-R"
+      "scheme_code": "D1",
+      "scheme_label": "Схема D1 · 2 активные + 1 фиксированная",
+      "scheme_slug": "shema-d1",
+      "sku": "STD-HS3-S158-3600X2300-7024-D1",
+      "slug": "catalog/hs-portaly/alumark-s158-3600x2300-grafit-shema-d1/"
     },
     {
       "model": "HS4",
@@ -539,7 +559,18 @@
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/projects/terrace.webp",
+      "architecture": "assets/images/projects/interior.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -554,19 +585,19 @@
       ],
       "schemes": [
         [
-          "CENTER",
-          "Открывание от центра",
+          "A7",
+          "Схема A7 · открывание от центра",
           "otkryvanie-ot-centra"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "CENTER",
-      "scheme_label": "Открывание от центра",
+      "scheme_code": "A7",
+      "scheme_label": "Схема A7 · открывание от центра",
       "scheme_slug": "otkryvanie-ot-centra",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/",
-      "sku": "STD-HS4-S158-4800X2300-7016"
+      "sku": "STD-HS4-S158-4800X2300-7016-A7",
+      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/"
     },
     {
       "model": "HS4",
@@ -578,7 +609,18 @@
       "price": 620000,
       "sections": 4,
       "subtitle": "2 активные + 2 фиксированные",
+      "track": "2-полозная",
+      "frame_depth": "158 мм",
+      "sash_depth": "70 мм",
+      "filling": "10–50 мм",
       "image": "assets/images/projects/terrace.webp",
+      "architecture": "assets/images/projects/interior.webp",
+      "limits": [
+        "Створка до 3000 мм по ширине",
+        "Створка до 3100 мм по высоте",
+        "Вес створки до 400 кг"
+      ],
+      "glass": "44 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -593,19 +635,19 @@
       ],
       "schemes": [
         [
-          "CENTER",
-          "Открывание от центра",
+          "A7",
+          "Схема A7 · открывание от центра",
           "otkryvanie-ot-centra"
         ]
       ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "scheme_code": "CENTER",
-      "scheme_label": "Открывание от центра",
+      "scheme_code": "A7",
+      "scheme_label": "Схема A7 · открывание от центра",
       "scheme_slug": "otkryvanie-ot-centra",
-      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/",
-      "sku": "STD-HS4-S158-4800X2300-9005"
+      "sku": "STD-HS4-S158-4800X2300-9005-A7",
+      "slug": "catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/"
     },
     {
       "model": "FS3",
@@ -617,7 +659,19 @@
       "price": 540000,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг",
+        "Рама до 6000 мм"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -632,24 +686,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "330-L",
+          "Схема 330 · складывание влево",
+          "shema-330-skladyvanie-vlevo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "330-R",
+          "Схема 330 · зеркально вправо",
+          "shema-330-skladyvanie-vpravo"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "STACK-L",
-      "scheme_label": "Складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/",
-      "sku": "STD-FS3-S70-2700X2300-7016-STACK-L"
+      "scheme_code": "330-L",
+      "scheme_label": "Схема 330 · складывание влево",
+      "scheme_slug": "shema-330-skladyvanie-vlevo",
+      "sku": "STD-FS3-S70-2700X2300-7016-330-L",
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-shema-330-skladyvanie-vlevo/"
     },
     {
       "model": "FS3",
@@ -661,7 +715,19 @@
       "price": 540000,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг",
+        "Рама до 6000 мм"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -676,24 +742,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "330-L",
+          "Схема 330 · складывание влево",
+          "shema-330-skladyvanie-vlevo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "330-R",
+          "Схема 330 · зеркально вправо",
+          "shema-330-skladyvanie-vpravo"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "STACK-R",
-      "scheme_label": "Складывание вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/",
-      "sku": "STD-FS3-S70-2700X2300-7016-STACK-R"
+      "scheme_code": "330-R",
+      "scheme_label": "Схема 330 · зеркально вправо",
+      "scheme_slug": "shema-330-skladyvanie-vpravo",
+      "sku": "STD-FS3-S70-2700X2300-7016-330-R",
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-antratsit-shema-330-skladyvanie-vpravo/"
     },
     {
       "model": "FS3",
@@ -705,7 +771,19 @@
       "price": 540000,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг",
+        "Рама до 6000 мм"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -720,24 +798,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "330-L",
+          "Схема 330 · складывание влево",
+          "shema-330-skladyvanie-vlevo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "330-R",
+          "Схема 330 · зеркально вправо",
+          "shema-330-skladyvanie-vpravo"
         ]
       ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "scheme_code": "STACK-L",
-      "scheme_label": "Складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/",
-      "sku": "STD-FS3-S70-2700X2300-9005-STACK-L"
+      "scheme_code": "330-L",
+      "scheme_label": "Схема 330 · складывание влево",
+      "scheme_slug": "shema-330-skladyvanie-vlevo",
+      "sku": "STD-FS3-S70-2700X2300-9005-330-L",
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-shema-330-skladyvanie-vlevo/"
     },
     {
       "model": "FS3",
@@ -749,7 +827,19 @@
       "price": 540000,
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/terrace.webp",
+      "limits": [
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг",
+        "Рама до 6000 мм"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -764,24 +854,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "330-L",
+          "Схема 330 · складывание влево",
+          "shema-330-skladyvanie-vlevo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "330-R",
+          "Схема 330 · зеркально вправо",
+          "shema-330-skladyvanie-vpravo"
         ]
       ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "scheme_code": "STACK-R",
-      "scheme_label": "Складывание вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/",
-      "sku": "STD-FS3-S70-2700X2300-9005-STACK-R"
+      "scheme_code": "330-R",
+      "scheme_label": "Схема 330 · зеркально вправо",
+      "scheme_slug": "shema-330-skladyvanie-vpravo",
+      "sku": "STD-FS3-S70-2700X2300-9005-330-R",
+      "slug": "catalog/fs-portaly/alumark-s70-2700x2300-chernyi-shema-330-skladyvanie-vpravo/"
     },
     {
       "model": "FS4",
@@ -792,8 +882,20 @@
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 + 1",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Проходная створка 480–1230 мм",
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -808,24 +910,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "431-L",
+          "Схема 431 · 3 влево + 1 вправо",
+          "shema-431-3-vlevo-1-vpravo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "431-R",
+          "Схема 431 · зеркально 1 влево + 3 вправо",
+          "shema-431-1-vlevo-3-vpravo"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "STACK-L",
-      "scheme_label": "Складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-skladyvanie-vlevo/",
-      "sku": "STD-FS4-S70-3600X2300-7016-STACK-L"
+      "scheme_code": "431-L",
+      "scheme_label": "Схема 431 · 3 влево + 1 вправо",
+      "scheme_slug": "shema-431-3-vlevo-1-vpravo",
+      "sku": "STD-FS4-S70-3600X2300-7016-431-L",
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-shema-431-3-vlevo-1-vpravo/"
     },
     {
       "model": "FS4",
@@ -836,8 +938,20 @@
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 + 1",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Проходная створка 480–1230 мм",
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -852,24 +966,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "431-L",
+          "Схема 431 · 3 влево + 1 вправо",
+          "shema-431-3-vlevo-1-vpravo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "431-R",
+          "Схема 431 · зеркально 1 влево + 3 вправо",
+          "shema-431-1-vlevo-3-vpravo"
         ]
       ],
       "color": "Антрацит",
       "ral": "7016",
       "color_slug": "antratsit",
-      "scheme_code": "STACK-R",
-      "scheme_label": "Складывание вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-skladyvanie-vpravo/",
-      "sku": "STD-FS4-S70-3600X2300-7016-STACK-R"
+      "scheme_code": "431-R",
+      "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
+      "scheme_slug": "shema-431-1-vlevo-3-vpravo",
+      "sku": "STD-FS4-S70-3600X2300-7016-431-R",
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-antratsit-shema-431-1-vlevo-3-vpravo/"
     },
     {
       "model": "FS4",
@@ -880,8 +994,20 @@
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 + 1",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Проходная створка 480–1230 мм",
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -896,24 +1022,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "431-L",
+          "Схема 431 · 3 влево + 1 вправо",
+          "shema-431-3-vlevo-1-vpravo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "431-R",
+          "Схема 431 · зеркально 1 влево + 3 вправо",
+          "shema-431-1-vlevo-3-vpravo"
         ]
       ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "scheme_code": "STACK-L",
-      "scheme_label": "Складывание влево",
-      "scheme_slug": "skladyvanie-vlevo",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-skladyvanie-vlevo/",
-      "sku": "STD-FS4-S70-3600X2300-9005-STACK-L"
+      "scheme_code": "431-L",
+      "scheme_label": "Схема 431 · 3 влево + 1 вправо",
+      "scheme_slug": "shema-431-3-vlevo-1-vpravo",
+      "sku": "STD-FS4-S70-3600X2300-9005-431-L",
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-shema-431-3-vlevo-1-vpravo/"
     },
     {
       "model": "FS4",
@@ -924,8 +1050,20 @@
       "size": "3600 × 2300 мм",
       "price": 610000,
       "sections": 4,
-      "subtitle": "Схема 431 · 3 складные + 1 проходная",
+      "subtitle": "Схема 431 · 3 + 1",
+      "track": "Fold&Slide",
+      "frame_depth": "70 мм",
+      "sash_depth": "80 мм",
+      "filling": "20–60 мм",
       "image": "assets/images/systems/fs-view.webp",
+      "architecture": "assets/images/projects/house.webp",
+      "limits": [
+        "Проходная створка 480–1230 мм",
+        "Складная створка 480–930 мм",
+        "Высота створки 630–2830 мм",
+        "Вес створки до 100 кг"
+      ],
+      "glass": "40 мм · двухкамерный",
       "colors": [
         [
           "Антрацит",
@@ -940,24 +1078,24 @@
       ],
       "schemes": [
         [
-          "STACK-L",
-          "Складывание влево",
-          "skladyvanie-vlevo"
+          "431-L",
+          "Схема 431 · 3 влево + 1 вправо",
+          "shema-431-3-vlevo-1-vpravo"
         ],
         [
-          "STACK-R",
-          "Складывание вправо",
-          "skladyvanie-vpravo"
+          "431-R",
+          "Схема 431 · зеркально 1 влево + 3 вправо",
+          "shema-431-1-vlevo-3-vpravo"
         ]
       ],
       "color": "Чёрный",
       "ral": "9005",
       "color_slug": "chernyi",
-      "scheme_code": "STACK-R",
-      "scheme_label": "Складывание вправо",
-      "scheme_slug": "skladyvanie-vpravo",
-      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-skladyvanie-vpravo/",
-      "sku": "STD-FS4-S70-3600X2300-9005-STACK-R"
+      "scheme_code": "431-R",
+      "scheme_label": "Схема 431 · зеркально 1 влево + 3 вправо",
+      "scheme_slug": "shema-431-1-vlevo-3-vpravo",
+      "sku": "STD-FS4-S70-3600X2300-9005-431-R",
+      "slug": "catalog/fs-portaly/alumark-s70-3600x2300-chernyi-shema-431-1-vlevo-3-vpravo/"
     }
   ]
 }
