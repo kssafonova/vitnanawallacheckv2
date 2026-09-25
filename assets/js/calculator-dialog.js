@@ -144,13 +144,7 @@
 /**
  * PATCH 2 — UI-level: hides the "Мультифункция" glazing card while the cold
  * contour is selected, and removes the default active highlighting from
- * step 2 (thermal contour / glazing) on initial page load. NOTE: this only
- * clears the *visual* highlighting on load — calculator.js's own internal
- * defaults (warm contour, multifunctional glazing) still drive the first
- * calculation until the user clicks a card, because that internal state
- * variable is not exposed outside calculator.js. Wrapping setThermalContour/
- * setGlazing (both are global function declarations) lets us react to every
- * user click and keep the hidden-card case consistent.
+ * step 2 (thermal contour / glazing) on initial page load.
  */
 (function(){
   if (typeof window.setThermalContour !== 'function' ||
@@ -198,6 +192,52 @@
     }
   }
 
-  syncGlazingVisibility(false); // warm is calculator.js's initial default
+  syncGlazingVisibility(false);
   clearStep2DefaultHighlighting();
+})();
+
+/**
+ * PATCH 3 — root-cause fix: setGlazing() in calculator.js calls
+ * recalculate({ resetSelection: true }), unlike setThermalContour()/setColor()
+ * which correctly call recalculate() with no reset. This means changing the
+ * glass package alone silently changes the selected sash-count preset,
+ * snapping to whatever pickRecommendedOption() now returns.
+ *
+ * Fix: capture the currently selected option's visible title before calling
+ * the original setGlazing, then after it re-renders, find the sash-card
+ * whose label matches that title and click it again — restoring the user's
+ * choice if it is still technically available. If it is no longer available
+ * (e.g. hidden by an engineering/aesthetic check), the recommended fallback
+ * from PATCH 1/2 stands, which is the correct behavior.
+ *
+ * This cannot be fixed by reading/writing calculator.js's internal `state`
+ * object directly (it is a module-scope const, not exposed on window) — the
+ * visible tile label is the only externally observable identifier for
+ * "which preset was selected", since sash-card buttons carry no data-id
+ * attribute.
+ */
+(function(){
+  if (typeof window.setGlazing !== 'function' ||
+      typeof window.getSelectedOption !== 'function') {
+    return;
+  }
+
+  var originalSetGlazing = window.setGlazing;
+  window.setGlazing = function(glazing){
+    var previousOption = window.getSelectedOption();
+    var previousTitle = previousOption ? previousOption.title : null;
+
+    originalSetGlazing(glazing);
+
+    if (!previousTitle) return;
+
+    var cards = document.querySelectorAll('.sash-card');
+    for (var i = 0; i < cards.length; i++) {
+      var labelEl = cards[i].querySelector('.sash-card__label');
+      if (labelEl && labelEl.textContent === previousTitle) {
+        cards[i].click();
+        break;
+      }
+    }
+  };
 })();
