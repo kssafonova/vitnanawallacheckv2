@@ -4,7 +4,7 @@
 .product-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
 .product-page *{box-sizing:border-box}
 .product-page a{color:inherit;text-decoration:none}
-.product-page button,.product-page input,.product-page textarea{font:inherit}
+:where(.product-page) :is(button,input,textarea){font:inherit} /* :where — не перебивает шрифт .ui-btn */
 .product-page img{display:block;max-width:100%}
 .p-wrap{width:min(100%,var(--ui-max));margin-inline:auto;padding-inline:var(--p-pad)}
 

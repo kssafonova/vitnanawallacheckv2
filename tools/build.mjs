@@ -112,39 +112,63 @@ const jsonLd = obj => `<script type="application/ld+json">${JSON.stringify(obj).
 const systemHref = (m, base) => (m.system === 'HS' ? `${base}systems/hs/` : `${base}systems/fs/`);
 const customHref = (m, base) => (m.system === 'HS' ? `${base}systems/hs/#hs-calculator` : `${base}index.html#calculator`);
 
-// Карточка модели для каталога и страницы HS. rel — путь от страницы до корня сайта.
-function productCard(m, index, rel) {
+// Карточка модели «как на маркетплейсе»: фото, цена, цвет и схема переключаются прямо в карточке
+// (assets/js/shop.js), кнопка «В корзину». Без JS цвета и схемы — обычные ссылки на страницы вариантов.
+// rel — путь от страницы до корня сайта.
+const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
+function marketCard(m, rel) {
   const first = firstOf(m);
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
-  const swatches = m.colors.map(c => {
-    const v = find(m.model, c.slug, m.schemes[0].slug);
-    return `<a class="product-card__swatch" href="${href(v)}" style="--sw:${c.hex}" data-label="${esc(c.name)} · RAL ${c.ral}" aria-label="${esc(m.code)}, ${esc(c.name)} RAL ${c.ral}"></a>`;
+  const s0 = m.schemes[0], c0 = m.colors[0];
+  const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image }));
+  const swatches = m.colors.map((c, i) => {
+    const v = find(m.model, c.slug, s0.slug);
+    return `<a class="m-card__swatch${i ? '' : ' is-active'}" href="${href(v)}" data-color="${c.slug}" data-name="${esc(c.name)} RAL ${c.ral}" style="--sw:${c.hex}" title="${esc(c.name)} RAL ${c.ral}" aria-label="Цвет ${esc(c.name)} RAL ${c.ral}"${i ? '' : ' aria-current="true"'}></a>`;
   }).join('');
-  const chips = m.schemes.map(s => {
-    const v = find(m.model, m.colors[0].slug, s.slug);
-    return `<a class="product-card__chip" href="${href(v)}">${esc(s.short)}</a>`;
-  }).join('');
+  const chips = m.schemes.length > 1
+    ? `<div class="m-card__chips">${m.schemes.map((s, i) => {
+        const v = find(m.model, c0.slug, s.slug);
+        return `<a class="m-card__chip${i ? '' : ' is-active'}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${i ? '' : ' aria-current="true"'}>${esc(s.short)}</a>`;
+      }).join('')}</div>`
+    : '';
+  const schemesSvg = m.schemes.map((s, i) => `<span data-scheme-svg="${s.slug}"${i ? ' hidden' : ''}>${smallSvg(m, s)}</span>`).join('');
   const price = soon
-    ? '<span class="product-card__price"><small>статус</small><strong>Скоро</strong></span>'
-    : `<span class="product-card__price"><small>от</small><strong>${money(m.price)}</strong></span>`;
-  return `<article class="product-card${soon ? ' product-card--soon' : ''}">
-        <a class="product-card__media" href="${href(first)}">
-          <img src="${rel}${m.image}" alt="${esc(m.code)} — ${esc(m.title.toLowerCase())} ${esc(sizeText(m))}" loading="lazy" decoding="async">
-          <span class="product-card__index">${String(index).padStart(2, '0')}</span>${soon ? '<span class="product-card__soon"><span>Скоро в продаже</span></span>' : ''}
-          <span class="product-card__scheme" aria-hidden="true">${smallSvg(m, m.schemes[0])}</span>
+    ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
+    : `<strong>${money(m.price)}</strong><small>от, за конструкцию</small>`;
+  const action = soon
+    ? `<a class="ui-btn m-card__cart" href="${href(first)}#product-contact" data-card-link data-card-hash="#product-contact">Сообщить о старте</a>`
+    : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
+  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}">
+        <a class="m-card__media" href="${href(first)}" data-card-link>
+          <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>
+          ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
+          <span class="m-card__scheme" aria-hidden="true">${schemesSvg}</span>
         </a>
-        <div class="product-card__body">
-          <div class="product-card__top"><span class="product-card__code">${esc(m.code)}</span><span class="product-card__size">${esc(sizeText(m))}</span></div>
-          <h3>${esc(m.name)}</h3>
-          <p class="product-card__desc">${esc(m.card_desc)}</p>
-          <div class="product-card__variants">
-            <div class="product-card__variant-row"><small>Цвет</small><div class="product-card__swatches">${swatches}</div></div>
-            <div class="product-card__variant-row"><small>${esc(m.scheme_title)}</small><div class="product-card__chips">${chips}</div></div>
-          </div>
-          <div class="product-card__foot">${price}<a class="product-card__link" href="${href(first)}">${soon ? 'Подробнее' : 'Выбрать'} <span>→</span></a></div>
+        <div class="m-card__body">
+          <div class="m-card__price">${price}</div>
+          <a class="m-card__title" href="${href(first)}" data-card-link>${esc(m.code)} · ${esc(m.name)}</a>
+          <p class="m-card__meta">${esc(sizeText(m))} · ${sectionsText(m.sections)}</p>
+          <div class="m-card__opt"><span class="m-card__label">Цвет: <b data-card-color>${esc(c0.name)} RAL ${c0.ral}</b></span><div class="m-card__swatches">${swatches}</div></div>
+          <div class="m-card__opt"><span class="m-card__label">${esc(m.scheme_title)}: <b data-card-scheme>${esc(s0.short)}</b></span>${chips}</div>
+          ${action}
         </div>
       </article>`;
+}
+
+// Карточка «Индивидуальный расчёт» — вся карточка ведёт в калькулятор
+function projectCard(calcHref, id) {
+  return `<a class="m-card m-card--project" href="${calcHref}"${id ? ` id="${id}"` : ''}>
+        <span class="m-card__media">
+          <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
+        </span>
+        <span class="m-card__body">
+          <span class="m-card__price"><strong>По расчёту</strong><small>любой размер и комплектация</small></span>
+          <span class="m-card__title">Индивидуальный расчёт</span>
+          <span class="m-card__meta">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
+          <span class="ui-btn ui-btn--light m-card__cart">Открыть калькулятор <span>→</span></span>
+        </span>
+      </a>`;
 }
 
 // ---------- страница варианта ----------
@@ -254,7 +278,9 @@ ${jsonLd(crumbs)}
       </div>
       <div class="product-variant"><div class="product-variant__head"><span>Цвет</span><span>${esc(c.name)} · RAL ${c.ral}</span></div><div class="product-swatches">${swatches}</div></div>
       <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
-      <div class="product-actions"><a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a><a class="ui-btn" href="${customHref(m, base)}">Изменить размер / комплектацию <span>↗</span></a></div>
+      <div class="product-actions">${soon
+        ? `<a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a>`
+        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customHref(m, base)}">Индивидуальный расчёт <span>↗</span></a></div>
       <p class="product-sku">Артикул: ${v.sku}</p>
     </aside>
   </div>
@@ -299,11 +325,12 @@ ${jsonLd(crumbs)}
   </div>
 </section>
 
-<div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>от</small><strong>${money(m.price)}</strong>`}</div><a class="ui-btn ui-btn--dark" href="#product-contact">${soon ? 'Узнать о старте' : 'Получить смету'} <span>→</span></a></div>
+<div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>от</small><strong>${money(m.price)}</strong>`}</div>${soon ? '<a class="ui-btn ui-btn--dark" href="#product-contact">Узнать о старте <span>→</span></a>' : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}</div>
 </main>
 <site-footer data-base="${base}"></site-footer>
 <script src="${base}assets/js/components/site-menu.js"></script>
 <script src="${base}assets/js/components/site-footer.js"></script>
+<script src="${base}assets/js/shop.js"></script>
 <script src="${base}assets/js/product.js"></script>
 </body>
 </html>
@@ -318,11 +345,11 @@ const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS /
 
 const blocks = {
   'catalog/index.html': {
-    'hs-cards': hs.map((m, i) => productCard(m, i + 1, '../')).join('\n\n      '),
-    'fs-cards': fsModels.map((m, i) => productCard(m, i + 1, '../')).join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../systems/hs/#hs-calculator', 'project')].join('\n\n      '),
+    'fs-cards': fsModels.map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'systems/hs/index.html': {
-    'hs-cards': hs.map((m, i) => productCard(m, i + 1, '../../')).join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('#hs-calculator')].join('\n\n      '),
     'hs-hero-products': featured.map(m => `<a class="hs-hero-product" href="../../${firstOf(m).path}">
         <span><small>${esc(m.code)}</small><strong>${esc(sizeText(m))}</strong></span>
         <span><small>от</small><b>${money(m.price)}</b></span>
@@ -362,6 +389,15 @@ for (const [file, map] of Object.entries(blocks)) {
   outputs.set(file, html);
 }
 outputs.set('sitemap.xml', sitemap);
+// Данные для корзины (assets/js/shop.js): актуальные цены и названия по артикулу
+outputs.set('data/catalog.json', JSON.stringify({
+  _comment: 'Сгенерировано tools/build.mjs из data/products.json — не редактировать вручную.',
+  variants: variants.map(v => ({
+    sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m),
+    color: `${v.c.name} RAL ${v.c.ral}`, scheme: v.s.label, price: v.m.price, available: v.available,
+    image: v.image, url: v.path,
+  })),
+}, null, 2) + '\n');
 
 // Лишние папки вариантов (переименованные или удалённые из данных)
 const stale = [];

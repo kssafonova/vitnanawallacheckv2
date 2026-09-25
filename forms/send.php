@@ -24,7 +24,7 @@ if (!empty($_SERVER['HTTP_ORIGIN'])) {
 
 // Honeypot: bots often fill hidden fields.
 if (!empty($_POST['website'] ?? '')) {
-    echo json_encode(['ok'=>true], JSON_UNESCAPED_UNICODE);
+    echo json_encode($isOrder ? ['ok'=>true,'order_id'=>$orderId] : ['ok'=>true], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -33,6 +33,9 @@ $phone = trim((string)($_POST['phone'] ?? ''));
 $comment = trim((string)($_POST['comment'] ?? ''));
 $project = trim((string)($_POST['project'] ?? ''));
 $source = trim((string)($_POST['source'] ?? 'site'));
+$city = trim((string)($_POST['city'] ?? ''));
+$orderId = strtoupper(trim((string)($_POST['order_id'] ?? '')));
+$isOrder = $source === 'cart';
 
 $digits = preg_replace('/\D+/', '', $phone);
 $nameLen = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
@@ -40,6 +43,18 @@ if ($name === '' || $nameLen > 100 || strlen($digits) < 10 || strlen($digits) > 
     http_response_code(422);
     echo json_encode(['ok'=>false,'message'=>'Проверьте имя и телефон.'], JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// Заказ из корзины: нужны город и согласие, номер заказа — PS-ГГММДД-XXXX (создаём, если не пришёл)
+if ($isOrder) {
+    if ($city === '' || empty($_POST['privacy_consent'] ?? '')) {
+        http_response_code(422);
+        echo json_encode(['ok'=>false,'message'=>'Укажите город и подтвердите согласие на обработку данных.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    if (!preg_match('/^PS-\d{6}-[A-Z0-9]{4}$/', $orderId)) {
+        $orderId = 'PS-' . date('ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 4));
+    }
 }
 
 // Basic request rate limit per PHP session.
@@ -63,14 +78,18 @@ $phone = $clean($phone, 40);
 $comment = $clean($comment, 3000);
 $project = $clean($project, 12000);
 $source = $clean($source, 40);
+$city = $clean($city, 120);
 
-$subject = 'Новая заявка PORTAL SYSTEMS — ' . ($source === 'calculator' ? 'калькулятор' : 'сайт');
-$body = "Новая заявка с сайта PORTAL SYSTEMS\n\n";
+$subject = $isOrder
+    ? "Заказ {$orderId} — PORTAL SYSTEMS"
+    : 'Новая заявка PORTAL SYSTEMS — ' . ($source === 'calculator' ? 'калькулятор' : 'сайт');
+$body = $isOrder ? "Новый заказ с сайта PORTAL SYSTEMS № {$orderId}\n\n" : "Новая заявка с сайта PORTAL SYSTEMS\n\n";
 $body .= "Источник: {$source}\n";
 $body .= "Имя: {$name}\n";
 $body .= "Телефон: {$phone}\n";
+if ($city !== '') $body .= "Город / посёлок: {$city}\n";
 if ($comment !== '') $body .= "\nКомментарий:\n{$comment}\n";
-if ($project !== '') $body .= "\nПараметры проекта:\n{$project}\n";
+if ($project !== '') $body .= ($isOrder ? "\nСостав заказа:\n" : "\nПараметры проекта:\n") . "{$project}\n";
 $body .= "\nСтраница: " . ($_SERVER['HTTP_REFERER'] ?? 'не определена') . "\n";
 $body .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'не определён') . "\n";
 
@@ -90,4 +109,4 @@ if (!$sent) {
     exit;
 }
 
-echo json_encode(['ok'=>true], JSON_UNESCAPED_UNICODE);
+echo json_encode($isOrder ? ['ok'=>true,'order_id'=>$orderId] : ['ok'=>true], JSON_UNESCAPED_UNICODE);
