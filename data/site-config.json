@@ -1,8 +1,6 @@
 {
   "brand": "",
   "site_url": "",
-  "phone": "",
-  "email": "",
   "seo": {
     "enabled": false,
     "title": "",
@@ -16,8 +14,8 @@
   "merchant": {
     "enabled": false,
     "feed_url": "",
-    "seller_name": "",
-    "delivery": {},
-    "offers": []
+    "seller": "",
+    "delivery": "",
+    "pickup": ""
   }
 }
