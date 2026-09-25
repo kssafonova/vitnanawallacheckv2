@@ -7,13 +7,13 @@
       root.innerHTML=\`
       <style>
       :host{display:block;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}a{color:inherit;text-decoration:none}
-      .footer{background:#080808;color:#f1f0eb;padding:60px 20px 22px;border-top:1px solid #292927}.in{width:min(100%,1440px);margin:auto}
-      .brand{font-size:clamp(48px,15vw,150px);line-height:.72;font-weight:300;letter-spacing:-.075em;padding-bottom:36px;border-bottom:1px solid #2d2d2a}
-      .grid{display:grid;grid-template-columns:1fr 1fr;gap:34px 20px;padding:34px 0 46px}
-      h3{margin:0 0 13px;color:#77746d;font-size:8px;line-height:1;text-transform:uppercase;letter-spacing:.13em;font-weight:400}
-      a,p{display:block;margin:0 0 8px;color:#d5d2c9;font-size:12px;line-height:1.45}a:hover{opacity:.62}
-      .bottom{display:flex;justify-content:space-between;gap:20px;padding-top:16px;border-top:1px solid #2d2d2a;color:#6f6c65;font-size:8px;letter-spacing:.09em;text-transform:uppercase}
-      @media(min-width:800px){.footer{padding:84px 48px 24px}.grid{grid-template-columns:repeat(4,1fr);gap:45px;padding:44px 0 62px}a,p{font-size:13px}}
+      .footer{background:#050505;color:#fff;padding:58px 20px 22px;border-top:1px solid #272727}.in{width:min(100%,1440px);margin:auto}
+      .brand{font-size:clamp(38px,12vw,110px);line-height:.82;font-weight:300;letter-spacing:-.065em;padding-bottom:32px;border-bottom:1px solid #333}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 18px;padding:32px 0 40px}
+      h3{margin:0 0 13px;color:#7f7f79;font-size:10px;line-height:1;text-transform:uppercase;letter-spacing:.13em;font-weight:400}
+      a,p{display:block;margin:0 0 8px;font-size:13px;line-height:1.45}a:hover{opacity:.65}
+      .bottom{display:flex;justify-content:space-between;gap:20px;padding-top:18px;border-top:1px solid #333;color:#777770;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+      @media(min-width:800px){.footer{padding:82px 40px 26px}.grid{grid-template-columns:repeat(4,1fr);gap:36px;padding:42px 0 60px}a,p{font-size:14px}}
       </style>
       <footer class="footer"><div class="in">
         <div class="brand">PORTAL SYSTEMS</div>
