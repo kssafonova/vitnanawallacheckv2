@@ -140,3 +140,64 @@
     });
   };
 })();
+
+/**
+ * PATCH 2 — UI-level: hides the "Мультифункция" glazing card while the cold
+ * contour is selected, and removes the default active highlighting from
+ * step 2 (thermal contour / glazing) on initial page load. NOTE: this only
+ * clears the *visual* highlighting on load — calculator.js's own internal
+ * defaults (warm contour, multifunctional glazing) still drive the first
+ * calculation until the user clicks a card, because that internal state
+ * variable is not exposed outside calculator.js. Wrapping setThermalContour/
+ * setGlazing (both are global function declarations) lets us react to every
+ * user click and keep the hidden-card case consistent.
+ */
+(function(){
+  if (typeof window.setThermalContour !== 'function' ||
+      typeof window.setGlazing !== 'function') {
+    return;
+  }
+
+  var userTouchedThermal = false;
+  var userTouchedGlazing = false;
+
+  function syncGlazingVisibility(isCold){
+    document.querySelectorAll('[data-glazing]').forEach(function(card){
+      if (card.dataset.glazing === 'multifunctional') {
+        card.hidden = isCold;
+      }
+    });
+  }
+
+  var originalSetThermalContour = window.setThermalContour;
+  window.setThermalContour = function(thermalContour){
+    originalSetThermalContour(thermalContour);
+    userTouchedThermal = true;
+    var isCold = thermalContour === 'cold';
+    syncGlazingVisibility(isCold);
+    if (isCold) {
+      var activeCard = document.querySelector('[data-glazing].is-active');
+      if (activeCard && activeCard.dataset.glazing === 'multifunctional') {
+        window.setGlazing('triplex');
+      }
+    }
+  };
+
+  var originalSetGlazing = window.setGlazing;
+  window.setGlazing = function(glazing){
+    originalSetGlazing(glazing);
+    userTouchedGlazing = true;
+  };
+
+  function clearStep2DefaultHighlighting(){
+    if (!userTouchedThermal) {
+      document.querySelectorAll('[data-thermal].is-active').forEach(function(c){ c.classList.remove('is-active'); });
+    }
+    if (!userTouchedGlazing) {
+      document.querySelectorAll('[data-glazing].is-active').forEach(function(c){ c.classList.remove('is-active'); });
+    }
+  }
+
+  syncGlazingVisibility(false); // warm is calculator.js's initial default
+  clearStep2DefaultHighlighting();
+})();
