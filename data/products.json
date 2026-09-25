@@ -1,0 +1,84 @@
+{
+  "models": [
+    {
+      "model": "HS2",
+      "system": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
+      "size": "3000 × 2300 мм",
+      "price": 375000,
+      "colors": [
+        "RAL 9016",
+        "RAL 7016"
+      ],
+      "variants": [
+        "ACTIVE-L",
+        "ACTIVE-R"
+      ]
+    },
+    {
+      "model": "HS3",
+      "system": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
+      "size": "3600 × 2300 мм",
+      "price": 489000,
+      "colors": [
+        "RAL 7016",
+        "RAL 7024"
+      ],
+      "variants": [
+        "PARK-L",
+        "PARK-R"
+      ]
+    },
+    {
+      "model": "HS4",
+      "system": "ALUMARK S158",
+      "hardware": "Roto Patio Lift",
+      "size": "4800 × 2300 мм",
+      "price": 620000,
+      "colors": [
+        "RAL 7016",
+        "RAL 9005"
+      ],
+      "variants": [
+        "MASTER-L",
+        "MASTER-R"
+      ]
+    },
+    {
+      "model": "FS3",
+      "system": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
+      "size": "2700 × 2300 мм",
+      "price": 540000,
+      "colors": [
+        "RAL 7016",
+        "RAL 9005"
+      ],
+      "variants": [
+        "STACK-L",
+        "STACK-R"
+      ]
+    },
+    {
+      "model": "FS4",
+      "system": "ALUMARK S70",
+      "hardware": "Roto Patio Fold",
+      "size": "3600 × 2300 мм",
+      "price": 610000,
+      "colors": [
+        "RAL 7016",
+        "RAL 9005"
+      ],
+      "variants": [
+        "STACK-L",
+        "STACK-R"
+      ]
+    }
+  ],
+  "notes": {
+    "url_language": "Russian market, human-readable transliterated slugs",
+    "sku_logic": "technical codes remain in SKU only; interface and URL use Russian human wording",
+    "seo": "prepared but disabled"
+  }
+}
