@@ -174,22 +174,23 @@
 
     <div class="hs-scheme-ui" data-scheme-ui>
       <div class="hs-scheme-picker">
-        <div class="hs-scheme-tabs" role="tablist" aria-label="Доступные конфигурации HS">
-          <button class="is-active" type="button" role="tab" aria-selected="true" data-scheme="hs30-left">
-            <span>HS / 30</span><small>активная слева</small>
+        <div class="hs-family-tabs" role="tablist" aria-label="Размер HS-портала">
+          <button class="is-active" type="button" role="tab" aria-selected="true" data-family="hs30">
+            <span>HS / 30</span><small>3000 × 2300 мм</small>
           </button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs30-right">
-            <span>HS / 30</span><small>активная справа</small>
+          <button type="button" role="tab" aria-selected="false" data-family="hs36">
+            <span>HS / 36</span><small>3600 × 2300 мм</small>
           </button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-left">
-            <span>HS / 36</span><small>2 активные слева</small>
+          <button type="button" role="tab" aria-selected="false" data-family="hs48">
+            <span>HS / 48</span><small>4800 × 2300 мм</small>
           </button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs36-right">
-            <span>HS / 36</span><small>2 активные справа</small>
-          </button>
-          <button type="button" role="tab" aria-selected="false" data-scheme="hs48">
-            <span>HS / 48</span><small>от центра</small>
-          </button>
+        </div>
+        <div class="hs-variant-row">
+          <span class="hs-variant-label">Вариант открывания</span>
+          <div class="hs-variant-tabs" role="tablist" aria-label="Варианты открывания" data-variant-tabs>
+            <button class="is-active" type="button" role="tab" aria-selected="true" data-variant="left">Активная слева</button>
+            <button type="button" role="tab" aria-selected="false" data-variant="right">Активная справа</button>
+          </div>
         </div>
       </div>
 
@@ -232,15 +233,9 @@
         </div>
       </div>
 
-      <div class="hs-scheme-available">
-        <div>
-          <small>Готовые проёмы</small>
-          <strong>Ширина</strong>
-        </div>
-        <button class="is-active" type="button" data-size-chip="3000" data-target-scheme="hs30-left">3000 мм</button>
-        <button type="button" data-size-chip="3600" data-target-scheme="hs36-left">3600 мм</button>
-        <button type="button" data-size-chip="4800" data-target-scheme="hs48">4800 мм</button>
-        <div class="hs-scheme-available__height"><small>Высота готовых</small><strong>2300 мм</strong></div>
+      <div class="hs-scheme-availability">
+        <div><small>Готовые размеры</small><strong>3000 × 2300 · 3600 × 2300 · 4800 × 2300 мм</strong></div>
+        <div><small>Другие проёмы</small><strong>HS / PROJECT · по индивидуальному расчёту</strong></div>
       </div>
 
       <div class="hs-scheme-summary">
