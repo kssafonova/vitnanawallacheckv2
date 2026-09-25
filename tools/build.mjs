@@ -31,7 +31,10 @@ const sizeText = m => `${m.width} × ${m.height} мм`;
 const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');           // ALUMARK S158 → alumark-s158
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
 const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
-const mirrored = s => /(^B\d|-R)$/.test(s.code);                                        // зеркальные схемы
+const mirrored = s => /(^B\d|-R)$/.test(s.code);
+// HS/36 (D1) рисуем зеркально: подвижная пара справа, движение влево — так попросила владелец
+const flipModel = m => m.model === 'HS3';
+const isMirror = (m, s) => mirrored(s) !== flipModel(m);                                        // зеркальные схемы
 const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порталы');
 
 // ---------- варианты ----------
@@ -60,7 +63,9 @@ for (const m of data.models) {
 }
 const byModel = model => variants.filter(v => v.m.model === model);
 const find = (model, colorSlug, schemeSlug) => variants.find(v => v.m.model === model && v.c.slug === colorSlug && v.s.slug === schemeSlug);
-const firstOf = m => find(m.model, m.colors[0].slug, m.schemes[0].slug);
+// Схема по умолчанию: default_scheme в products.json, иначе первая
+const defScheme = m => m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0];
+const firstOf = m => find(m.model, m.colors[0].slug, defScheme(m).slug);
 
 // ---------- схемы (SVG) ----------
 // Мелкая схема в углу фото: без текста. Рисуем створки прямоугольниками:
@@ -90,7 +95,7 @@ function smallSvg(m, s) {
     marks = `<path class="sm-fold" d="M${z}"/>` + arrow(px(2) + pw * 0.7, px(0) + pw * 0.3, Y1 - 4);
   }
   let body = panes + marks;
-  if (mirrored(s)) body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
+  if (isMirror(m, s)) body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
   return `<svg class="scheme-mini" viewBox="0 0 100 56"><rect class="sm-frame" x="2.5" y="2.5" width="95" height="51"/>${body}</svg>`;
 }
 
@@ -115,7 +120,7 @@ function largeSvg(m, s) {
   } else {
     body = '<path d="M105 72l85 88-85 88M190 72l85 88-85 88M275 72l85 88-85 88"/><line x1="500" y1="44" x2="500" y2="276"/>';
   }
-  if (mirrored(s)) {
+  if (isMirror(m, s)) {
     body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
     labels = labels.map(l => ({ ...l, x: W - l.x })).reverse();
   }
@@ -141,7 +146,7 @@ function marketCard(m, rel) {
   const first = firstOf(m);
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
-  const s0 = m.schemes[0], c0 = m.colors[0];
+  const s0 = defScheme(m), c0 = m.colors[0];
   const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
   const swatches = m.colors.map((c, i) => {
     const v = find(m.model, c.slug, s0.slug);
@@ -150,10 +155,11 @@ function marketCard(m, rel) {
   const chips = m.schemes.length > 1
     ? `<div class="m-card__chips">${m.schemes.map((s, i) => {
         const v = find(m.model, c0.slug, s.slug);
-        return `<a class="m-card__chip${i ? '' : ' is-active'}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${i ? '' : ' aria-current="true"'}>${esc(s.short)}</a>`;
+        const on = s === s0;
+        return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
       }).join('')}</div>`
     : '';
-  const schemesSvg = m.schemes.map((s, i) => `<span data-scheme-svg="${s.slug}"${i ? ' hidden' : ''}>${smallSvg(m, s)}</span>`).join('');
+  const schemesSvg = m.schemes.map(s => `<span data-scheme-svg="${s.slug}"${s === s0 ? '' : ' hidden'}>${smallSvg(m, s)}</span>`).join('');
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
     : `<strong>${money(m.price)}</strong><small>от, за конструкцию</small>`;
@@ -211,7 +217,7 @@ function variantPage(v) {
   const product = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: `${m.title} ${m.code} «${m.name}» ${size}, ${colorName}, ${s.label}`,
+    name: `${m.name} ${m.code}, ${size}, ${colorName}, ${s.label}`,
     sku: v.sku,
     url,
     image: [imageUrl],
