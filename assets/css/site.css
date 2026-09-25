@@ -417,3 +417,106 @@
   .sysx-card-strip .product-card__media{aspect-ratio:1.62/1}
   .project{flex-basis:min(52vw,820px)!important;min-height:76vh!important}
 }
+
+
+/* ============================================================
+   COMPACT SYSTEM PREVIEWS — keep the system, not cards, dominant
+   ============================================================ */
+.sysx-mini-block{margin-top:22px}
+.sysx-mini-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin-bottom:9px;color:#aaa79f;
+  font-size:8px;font-weight:600;letter-spacing:.11em;text-transform:uppercase
+}
+.sysx-mini-head a{
+  display:inline-flex;align-items:center;gap:7px;color:#f0eee7;
+  padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.45)
+}
+.sysx-mini-head a b{font-size:13px;font-weight:300}
+.sysx-mini-status{color:#9f936f}
+
+.sysx-mini-products{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px
+}
+.sysx-mini-card{
+  min-width:0;display:grid;grid-template-rows:76px 1fr;
+  position:relative;background:#11110f;border:1px solid var(--sx-line);
+  color:#f5f3ed;text-decoration:none;overflow:hidden
+}
+.sysx-mini-thumb{position:relative;display:block;overflow:hidden;background:#252522}
+.sysx-mini-thumb img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:transform .35s ease}
+.sysx-mini-thumb i{
+  position:absolute;left:6px;bottom:6px;padding:4px 5px;
+  background:rgba(5,5,5,.72);border:1px solid rgba(255,255,255,.5);
+  color:#fff;font-size:6px;font-style:normal;font-weight:600;letter-spacing:.08em;text-transform:uppercase
+}
+.sysx-mini-copy{display:block;min-width:0;padding:9px 8px 10px}
+.sysx-mini-copy small{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#817e76;font-size:6px;font-weight:600;letter-spacing:.07em;text-transform:uppercase
+}
+.sysx-mini-copy strong{
+  display:block;margin-top:5px;
+  font-size:10px;line-height:1.25;font-weight:400;letter-spacing:-.015em
+}
+.sysx-mini-copy em{
+  display:block;margin-top:5px;color:#aaa79f;
+  font-size:7px;line-height:1.2;font-style:normal
+}
+.sysx-mini-arrow{
+  position:absolute;right:7px;bottom:8px;color:#77746d;
+  font-size:11px;line-height:1
+}
+.sysx-mini-card.is-soon{opacity:.76}
+.sysx-mini-card.is-soon .sysx-mini-thumb img{filter:grayscale(.25) brightness(.65)}
+.sysx-actions--single{grid-template-columns:1fr}
+.sysx-actions--single .sysx-link{max-width:240px}
+
+/* Panoramic glazing: individual project, B2C + B2B without corporate clutter */
+.sysx-pano-cta{
+  margin-top:24px;padding-top:18px;border-top:1px solid var(--sx-line)
+}
+.sysx-pano-audience{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:13px}
+.sysx-pano-audience span{
+  padding:6px 7px;border:1px solid #3d3d38;color:#aaa79f;
+  font-size:7px;font-weight:600;letter-spacing:.08em;text-transform:uppercase
+}
+.sysx-pano-cta p{margin:0;color:#aaa79f;font-size:11px;line-height:1.55}
+.sysx-pano-cta .sysx-link{margin-top:13px}
+.sysx-pano-visual{margin:0;position:relative;min-height:280px;overflow:hidden;background:#161614}
+.sysx-pano-visual img{display:block;width:100%;height:100%;min-height:280px;object-fit:cover;filter:saturate(.76)}
+.sysx-pano-visual:after{
+  content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(0,0,0,.62))
+}
+.sysx-pano-visual figcaption{
+  position:absolute;z-index:2;left:12px;right:12px;bottom:11px;
+  display:flex;justify-content:space-between;gap:12px;
+  color:#e6e3da;font-size:7px;letter-spacing:.08em;text-transform:uppercase
+}
+
+/* Hero CTA hierarchy: catalogue first, individual calculation second */
+.hero__actions .ui-btn--light{font-weight:700}
+.hero__actions .ui-btn:not(.ui-btn--light){background:rgba(5,5,5,.12)}
+
+@media(max-width:520px){
+  .hero__actions{grid-template-columns:1fr}
+  .hero__actions .ui-btn{width:100%;min-height:52px}
+}
+
+@media(min-width:900px){
+  .sysx-mini-block{margin-top:26px}
+  .sysx-mini-products{grid-template-columns:1fr;gap:7px}
+  .sysx-mini-card{
+    min-height:76px;grid-template-columns:86px minmax(0,1fr) 18px;grid-template-rows:none
+  }
+  .sysx-mini-copy{align-self:center;padding:9px 8px 9px 11px}
+  .sysx-mini-copy small{font-size:7px}
+  .sysx-mini-copy strong{font-size:12px}
+  .sysx-mini-copy em{font-size:8px}
+  .sysx-mini-arrow{position:static;align-self:center;justify-self:center;padding-right:7px}
+  .sysx-mini-thumb{height:100%}
+  .sysx-mini-card:hover .sysx-mini-thumb img{transform:scale(1.025)}
+  .sysx-pano-visual{min-height:420px}
+  .sysx-pano-visual img{min-height:420px}
+  .sysx-pano-cta p{font-size:12px}
+}
