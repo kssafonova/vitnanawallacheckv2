@@ -398,15 +398,6 @@
 }
 /* Телефон: группы из четырёх пунктов — сеткой 2×2 */
 @media(max-width:767px){
-  /* герметичность: 4 пункта */
-  .hsx-rows{display:grid;grid-template-columns:1fr 1fr}
-  .hsx-rows article{grid-template-columns:1fr;align-content:start;gap:6px;padding:14px 12px}
-  .hsx-rows article:nth-child(odd){border-right:1px solid var(--hx-line)}
-  .hsx-rows article:nth-last-child(-n+2){border-bottom:0}
-  .hsx-rows article>span{padding-top:0}
-  .hs-page .hsx-rows h4{font-size:var(--fs-body);line-height:1.2}
-  .hsx-rows p{font-size:var(--fs-caption);line-height:1.4}
-
   /* как работает: 4 шага */
   .hsx-steps{display:grid;grid-template-columns:1fr 1fr;column-gap:0}
   .hsx-steps li{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:12px 12px 14px 0}
@@ -422,4 +413,24 @@
   .hsx-result__main{grid-column:1 / -1}
   .hsx-fact{grid-template-columns:1fr;align-content:start;gap:6px;align-items:start;padding:12px 12px 12px 0}
   .hsx-fact:nth-child(odd){padding:12px 0 12px 12px;border-left:1px solid var(--hx-line)}
+}
+/* Телефон: плотные группы — карточками с прокруткой вбок (как варианты стеклопакета) */
+@media(max-width:767px){
+  .hsx-rows,.hsx-frames{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    margin-inline:calc(-1 * var(--hs-pad));padding:0 var(--hs-pad) 4px;scroll-padding-inline:var(--hs-pad);
+    border:0;background:none;scrollbar-width:none
+  }
+  .hsx-rows::-webkit-scrollbar,.hsx-frames::-webkit-scrollbar{display:none}
+  /* герметичность: 4 пункта */
+  .hsx-split{border-top:0}
+  .hsx-visual-box.is-seal{margin-bottom:12px;border-top:1px solid var(--hx-line)}
+  .hsx-rows article{
+    flex:0 0 74%;scroll-snap-align:start;grid-template-columns:1fr;align-content:start;gap:6px;
+    padding:14px;border:1px solid var(--hx-line);background:rgba(255,255,255,.28)
+  }
+  .hsx-rows article:last-child{border-bottom:1px solid var(--hx-line)}
+  .hsx-rows article>span{padding-top:0}
+  /* профиль: рамы 158 и 246 */
+  .hsx-frame{flex:0 0 84%;scroll-snap-align:start;border:1px solid var(--hx-line)}
 }
