@@ -91,11 +91,14 @@
     }
   }
 
-  /* Grouped scheme visualizer */
+  /* Grouped scheme visualizer — scrub / drag workbench */
   const schemeRoot=document.querySelector('[data-scheme-ui]');
   if(schemeRoot){
     const canvas=schemeRoot.querySelector('#hsSchemeCanvas');
     const ctx=canvas?.getContext('2d',{alpha:true});
+    const stage=schemeRoot.querySelector('[data-scheme-stage]');
+    const progressInput=schemeRoot.querySelector('[data-scheme-progress]');
+    const meter=schemeRoot.querySelector('[data-scheme-meter]');
     const familyButtons=[...schemeRoot.querySelectorAll('[data-family]')];
     const variantHost=schemeRoot.querySelector('[data-variant-tabs]');
     const viewButtons=[...schemeRoot.querySelectorAll('[data-scheme-view]')];
@@ -111,55 +114,182 @@
 
     const families={
       hs30:{label:'HS / 30',width:3000,height:2300,variants:{
-        left:{label:'Активная слева',name:'HS / 30 · активная слева',sections:2,active:1,moving:[0],fixed:[1],targets:[1],opening:'створка → вправо',passage:'≈ 1500 мм*',openPct:'около 50% проёма',openSlots:[0,1],use:'Выход на террасу'},
-        right:{label:'Активная справа',name:'HS / 30 · активная справа',sections:2,active:1,moving:[1],fixed:[0],targets:[0],opening:'створка ← влево',passage:'≈ 1500 мм*',openPct:'около 50% проёма',openSlots:[1,2],use:'Выход на террасу'}
+        left:{label:'Активная слева',name:'HS / 30 · активная слева',sections:2,active:1,moving:[0],fixed:[1],targets:[1],opening:'створка → вправо',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[0,1],passageFrom:'left',use:'Выход на террасу'},
+        right:{label:'Активная справа',name:'HS / 30 · активная справа',sections:2,active:1,moving:[1],fixed:[0],targets:[0],opening:'створка ← влево',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,2],passageFrom:'right',use:'Выход на террасу'}
       }},
       hs36:{label:'HS / 36',width:3600,height:2300,variants:{
-        left:{label:'2 активные слева',name:'HS / 36 · 2 активные слева',sections:3,active:2,moving:[0,1],fixed:[2],targets:[2,2],opening:'2 створки → вправо',passage:'≈ 2400 мм*',openPct:'около 66% проёма',openSlots:[0,2],use:'Широкий выход'},
-        right:{label:'2 активные справа',name:'HS / 36 · 2 активные справа',sections:3,active:2,moving:[1,2],fixed:[0],targets:[0,0],opening:'2 створки ← влево',passage:'≈ 2400 мм*',openPct:'около 66% проёма',openSlots:[1,3],use:'Широкий выход'}
+        left:{label:'2 активные слева',name:'HS / 36 · 2 активные слева',sections:3,active:2,moving:[0,1],fixed:[2],targets:[2,2],opening:'2 створки → вправо',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[0,2],passageFrom:'left',use:'Широкий выход'},
+        right:{label:'2 активные справа',name:'HS / 36 · 2 активные справа',sections:3,active:2,moving:[1,2],fixed:[0],targets:[0,0],opening:'2 створки ← влево',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[1,3],passageFrom:'right',use:'Широкий выход'}
       }},
       hs48:{label:'HS / 48',width:4800,height:2300,variants:{
-        center:{label:'Открывание от центра',name:'HS / 48 · от центра',sections:4,active:2,moving:[1,2],fixed:[0,3],targets:[0,3],opening:'← от центра →',passage:'≈ 2400 мм*',openPct:'около 50% проёма',openSlots:[1,3],use:'Главный панорамный выход'}
+        center:{label:'Открывание от центра',name:'HS / 48 · от центра',sections:4,active:2,moving:[1,2],fixed:[0,3],targets:[0,3],opening:'← от центра →',passage:'≈ 2400 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,3],passageFrom:'center',use:'Главный панорамный выход'}
       }}
     };
 
-    let currentFamily='hs30',currentVariant='left',view='diagram',openProgress=0,openTarget=0,raf=0;
+    let currentFamily='hs30',currentVariant='left',view='diagram',openProgress=0,openTarget=0,raf=0,drag=false;
     const current=()=>({...families[currentFamily],...families[currentFamily].variants[currentVariant]});
 
     const line=(x1,y1,x2,y2,color='#77736a',width=1)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()};
     const arrowHead=(x,y,dir,color='#77736a')=>{ctx.fillStyle=color;ctx.beginPath();if(dir==='left'){ctx.moveTo(x,y);ctx.lineTo(x+6,y-4);ctx.lineTo(x+6,y+4)}else if(dir==='right'){ctx.moveTo(x,y);ctx.lineTo(x-6,y-4);ctx.lineTo(x-6,y+4)}else if(dir==='up'){ctx.moveTo(x,y);ctx.lineTo(x-4,y+6);ctx.lineTo(x+4,y+6)}else{ctx.moveTo(x,y);ctx.lineTo(x-4,y-6);ctx.lineTo(x+4,y-6)}ctx.closePath();ctx.fill()};
-    const dimensionH=(x1,x2,y,label)=>{line(x1,y,x2,y,'#756f63',1);arrowHead(x1,y,'left','#756f63');arrowHead(x2,y,'right','#756f63');ctx.fillStyle='#665f55';ctx.font='9px Arial';ctx.textAlign='center';ctx.fillText(label,(x1+x2)/2,y-7)};
-    const dimensionV=(x,y1,y2,label)=>{line(x,y1,x,y2,'#756f63',1);arrowHead(x,y1,'up','#756f63');arrowHead(x,y2,'down','#756f63');ctx.save();ctx.translate(x-8,(y1+y2)/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='#665f55';ctx.font='9px Arial';ctx.textAlign='center';ctx.fillText(label,0,0);ctx.restore()};
-    const drawPane=(x,y,w,h,moving=false)=>{const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,moving?'rgba(245,250,249,.96)':'rgba(220,228,226,.78)');g.addColorStop(1,moving?'rgba(166,192,196,.46)':'rgba(241,242,238,.74)');ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.strokeStyle=moving?'#171816':'#5f625e';ctx.lineWidth=moving?2:1.2;ctx.strokeRect(x,y,w,h)};
-    const geometry=()=>{const w=canvas.clientWidth,h=canvas.clientHeight,mobile=w<640,left=mobile?w*.09:w*.12,right=mobile?w*.94:w*.91,top=mobile?h*.19:h*.16,bottom=mobile?h*.70:h*.72;return{w,h,mobile,left,right,top,bottom,frameW:right-left,frameH:bottom-top}};
-    const openingRect=(s,g)=>{const slotW=g.frameW/s.sections;return{x:g.left+s.openSlots[0]*slotW,y:g.top,w:(s.openSlots[1]-s.openSlots[0])*slotW,h:g.frameH}};
+    const font=(size,weight=500)=>`${weight} ${size}px Manrope, Arial, sans-serif`;
+    const dimensionH=(x1,x2,y,label)=>{line(x1,y,x2,y,'#756f63',1);arrowHead(x1,y,'left','#756f63');arrowHead(x2,y,'right','#756f63');ctx.fillStyle='#665f55';ctx.font=font(9,500);ctx.textAlign='center';ctx.fillText(label,(x1+x2)/2,y-7)};
+    const dimensionV=(x,y1,y2,label)=>{line(x,y1,x,y2,'#756f63',1);arrowHead(x,y1,'up','#756f63');arrowHead(x,y2,'down','#756f63');ctx.save();ctx.translate(x-8,(y1+y2)/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='#665f55';ctx.font=font(9,500);ctx.textAlign='center';ctx.fillText(label,0,0);ctx.restore()};
 
-    const drawPortal=(s,g)=>{
-      const slotW=g.frameW/s.sections,inset=5,paneW=slotW-inset*2,paneH=g.frameH-inset*2,slots=Array.from({length:s.sections},(_,i)=>g.left+i*slotW);
-      const op=openingRect(s,g);
-      if(openProgress>.03){ctx.fillStyle='rgba(169,157,121,.16)';ctx.fillRect(op.x+2,op.y+2,op.w-4,op.h-4);ctx.strokeStyle='#9f916e';ctx.setLineDash([6,5]);ctx.strokeRect(op.x+2,op.y+2,op.w-4,op.h-4);ctx.setLineDash([])}
-      ctx.strokeStyle='#202120';ctx.lineWidth=g.mobile?5:7;ctx.strokeRect(g.left,g.top,g.frameW,g.frameH);
-      s.fixed.forEach(i=>drawPane(slots[i]+inset,g.top+inset,paneW,paneH,false));
-      s.moving.forEach((i,k)=>{const target=s.targets[k],from=slots[i]+inset,to=slots[target]+inset+(s.targets.filter(t=>t===target).length>1?(k-(s.moving.length-1)/2)*(g.mobile?5:8):0);const x=lerp(from,to,ease(openProgress));drawPane(x,g.top+inset,paneW,paneH,true);ctx.fillStyle='#171816';ctx.fillRect(x+(to>=from?paneW*.12:paneW*.88-2),g.top+paneH*.44,2,Math.max(20,paneH*.13))});
-      return op;
+    const drawPane=(x,y,w,h,moving=false,label='')=>{
+      const g=ctx.createLinearGradient(x,y,x+w,y+h);
+      g.addColorStop(0,moving?'rgba(249,253,252,.98)':'rgba(220,228,226,.76)');
+      g.addColorStop(1,moving?'rgba(165,193,196,.47)':'rgba(241,242,238,.73)');
+      ctx.fillStyle=g;ctx.fillRect(x,y,w,h);
+      ctx.strokeStyle=moving?'#171816':'#6b6d68';ctx.lineWidth=moving?2:1.2;ctx.strokeRect(x,y,w,h);
+      if(label&&w>75){
+        ctx.fillStyle=moving?'#171816':'#6f6c65';ctx.font=font(7,600);ctx.textAlign='center';
+        ctx.fillText(label,x+w/2,y+16);
+      }
     };
 
-    const drawDiagram=()=>{const s=current(),g=geometry();ctx.fillStyle='#e9e6de';ctx.fillRect(0,0,g.w,g.h);const op=drawPortal(s,g);dimensionH(g.left,g.right,g.top-28,s.width+' мм');dimensionV(g.left-24,g.top,g.bottom,s.height+' мм');dimensionH(op.x+3,op.x+op.w-3,g.bottom+28,s.passage.replace('*',''));ctx.fillStyle='#6e695f';ctx.font=(g.mobile?'8px':'9px')+' Arial';ctx.textAlign='center';ctx.fillText(openProgress>.88?'СВОБОДНАЯ ЗОНА ПРОХОДА':'ОТКРЫВАЕМАЯ ЗОНА',op.x+op.w/2,g.bottom+44)};
-    const drawFacade=()=>{const s=current(),g0=geometry(),{w,h}=g0;const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#cfd5d2');sky.addColorStop(.52,'#ecebe5');sky.addColorStop(.53,'#c9c0ae');sky.addColorStop(1,'#b3a58f');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);const wallX=w*.04,wallY=h*.09,wallW=w*.92,wallH=h*.72;ctx.fillStyle='#e1ded4';ctx.fillRect(wallX,wallY,wallW,wallH);ctx.fillStyle='#c8bca7';ctx.fillRect(0,h*.81,w,h*.19);const portalW=wallW*(w<640?.88:.72),portalH=wallH*.62,left=wallX+(wallW-portalW)/2,top=wallY+wallH*.23,g={w,h,mobile:w<640,left,right:left+portalW,top,bottom:top+portalH,frameW:portalW,frameH:portalH};drawPortal(s,g);ctx.fillStyle='#57534c';ctx.font=(w<640?'8px':'9px')+' Arial';ctx.textAlign='left';ctx.fillText(s.width+' × '+s.height+' мм',left,top-14);ctx.textAlign='right';ctx.fillText(openProgress>.5?'ОТКРЫТО · '+s.openPct.toUpperCase():'ЗАКРЫТО',left+portalW,top-14)};
-    const draw=()=>{if(!ctx||!canvas||!canvas.clientWidth)return;ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);view==='facade'?drawFacade():drawDiagram()};
-    const resize=()=>{const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);draw()};
-    const animateOpen=()=>{cancelAnimationFrame(raf);if(reduce){openProgress=openTarget;draw();return}const step=()=>{openProgress+=(openTarget-openProgress)*.12;if(Math.abs(openTarget-openProgress)<.002){openProgress=openTarget;draw();return}draw();raf=requestAnimationFrame(step)};step()};
+    const geometry=()=>{
+      const w=canvas.clientWidth,h=canvas.clientHeight,mobile=w<640;
+      const left=mobile?w*.09:w*.12,right=mobile?w*.94:w*.91,top=mobile?h*.20:h*.17,bottom=mobile?h*.69:h*.72;
+      return{w,h,mobile,left,right,top,bottom,frameW:right-left,frameH:bottom-top}
+    };
+    const openingRect=(s,g)=>{
+      const slotW=g.frameW/s.sections;
+      return{x:g.left+s.openSlots[0]*slotW,y:g.top,w:(s.openSlots[1]-s.openSlots[0])*slotW,h:g.frameH}
+    };
+    const visiblePassage=(s,op)=>{
+      const maxW=op.w*openProgress;
+      if(s.passageFrom==='right')return{x:op.x+op.w-maxW,w:maxW};
+      if(s.passageFrom==='center')return{x:op.x+(op.w-maxW)/2,w:maxW};
+      return{x:op.x,w:maxW};
+    };
+
+    const drawPortal=(s,g)=>{
+      const slotW=g.frameW/s.sections,inset=g.mobile?5:7,paneW=slotW-inset*2,paneH=g.frameH-inset*2;
+      const slots=Array.from({length:s.sections},(_,i)=>g.left+i*slotW);
+      const op=openingRect(s,g),free=visiblePassage(s,op);
+
+      // threshold / running tracks
+      line(g.left,g.bottom+7,g.right,g.bottom+7,'#6d695f',1);
+      line(g.left,g.bottom+12,g.right,g.bottom+12,'#a49d8e',1);
+
+      if(openProgress>.015&&free.w>2){
+        ctx.fillStyle='rgba(177,162,122,.23)';ctx.fillRect(free.x+2,op.y+2,Math.max(0,free.w-4),op.h-4);
+        ctx.strokeStyle='#9f916e';ctx.setLineDash([6,5]);ctx.strokeRect(free.x+2,op.y+2,Math.max(0,free.w-4),op.h-4);ctx.setLineDash([]);
+      }
+
+      ctx.strokeStyle='#202120';ctx.lineWidth=g.mobile?5:7;ctx.strokeRect(g.left,g.top,g.frameW,g.frameH);
+      s.fixed.forEach(i=>drawPane(slots[i]+inset,g.top+inset,paneW,paneH,false,'FIX'));
+      s.moving.forEach((i,k)=>{
+        const target=s.targets[k],from=slots[i]+inset;
+        const sameTarget=s.targets.filter(t=>t===target).length>1;
+        const offset=sameTarget?(k-(s.moving.length-1)/2)*(g.mobile?5:10):0;
+        const to=slots[target]+inset+offset;
+        const x=lerp(from,to,ease(openProgress));
+        drawPane(x,g.top+inset,paneW,paneH,true,'ACTIVE');
+        const handleX=to>=from?x+paneW*.13:x+paneW*.87-2;
+        ctx.fillStyle='#171816';ctx.fillRect(handleX,g.top+inset+paneH*.43,2,Math.max(20,paneH*.14));
+      });
+      return{op,free};
+    };
+
+    const drawDiagram=()=>{
+      const s=current(),g=geometry();
+      ctx.fillStyle='#e9e6de';ctx.fillRect(0,0,g.w,g.h);
+      const {op,free}=drawPortal(s,g);
+      dimensionH(g.left,g.right,g.top-30,s.width+' мм');
+      dimensionV(g.left-24,g.top,g.bottom,s.height+' мм');
+      if(openProgress>.04&&free.w>22)dimensionH(free.x+3,free.x+free.w-3,g.bottom+34,Math.round(parseInt(s.passage.replace(/\D/g,''),10)*openProgress)+' мм');
+      ctx.fillStyle='#6e695f';ctx.font=font(g.mobile?8:9,600);ctx.textAlign='center';
+      ctx.fillText(openProgress>.94?'СВОБОДНЫЙ ПРОХОД':openProgress>.03?'ПРОХОД ОТКРЫВАЕТСЯ':'ЗАКРЫТО',op.x+op.w/2,g.bottom+54);
+    };
+
+    const drawFacade=()=>{
+      const s=current(),g0=geometry(),{w,h}=g0;
+      const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#cbd2cf');sky.addColorStop(.50,'#e9e8e2');sky.addColorStop(.51,'#cfc5b4');sky.addColorStop(1,'#b2a58f');
+      ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+      const wallX=w*.04,wallY=h*.09,wallW=w*.92,wallH=h*.72;
+      ctx.fillStyle='#e1ded4';ctx.fillRect(wallX,wallY,wallW,wallH);
+      ctx.fillStyle='#c7baa6';ctx.fillRect(0,h*.81,w,h*.19);
+      // architectural datum lines
+      ctx.fillStyle='rgba(70,68,62,.07)';ctx.fillRect(wallX+wallW*.07,wallY,2,wallH);ctx.fillRect(wallX+wallW*.91,wallY,2,wallH);
+      const portalW=wallW*(w<640?.88:.72),portalH=wallH*.62,left=wallX+(wallW-portalW)/2,top=wallY+wallH*.23;
+      const g={w,h,mobile:w<640,left,right:left+portalW,top,bottom:top+portalH,frameW:portalW,frameH:portalH};
+      drawPortal(s,g);
+      ctx.fillStyle='#57534c';ctx.font=font(w<640?8:9,600);ctx.textAlign='left';ctx.fillText(s.width+' × '+s.height+' мм',left,top-14);
+      ctx.textAlign='right';ctx.fillText(Math.round(openProgress*100)+'% ОТКРЫТИЯ',left+portalW,top-14);
+    };
+
+    const syncProgress=()=>{
+      const s=current(),pct=Math.round(openProgress*100);
+      if(progressInput)progressInput.value=String(pct);
+      if(meter)meter.style.width=(s.ratio*openProgress*100)+'%';
+      if(fields.status)fields.status.textContent=pct===0?'Закрыто':pct===100?'Открыто':pct+'%';
+      stateButtons.forEach(btn=>{
+        const key=btn.dataset.schemeState;
+        const on=(key==='closed'&&pct<10)||(key==='half'&&pct>=10&&pct<90)||(key==='open'&&pct>=90);
+        btn.classList.toggle('is-active',on);
+      });
+    };
+
+    const draw=()=>{
+      if(!ctx||!canvas||!canvas.clientWidth)return;
+      ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+      view==='facade'?drawFacade():drawDiagram();
+      syncProgress();
+    };
+    const resize=()=>{
+      const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+      canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));
+      ctx.setTransform(dpr,0,0,dpr,0,0);draw()
+    };
+    const animateOpen=()=>{
+      cancelAnimationFrame(raf);
+      if(reduce){openProgress=openTarget;draw();return}
+      const step=()=>{openProgress+=(openTarget-openProgress)*.12;if(Math.abs(openTarget-openProgress)<.002){openProgress=openTarget;draw();return}draw();raf=requestAnimationFrame(step)};step()
+    };
 
     const renderVariants=()=>{
       const variants=families[currentFamily].variants;
       if(!variants[currentVariant])currentVariant=Object.keys(variants)[0];
       variantHost.innerHTML=Object.entries(variants).map(([key,v])=>`<button type="button" role="tab" aria-selected="${key===currentVariant}" class="${key===currentVariant?'is-active':''}" data-variant="${key}">${v.label}</button>`).join('');
-      [...variantHost.querySelectorAll('[data-variant]')].forEach(btn=>btn.addEventListener('click',()=>{currentVariant=btn.dataset.variant;renderVariants();updateMeta();draw()}));
+      [...variantHost.querySelectorAll('[data-variant]')].forEach(btn=>btn.addEventListener('click',()=>{currentVariant=btn.dataset.variant;renderVariants();updateMeta();draw()}))
     };
-    const updateMeta=()=>{const s=current();fields.name.textContent=s.name;fields.status.textContent=openTarget>.5?'Открыто':'Закрыто';fields.size.textContent=s.width+' × '+s.height+' мм';fields.passage.textContent=s.passage;fields.openPct.textContent=s.openPct;fields.width.textContent=s.width+' мм';fields.height.textContent=s.height+' мм';fields.sections.textContent=s.sections;fields.active.textContent=s.active;fields.opening.textContent=s.opening;fields.use.textContent=s.use};
-    familyButtons.forEach(btn=>btn.addEventListener('click',()=>{currentFamily=btn.dataset.family;currentVariant=Object.keys(families[currentFamily].variants)[0];familyButtons.forEach(b=>{const on=b===btn;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',String(on))});renderVariants();updateMeta();draw()}));
-    viewButtons.forEach(btn=>btn.addEventListener('click',()=>{view=btn.dataset.schemeView||'diagram';viewButtons.forEach(b=>b.classList.toggle('is-active',b===btn));draw()}));
-    stateButtons.forEach(btn=>btn.addEventListener('click',()=>{openTarget=btn.dataset.schemeState==='open'?1:0;stateButtons.forEach(b=>b.classList.toggle('is-active',b===btn));fields.status.textContent=openTarget?'Открыто':'Закрыто';animateOpen()}));
+    const updateMeta=()=>{
+      const s=current();
+      fields.name.textContent=s.name;fields.size.textContent=s.width+' × '+s.height+' мм';fields.passage.textContent=s.passage;
+      fields.openPct.textContent=s.openPct;fields.width.textContent=s.width+' мм';fields.height.textContent=s.height+' мм';
+      fields.sections.textContent=s.sections;fields.active.textContent=s.active;fields.opening.textContent=s.opening;fields.use.textContent=s.use;
+      syncProgress()
+    };
+
+    familyButtons.forEach(btn=>btn.addEventListener('click',()=>{
+      currentFamily=btn.dataset.family;currentVariant=Object.keys(families[currentFamily].variants)[0];
+      familyButtons.forEach(b=>{const on=b===btn;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',String(on))});
+      openProgress=0;openTarget=0;renderVariants();updateMeta();draw()
+    }));
+    viewButtons.forEach(btn=>btn.addEventListener('click',()=>{
+      view=btn.dataset.schemeView||'diagram';viewButtons.forEach(b=>b.classList.toggle('is-active',b===btn));draw()
+    }));
+    stateButtons.forEach(btn=>btn.addEventListener('click',()=>{
+      const key=btn.dataset.schemeState;openTarget=key==='open'?1:key==='half'?.5:0;animateOpen()
+    }));
+    progressInput?.addEventListener('input',()=>{
+      cancelAnimationFrame(raf);openProgress=clamp(Number(progressInput.value)/100);openTarget=openProgress;draw()
+    });
+
+    const pointerToProgress=e=>{
+      const r=stage.getBoundingClientRect();openProgress=clamp((e.clientX-r.left)/r.width);openTarget=openProgress;draw()
+    };
+    stage?.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;drag=true;cancelAnimationFrame(raf);stage.setPointerCapture?.(e.pointerId);pointerToProgress(e)
+    });
+    stage?.addEventListener('pointermove',e=>{if(drag)pointerToProgress(e)});
+    const finish=e=>{
+      if(!drag)return;drag=false;
+      openTarget=openProgress<.25?0:openProgress>.75?1:.5;animateOpen();
+      try{stage.releasePointerCapture?.(e.pointerId)}catch(_){}
+    };
+    stage?.addEventListener('pointerup',finish);stage?.addEventListener('pointercancel',finish);
 
     renderVariants();updateMeta();
     if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else addEventListener('resize',resize,{passive:true});
