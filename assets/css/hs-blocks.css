@@ -384,3 +384,15 @@
 }
 @media(min-width:768px){.hsx-stat{padding:18px 26px 16px}}
 @media(min-width:1100px){.hsx-mini div{min-height:30px;padding:4px 0}.hsx-glass-option>p{margin-bottom:12px}}
+/* Телефон: три варианта стеклопакета — карточки с прокруткой вбок, видно край следующей */
+@media(max-width:767px){
+  .hsx-glass-options{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    margin-inline:calc(-1 * var(--hs-pad));padding:0 var(--hs-pad) 4px;scroll-padding-inline:var(--hs-pad);
+    border:0;scrollbar-width:none
+  }
+  .hsx-glass-options::-webkit-scrollbar{display:none}
+  .hsx-glass-option{flex:0 0 84%;scroll-snap-align:start;padding:16px 14px 6px;border:1px solid var(--hx-line);background:rgba(255,255,255,.28)}
+  .hsx-glass-option:last-child{border-bottom:1px solid var(--hx-line)}
+  .hsx-glass-option .hsx-mini div:last-child{border-bottom:0}
+}
