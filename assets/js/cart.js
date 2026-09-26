@@ -19,6 +19,10 @@
   let services={install_delivery_pct:12,install_delivery_min:45000},factory={};
   const mode=()=>form.elements.delivery.value==='pickup'?'pickup':'delivery';
   // Оценка доставки и монтажа, округлённая до тысячи; при самовывозе — 0
+  // Ориентировочная дата получения: сегодня + срок изготовления (services.production_days). Точную дату подтверждает менеджер.
+  const etaDate=()=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+(services.production_days||14));return d};
+  const etaText=()=>etaDate().toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'}).replace(/^(\S+),/,'$1 ·');
+  const daysText=n=>`${n} ${n%10===1&&n%100!==11?'день':n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'дня':'дней'}`;
   const serviceCost=goods=>mode()==='pickup'?0:Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
 
   const lines=()=>cart.items().map(i=>({...i,v:catalog.get(i.sku)})).filter(i=>i.v);
@@ -35,7 +39,7 @@
         <div class="cart-item__body">
           <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>от, ${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
           <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
-          <p class="cart-item__meta">${esc(v.size)} · арт. ${esc(sku)}</p>
+          <p class="cart-item__meta">${esc(v.size)} · срок ${daysText(services.production_days||14)} · арт. ${esc(sku)}</p>
           <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(v.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
           <div class="m-card__opt"><span class="m-card__label">${esc(v.scheme_title)}: <b>${esc(v.scheme_short)}</b></span>${chips}</div>
           <div class="cart-item__foot">
@@ -63,6 +67,9 @@
     root.querySelector('[data-cart-total]').textContent='от '+money(goods+service);
     root.querySelector('[data-cart-note-delivery]').hidden=pickup;
     root.querySelector('[data-cart-note-pickup]').hidden=!pickup;
+    root.querySelector('[data-cart-days]').textContent=daysText(services.production_days||14);
+    root.querySelector('[data-cart-eta-label]').textContent=pickup?'Самовывоз ориентировочно':'Доставка и монтаж ориентировочно';
+    root.querySelector('[data-cart-eta-date]').textContent='с '+etaText();
   };
 
   list.addEventListener('click',e=>{
@@ -104,7 +111,8 @@
       ?`Получение: САМОВЫВОЗ с производства (${factory.address||'квартал № 205'})`
       :`Получение: доставка и монтаж — оценка от ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
     const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = от ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
-      +`\n\nКонструкции: от ${money(goods)}\n${deliveryLine}\nИтого: от ${money(total)}`;
+      +`\n\nКонструкции: от ${money(goods)}\n${deliveryLine}\nИтого: от ${money(total)}`
+      +`\nСрок изготовления: ${daysText(services.production_days||14)}. Ориентировочно ${pickup?'самовывоз':'доставка и монтаж'} с ${etaText()} — дату нужно подтвердить клиенту.`;
     const data=new FormData(form);
     data.set('source','cart');data.set('order_id',id);data.set('project',project);data.set('delivery',mode());
     if(pickup)data.delete('city');
@@ -115,7 +123,7 @@
       const json=await res.json().catch(()=>({}));
       if(!res.ok||!json.ok)throw new Error(json.message||'HTTP '+res.status);
       const number=json.order_id||id;
-      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,items:items.map(i=>({title:`${i.v.code} · ${i.v.name}`,meta:`${i.v.size} · ${i.v.color}`,qty:i.qty,sum:i.v.price*i.qty}))}))}catch(e){}
+      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,eta:etaText(),days:services.production_days||14,items:items.map(i=>({title:`${i.v.code} · ${i.v.name}`,meta:`${i.v.size} · ${i.v.color}`,qty:i.qty,sum:i.v.price*i.qty}))}))}catch(e){}
       cart.clear();
       location.href='done/?order='+encodeURIComponent(number);
     }catch(err){

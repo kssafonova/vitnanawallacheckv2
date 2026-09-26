@@ -155,6 +155,8 @@ const model3d = m => ({
   colors: Object.fromEntries(m.colors.map(c => [c.slug, c.hex])),
   mirror: Object.fromEntries(m.schemes.map(s => [s.slug, isMirror(m, s)])),
 });
+// Срок изготовления — data/site-config.json → services.production_days (он же в корзине через data/catalog.json)
+const PROD_DAYS = (config.services && config.services.production_days) || 14;
 const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
 function marketCard(m, rel) {
   const first = firstOf(m);
@@ -188,7 +190,7 @@ function marketCard(m, rel) {
         <div class="m-card__body">
           <p class="m-card__meta">${esc(sizeText(m))} · ${sectionsText(m.sections)}</p>
           <a class="m-card__title" href="${href(first)}" data-card-link>${esc(m.name)}</a>
-          <div class="m-card__opt"><span class="m-card__label">Цвет:</span><div class="m-card__swatches">${swatches}</div></div>
+          <div class="m-card__opt"><span class="m-card__label">Цвет:</span><div class="m-card__swatches">${swatches}<span class="m-card__ral">+ любой RAL</span></div></div>
           ${chips ? `<div class="m-card__opt"><span class="m-card__label">${esc(m.scheme_title)}:</span>${chips}</div>` : ''}
           <div class="m-card__buy">${action}<div class="m-card__price">${price}</div></div>
         </div>
@@ -325,7 +327,7 @@ function variantPage(v) {
 
   const priceBlock = soon
     ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции от</small><strong>${money(m.price)}</strong></div><div class="product-price__term">срок — после подтверждения комплектации</div></div>
+    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции от</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_DAYS} дней</b>изготовление после подтверждения заказа</div></div>
       <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;
@@ -366,7 +368,6 @@ ${jsonLd(crumbs)}
       <img class="product-media__open" src="${base + v.imageOpen}" alt="${esc(`${m.code} — ${size}, ${c.name}, открыто`)}" loading="lazy">
       <div class="product-media__states" role="group" aria-label="Вид конструкции"><button type="button" class="is-active" aria-pressed="true" data-media-state="closed">Закрыто</button><button type="button" aria-pressed="false" data-media-state="open">Открыто</button></div>` : ''}
       <span class="product-media__label">${esc(s.code)} · ${esc(colorName)}</span>
-      <span class="product-media__scheme" aria-hidden="true">${smallSvg(m, s)}</span>
     </div>
     <aside class="product-buy">
       <div class="product-buy__top"><span class="product-buy__code">${esc(m.code)}</span><span class="product-buy__status">${soon ? 'скоро в продаже' : 'готовая конфигурация'}</span></div>

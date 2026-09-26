@@ -110,3 +110,11 @@
 /* ---------- Глубина ---------- */
 .cart-item{border-color:transparent;box-shadow:var(--sh-1)}
 .cart-summary,.cart-form{border-color:transparent;box-shadow:var(--sh-2)}
+/* Срок и ориентировочная дата получения */
+.cart-eta{margin-top:14px;padding:14px;background:#f5f5f4;border-left:2px solid var(--ui-ink)}
+.cart-eta__row{display:flex;justify-content:space-between;gap:12px;color:var(--ui-muted);font-size:var(--fs-small)}
+.cart-eta__row b{color:var(--ui-ink);font-weight:500;white-space:nowrap}
+.cart-eta__row+.cart-eta__row{margin-top:8px}
+.cart-eta__date b{font-size:var(--fs-h4);font-weight:400;letter-spacing:-.02em}
+.cart-eta__note{display:flex;gap:8px;align-items:flex-start;margin:10px 0 0;color:var(--ui-muted);font-size:var(--fs-caption);line-height:1.45}
+.cart-eta__note svg{flex:none;width:16px;height:16px;margin-top:1px;fill:none;stroke:var(--ui-ink);stroke-width:1.5}
