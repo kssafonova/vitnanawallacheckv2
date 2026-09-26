@@ -87,14 +87,49 @@
       pane(ctx, L + c * cw + 4, top + 4, cw - 8, tr - 8, false, .1);
       if (c !== 1) pane(ctx, L + c * cw + 4, top + tr, cw - 8, fh - tr - 4, false);
     }
-    // открывающаяся створка: в перспективе поворачивается на петлях слева
-    const x = L + cw + 4, y = top + tr, sw = cw - 8, sh = fh - tr - 4, q = ease(p), k = 1 - q * .55, dy = q * sh * .06;
-    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(x, y, sw, sh);
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sw * k, y + dy); ctx.lineTo(x + sw * k, y + sh - dy); ctx.lineTo(x, y + sh); ctx.closePath();
-    ctx.fillStyle = C.glassOn; ctx.fill(); ctx.strokeStyle = C.line; ctx.lineWidth = 1.6; ctx.stroke();
-    // обозначение открывания: вершина у петель
-    ctx.setLineDash([4, 4]); ctx.strokeStyle = C.accent; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(x + sw * k, y + dy); ctx.lineTo(x, y + sh / 2); ctx.lineTo(x + sw * k, y + sh - dy); ctx.stroke(); ctx.setLineDash([]);
+    // открывающаяся створка: распахивается наружу на петлях слева (до 80°)
+    const x = L + cw + 4, y = top + tr, sw = cw - 8, sh = fh - tr - 4, q = ease(p), th = q * Math.PI * .44;
+    // проём: за створкой виден «улица» — светлое небо, линия горизонта, кроны
+    const sky = ctx.createLinearGradient(0, y, 0, y + sh);
+    sky.addColorStop(0, `rgba(196,214,222,${.05 + q * .28})`); sky.addColorStop(1, `rgba(120,140,130,${.04 + q * .16})`);
+    ctx.fillStyle = '#0b0b0a'; ctx.fillRect(x, y, sw, sh);
+    ctx.fillStyle = sky; ctx.fillRect(x, y, sw, sh);
+    if (q > .02) {
+      ctx.save(); ctx.beginPath(); ctx.rect(x, y, sw, sh); ctx.clip();
+      ctx.strokeStyle = `rgba(244,243,241,${.35 * q})`; ctx.lineWidth = 1;
+      const hy = y + sh * .62; ctx.beginPath(); ctx.moveTo(x, hy); ctx.lineTo(x + sw, hy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, hy);
+      for (let i = 0; i <= 8; i++) ctx.lineTo(x + sw * i / 8, hy - sh * (.08 + .07 * Math.abs(Math.sin(i * 1.7))));
+      ctx.lineTo(x + sw, hy); ctx.stroke();
+      ctx.restore();
+    }
+    // сама створка: свободный край уходит к зрителю — становится выше и сдвигается к петлям
+    const fx = x + sw * Math.cos(th), grow = Math.sin(th) * sh * .09;
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; // тень от створки на откосе
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sw * .12 * q, y); ctx.lineTo(x + sw * .12 * q, y + sh); ctx.lineTo(x, y + sh); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(fx, y - grow); ctx.lineTo(fx, y + sh + grow); ctx.lineTo(x, y + sh); ctx.closePath();
+    ctx.fillStyle = q > .02 ? 'rgba(200,222,230,.26)' : C.glassOn; ctx.fill();
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1.8; ctx.stroke();
+    // внутренняя рамка створки
+    const ins = .07;
+    ctx.strokeStyle = C.faint; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(lerp(x, fx, ins), lerp(y, y - grow, ins) + sh * ins); ctx.lineTo(lerp(x, fx, 1 - ins), lerp(y, y - grow, 1 - ins) + sh * ins);
+    ctx.lineTo(lerp(x, fx, 1 - ins), lerp(y + sh, y + sh + grow, 1 - ins) - sh * ins); ctx.lineTo(lerp(x, fx, ins), lerp(y + sh, y + sh + grow, ins) - sh * ins); ctx.closePath(); ctx.stroke();
+    // ручка на свободном краю
+    ctx.strokeStyle = C.line; ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+    const hx = lerp(x, fx, .9), hy2 = y + sh * .5; ctx.beginPath(); ctx.moveTo(hx, hy2); ctx.lineTo(hx, hy2 + (mob ? 12 : 16)); ctx.stroke(); ctx.lineCap = 'butt';
+    // обозначение открывания: пунктир, вершина у петель
+    if (q < .02) {
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = C.accent; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x + sw, y); ctx.lineTo(x, y + sh / 2); ctx.lineTo(x + sw, y + sh); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // стрелка: створка распахивается наружу
+    if (q < .96) {
+      const ax = lerp(x, fx, .5) + sw * .18, ay = y + sh * .2;
+      ctx.strokeStyle = C.accent; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(ax + sw * .22, ay + sh * .1); ctx.quadraticCurveTo(ax + sw * .2, ay - sh * .06, ax, ay - sh * .04); ctx.stroke();
+      ctx.fillStyle = C.accent; ctx.beginPath(); ctx.moveTo(ax - 1, ay - sh * .04); ctx.lineTo(ax + 7, ay - sh * .04 - 4); ctx.lineTo(ax + 6, ay - sh * .04 + 4); ctx.closePath(); ctx.fill();
+    }
     floor(ctx, L, R, bot);
   }
 
@@ -122,7 +157,27 @@
     stage.addEventListener('pointerdown', e => { drag = true; stage.setPointerCapture(e.pointerId); fromPointer(e); });
     stage.addEventListener('pointermove', e => { if (drag) fromPointer(e); });
     ['pointerup', 'pointercancel'].forEach(t => stage.addEventListener(t, () => { drag = false; }));
-    redraw.set(root, render);
+    // подсказка: при первом показе схема один раз сама приоткрывается и закрывается — видно, что её можно двигать
+    let touched = false, shown = false;
+    ['pointerdown', 'keydown'].forEach(t => root.addEventListener(t, () => { touched = true; }));
+    range.addEventListener('input', () => { touched = true; });
+    const demo = () => {
+      if (shown || touched || matchMedia('(prefers-reduced-motion: reduce)').matches || !canvas.getBoundingClientRect().width) return;
+      shown = true;
+      const t0 = performance.now(), up = 900, hold = 350, down = 700;
+      const step = now => {
+        if (touched) return;
+        const t = now - t0;
+        const v = t < up ? t / up : t < up + hold ? 1 : 1 - (t - up - hold) / down;
+        set(.72 * clamp(v, 0, 1));
+        if (t < up + hold + down) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setTimeout(demo, 250); }), { threshold: .6 }).observe(stage);
+    }
+    redraw.set(root, () => { render(); setTimeout(demo, 350); });
     if ('ResizeObserver' in window) new ResizeObserver(render).observe(canvas); else addEventListener('resize', render);
     render();
   });
