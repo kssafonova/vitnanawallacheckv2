@@ -7,7 +7,7 @@
 <title>Панорамное остекление и HS-порталы для дома | PORTAL SYSTEMS</title>
 <meta name="description" content="Панорамное остекление загородных домов, HS- и FS-порталы под ключ в Москве и Московской области. Проектирование, производство и монтаж.">
 <meta content="#050505" name="theme-color"/>
-<link href="assets/css/site.css" rel="stylesheet"/><link href="assets/css/calculator.css" rel="stylesheet"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><meta name="robots" content="index,follow,max-image-preview:large">
+<link href="assets/css/site.css" rel="stylesheet"/><link href="assets/css/calculator.css" rel="stylesheet"/><link href="assets/css/quick-calc.css" rel="stylesheet"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><meta name="robots" content="index,follow,max-image-preview:large">
 </head>
 <body>
 <site-menu data-base="./"></site-menu>
@@ -18,7 +18,7 @@
 <div class="hero__kicker">Москва · Московская область</div>
 <h1>Стираем границу между домом и пространством</h1>
 <p class="hero__copy">Панорамные алюминиевые конструкции для современной архитектуры: готовые HS-порталы и индивидуальное остекление домов, террас и фасадов.</p>
-<div class="hero__actions"><a class="btn ui-btn ui-btn--light" href="catalog/">Каталог готовых решений <span>→</span></a><a class="btn ui-btn" href="#calculator">Рассчитать проект <span>↘</span></a></div>
+<div class="hero__actions"><a class="btn ui-btn ui-btn--light" href="catalog/">Каталог готовых решений <span>→</span></a><a class="btn ui-btn" href="raschet/">Рассчитать проект <span>↘</span></a></div>
 <div class="hero__stats"><div class="hero__stat"><b>5+</b><span>лет опыта</span></div><div class="hero__stat"><b>200+</b><span>объектов</span></div><div class="hero__stat"><b>5 лет</b><span>гарантия на монтаж</span></div><div class="hero__stat"><b>Бесплатно</b><span>замер в Москве и МО</span></div></div>
 </div>
 </section>
@@ -187,7 +187,38 @@
 </section>
 <div class="projects__cta"><a class="btn ui-btn" href="#contact">Обсудить свой проект <span>→</span></a></div>
 <section class="process" id="process"><div class="wrap process__grid"><div class="process__intro"><p class="eyebrow ui-eyebrow">Процесс</p><h2>От проёма до готовой архитектуры</h2></div><div class="steps"><article class="step"><span class="step__num">01</span><div><h3>Замер</h3><p>Проверяем геометрию, уровень чистового пола, основание и условия монтажа.</p></div></article><article class="step"><span class="step__num">02</span><div><h3>Проект</h3><p>Определяем систему, раскладку створок, узлы примыкания и готовим смету.</p></div></article><article class="step"><span class="step__num">03</span><div><h3>Производство</h3><p>Собираем конструкции и проверяем геометрию, комплектацию и механизмы.</p></div></article><article class="step"><span class="step__num">04</span><div><h3>Монтаж</h3><p>Устанавливаем, герметизируем, регулируем и сдаём готовую конструкцию.</p></div></article></div></div></section>
-<section class="calc-section" data-reveal="" id="calculator" style="--reveal-delay:150ms">
+<section class="qc-teaser-section" id="calculator">
+  <div class="wrap">
+    <!-- build:home-calc -->
+      <div class="qc-teaser">
+      <a class="qc-teaser__media" href="raschet/" tabindex="-1" aria-hidden="true">
+        <img src="assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya.webp" alt="" loading="lazy" decoding="async">
+        <img class="qc-teaser__open" src="assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya-open.webp" alt="" loading="lazy" decoding="async">
+        <span class="qc-teaser__tag">Цена сразу · без телефона</span>
+      </a>
+      <div class="qc-teaser__body">
+        <p class="qc-teaser__eyebrow">Калькулятор</p>
+        <h2 class="qc-teaser__title">Сколько стоит раздвижная дверь под ваш размер</h2>
+        <p class="qc-teaser__lead">Укажите примерный размер проёма — калькулятор предложит число створок, покажет вид и ориентировочную цену.</p>
+        <form class="qc-teaser__form" action="raschet/" method="get">
+          <label><span>Ширина, мм</span><input name="w" inputmode="numeric" maxlength="4" value="3600" autocomplete="off"></label>
+          <label><span>Высота, мм</span><input name="h" inputmode="numeric" maxlength="4" value="2300" autocomplete="off"></label>
+          <button type="submit">Рассчитать <i aria-hidden="true">→</i></button>
+        </form>
+        <ul class="qc-teaser__points">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3.2"/></svg><span>Цена сразу, <br>без регистрации</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5 12.3 19.2a5 5 0 0 1-7.1-7.1l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg><span>Можно приложить <br>готовый проект</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg><span>Замер — <br>бесплатно</span></li>
+        </ul>
+      </div>
+    </div>
+      <!-- /build:home-calc -->
+  </div>
+</section>
+
+<!-- Прежний калькулятор главной: скрыт по решению владельца, не удалять. Калькулятор теперь — страница /raschet/. Вернуть — убрать hidden. -->
+<div class="calc-legacy" hidden>
+<section class="calc-section" data-reveal="" id="calculator-legacy" style="--reveal-delay:150ms">
 <div class="w" data-reveal="" style="--reveal-delay:0ms">
 <div class="calc-head" data-reveal="" style="--reveal-delay:0ms"><p class="eyebrow ui-eyebrow">Калькулятор</p><h2 class="section-title">Соберите портал и узнайте стоимость</h2><p class="section-lead">Сначала покажем подходящую конструкцию и ориентировочную цену. Контакты понадобятся только после результата — если захотите получить точную смету.</p><div aria-label="Как работает расчёт" class="calc-entry-promise"><span>Без регистрации</span><span>Можно примерные размеры</span><span>Цена до формы</span></div></div>
 <div class="calculator-v18-scope">
@@ -347,25 +378,19 @@
 </div>
 </div>
 </section>
+</div>
 <section class="contact" id="contact"><div class="wrap contact__inner">
   <div>
     <p class="eyebrow ui-eyebrow">Ваш проект</p>
     <h2>Начнём с проёма</h2>
-    <p class="contact__copy">Оставьте примерные размеры и коротко опишите задачу. План дома или фотографию можно отправить инженеру на e-mail — подберём систему и подготовим предварительную смету.</p>
+    <p class="contact__copy">Оставьте примерные размеры и коротко опишите задачу. План дома, проект или фото можно прикрепить прямо к заявке — подберём систему и подготовим предварительную смету.</p>
     <div class="contact__meta">
       <a href="tel:+79774102479">+7 977 410-24-79</a>
       <a href="mailto:info@steclodom.ru">info@steclodom.ru</a>
       <a href="contacts/">Адрес производства и самовывоз →</a>
     </div>
   </div>
-  <form class="contact-form" id="contactForm" data-endpoint="forms/send.php">
-    <input aria-hidden="true" autocomplete="off" name="website" style="position:absolute;left:-9999px;opacity:0;pointer-events:none" tabindex="-1" type="text"/>
-    <label class="field"><span>Имя</span><input autocomplete="name" name="name" placeholder="Как к вам обращаться" required/></label>
-    <label class="field"><span>Телефон</span><input autocomplete="tel" name="phone" placeholder="+7 999 000-00-00" required/></label>
-    <label class="field"><span>Проём / задача</span><textarea name="comment" placeholder="Например: 3600 × 2300 мм, выход из гостиной на террасу"></textarea></label>
-    <button class="btn ui-btn ui-btn--dark" type="submit">Получить расчёт <span>→</span></button>
-    <p class="form-status" id="formStatus"></p>
-  </form>
+  <lead-form data-base="" data-source="home" data-calc="raschet/"></lead-form>
 </div></section>
 </main>
 <site-footer data-base="./"></site-footer>
@@ -374,4 +399,4 @@
 <!-- exact production calculator-effects.js -->
 <script src="assets/js/components/site-menu.js"></script>
 <script src="assets/js/components/site-footer.js"></script>
-<script src="assets/js/site.js"></script><script src="assets/js/calculator.js"></script><script src="assets/js/calculator-dialog.js"></script><script src="assets/js/calculator-mobile.js"></script><script src="assets/js/systems.js"></script></body></html>
+<script src="assets/js/site.js"></script><script src="assets/js/calculator.js"></script><script src="assets/js/calculator-dialog.js"></script><script src="assets/js/calculator-mobile.js"></script><script src="assets/js/systems.js"></script><script src="assets/js/components/lead-form.js"></script></body></html>

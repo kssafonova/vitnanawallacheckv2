@@ -136,7 +136,7 @@ const fontPreload = base =>
 const GENERATED = '<!-- Сгенерировано tools/build.mjs из data/products.json. Не редактировать вручную: правьте данные и пересобирайте. -->';
 const jsonLd = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 const systemHref = (m, base) => (m.system === 'HS' ? `${base}systems/hs/` : `${base}systems/fs/`);
-const customHref = (m, base) => (m.system === 'HS' ? `${base}systems/hs/#hs-calculator` : `${base}index.html#calculator`);
+const customHref = (m, base) => (m.system === 'HS' ? `${base}raschet/` : `${base}index.html#contact`);
 
 // Карточка модели «как на маркетплейсе»: фото, цена, цвет и схема переключаются прямо в карточке
 // (assets/js/shop.js), кнопка «В корзину». Без JS цвета и схемы — обычные ссылки на страницы вариантов.
@@ -184,19 +184,66 @@ function marketCard(m, rel) {
       </article>`;
 }
 
-// Быстрый калькулятор HS (assets/js/quick-calc.js): цены моделей по числу секций из products.json
-const calcRefs = () => JSON.stringify(Object.fromEntries(data.models.filter(m => m.system === 'HS' && m.status === 'available')
-  .map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
+// Калькулятор HS (assets/js/quick-calc.js) живёт на отдельной странице /raschet/.
+// Цены моделей по числу секций — из products.json; фото — рендеры моделей (светлая рама — если есть белый цвет).
+const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
+const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
+const calcRenders = rel => JSON.stringify(Object.fromEntries(hsAvail().map(m => {
+  const pick = pred => {
+    const col = m.colors.find(pred);
+    const v = col && find(m.model, col.slug, defScheme(m).slug);
+    return v ? { closed: rel + v.image, open: rel + (v.imageOpen || v.image) } : null;
+  };
+  return [m.sections, { light: pick(c => c.slug === 'belyi'), dark: pick(c => c.slug !== 'belyi') }];
+})));
 const calcBox = (rel, attrs = {}) => {
-  const all = { refs: calcRefs(), endpoint: `${rel}forms/send.php`, img: `${rel}assets/images/systems/hs-overview.jpg`, ...attrs };
-  return `<div class="m-card__calc-qc" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
+  const all = { refs: calcRefs(), renders: calcRenders(rel), endpoint: `${rel}forms/send.php`, img: `${rel}assets/images/systems/hs-overview.jpg`, ...attrs };
+  return `<div class="qc-root" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
+};
+const colorKeyOf = c => ({ belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral');
+// Ссылка на калькулятор с параметрами товара (размер, створки, цвет, стекло как в каталоге)
+const raschetHref = (rel, m, c) => `${rel}raschet/?w=${m.width}&amp;h=${m.height}&amp;n=${m.sections}&amp;glass=standard&amp;color=${colorKeyOf(c)}&amp;from=${encodeURIComponent(`${m.code} · ${c.name} RAL ${c.ral}`)}`;
+
+const ICO = {
+  price: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3.2"/></svg>',
+  clip: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5 12.3 19.2a5 5 0 0 1-7.1-7.1l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg>',
+  ruler: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg>',
+  palette: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.2-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg>',
+  glass: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M11 4v16M17 4v16"/><path d="M5 4h12M5 20h12" opacity=".5"/></svg>',
+  sill: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18M5 18V6h14v12"/><path d="M8 18l3-3h7" opacity=".6"/></svg>',
 };
 
-// Карточка «Индивидуальный расчёт»: по нажатию разворачивается на всю ширину ряда, внутри — быстрый калькулятор.
-// Без JS — обычная ссылка на полный калькулятор.
-function projectCard(calcHref, id, rel) {
-  return `<article class="m-card m-card--project" data-calc-card${id ? ` id="${id}"` : ''}>
-      <a class="m-card__teaser" href="${calcHref}" data-calc-open aria-expanded="false" aria-controls="${id || 'project'}-calc">
+// Блок «Калькулятор» на главной и странице HS: фото, короткий расчёт (ширина × высота) → страница /raschet/
+function calcTeaser(rel, eyebrow) {
+  const m = hsAvail().find(x => x.sections === 3) || hsAvail()[0];
+  const v = firstOf(m);
+  return `<div class="qc-teaser">
+      <a class="qc-teaser__media" href="${rel}raschet/" tabindex="-1" aria-hidden="true">
+        <img src="${rel}${v.image}" alt="" loading="lazy" decoding="async">
+        ${v.imageOpen ? `<img class="qc-teaser__open" src="${rel}${v.imageOpen}" alt="" loading="lazy" decoding="async">` : ''}
+        <span class="qc-teaser__tag">Цена сразу · без телефона</span>
+      </a>
+      <div class="qc-teaser__body">
+        <p class="qc-teaser__eyebrow">${esc(eyebrow)}</p>
+        <h2 class="qc-teaser__title">Сколько стоит раздвижная дверь под ваш размер</h2>
+        <p class="qc-teaser__lead">Укажите примерный размер проёма — калькулятор предложит число створок, покажет вид и ориентировочную цену.</p>
+        <form class="qc-teaser__form" action="${rel}raschet/" method="get">
+          <label><span>Ширина, мм</span><input name="w" inputmode="numeric" maxlength="4" value="3600" autocomplete="off"></label>
+          <label><span>Высота, мм</span><input name="h" inputmode="numeric" maxlength="4" value="2300" autocomplete="off"></label>
+          <button type="submit">Рассчитать <i aria-hidden="true">→</i></button>
+        </form>
+        <ul class="qc-teaser__points">
+          <li>${ICO.price}<span>Цена сразу, <br>без регистрации</span></li>
+          <li>${ICO.clip}<span>Можно приложить <br>готовый проект</span></li>
+          <li>${ICO.ruler}<span>Замер — <br>бесплатно</span></li>
+        </ul>
+      </div>
+    </div>`;
+}
+
+// Карточка «Индивидуальный расчёт» — вся карточка ведёт на страницу калькулятора
+function projectCard(calcHref, id) {
+  return `<a class="m-card m-card--project" href="${calcHref}"${id ? ` id="${id}"` : ''}>
         <span class="m-card__media">
           <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
         </span>
@@ -206,12 +253,7 @@ function projectCard(calcHref, id, rel) {
           <span class="m-card__meta">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
           <span class="ui-btn ui-btn--light m-card__cart">Рассчитать под свой размер <span>→</span></span>
         </span>
-      </a>
-      <div class="m-card__calc" id="${id || 'project'}-calc" data-calc-panel hidden>
-        <div class="m-card__calc-bar"><span>Индивидуальный расчёт</span><button class="m-card__calc-close" type="button" data-calc-close>Свернуть <span aria-hidden="true">×</span></button></div>
-        <div class="m-card__calc-body">${calcBox(rel, { context: 'карточка «Индивидуальный расчёт»' })}</div>
-      </div>
-    </article>`;
+      </a>`;
 }
 
 // ---------- страница варианта ----------
@@ -276,8 +318,7 @@ function variantPage(v) {
       <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;
-  const customLink = hasCalc ? '#product-contact' : customHref(m, base);
-  const colorKey = { belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral';
+  const customLink = hasCalc ? raschetHref(base, m, c) : '#product-contact';
 
   return `<!doctype html>
 <html lang="ru">
@@ -299,7 +340,6 @@ ${fontPreload(base)}
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${imageUrl}">
 <link rel="stylesheet" href="${base}assets/css/product.css">
-<link rel="stylesheet" href="${base}assets/css/quick-calc.css">
 <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
 ${jsonLd(product)}
 ${jsonLd(crumbs)}
@@ -330,7 +370,7 @@ ${jsonLd(crumbs)}
       <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
       <div class="product-actions">${soon
         ? `<a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a>`
-        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customLink}">Индивидуальный расчёт <span>${hasCalc ? '↓' : '↗'}</span></a></div>
+        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customLink}">${hasCalc ? 'Рассчитать под свой размер' : 'Индивидуальный расчёт'} <span>→</span></a></div>
       <p class="product-sku">Артикул: ${v.sku}</p>
     </aside>
   </div>
@@ -352,29 +392,25 @@ ${jsonLd(crumbs)}
   </div>
 </section>
 
-${hasCalc ? `<section class="product-calc" id="product-contact">
-  <div class="p-wrap">${calcBox(base, { eyebrow: '02 · Расчёт под ваш проём', width: m.width, height: m.height, leaves: m.sections, glass: 'standard', color: colorKey, context: `${m.code}, ${colorName}, ${s.code} (${v.sku})` })}</div>
-</section>
-
-` : `<section class="product-custom">
-  <div class="p-wrap product-custom__grid"><div><p class="ui-eyebrow">02 · Под проект</p><h2>Не нашли точный вариант?</h2></div><div>
-    <div class="product-custom__rows">
-      <div><span>01</span><div><b>Другой размер</b><p>Проверим геометрию створок и допустимый вес стекла.</p></div></div>
-      <div><span>02</span><div><b>Другой RAL</b><p>Подберём цвет под фасад, кровлю и другие алюминиевые элементы.</p></div></div>
-      <div><span>03</span><div><b>Стекло под задачу</b><p>Безопасность, акустика, солнцезащита и теплотехника — в одной формуле.</p></div></div>
-      <div><span>04</span><div><b>Монтажный узел</b><p>Согласуем порог, чистовой пол, гидроизоляцию и наружный водоотвод.</p></div></div>
-    </div>
-    <a class="ui-btn ui-btn--dark" href="${customHref(m, base)}">Рассчитать индивидуально <span>→</span></a>
-  </div></div>
-</section>
-
 <section class="product-contact" id="product-contact">
-  <div class="p-wrap product-contact__grid"><div><p class="ui-eyebrow">03 · ${soon ? 'Старт продаж' : 'Точная смета'}</p><h2>${soon ? 'Сообщим о старте продаж' : 'Начнём с вашего проёма'}</h2><p class="product-contact__copy">${soon ? 'Оставьте телефон — позвоним, когда конфигурация станет доступна к заказу, и назовём цену. Если проект срочный, рассчитаем индивидуальную складную систему.' : 'Оставьте телефон и примерные размеры. Зафиксируем нужную конфигурацию, проверим ограничения и уточним стоимость изготовления и монтажа.'}</p></div>
-    <form class="product-form" data-product-form data-endpoint="${base}forms/send.php"><input type="hidden" name="source" value="${v.sku}"><label class="product-field"><span>Имя</span><input name="name" autocomplete="name" required placeholder="Ваше имя"></label><label class="product-field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" required placeholder="+7 999 000-00-00"></label><label class="product-field"><span>Комментарий</span><textarea name="comment" placeholder="Размер проёма, стадия строительства, пожелания"></textarea></label><button class="ui-btn ui-btn--dark" type="submit">${soon ? 'Сообщить о старте' : 'Получить расчёт'} <span>→</span></button><p class="product-form__status" data-form-status></p></form>
+  <div class="p-wrap product-contact__grid">
+    <div class="product-contact__intro">
+      <p class="ui-eyebrow">02 · ${soon ? 'Старт продаж' : 'Под ваш проём'}</p>
+      <h2>${soon ? 'Сообщим о старте продаж' : 'Другой размер или комплектация?'}</h2>
+      <p class="product-contact__copy">${soon ? 'Оставьте телефон — позвоним, когда конфигурация станет доступна к заказу, и назовём цену.' : 'Посчитаем под ваш проём: калькулятор сразу покажет ориентировочную цену, а инженер после бесплатного замера — точную.'}</p>
+      <ul class="product-options">
+        <li>${ICO.ruler}<span><b>Другой размер</b>проверим створки и вес стекла</span></li>
+        <li>${ICO.palette}<span><b>Любой RAL</b>под фасад и кровлю</span></li>
+        <li>${ICO.glass}<span><b>Стекло под задачу</b>безопасность, тепло, солнце</span></li>
+        <li>${ICO.sill}<span><b>Монтажный узел</b>порог, пол, водоотвод</span></li>
+      </ul>
+      ${hasCalc ? `<a class="ui-btn ui-btn--dark product-contact__calc" href="${customLink}">Рассчитать под свой размер <span>→</span></a>` : ''}
+    </div>
+    <lead-form data-base="${base}" data-source="${v.sku}" data-context="${esc(`${m.code}, ${colorName}, ${s.code} (${v.sku})`)}" data-cta="${soon ? 'Сообщить о старте' : 'Получить точный расчёт'}"></lead-form>
   </div>
 </section>
 
-`}<section class="product-lifestyle" data-reveal>
+<section class="product-lifestyle" data-reveal>
   <img src="${base + m.architecture}" alt="${esc(m.code)} в архитектуре загородного дома" loading="lazy" decoding="async">
   <div class="product-lifestyle__copy"><small>${esc(m.code)} · ${esc(size)}</small><h2>Система внутри архитектуры</h2><p>${esc(m.use)}. Портал подбираем по проёму, планировке и маршруту движения, а не только по размеру из каталога.</p></div>
 </section>
@@ -386,7 +422,7 @@ ${hasCalc ? `<section class="product-calc" id="product-contact">
 <script src="${base}assets/js/components/site-footer.js"></script>
 <script src="${base}assets/js/shop.js"></script>
 <script src="${base}assets/js/product.js"></script>
-<script src="${base}assets/js/quick-calc.js"></script>
+<script src="${base}assets/js/components/lead-form.js"></script>
 </body>
 </html>
 `;
@@ -399,12 +435,24 @@ const fsModels = models.filter(m => m.system === 'FS');
 const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS / 30 и HS / 36 на главной и первом экране HS
 
 const blocks = {
+  'raschet/index.html': {
+    'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS-порталы', context: 'страница калькулятора' }),
+    'raschet-models': hsAvail().map(m => {
+      const v = firstOf(m);
+      return `<a class="rs-model" href="../${v.path}">
+          <span class="rs-model__img"><img src="../${v.image}" alt="" loading="lazy" decoding="async"></span>
+          <span class="rs-model__body"><small>${esc(m.code)} · ${m.width} × ${m.height} мм</small><strong>${esc(m.name)}</strong><em>от ${money(m.price)}</em></span>
+          <i aria-hidden="true">→</i>
+        </a>`;
+    }).join('\n        '),
+  },
   'catalog/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../systems/hs/#hs-calculator', 'project', '../')].join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/', 'project')].join('\n\n      '),
     'fs-cards': fsModels.map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'systems/hs/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('#hs-calculator', 'project', '../../')].join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
+    'hs-calc': calcTeaser('../../', '03 · Калькулятор'),
     'hs-hero-products': featured.map(m => `<a class="hs-hero-product" href="../../${firstOf(m).path}">
         <span><small>${esc(m.code)}</small><strong>${esc(sizeText(m))}</strong></span>
         <span><small>от</small><b>${money(m.price)}</b></span>
@@ -412,6 +460,7 @@ const blocks = {
       </a>`).join('\n      '),
   },
   'index.html': {
+    'home-calc': calcTeaser('', 'Калькулятор'),
     'hs-mini-cards': featured.map(m => `<a class="sysx-mini-card" href="${firstOf(m).path}">
             <span class="sysx-mini-thumb"><img src="${m.image}" alt="" loading="lazy"></span>
             <span class="sysx-mini-copy"><small>${esc(m.code)} · ${m.width} × ${m.height}</small><strong>${esc(m.name)}</strong><em>от ${money(m.price)}</em></span>
@@ -423,7 +472,7 @@ const blocks = {
 // ---------- sitemap ----------
 const sitemapUrls = [
   ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
-  ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
+  ['raschet/', 'monthly', '0.8'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
 ];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

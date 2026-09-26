@@ -2,12 +2,12 @@
    Быстрый калькулятор HS (.qc) — assets/js/quick-calc.js.
    Дизайн по макету владельца «Сколько стоит раздвижная дверь под ваш размер».
    Mobile-first; с 1100 px — форма слева, итог с фото справа.
-   Плюс раскрытие карточки «Индивидуальный расчёт» (.m-card--project.is-open).
+   Страница /raschet/ и блок-анонс «Калькулятор» на главной и HS (.qc-teaser).
    Размеры шрифтов — только токены из components.css.
    ============================================================ */
 .qc{
   --qc-bg:var(--ui-bg);
-  --qc-line:#cfcac0;
+  --qc-line:#c9c8c6;
   --qc-ink:var(--ui-ink);
   --qc-muted:#77736a;
   --qc-on:#0b0b0a;
@@ -63,7 +63,7 @@
 .qc__leaf-name{font-size:var(--fs-caption)}
 .qc__leaf-open{margin-top:auto;padding-top:8px;border-top:1px solid var(--qc-line);color:var(--qc-muted);font-size:var(--fs-caption);line-height:1.25}
 .qc__rec{
-  position:absolute;left:-1px;right:-1px;bottom:100%;display:none;padding:5px 4px 4px;background:#d9d6cf;color:#34312d;text-align:center;
+  position:absolute;left:-1px;right:-1px;bottom:100%;display:none;padding:5px 4px 4px;background:#d5d4d3;color:#34312d;text-align:center;
   font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
 }
 .qc__leaf.is-rec .qc__rec{display:block}
@@ -84,11 +84,9 @@
 .qc__sw{border-color:rgba(17,17,15,.25)}
 .qc__opt-t{grid-column:1 / -1;grid-row:2;min-width:0;font-size:var(--fs-caption);line-height:1.25;letter-spacing:-.01em}
 .qc__opt-t small{display:block;margin-top:3px;color:var(--qc-muted);font:500 var(--fs-label)/1.1 var(--font)}
-.qc__radio{grid-column:2;grid-row:1;justify-self:end;width:20px;height:20px;border:1px solid #9f998d;border-radius:50%}
 .qc__opt[aria-pressed="true"]{background:var(--qc-on);border-color:var(--qc-on);color:#fff}
 .qc__opt[aria-pressed="true"] .qc__opt-t small{color:rgba(255,255,255,.6)}
-.qc__opt[aria-pressed="true"] .qc__radio{border-color:#fff;box-shadow:inset 0 0 0 4px var(--qc-on);background:#fff}
-.qc__opt[aria-pressed="true"] .qc__sw{border-color:rgba(255,255,255,.4)}
+.qc__opt[aria-pressed="true"] .qc__opt[aria-pressed="true"] .qc__sw{border-color:rgba(255,255,255,.4)}
 
 /* 05 дополнительно */
 .qc__extras{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -97,12 +95,7 @@
   padding:12px 10px;border:1px solid var(--qc-line);background:rgba(255,255,255,.35);cursor:pointer
 }
 .qc__extra input{position:absolute;opacity:0;width:1px;height:1px}
-.qc__box{display:grid;place-items:center;width:22px;height:22px;border:1px solid #5f5b55;background:#fff}
-.qc__box svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2;opacity:0}
-.qc__extra input:checked+.qc__box{background:var(--qc-on);border-color:var(--qc-on)}
-.qc__extra input:checked+.qc__box svg{opacity:1}
-.qc__extra input:focus-visible+.qc__box{outline:2px solid var(--ui-accent);outline-offset:2px}
-.qc__extra b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
+.qc__extra input:checked+.qc__extra input:checked+.qc__extra input:focus-visible+.qc__extra b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
 .qc__extra small{display:block;margin-top:3px;color:var(--qc-muted);font-size:var(--fs-caption)}
 .qc__extra-ico{display:none}
 .qc__extra-ico svg{width:44px;height:30px;fill:none;stroke:#8d887d;stroke-width:1}
@@ -110,8 +103,19 @@
 
 /* итог */
 .qc__summary{display:grid;gap:16px;align-content:start}
-.qc__photo{position:relative;aspect-ratio:16/10;overflow:hidden;background:#dcd8cf}
-.qc__photo img{display:block;width:100%;height:100%;object-fit:cover}
+.qc__photo{position:relative;margin:0;aspect-ratio:4/3;overflow:hidden;background:#e4e3e0}
+.qc__img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 48%;transition:opacity .25s}
+.qc__img.is-open{opacity:var(--qc-open,0)}
+.qc__view{
+  position:absolute;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  padding:6px 12px;background:rgba(12,12,11,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.22);
+  color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
+}
+.qc__view input{width:100%;height:32px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:ew-resize}
+.qc__view input::-webkit-slider-runnable-track{height:1px;background:rgba(255,255,255,.6)}
+.qc__view input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(12,12,11,.35)}
+.qc__view input::-moz-range-track{height:1px;background:rgba(255,255,255,.6)}
+.qc__view input::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#fff}
 .qc__badge{position:absolute;left:10px;top:10px;width:84px;padding:7px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.24)}
 .qc__badge svg{display:block;width:100%;height:auto}
 .qc__conf small,.qc__price small{display:block;color:var(--qc-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}
@@ -130,7 +134,7 @@
 .qc__cta.is-open{background:#2a2a27}
 .qc__free{
   display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;margin:0;padding:12px 14px;
-  background:#e9e4d4;border-left:2px solid var(--ui-accent);font-size:var(--fs-small);line-height:1.4
+  background:#dfdfde;border-left:2px solid var(--ui-accent);font-size:var(--fs-small);line-height:1.4
 }
 .qc__free svg{width:22px;height:22px;fill:none;stroke:#7d6c3c;stroke-width:1.8}
 .qc__free b{font-weight:600}
@@ -170,10 +174,9 @@
 .qc button:focus-visible,.qc input:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
 
 @media(min-width:560px){
-  .qc__opt{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto;min-height:66px}
+  .qc__opt{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto;min-height:66px}
   .qc__opt-t{grid-column:2;grid-row:1;font-size:var(--fs-small)}
-  .qc__radio{grid-column:3}
-  .qc__extra{grid-template-columns:22px minmax(0,1fr) auto;align-items:center}
+    .qc__extra{grid-template-columns:22px minmax(0,1fr) auto;align-items:center}
   .qc__extra-ico{display:block}
   .qc__extra b{font-size:var(--fs-small)}
   .qc__legend em{display:inline-flex}
@@ -197,23 +200,208 @@
   .qc__price{padding-right:0;border-right:0}
 }
 
-/* ---------- Карточка «Индивидуальный расчёт» ---------- */
-.m-card__teaser{display:flex;flex-direction:column;flex:1;color:inherit;text-decoration:none}
-.m-card__calc[hidden]{display:none}
-.m-card.m-card--project.is-open{grid-column:1 / -1;background:var(--ui-bg);color:var(--ui-ink);cursor:default;scroll-margin-top:calc(var(--header-h) + 8px)}
-.m-card--project.is-open .m-card__teaser{display:none}
-.m-card__calc-bar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:0 0 0 16px;
-  background:#0b0b0a;color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+/* ---------- Анонс «Калькулятор» на главной и странице HS (.qc-teaser) → страница /raschet/ ---------- */
+.qc-teaser-section{padding:var(--space-section) 0;background:var(--ui-paper);color:var(--ui-ink);scroll-margin-top:var(--header-h)}
+.calc-legacy[hidden]{display:none}
+.qc-teaser{display:grid;gap:22px}
+.qc-teaser__media{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:#e4e3e0}
+.qc-teaser__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 48%;transition:opacity .5s ease,transform .8s ease}
+.qc-teaser__open{opacity:0}
+.qc-teaser__tag{
+  position:absolute;left:12px;top:12px;padding:8px 10px;background:rgba(12,12,11,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
 }
-.m-card .m-card__calc-close{
-  display:flex;align-items:center;gap:10px;min-height:52px;padding:0 16px;border:0;border-left:1px solid #2c2c29;background:transparent;color:#fff;cursor:pointer;
-  font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+@media(hover:hover){.qc-teaser:hover .qc-teaser__open{opacity:1}.qc-teaser:hover .qc-teaser__media img{transform:scale(1.02)}}
+.qc-teaser__eyebrow{margin:0 0 12px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.qc-teaser .qc-teaser__title{margin:0;max-width:13ch;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.05em}
+.qc-teaser__lead{margin:14px 0 0;max-width:520px;color:#625e57;font-size:var(--fs-body);line-height:1.45}
+.qc-teaser__form{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:20px;border:1px solid #c9c3b6;background:rgba(255,255,255,.55)}
+.qc-teaser__form label{display:block;padding:12px 14px 10px;cursor:text}
+.qc-teaser__form label+label{border-left:1px solid #c9c3b6}
+.qc-teaser__form span{display:block;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.qc-teaser__form input{display:block;width:100%;margin-top:8px;padding:0;border:0;background:transparent;color:var(--ui-ink);font:300 var(--fs-h3)/1.1 var(--font);letter-spacing:-.03em;outline:none}
+.qc-teaser__form label:focus-within{box-shadow:inset 0 0 0 1px var(--ui-ink)}
+.qc-teaser .qc-teaser__form button{
+  grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 20px;border:0;
+  background:#0b0b0a;color:#fff;cursor:pointer;font:400 var(--fs-body)/1 var(--font)
 }
-.m-card__calc-close:hover{background:#1c1c1a}
-.m-card__calc-body{padding:22px 16px 28px;text-align:left}
-@media(min-width:768px){.m-card__calc-body{padding:32px 28px 36px}}
-@media(min-width:1100px){.m-card__calc-body{padding:44px 44px 48px}}
+.qc-teaser__form button i{font-style:normal}
+.qc-teaser__form button:hover{background:#2a2a27}
+.qc-teaser__points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.qc-teaser__points li{display:grid;gap:8px;align-content:start;padding:12px 10px;border:1px solid #cccbc8;font-size:var(--fs-caption);line-height:1.3}
+.qc-teaser__points svg{width:24px;height:24px;fill:none;stroke:var(--ui-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:399px){.qc-teaser__points br{display:none}}
+@media(min-width:900px){
+  .qc-teaser{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,72px);align-items:center}
+  .qc-teaser__media{aspect-ratio:5/4}
+  .qc-teaser__form{grid-template-columns:1fr 1fr auto}
+  .qc-teaser .qc-teaser__form button{grid-column:auto;gap:24px;min-width:190px}
+}
 
-/* ---------- Страница товара: блок «Под ваш проём» ---------- */
-.product-calc{padding:var(--space-section) 0;background:var(--ui-bg);border-top:1px solid var(--ui-line-soft);scroll-margin-top:var(--header-h)}
+/* ---------- Глубина и выбор без лишних радиокнопок ----------
+   Выбранная плитка — чёрная, этого достаточно; кружки-радио и квадратики убраны.
+   «Дополнительно» — можно выбрать несколько: плитка-переключатель с «+», выбранная — чёрная с «✓». */
+.qc__num,.qc__leaf,.qc__opt,.qc__extra{background:#fff;box-shadow:var(--sh-1)}
+.qc__size{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
+.qc__size .qc__num{box-shadow:none}
+.qc__leaf,.qc__opt,.qc__extra{border-color:transparent;transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s,color .2s}
+.qc__leaf[aria-pressed="true"],.qc__opt[aria-pressed="true"]{box-shadow:var(--sh-3)}
+@media(hover:hover){
+  .qc__leaf:hover,.qc__opt:hover,.qc__extra:hover{transform:translateY(-2px);box-shadow:var(--sh-2)}
+  .qc__leaf[aria-pressed="true"]:hover,.qc__opt[aria-pressed="true"]:hover{box-shadow:var(--sh-3)}
+}
+.qc__extra{grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px}
+.qc__extra-ico{display:block}
+.qc__extra-ico svg{width:34px;height:26px;fill:none;stroke:currentColor;stroke-width:1.1;opacity:.75}
+.qc__extra-t b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
+.qc__extra-t small{display:block;margin-top:3px;color:var(--qc-muted);font-size:var(--fs-caption)}
+.qc__add{position:relative;width:24px;height:24px;border:1px solid #bdbcb9;border-radius:50%;transition:background-color .2s,border-color .2s}
+.qc__add::before,.qc__add::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1px;background:currentColor;transform:translate(-50%,-50%)}
+.qc__add::after{transform:translate(-50%,-50%) rotate(90deg)}
+.qc__extra:has(input:checked){background:var(--qc-on);color:#fff;box-shadow:var(--sh-3)}
+.qc__extra:has(input:checked) .qc__extra-t small{color:rgba(255,255,255,.65)}
+.qc__extra:has(input:checked) .qc__add{border-color:#fff;background:#fff}
+.qc__extra:has(input:checked) .qc__add::before{width:5px;left:38%;top:55%;background:var(--qc-on);transform:translate(-50%,-50%) rotate(45deg)}
+.qc__extra:has(input:checked) .qc__add::after{width:10px;left:56%;top:48%;background:var(--qc-on);transform:translate(-50%,-50%) rotate(-50deg)}
+.qc__extra input:focus-visible~.qc__add{outline:2px solid var(--ui-accent);outline-offset:2px}
+.qc__project{background:#fff;border-style:solid;border-color:transparent;box-shadow:var(--sh-1);transition:box-shadow .2s,transform .2s var(--ease-ui)}
+@media(hover:hover){.qc__project:hover{transform:translateY(-1px);box-shadow:var(--sh-2)}}
+/* итог — приподнятая панель */
+.qc__summary{padding:14px;background:#fff;box-shadow:var(--sh-2)}
+.qc__photo{box-shadow:0 1px 0 rgba(17,17,15,.04)}
+.qc__cta,.qc__submit{box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s}
+@media(hover:hover){.qc__cta:hover,.qc__submit:hover{transform:translateY(-1px);box-shadow:var(--sh-btn)}}
+.qc__free{background:#f1f1ef;border-left-color:var(--ui-ink)}
+.qc__free svg{stroke:var(--ui-ink)}
+.qc__field input,.qc__field textarea{box-shadow:inset 0 1px 2px rgba(17,17,15,.05)}
+.qc__field input:focus,.qc__field textarea:focus{box-shadow:0 0 0 3px rgba(17,17,15,.08)}
+.qc__num:focus-within{box-shadow:inset 0 0 0 1px var(--ui-ink),0 0 0 3px rgba(17,17,15,.06)}
+@media(min-width:768px){.qc__summary{padding:20px}}
+@media(min-width:560px){.qc__extra-t b{font-size:var(--fs-small)}}
+
+/* анонс калькулятора */
+.qc-teaser__media{box-shadow:var(--sh-2)}
+.qc-teaser__form{background:#fff;border-color:transparent;box-shadow:var(--sh-2)}
+.qc-teaser__form label+label{border-left-color:#e3e2e0}
+.qc-teaser .qc-teaser__form button{transition:background-color .2s}
+.qc-teaser__points li{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
+
+/* ============================================================
+   Калькулятор как одна форма: белая панель, сверху шаги-вкладки, внутри — текущий шаг,
+   справа (с 1100 px) — итог с фото и ценой. На телефоне итог — пятый шаг, снизу панель «цена + Далее».
+   ============================================================ */
+.qc__panel{position:relative;margin-top:clamp(18px,2.4vw,32px);background:#fff;box-shadow:var(--sh-2)}
+.qc__head{margin:0}
+/* вкладки шагов — шапка той же панели */
+.qc__tabs{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#f6f6f5;border-bottom:1px solid #e3e2e0}
+.qc .qc__tab{
+  position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;align-items:center;min-height:56px;padding:10px 8px;
+  border:0;border-right:1px solid #e3e2e0;background:transparent;color:#7a7771;text-align:left;cursor:pointer;transition:background-color .2s,color .2s
+}
+.qc__tab:last-of-type{border-right:0}
+.qc__tab-n{
+  grid-row:1 / span 2;display:grid;place-items:center;width:24px;height:24px;border:1px solid currentColor;border-radius:50%;
+  font:500 var(--fs-label)/1 var(--font)
+}
+.qc__tab-t{font:500 var(--fs-label)/1.15 var(--font);letter-spacing:.02em}
+.qc__tab-v{display:none;overflow:hidden;color:#9a978f;font-size:var(--fs-caption);line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+.qc__tab[aria-selected="true"]{background:#fff;color:var(--qc-ink)}
+.qc__tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--qc-ink)}
+.qc__tab[aria-selected="true"] .qc__tab-n{background:var(--qc-ink);border-color:var(--qc-ink);color:#fff}
+.qc__tab.is-done{color:var(--qc-ink)}
+.qc__tab.is-done .qc__tab-n{font-size:0;background:var(--qc-ink);border-color:var(--qc-ink)}
+.qc__tab.is-done .qc__tab-n::before{content:"";width:9px;height:5px;margin-top:-2px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg)}
+.qc__tab:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+@media(hover:hover){.qc__tab:not([aria-selected="true"]):hover{background:#efefed;color:var(--qc-ink)}}
+.qc__progress{display:none}
+
+.qc__body{display:grid}
+.qc__stage{display:grid;align-content:start;padding:20px 16px 18px}
+.qc__pane{display:none}
+.qc__pane.is-active{display:block;animation:qc-in .28s var(--ease-ui)}
+@keyframes qc-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.qc__pane.is-active{animation:none}}
+.qc__legend{align-items:center;margin-bottom:12px}
+.qc__legend b{font:500 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em;text-transform:none}
+.qc__legend em{display:inline-flex;text-transform:none;letter-spacing:0;font:400 var(--fs-caption)/1.2 var(--font)}
+.qc__legend--gap{margin-top:22px}
+.qc__tip{margin:12px 0 0;color:var(--qc-muted);font-size:var(--fs-small);line-height:1.45}
+.qc__tip:empty{display:none}
+
+/* плитки внутри панели — плоские, с рамкой; выбранная — чёрная */
+.qc__panel .qc__size{border:1px solid #e0dfdc;background:#fafaf9;box-shadow:none}
+.qc__panel .qc__num+.qc__num{border-left-color:#e0dfdc}
+.qc__panel .qc__leaf,.qc__panel .qc__opt,.qc__panel .qc__extra{border:1px solid #e0dfdc;background:#fafaf9;box-shadow:none;transform:none}
+.qc__panel .qc__leaf[aria-pressed="true"],.qc__panel .qc__opt[aria-pressed="true"],.qc__panel .qc__extra:has(input:checked){background:var(--qc-on);border-color:var(--qc-on);box-shadow:0 6px 16px -8px rgba(17,17,15,.55)}
+@media(hover:hover){
+  .qc__panel .qc__leaf:hover,.qc__panel .qc__opt:hover,.qc__panel .qc__extra:hover{transform:none;box-shadow:none;border-color:var(--qc-ink)}
+  .qc__panel .qc__leaf[aria-pressed="true"]:hover,.qc__panel .qc__opt[aria-pressed="true"]:hover{box-shadow:0 6px 16px -8px rgba(17,17,15,.55)}
+}
+.qc__panel .qc__project{margin-top:18px;background:transparent;border:1px dashed #c9c8c5;box-shadow:none}
+@media(hover:hover){.qc__panel .qc__project:hover{transform:none;box-shadow:none;border-color:var(--qc-ink)}}
+
+/* навигация по шагам */
+.qc__nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid #ecebe9}
+.qc .qc__back{min-height:44px;padding:0;border:0;background:none;color:var(--qc-muted);font:500 var(--fs-small)/1 var(--font);cursor:pointer}
+.qc__back[hidden]{visibility:hidden;display:block}
+.qc .qc__back:hover{color:var(--qc-ink)}
+.qc .qc__next,.qc .qc__bar-next{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:18px;min-height:52px;padding:0 20px;border:0;
+  background:var(--qc-on);color:#fff;font:400 var(--fs-body)/1 var(--font);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.2);
+  transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui)
+}
+.qc__next i,.qc__bar-next i{font-style:normal}
+@media(hover:hover){.qc .qc__next:hover,.qc .qc__bar-next:hover{transform:translateY(-1px);box-shadow:var(--sh-btn)}}
+.qc__nav .qc__next{display:none}
+
+/* итог: внутри панели, без своей тени */
+.qc__panel .qc__summary{display:none;padding:16px;background:#f6f6f5;box-shadow:none;border-top:1px solid #e3e2e0}
+.qc__panel .qc__summary.is-active{display:grid;animation:qc-in .28s var(--ease-ui)}
+
+/* телефон: снизу панели — цена и «Далее», прилипает к низу экрана */
+.qc__bar{
+  position:sticky;bottom:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid #e3e2e0;box-shadow:0 -10px 24px -18px rgba(17,17,15,.4)
+}
+.qc__bar small{display:block;color:var(--qc-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.qc__bar strong{display:block;margin-top:5px;font:400 var(--fs-h4)/1 var(--font);letter-spacing:-.02em;white-space:nowrap}
+.qc__bar .qc__bar-next{min-height:48px;padding:0 16px;font-size:var(--fs-small)}
+.qc__panel[data-step="5"] .qc__bar{display:none}
+
+@media(min-width:560px){
+  .qc__tab-v{display:block}
+  .qc .qc__tab{padding:12px 12px;min-height:64px}
+}
+@media(min-width:768px){
+  .qc__stage{padding:28px 28px 24px}
+  .qc__panel .qc__summary{padding:24px 28px}
+}
+@media(min-width:1100px){
+  .qc__tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .qc__tab--m{display:none!important}
+  .qc__body{grid-template-columns:minmax(0,1.3fr) minmax(360px,.7fr)}
+  .qc__stage{padding:34px 36px 30px}
+  .qc__nav .qc__next{display:inline-flex}
+  .qc__panel .qc__summary{display:grid;align-content:start;gap:16px;padding:28px;border-top:0;border-left:1px solid #e3e2e0;animation:none}
+  .qc__bar{display:none}
+  .qc__summary{position:static}
+}
+
+/* телефон: вкладки — номер над коротким названием; панель не уезжает под шапку */
+.qc__panel{scroll-margin-top:calc(var(--header-h) + 8px)}
+.qc__tab-full{display:none}
+.qc .qc__tab{grid-template-columns:1fr;justify-items:center;gap:6px;padding:10px 4px;text-align:center}
+.qc__tab-n{grid-row:auto}
+.qc__legend{flex-wrap:wrap;row-gap:4px}
+.qc__panel .qc__extras{grid-template-columns:1fr}
+@media(min-width:560px){
+  .qc__tab-full{display:inline}.qc__tab-short{display:none}
+  .qc .qc__tab{grid-template-columns:auto minmax(0,1fr);justify-items:start;gap:2px 10px;padding:12px;text-align:left}
+  .qc__tab-n{grid-row:1 / span 2}
+  .qc__panel .qc__extras{grid-template-columns:1fr 1fr}
+}
+@media(max-width:1099px){
+  .qc__panel[data-step="5"] .qc__stage{padding:6px 16px 0}
+  .qc__panel[data-step="5"] .qc__nav{margin:0;padding:0;border:0}
+}
