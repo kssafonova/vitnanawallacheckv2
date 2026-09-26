@@ -1,5 +1,18 @@
 {
-  "_comment": "Сгенерировано tools/build.mjs из data/products.json — не редактировать вручную.",
+  "_comment": "Сгенерировано tools/build.mjs из data/products.json и data/site-config.json — не редактировать вручную.",
+  "factory": {
+    "address": "Москва, Троицкий административный округ, Краснопахорский район, квартал № 205, 1, стр. 1",
+    "hours": "ежедневно, 10:00–20:00",
+    "lat": 55.404982,
+    "lon": 37.402583,
+    "yandex_org": "https://yandex.ru/maps/org/okna/178905094330/",
+    "yandex_route": "https://yandex.ru/maps/?rtext=~55.404982%2C37.402583&rtt=auto"
+  },
+  "services": {
+    "install_delivery_pct": 12,
+    "install_delivery_min": 45000,
+    "install_delivery_zone": "Москва и МО до 50 км от МКАД"
+  },
   "variants": [
     {
       "sku": "STD-HS2-S158-3000X2300-9016-A1",
