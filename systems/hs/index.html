@@ -37,7 +37,7 @@
   <a href="#specification">Характеристики</a>
   <a href="#schemes">Схемы</a>
   <a href="#stock">Конфигурации</a>
-  <a href="#hs-calculator">Калькулятор HS</a>
+  <a href="#hs-calculator">Калькулятор</a>
   <a href="#projects">Проекты</a>
   <a href="#project-form">Отправить проект</a>
 </nav>
@@ -49,7 +49,7 @@
     <div class="hero__kicker">HS · подъёмно-раздвижная система</div>
     <h1>Большой проём. Лёгкое открывание.</h1>
     <p class="hero__copy">Алюминиевый HS-портал для выхода на террасу, в сад или на веранду. Крупные стеклянные створки движутся параллельно фасаду и не занимают пространство комнаты.</p>
-    <div class="hero__actions"><a class="btn btn--fill" href="#hs-calculator">Рассчитать свой HS <span>→</span></a><a class="btn" href="#schemes">Схемы открывания <span>↓</span></a></div>
+    <div class="hero__actions"><a class="btn btn--fill" href="../../raschet/">Рассчитать свой HS <span>→</span></a><a class="btn" href="#schemes">Схемы открывания <span>↓</span></a></div>
     <div class="hs-hero-products" aria-label="Готовые HS-конфигурации">
       <!-- build:hs-hero-products -->
       <a class="hs-hero-product" href="../../catalog/hs-portaly/alumark-s158-3000x2300-belyi-aktivnaya-sprava/">
@@ -367,8 +367,7 @@
         </div>
       </article>
 
-      <article class="m-card m-card--project" data-calc-card id="project">
-      <a class="m-card__teaser" href="#hs-calculator" data-calc-open aria-expanded="false" aria-controls="project-calc">
+      <a class="m-card m-card--project" href="../../raschet/" id="project">
         <span class="m-card__media">
           <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
         </span>
@@ -379,17 +378,43 @@
           <span class="ui-btn ui-btn--light m-card__cart">Рассчитать под свой размер <span>→</span></span>
         </span>
       </a>
-      <div class="m-card__calc" id="project-calc" data-calc-panel hidden>
-        <div class="m-card__calc-bar"><span>Индивидуальный расчёт</span><button class="m-card__calc-close" type="button" data-calc-close>Свернуть <span aria-hidden="true">×</span></button></div>
-        <div class="m-card__calc-body"><div class="m-card__calc-qc" data-quick-calc data-refs="{&quot;2&quot;:{&quot;price&quot;:375000,&quot;w&quot;:3000,&quot;h&quot;:2300},&quot;3&quot;:{&quot;price&quot;:489000,&quot;w&quot;:3600,&quot;h&quot;:2300},&quot;4&quot;:{&quot;price&quot;:620000,&quot;w&quot;:4800,&quot;h&quot;:2300}}" data-endpoint="../../forms/send.php" data-img="../../assets/images/systems/hs-overview.jpg" data-context="карточка «Индивидуальный расчёт»"></div></div>
-      </div>
-    </article>
       <!-- /build:hs-cards -->
     </div>
   </div>
 </section>
 
-<section class="calc-section hs-calculator" id="hs-calculator" data-hs-calculator>
+<section class="qc-teaser-section" id="hs-calculator">
+  <div class="wrap hs-container">
+    <!-- build:hs-calc -->
+      <div class="qc-teaser">
+      <a class="qc-teaser__media" href="../../raschet/" tabindex="-1" aria-hidden="true">
+        <img src="../../assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya.webp" alt="" loading="lazy" decoding="async">
+        <img class="qc-teaser__open" src="../../assets/images/products/hs3/antratsit-dve-aktivnye-odna-fiksirovannaya-open.webp" alt="" loading="lazy" decoding="async">
+        <span class="qc-teaser__tag">Цена сразу · без телефона</span>
+      </a>
+      <div class="qc-teaser__body">
+        <p class="qc-teaser__eyebrow">05 · Калькулятор</p>
+        <h2 class="qc-teaser__title">Сколько стоит раздвижная дверь под ваш размер</h2>
+        <p class="qc-teaser__lead">Укажите примерный размер проёма — калькулятор предложит число створок, покажет вид и ориентировочную цену.</p>
+        <form class="qc-teaser__form" action="../../raschet/" method="get">
+          <label><span>Ширина, мм</span><input name="w" inputmode="numeric" maxlength="4" value="3600" autocomplete="off"></label>
+          <label><span>Высота, мм</span><input name="h" inputmode="numeric" maxlength="4" value="2300" autocomplete="off"></label>
+          <button type="submit">Рассчитать <i aria-hidden="true">→</i></button>
+        </form>
+        <ul class="qc-teaser__points">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3.2"/></svg><span>Цена сразу, <br>без регистрации</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5 12.3 19.2a5 5 0 0 1-7.1-7.1l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg><span>Можно приложить <br>готовый проект</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg><span>Замер — <br>бесплатно</span></li>
+        </ul>
+      </div>
+    </div>
+      <!-- /build:hs-calc -->
+  </div>
+</section>
+
+<!-- Прежний калькулятор HS: скрыт по решению владельца, не удалять. Калькулятор теперь — страница /raschet/. Вернуть — убрать hidden. -->
+<div class="calc-legacy" hidden>
+<section class="calc-section hs-calculator" id="hs-calculator-legacy" data-hs-calculator>
   <div class="w">
     <div class="calc-head">
       <p class="eyebrow">05 · Расчёт</p>
@@ -461,6 +486,7 @@
     </div>
   </div>
 </section>
+</div>
 
 <section class="projects-intro" id="projects"><div class="wrap"><h2>Проекты с HS-порталами</h2><p>HS-портал работает не отдельно от дома, а вместе с фасадом, интерьером и маршрутом на участок. Показываем именно этот результат.</p></div></section>
 <section aria-label="Проекты с HS-порталами" class="projects">
@@ -517,42 +543,17 @@
       </div>
     </div>
 
-    <form class="hs-home-contact__form contact-form" id="contactForm" data-endpoint="../../forms/send.php" enctype="multipart/form-data">
-      <input aria-hidden="true" autocomplete="off" name="website" style="position:absolute;left:-9999px;opacity:0;pointer-events:none" tabindex="-1" type="text">
-      <input type="hidden" name="source" value="hs-project">
-
-      <div class="hs-home-contact__row">
-        <label class="field"><span>Имя</span><input autocomplete="name" name="name" placeholder="Как к вам обращаться" required></label>
-        <label class="field"><span>Телефон</span><input autocomplete="tel" name="phone" placeholder="+7 (___) ___-__-__" required></label>
-      </div>
-
-      <label class="field"><span>Комментарий</span><textarea name="project" placeholder="Размеры проёма / что нужно остеклить"></textarea></label>
-
-      <label class="hs-home-contact__file">
-        <input type="file" name="project_file" accept=".pdf,.jpg,.jpeg,.png,.webp">
-        <span>Прикрепить проект, план или фото</span>
-        <em data-file-name>Файл не выбран</em>
-      </label>
-
-      <button class="btn hs-home-contact__submit" type="submit">Получить расчёт <span>↗</span></button>
-
-      <label class="hs-home-contact__consent">
-        <input type="checkbox" required>
-        <span>Соглашаюсь с политикой конфиденциальности</span>
-      </label>
-
-      <p class="form-status" id="formStatus"></p>
-    </form>
+    <lead-form data-base="../../" data-source="hs" data-theme="dark" data-calc="../../raschet/"></lead-form>
   </div>
 </section>
 </main>
 
 <site-footer data-base="../../"></site-footer>
-<div class="hs-mobile-cta"><a href="#hs-calculator"><span>Рассчитать HS</span><span>→</span></a></div>
+<div class="hs-mobile-cta"><a href="../../raschet/"><span>Рассчитать HS</span><span>→</span></a></div>
 <script src="../../assets/js/components/site-menu.js"></script>
 <script src="../../assets/js/components/site-footer.js"></script>
 <script src="../../assets/js/shop.js"></script>
-<script src="../../assets/js/quick-calc.js"></script>
+<script src="../../assets/js/components/lead-form.js"></script>
 
 <script src="../../assets/js/hs-system.js"></script>
 <script src="../../assets/js/hs-opening.js"></script>
