@@ -13,7 +13,7 @@
 
 .rs-head{margin-bottom:var(--space-head)}
 .rs-head--row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px}
-.rs-h2{margin:0;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.05em}
+.rs-h2{margin:0;font:300 var(--fs-h2)/.98 var(--font);letter-spacing:-.05em}
 .rs-link{display:inline-flex;align-items:center;gap:10px;min-height:44px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor}
 
 /* Что дальше: четыре шага с иконками. Телефон — прокрутка вбок */

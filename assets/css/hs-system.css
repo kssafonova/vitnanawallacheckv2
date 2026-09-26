@@ -14,7 +14,7 @@
   --hs-pad:var(--ui-pad);
   --hs-max:var(--ui-max);
   --hs-h1:var(--fs-h1);
-  --hs-h2:var(--fs-h2);
+  --hs-h2:var(--fs-h2); /* заголовки секций HS — общий токен сайта */
   --hs-h3:var(--fs-h4);
   margin:0;
   background:var(--hs-bg);
@@ -72,7 +72,19 @@
 }
 
 /* local nav is intentionally hidden on phones; global header remains */
-.hs-localnav{display:none}
+/* Мини-меню разделов: стоит сразу под баннером, при прокрутке прилипает под шапкой; на всех ширинах, на телефоне листается вбок */
+.hs-localnav{
+  position:sticky;top:var(--header-h);z-index:90;display:flex;overflow-x:auto;min-height:44px;padding:0 var(--hs-pad);
+  background:rgba(245,245,244,.96);border-bottom:1px solid var(--hs-line-soft);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  scrollbar-width:none;-webkit-overflow-scrolling:touch
+}
+.hs-localnav::-webkit-scrollbar{display:none}
+.hs-localnav a{
+  flex:0 0 auto;display:flex;align-items:center;min-height:44px;padding:0 10px;border-right:1px solid var(--hs-line-soft);
+  color:#68645c;text-decoration:none;font-size:var(--fs-label);font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap
+}
+@media(max-width:899px){.hs-localnav a:first-child{padding-left:0}.hs-localnav a:last-child{border-right:0}}
+.hs-page [id]{scroll-margin-top:calc(var(--header-h) + 44px + 12px)}
 
 /* hero */
 .hs-page .hero{
@@ -116,10 +128,10 @@
 }
 .hs-page .hero__actions .btn{
   width:100%;
-  min-height:48px;
-  padding:0 11px;
-  font-size:var(--fs-caption);
-  letter-spacing:.07em;
+  min-height:var(--btn-h);
+  padding:0 16px;
+  font:600 var(--fs-label)/1 var(--font);
+  letter-spacing:.1em;
 }
 .hs-page .hero__actions .btn--fill{background:#fff;border-color:#fff;color:#111}
 
@@ -996,7 +1008,7 @@
 .hs-page .project__copy h3{max-width:11ch;font-size:var(--fs-h3)}
 .hs-page .project__copy p{margin-top:7px;font-size:var(--fs-caption);line-height:1.4;color:#dad9d7}
 .hs-page .projects__cta{padding:16px var(--hs-pad) 54px;background:var(--hs-bg)}
-.hs-page .projects__cta .btn{width:100%;font-size:var(--fs-caption)}
+.hs-page .projects__cta .btn{width:100%;min-height:var(--btn-h);font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em}
 
 /* process */
 .hs-home-process{background:#fff}
@@ -1129,31 +1141,8 @@
 /* desktop */
 @media(min-width:900px){
   .hs-page{padding-bottom:0}
-  .hs-localnav{
-    position:sticky;
-    top:var(--header-h);
-    z-index:90;
-    display:flex;
-    overflow-x:auto;
-    min-height:44px;
-    padding:0 48px;
-    background:rgba(245,245,244,.96);
-    border-bottom:1px solid var(--hs-line-soft);
-    backdrop-filter:blur(12px);
-  }
-  .hs-localnav a{
-    flex:0 0 auto;
-    display:flex;
-    align-items:center;
-    min-height:44px;
-    padding:0 12px;
-    border-right:1px solid var(--hs-line-soft);
-    color:#68645c;
-    text-decoration:none;
-    font-size:var(--fs-label);
-    font-weight:600;
-    text-transform:uppercase;
-  }
+  .hs-localnav{padding:0 48px}
+  .hs-localnav a{padding:0 12px}
   .hs-page .hero{min-height:calc(100svh - var(--header-h) - 44px)}
   .hs-page .hero__body{min-height:calc(100svh - var(--header-h) - 44px);padding:68px 48px 26px}
   .hs-page .hero__copy{font-size:var(--fs-body)}
@@ -1240,8 +1229,27 @@
   .hs-home-process__steps p{grid-column:auto;margin:0}
 }
 
-/* Первый экран HS на телефоне: без ленты цен — готовые конфигурации идут сразу следом; текст на фото читается */
+/* Первый экран HS без ленты цен (убрана по решению владельца) и ниже прежнего — «Готовые конфигурации»
+   начинаются раньше и на первом экране уже видно начало блока */
+.hs-page .hero,.hs-page .hero__body{min-height:calc(84svh - var(--header-h))}
+.hs-page .hs-stock{padding-top:44px}
+@media(min-width:900px){
+  .hs-page .hero,.hs-page .hero__body{min-height:calc(82svh - var(--header-h))}
+  .hs-page .hs-stock{padding-top:64px}
+}
 @media(max-width:899px){
-  .hs-hero-products{display:none}
   .hs-page .hero__media:after{background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.34) 36%,rgba(0,0,0,.82))}
 }
+
+/* «03 · Готовые двери с ценой» — тёмный блок: разбивает длинную серию светлых секций после первого экрана
+   (подбор → готовые двери → калькулятор → характеристики). Белые карточки на тёмном — как FS в каталоге */
+.hs-page .hs-stock{background:#0b0b0a;color:#f1f0ef}
+.hs-page .hs-stock .hs-kicker{color:#8c887f}
+.hs-page .hs-stock .hs-section-head h2{color:#fff}
+.hs-page .hs-stock .hs-section-head>p{color:#aaa79f}
+.hs-page .hs-stock .m-card{box-shadow:0 1px 0 rgba(255,255,255,.04),0 18px 40px -20px rgba(0,0,0,.8)}
+.hs-page .hs-stock .m-card.m-card--project{box-shadow:inset 0 0 0 1px #343430}
+.hs-page .hs-stock .m-card.is-match{box-shadow:0 0 0 2px #fff,0 18px 40px -20px rgba(0,0,0,.8)}
+.hs-page .hs-stock .m-card__match{background:#fff;color:var(--ui-ink)}
+@keyframes m-card-pulse-dark{0%{box-shadow:0 0 0 2px #fff,0 0 0 0 rgba(255,255,255,.4)}100%{box-shadow:0 0 0 2px #fff,0 0 0 18px rgba(255,255,255,0)}}
+.hs-page .hs-stock .m-card.is-match.is-pulse{animation-name:m-card-pulse-dark}

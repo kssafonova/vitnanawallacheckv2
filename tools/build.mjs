@@ -162,7 +162,7 @@ function marketCard(m, rel) {
   const schemesSvg = m.schemes.map(s => `<span data-scheme-svg="${s.slug}"${s === s0 ? '' : ' hidden'}>${smallSvg(m, s)}</span>`).join('');
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
-    : `<strong>${money(m.price)}</strong><small>от, за конструкцию</small>`;
+    : `<strong>${money(m.price)}</strong><small>за конструкцию</small>`;
   const action = soon
     ? `<a class="ui-btn m-card__cart" href="${href(first)}#product-contact" data-card-link data-card-hash="#product-contact">Сообщить о старте</a>`
     : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
@@ -174,12 +174,11 @@ function marketCard(m, rel) {
           <span class="m-card__scheme" aria-hidden="true">${schemesSvg}</span>
         </a>
         <div class="m-card__body">
-          <div class="m-card__price">${price}</div>
-          <a class="m-card__title" href="${href(first)}" data-card-link>${esc(m.code)} · ${esc(m.name)}</a>
           <p class="m-card__meta">${esc(sizeText(m))} · ${sectionsText(m.sections)}</p>
-          <div class="m-card__opt"><span class="m-card__label">Цвет: <b data-card-color>${esc(c0.name)} RAL ${c0.ral}</b></span><div class="m-card__swatches">${swatches}</div></div>
-          <div class="m-card__opt"><span class="m-card__label">${esc(m.scheme_title)}: <b data-card-scheme>${esc(s0.short)}</b></span>${chips}</div>
-          ${action}
+          <a class="m-card__title" href="${href(first)}" data-card-link>${esc(m.name)}</a>
+          <div class="m-card__opt"><span class="m-card__label">Цвет:</span><div class="m-card__swatches">${swatches}</div></div>
+          ${chips ? `<div class="m-card__opt"><span class="m-card__label">${esc(m.scheme_title)}:</span>${chips}</div>` : ''}
+          <div class="m-card__buy">${action}<div class="m-card__price">${price}</div></div>
         </div>
       </article>`;
 }
@@ -248,10 +247,10 @@ function projectCard(calcHref, id) {
           <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
         </span>
         <span class="m-card__body">
-          <span class="m-card__price"><strong>По расчёту</strong><small>любой размер и комплектация</small></span>
+          <span class="m-card__meta">Любой размер и комплектация</span>
           <span class="m-card__title">Индивидуальный расчёт</span>
-          <span class="m-card__meta">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
-          <span class="ui-btn ui-btn--light m-card__cart">Рассчитать под свой размер <span>→</span></span>
+          <span class="m-card__note">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
+          <span class="m-card__buy"><span class="ui-btn ui-btn--light m-card__cart">Рассчитать <span>→</span></span><span class="m-card__price"><strong>По расчёту</strong><small>под ваш проём</small></span></span>
         </span>
       </a>`;
 }
@@ -452,20 +451,11 @@ const blocks = {
   },
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
-    'hs-calc': calcTeaser('../../', '03 · Калькулятор'),
-    'hs-hero-products': featured.map(m => `<a class="hs-hero-product" href="../../${firstOf(m).path}">
-        <span><small>${esc(m.code)}</small><strong>${esc(sizeText(m))}</strong></span>
-        <span><small>от</small><b>${money(m.price)}</b></span>
-        <i>→</i>
-      </a>`).join('\n      '),
+    'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
   },
   'index.html': {
     'home-calc': calcTeaser('', 'Калькулятор'),
-    'hs-mini-cards': featured.map(m => `<a class="sysx-mini-card" href="${firstOf(m).path}">
-            <span class="sysx-mini-thumb"><img src="${m.image}" alt="" loading="lazy"></span>
-            <span class="sysx-mini-copy"><small>${esc(m.code)} · ${m.width} × ${m.height}</small><strong>${esc(m.name)}</strong><em>от ${money(m.price)}</em></span>
-            <span class="sysx-mini-arrow">→</span>
-          </a>`).join('\n          '),
+    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>от ${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },
 };
 
