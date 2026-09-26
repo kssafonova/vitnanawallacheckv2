@@ -1,6 +1,7 @@
-/* Быстрый калькулятор HS «Сколько стоит раздвижная дверь под ваш размер».
-   Рисуется в любой [data-quick-calc]: карточка «Индивидуальный расчёт» в каталоге и на странице HS,
-   блок «Под ваш проём» на странице товара HS.
+/* Калькулятор HS «Сколько стоит раздвижная дверь под ваш размер» — страница /raschet/.
+   Рисуется в [data-quick-calc]. Параметры можно передать адресом: ?w=3600&h=2300&n=3&glass=standard&color=anthracite&from=…
+   (так на калькулятор ведут страница товара и быстрый расчёт на главной и HS).
+   Фото — настоящие рендеры модели с таким числом створок (data-renders), ползунок «Закрыто — Открыто».
    Цены — из data-refs (генератор кладёт туда цены моделей HS из data/products.json):
    цена модели × (площадь / площадь модели) × стеклопакет × цвет, округление вверх до 1000 ₽.
    Без JS вместо калькулятора остаётся ссылка на полный калькулятор. */
@@ -58,16 +59,23 @@
     let refs = {};
     try { refs = JSON.parse(d.refs || '{}'); } catch (_) { refs = {}; }
     const id = 'qc' + (++uid);
+    let renders = {};
+    try { renders = JSON.parse(d.renders || '{}'); } catch (_) { renders = {}; }
+    const q = d.url ? new URLSearchParams(location.search) : new URLSearchParams();
+    const qn = k => { const v = parseInt(q.get(k), 10); return Number.isFinite(v) && v > 0 ? v : 0; };
+    const oneOf = (v, list) => (list.some(x => x.k === v) ? v : '');
     const st = {
-      w: +d.width || 3600,
-      h: +d.height || 2300,
-      n: +d.leaves || 0,
-      glass: d.glass || 'climate',
-      color: d.color || 'white',
+      w: qn('w') || +d.width || 3600,
+      h: qn('h') || +d.height || 2300,
+      n: [2, 3, 4].includes(qn('n')) ? qn('n') : +d.leaves || 0,
+      glass: oneOf(q.get('glass'), GLASS) || d.glass || 'climate',
+      color: oneOf(q.get('color'), COLORS) || d.color || 'white',
       extras: new Set(),
-      manualLeaves: !!d.leaves,
+      manualLeaves: !!(qn('n') || d.leaves),
+      open: 0,
     };
     if (!st.n) st.n = recommend(st.w);
+    const from = q.get('from') ? String(q.get('from')).slice(0, 160) : '';
 
     const opt = (group, k, inner, on, extra = '') =>
       `<button type="button" class="qc__opt" data-${group}="${k}" aria-pressed="${on}"${extra}>${inner}</button>`;
@@ -76,7 +84,7 @@
 <form class="qc" novalidate>
   <header class="qc__head">
     ${d.eyebrow ? `<p class="qc__eyebrow">${esc(d.eyebrow)}</p>` : ''}
-    <h2 class="qc__title">${esc(d.title || 'Сколько стоит раздвижная дверь под ваш размер')}</h2>
+    <${d.h1 ? 'h1' : 'h2'} class="qc__title">${esc(d.title || 'Сколько стоит раздвижная дверь под ваш размер')}</${d.h1 ? 'h1' : 'h2'}>
     <p class="qc__lead">Укажите примерную ширину и высоту проёма. Цену покажем сразу — без регистрации и без телефона.</p>
     <button type="button" class="qc__project" data-qc-project>${ICON.clip}<span><b>Уже есть проект или план?</b> Прикрепите файл — посчитаем по нему</span><i aria-hidden="true">→</i></button>
   </header>
@@ -122,7 +130,16 @@
     </div>
 
     <aside class="qc__summary">
-      ${d.img ? `<div class="qc__photo"><img src="${esc(d.img)}" alt="" loading="lazy" decoding="async"><span class="qc__badge" data-qc-badge></span></div>` : ''}
+      <figure class="qc__photo">
+        <img class="qc__img" data-qc-img="closed" src="${esc(d.img || '')}" alt="Раздвижная дверь: вид в закрытом положении" decoding="async">
+        <img class="qc__img is-open" data-qc-img="open" src="${esc(d.img || '')}" alt="" aria-hidden="true" decoding="async">
+        <span class="qc__badge" data-qc-badge></span>
+        <figcaption class="qc__view">
+          <span>Закрыто</span>
+          <input type="range" min="0" max="100" step="1" value="0" data-qc-open aria-label="Показать дверь открытой">
+          <span>Открыто</span>
+        </figcaption>
+      </figure>
       <div class="qc__conf"><small>Предварительная конфигурация</small><strong data-qc-conf></strong><span data-qc-confsub></span></div>
       <div class="qc__total">
         <div class="qc__price"><small>Ориентировочная стоимость</small><strong data-qc-price></strong><span>без доставки и монтажа</span></div>
@@ -181,6 +198,7 @@
         `Дополнительно: ${ex.length ? ex.join(', ') : 'нет'}`,
         `Ориентировочно: ${price ? fmt(price) + ' ₽ (без доставки и монтажа)' : 'по расчёту'}`,
         d.context ? `Откуда: ${d.context}` : '',
+        from ? `Со страницы: ${from}` : '',
       ].filter(Boolean).join('\n');
     }
 
@@ -202,6 +220,13 @@
       $('[data-qc-price]').textContent = price ? `≈ ${fmt(price)} ₽` : 'По расчёту';
       const badge = $('[data-qc-badge]');
       if (badge) badge.innerHTML = photoScheme(st.n);
+      // фото: рендер модели с таким числом створок; белый есть только у 2-створчатой, остальные — тёмная рама
+      const set = renders[st.n];
+      if (set) {
+        const tone = st.color === 'white' && set.light ? set.light : set.dark || set.light;
+        const imgC = $('[data-qc-img="closed"]'), imgO = $('[data-qc-img="open"]');
+        if (tone && imgC.getAttribute('src') !== tone.closed) { imgC.src = tone.closed; imgO.src = tone.open || tone.closed; }
+      }
 
       let hint = '';
       if (st.w < W_MIN || st.h < H_MIN || st.h > H_MAX) hint = `Готовые конфигурации — от ${fmt(W_MIN)} мм в ширину и от ${fmt(H_MIN)} до ${fmt(H_MAX)} мм в высоту. Другой размер посчитаем индивидуально.`;
@@ -229,6 +254,9 @@
       else if ('qcCta' in b.dataset) openSend(true);
       else if ('qcProject' in b.dataset) { openSend(false); fileIn.click(); }
     });
+    const openIn = $('[data-qc-open]');
+    const setOpen = v => { st.open = v; root.style.setProperty('--qc-open', (v / 100).toFixed(2)); };
+    if (openIn) openIn.addEventListener('input', () => setOpen(+openIn.value));
     $$('[data-extra]').forEach(i => i.addEventListener('change', () => { i.checked ? st.extras.add(i.dataset.extra) : st.extras.delete(i.dataset.extra); update(); }));
 
     function openSend(focus) {
@@ -289,30 +317,5 @@
     update();
   }
 
-  // Карточка «Индивидуальный расчёт»: по нажатию разворачивается на всю ширину ряда, внутри — калькулятор
-  document.querySelectorAll('[data-calc-card]').forEach(card => {
-    const open = card.querySelector('[data-calc-open]');
-    const panel = card.querySelector('[data-calc-panel]');
-    const close = card.querySelector('[data-calc-close]');
-    if (!open || !panel) return;
-    const setOpen = on => {
-      card.classList.toggle('is-open', on);
-      panel.hidden = !on;
-      open.setAttribute('aria-expanded', String(on));
-      if (on) {
-        const calc = panel.querySelector('[data-quick-calc]');
-        if (calc) init(calc);
-        requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-      } else {
-        open.focus({ preventScroll: true });
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    };
-    open.addEventListener('click', e => { e.preventDefault(); setOpen(true); });
-    close && close.addEventListener('click', () => setOpen(false));
-    if (card.id && location.hash === '#' + card.id) setOpen(true);
-  });
-
-  // Калькуляторы вне карточек (страница товара) — сразу
-  document.querySelectorAll('[data-quick-calc]').forEach(el => { if (!el.closest('[data-calc-panel]')) init(el); });
+  document.querySelectorAll('[data-quick-calc]').forEach(init);
 })();
