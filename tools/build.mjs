@@ -184,9 +184,19 @@ function marketCard(m, rel) {
       </article>`;
 }
 
-// Карточка «Индивидуальный расчёт» — вся карточка ведёт в калькулятор
-function projectCard(calcHref, id) {
-  return `<a class="m-card m-card--project" href="${calcHref}"${id ? ` id="${id}"` : ''}>
+// Быстрый калькулятор HS (assets/js/quick-calc.js): цены моделей по числу секций из products.json
+const calcRefs = () => JSON.stringify(Object.fromEntries(data.models.filter(m => m.system === 'HS' && m.status === 'available')
+  .map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
+const calcBox = (rel, attrs = {}) => {
+  const all = { refs: calcRefs(), endpoint: `${rel}forms/send.php`, img: `${rel}assets/images/systems/hs-overview.jpg`, ...attrs };
+  return `<div class="m-card__calc-qc" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
+};
+
+// Карточка «Индивидуальный расчёт»: по нажатию разворачивается на всю ширину ряда, внутри — быстрый калькулятор.
+// Без JS — обычная ссылка на полный калькулятор.
+function projectCard(calcHref, id, rel) {
+  return `<article class="m-card m-card--project" data-calc-card${id ? ` id="${id}"` : ''}>
+      <a class="m-card__teaser" href="${calcHref}" data-calc-open aria-expanded="false" aria-controls="${id || 'project'}-calc">
         <span class="m-card__media">
           <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
         </span>
@@ -194,9 +204,14 @@ function projectCard(calcHref, id) {
           <span class="m-card__price"><strong>По расчёту</strong><small>любой размер и комплектация</small></span>
           <span class="m-card__title">Индивидуальный расчёт</span>
           <span class="m-card__meta">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
-          <span class="ui-btn ui-btn--light m-card__cart">Открыть калькулятор <span>→</span></span>
+          <span class="ui-btn ui-btn--light m-card__cart">Рассчитать под свой размер <span>→</span></span>
         </span>
-      </a>`;
+      </a>
+      <div class="m-card__calc" id="${id || 'project'}-calc" data-calc-panel hidden>
+        <div class="m-card__calc-bar"><span>Индивидуальный расчёт</span><button class="m-card__calc-close" type="button" data-calc-close>Свернуть <span aria-hidden="true">×</span></button></div>
+        <div class="m-card__calc-body">${calcBox(rel, { context: 'карточка «Индивидуальный расчёт»' })}</div>
+      </div>
+    </article>`;
 }
 
 // ---------- страница варианта ----------
@@ -257,8 +272,12 @@ function variantPage(v) {
 
   const priceBlock = soon
     ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции от</small><strong>${money(m.price)}</strong></div><div class="product-price__term">срок — после подтверждения комплектации</div></div>`;
+    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции от</small><strong>${money(m.price)}</strong></div><div class="product-price__term">срок — после подтверждения комплектации</div></div>
+      <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
+  const hasCalc = m.system === 'HS' && !soon;
+  const customLink = hasCalc ? '#product-contact' : customHref(m, base);
+  const colorKey = { belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral';
 
   return `<!doctype html>
 <html lang="ru">
@@ -280,6 +299,7 @@ ${fontPreload(base)}
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${imageUrl}">
 <link rel="stylesheet" href="${base}assets/css/product.css">
+<link rel="stylesheet" href="${base}assets/css/quick-calc.css">
 <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
 ${jsonLd(product)}
 ${jsonLd(crumbs)}
@@ -310,7 +330,7 @@ ${jsonLd(crumbs)}
       <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
       <div class="product-actions">${soon
         ? `<a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a>`
-        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customHref(m, base)}">Индивидуальный расчёт <span>↗</span></a></div>
+        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customLink}">Индивидуальный расчёт <span>${hasCalc ? '↓' : '↗'}</span></a></div>
       <p class="product-sku">Артикул: ${v.sku}</p>
     </aside>
   </div>
@@ -323,21 +343,20 @@ ${jsonLd(crumbs)}
   </div>
 </section>
 
-<section class="product-lifestyle" data-reveal>
-  <img src="${base + m.architecture}" alt="${esc(m.code)} в архитектуре загородного дома" loading="lazy" decoding="async">
-  <div class="product-lifestyle__copy"><small>${esc(m.code)} · ${esc(size)}</small><h2>Система внутри архитектуры</h2><p>${esc(m.use)}. Портал подбираем по проёму, планировке и маршруту движения, а не только по размеру из каталога.</p></div>
-</section>
-
 <section class="product-tech">
   <div class="p-wrap">
     <header class="product-tech__head"><h2>Инженерная спецификация</h2><p>Поставщиков и комплектующие показываем на техническом уровне. Итоговые характеристики конкретной конструкции подтверждаются после расчёта размера и стеклопакета.</p></header>
     <div class="product-tech__grid">${tech}</div>
     <ul class="product-limits">${limits}</ul>
-    <div class="product-docs"><a class="product-doc" href="${systemHref(m, base)}"><div><strong>Описание системы и механики</strong><small>Схемы открывания, стеклопакеты и инженерные ориентиры</small></div><span>↗</span></a><a class="product-doc" href="${customHref(m, base)}"><div><strong>Индивидуальная конфигурация</strong><small>Другой размер, стекло, цвет или монтажный узел</small></div><span>→</span></a></div>
+    <div class="product-docs"><a class="product-doc" href="${systemHref(m, base)}"><div><strong>Описание системы и механики</strong><small>Схемы открывания, стеклопакеты и инженерные ориентиры</small></div><span>↗</span></a><a class="product-doc" href="${customLink}"><div><strong>Индивидуальная конфигурация</strong><small>Другой размер, стекло, цвет или монтажный узел</small></div><span>→</span></a></div>
   </div>
 </section>
 
-<section class="product-custom">
+${hasCalc ? `<section class="product-calc" id="product-contact">
+  <div class="p-wrap">${calcBox(base, { eyebrow: '02 · Расчёт под ваш проём', width: m.width, height: m.height, leaves: m.sections, glass: 'standard', color: colorKey, context: `${m.code}, ${colorName}, ${s.code} (${v.sku})` })}</div>
+</section>
+
+` : `<section class="product-custom">
   <div class="p-wrap product-custom__grid"><div><p class="ui-eyebrow">02 · Под проект</p><h2>Не нашли точный вариант?</h2></div><div>
     <div class="product-custom__rows">
       <div><span>01</span><div><b>Другой размер</b><p>Проверим геометрию створок и допустимый вес стекла.</p></div></div>
@@ -355,6 +374,11 @@ ${jsonLd(crumbs)}
   </div>
 </section>
 
+`}<section class="product-lifestyle" data-reveal>
+  <img src="${base + m.architecture}" alt="${esc(m.code)} в архитектуре загородного дома" loading="lazy" decoding="async">
+  <div class="product-lifestyle__copy"><small>${esc(m.code)} · ${esc(size)}</small><h2>Система внутри архитектуры</h2><p>${esc(m.use)}. Портал подбираем по проёму, планировке и маршруту движения, а не только по размеру из каталога.</p></div>
+</section>
+
 <div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>от</small><strong>${money(m.price)}</strong>`}</div>${soon ? '<a class="ui-btn ui-btn--dark" href="#product-contact">Узнать о старте <span>→</span></a>' : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}</div>
 </main>
 <site-footer data-base="${base}"></site-footer>
@@ -362,6 +386,7 @@ ${jsonLd(crumbs)}
 <script src="${base}assets/js/components/site-footer.js"></script>
 <script src="${base}assets/js/shop.js"></script>
 <script src="${base}assets/js/product.js"></script>
+<script src="${base}assets/js/quick-calc.js"></script>
 </body>
 </html>
 `;
@@ -375,11 +400,11 @@ const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS /
 
 const blocks = {
   'catalog/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../systems/hs/#hs-calculator', 'project')].join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../systems/hs/#hs-calculator', 'project', '../')].join('\n\n      '),
     'fs-cards': fsModels.map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'systems/hs/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('#hs-calculator')].join('\n\n      '),
+    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('#hs-calculator', 'project', '../../')].join('\n\n      '),
     'hs-hero-products': featured.map(m => `<a class="hs-hero-product" href="../../${firstOf(m).path}">
         <span><small>${esc(m.code)}</small><strong>${esc(sizeText(m))}</strong></span>
         <span><small>от</small><b>${money(m.price)}</b></span>
