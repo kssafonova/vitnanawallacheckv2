@@ -61,11 +61,11 @@
 @media(hover:hover){.rs-model:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
 .rs-steps__list li{box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 20px 40px -24px rgba(0,0,0,.9)}
 
-/* ---------- «Что дальше» — светлая таблица в тонких линиях, готовые конфигурации — карточки .m-card ---------- */
+/* ---------- В стиле каталога: «Что дальше» — светлые плитки, готовые конфигурации — карточки .m-card ---------- */
 .rs-steps{background:var(--ui-bg);color:var(--ui-ink)}
 .rs-steps .ui-eyebrow{color:var(--ui-muted)}
-.rs-steps__list{gap:0!important;background:#fff;border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
-.rs-steps__list li{background:transparent;border:0;border-right:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);box-shadow:none}
+.rs-steps__list li{background:#fff;border:0;box-shadow:var(--sh-1);transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)}
+@media(hover:hover){.rs-steps__list li:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
 .rs-steps__list svg{stroke:var(--ui-ink)}
 .rs-steps__n{color:var(--ui-muted)}
 .rs-steps__list p{color:var(--ui-muted)}
@@ -74,8 +74,3 @@
 .rs-models__list.rs-models__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(14px,1.8vw,28px);overflow:visible;margin:0;padding:0}
 @media(min-width:640px){.rs-models__list.rs-models__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.rs-models__list.rs-models__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-/* телефон: не лента, а таблица по строкам; 2 колонки с 640 px */
-.rs-steps__list{display:grid!important;margin:0!important;padding:0!important;overflow:visible!important}
-.rs-steps__list li{min-height:0}
-@media(min-width:640px){.rs-steps__list{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(min-width:1100px){.rs-steps__list{grid-template-columns:repeat(4,minmax(0,1fr))}}

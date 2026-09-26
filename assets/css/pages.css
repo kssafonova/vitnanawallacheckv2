@@ -123,8 +123,7 @@
 }
 
 /* ============================================================
-   Плоский светлый фон; цифры, «Почему мы», шаги, реквизиты — инженерные таблицы:
-   тонкие линии, белое поле, без теней (решение владельца: схемы и таблицы — «как чертёж»)
+   В стиле каталога: плоский светлый фон, всё содержимое — белые плитки с тенью (--sh-1, подъём при наведении)
    ============================================================ */
 .pg-section,.pg-section--paper,.pg-section--dark{background:var(--ui-bg);color:var(--ui-ink)}
 .pg-section + .pg-section{padding-top:0}
@@ -133,15 +132,23 @@
 .pg-section--dark .ui-btn--light{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
 .pg-section--dark .ui-btn:not(.ui-btn--light){color:var(--ui-ink);border-color:var(--ui-ink)}
 .pg-section .ui-section-head,.pg-section .pg-head{padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
-.pg-figures,.pg-why,.pg-steps{display:grid;gap:0;background:#fff;border:0!important;border-top:1px solid var(--ui-line)!important;border-left:1px solid var(--ui-line)!important}
-.pg-figures>div,.pg-why li,.pg-steps li{padding:clamp(16px,1.8vw,26px)!important;border:0!important;border-right:1px solid var(--ui-line)!important;border-bottom:1px solid var(--ui-line)!important}
+.pg-figures,.pg-why,.pg-steps{gap:clamp(8px,1vw,14px);border:0!important}
+.pg-figures>div,.pg-why li,.pg-steps li{
+  padding:clamp(16px,1.8vw,26px)!important;background:#fff;border:0!important;box-shadow:var(--sh-1);
+  transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)
+}
+@media(hover:hover){.pg-figures>div:hover,.pg-why li:hover,.pg-steps li:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
+.pg-why{display:grid}
 .pg-why h3{font-size:var(--fs-h4);letter-spacing:-.02em;line-height:1.2}
 .pg-why p{font-size:var(--fs-small)}
+.pg-steps{display:grid}
 .pg-steps b{font-size:var(--fs-h4)}
-.pg-steps,.pg-steps li,.pg-section--dark .pg-steps,.pg-section--dark .pg-steps li{border-color:var(--ui-line)!important}
-.pg-rows{padding:0 clamp(16px,1.8vw,26px);background:#fff;border:1px solid var(--ui-line)}
+.pg-rows{padding:4px clamp(16px,1.8vw,26px);background:#fff;border:0;box-shadow:var(--sh-1)}
 .pg-rows>div{border-color:var(--ui-line-soft)}
 .pg-rows>div:last-child{border-bottom:0}
+.pg-split__media{box-shadow:var(--sh-2)}
+.ct-map{border:0;box-shadow:var(--sh-2)}
+.ct-map__stub{background:#fff}
 @media(min-width:768px){
   .pg-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pg-why{grid-template-columns:repeat(2,minmax(0,1fr))}

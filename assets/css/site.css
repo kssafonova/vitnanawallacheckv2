@@ -577,3 +577,16 @@
   .sx__visual{align-self:start}
   .sx__stage{max-height:none;aspect-ratio:16/10}
 }
+
+/* ---------- В стиле каталога: процесс — белые плитки на плоском фоне ---------- */
+.process{background:var(--ui-bg)!important}
+.process .steps{display:grid!important;grid-template-columns:minmax(0,1fr);gap:clamp(8px,1vw,14px);border:0!important}
+.process .steps .step{display:block!important;padding:clamp(16px,1.8vw,26px)!important;background:#fff;border:0!important;box-shadow:var(--sh-1);transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)}
+.process .step__num{display:block;margin-bottom:clamp(14px,2vw,28px)!important;color:var(--ui-muted)}
+.process .step h3{margin:0;font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em;text-transform:none}
+.process .step p{margin:8px 0 0;color:var(--ui-muted);font-size:var(--fs-small);line-height:1.5}
+@media(hover:hover){.process .steps .step:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
+@media(min-width:768px){.process .steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* шаги стоят в правой колонке .process__grid — максимум 2 в ряд */
+.process .steps .step>div{min-width:0}
+.process .steps .step p{grid-column:auto!important}

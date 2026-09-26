@@ -229,8 +229,8 @@
 .pdp-buy .m-card__swatch{width:36px;height:36px}
 .pdp-buy__actions{display:grid;gap:8px;padding-top:4px}
 .pdp-buy__actions .ui-btn{width:100%}
-.pdp-buy__facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
-.pdp-buy__facts li{padding:12px;border-right:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line)}
+.pdp-buy__facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.pdp-buy__facts li{padding:12px;background:var(--ui-bg)}
 .pdp-buy__facts small{display:block;color:var(--ui-muted);font:500 var(--fs-label)/1.3 var(--font);letter-spacing:.08em;text-transform:uppercase}
 .pdp-buy__facts strong{display:block;margin-top:6px;font:400 var(--fs-small)/1.3 var(--font)}
 .pdp-buy__lead{margin:0;color:var(--ui-muted);font:300 var(--fs-small)/1.55 var(--font)}
@@ -240,23 +240,27 @@
   .pdp-gallery{position:sticky;top:calc(var(--header-h) + 16px)}
 }
 
-/* Конфигурация: чертёж и факты — плоско на белом, в тонких линиях (как инженерная схема) */
+/* Конфигурация: чертёж и факты — белая плитка */
 .product-story{padding:0 0 var(--space-section);background:var(--ui-bg)}
-.product-config{background:#fff;border:1px solid var(--ui-line)}
+.product-config{background:#fff;border:0;box-shadow:var(--sh-1)}
+.product-config__drawing{border-color:var(--ui-line-soft)!important}
+.product-config__facts>div{border-color:var(--ui-line-soft)!important}
 
-/* Характеристики — светлая инженерная таблица в тонких линиях (вместо тёмного блока) */
+/* Характеристики — светлые плитки вместо тёмного блока */
 .product-tech{padding:0 0 var(--space-section);background:var(--ui-bg);color:var(--ui-ink)}
 .product-tech__head{padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
 .product-tech__head h2{font-size:var(--fs-h3);line-height:1.05;letter-spacing:-.04em}
 .product-tech__head p{color:var(--ui-muted)}
-.product-tech__grid{background:#fff;border-color:var(--ui-line)}
-.product-tech__grid>div{min-height:0;padding:14px;border-color:var(--ui-line)}
+.product-tech__grid{gap:8px;border:0}
+.product-tech__grid>div{min-height:0;padding:14px;background:#fff;border:0;box-shadow:var(--sh-1)}
 .product-tech__grid small{color:var(--ui-muted)}
-.product-limits{background:#fff;border-color:var(--ui-line)}
-.product-limits li{border-color:var(--ui-line);color:var(--ui-muted)}
-.product-doc,.product-doc:last-child{border-color:var(--ui-line)}
+.product-limits{display:flex!important;flex-wrap:wrap;gap:8px;margin-top:8px;border:0}
+.product-limits li{padding:10px 12px;background:#fff;border:0;box-shadow:var(--sh-1);color:var(--ui-muted);font-size:var(--fs-caption)}
+.product-docs{display:grid;gap:8px;margin-top:16px}
+.product-doc,.product-doc:last-child{padding:16px 18px;background:#fff;border:0;box-shadow:var(--sh-1);transition:box-shadow .2s var(--ease-ui),transform .2s var(--ease-ui)}
 .product-doc small{color:var(--ui-muted)}
-@media(hover:hover){.product-doc:hover strong{text-decoration:underline;text-underline-offset:3px}}
+@media(hover:hover){.product-doc:hover{transform:translateY(-2px);box-shadow:var(--sh-3)}}
+@media(min-width:768px){.product-docs{grid-template-columns:1fr 1fr}}
 
 /* «Под ваш проём» и «Система внутри архитектуры» — на общем фоне, фото — компактная карточка */
 .product-contact{padding:0 0 var(--space-section);background:var(--ui-bg)}
