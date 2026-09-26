@@ -47,7 +47,7 @@
           "hex": "#383b3a"
         }
       ],
-      "scheme_title": "Открывание",
+      "scheme_title": "Схема",
       "schemes": [
         {
           "code": "A1",
@@ -115,7 +115,7 @@
           "hex": "#4b4d4c"
         }
       ],
-      "scheme_title": "Открывание",
+      "scheme_title": "Схема",
       "schemes": [
         {
           "code": "D1",
@@ -179,7 +179,7 @@
           "hex": "#111111"
         }
       ],
-      "scheme_title": "Открывание",
+      "scheme_title": "Схема",
       "schemes": [
         {
           "code": "A7",
@@ -243,7 +243,7 @@
           "hex": "#111111"
         }
       ],
-      "scheme_title": "Складывание",
+      "scheme_title": "Схема",
       "schemes": [
         {
           "code": "330-L",
