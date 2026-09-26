@@ -1239,3 +1239,9 @@
   }
   .hs-home-process__steps p{grid-column:auto;margin:0}
 }
+
+/* Первый экран HS на телефоне: без ленты цен — готовые конфигурации идут сразу следом; текст на фото читается */
+@media(max-width:899px){
+  .hs-hero-products{display:none}
+  .hs-page .hero__media:after{background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.34) 36%,rgba(0,0,0,.82))}
+}
