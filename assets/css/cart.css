@@ -39,7 +39,9 @@
 
 .cart-side{display:grid;gap:18px;align-content:start}
 .cart-summary{padding:18px;background:#fff;border:1px solid var(--ui-line-soft)}
-.cart-summary__row{display:flex;justify-content:space-between;color:var(--ui-muted);font-size:var(--fs-small)}
+.cart-summary__row{display:flex;justify-content:space-between;gap:12px;color:var(--ui-muted);font-size:var(--fs-small)}
+.cart-summary__row+.cart-summary__row{margin-top:8px}
+.cart-summary__row span:last-child{color:var(--ui-ink);white-space:nowrap}
 .cart-summary__total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ui-line-soft)}
 .cart-summary__total span{font-size:var(--fs-small)}
 .cart-summary__total strong{font:400 var(--fs-h3)/1 var(--font);letter-spacing:-.04em;white-space:nowrap}
@@ -47,6 +49,14 @@
 
 .cart-form{display:grid;gap:14px;padding:18px;background:#fff;border:1px solid var(--ui-line-soft)}
 .cart-form h2{margin:0 0 4px;font:300 var(--fs-h3)/1 var(--font);letter-spacing:-.045em}
+.cart-delivery{display:grid;gap:8px;margin:0;padding:0;border:0}
+.cart-delivery legend{margin-bottom:8px;padding:0;color:#666159;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.cart-option{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;padding:12px;border:1px solid var(--ui-line-soft);cursor:pointer;transition:border-color .2s}
+.cart-option:has(input:checked){border-color:var(--ui-ink)}
+.cart-option input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--ui-ink)}
+.cart-option b{display:block;font:400 var(--fs-small)/1.3 var(--font)}
+.cart-option small{display:block;margin-top:4px;color:var(--ui-muted);font-size:var(--fs-caption);line-height:1.45}
+.cart-option a{text-decoration:underline;text-underline-offset:2px}
 .cart-field{display:grid;gap:6px}
 .cart-field span{color:#666159;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
 .cart-field input,.cart-field textarea{

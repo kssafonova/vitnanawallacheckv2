@@ -1,8 +1,8 @@
 {
   "brand": "PORTAL SYSTEMS",
   "site_url": "https://www.portal-systems.ru",
-  "phone": "",
-  "email": "",
+  "phone": "+7 977 410-24-79",
+  "email": "info@steclodom.ru",
   "seo": {
     "enabled": false,
     "title": "",
@@ -12,5 +12,20 @@
     "og_description": "",
     "og_image": "",
     "json_ld": []
+  },
+  "factory": {
+    "_comment": "Производство и самовывоз. Те же данные вручную в contacts/index.html и about/index.html — меняйте вместе.",
+    "address": "Москва, Троицкий административный округ, Краснопахорский район, квартал № 205, 1, стр. 1",
+    "hours": "ежедневно, 10:00–20:00",
+    "lat": 55.404982,
+    "lon": 37.402583,
+    "yandex_org": "https://yandex.ru/maps/org/okna/178905094330/",
+    "yandex_route": "https://yandex.ru/maps/?rtext=~55.404982%2C37.402583&rtt=auto"
+  },
+  "services": {
+    "_comment": "Оценка доставки и монтажа в корзине: процент от стоимости конструкций, но не меньше минимума. Точная сумма — после замера.",
+    "install_delivery_pct": 12,
+    "install_delivery_min": 45000,
+    "install_delivery_zone": "Москва и МО до 50 км от МКАД"
   }
 }

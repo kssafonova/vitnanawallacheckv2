@@ -375,6 +375,7 @@ const blocks = {
 // ---------- sitemap ----------
 const sitemapUrls = [
   ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
+  ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
 ];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -398,7 +399,10 @@ for (const [file, map] of Object.entries(blocks)) {
 outputs.set('sitemap.xml', sitemap);
 // Данные для корзины (assets/js/shop.js): актуальные цены и названия по артикулу
 outputs.set('data/catalog.json', JSON.stringify({
-  _comment: 'Сгенерировано tools/build.mjs из data/products.json — не редактировать вручную.',
+  _comment: 'Сгенерировано tools/build.mjs из data/products.json и data/site-config.json — не редактировать вручную.',
+  // Для корзины: самовывоз с производства и оценка доставки + монтажа
+  factory: (({ _comment, ...f }) => f)(config.factory || {}),
+  services: (({ _comment, ...s }) => s)(config.services || {}),
   variants: variants.map(v => ({
     sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m),
     color: `${v.c.name} RAL ${v.c.ral}`, color_slug: v.c.slug, hex: v.c.hex,

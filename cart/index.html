@@ -33,15 +33,23 @@
   <aside class="cart-side">
     <div class="cart-summary">
       <div class="cart-summary__row"><span>Товаров</span><span data-cart-count>0</span></div>
+      <div class="cart-summary__row"><span>Конструкции</span><span data-cart-goods>—</span></div>
+      <div class="cart-summary__row"><span data-cart-service-label>Доставка и монтаж</span><span data-cart-service>—</span></div>
       <div class="cart-summary__total"><span>Итого</span><strong data-cart-total>—</strong></div>
-      <p class="cart-summary__note">Цена «от» — за конструкцию стандартной комплектации. Итоговую стоимость с монтажом подтвердим после замера.</p>
+      <p class="cart-summary__note" data-cart-note-delivery>Цена «от» — за конструкции стандартной комплектации. Доставка и монтаж — предварительная оценка; точную сумму зафиксируем в договоре после замера.</p>
+      <p class="cart-summary__note" data-cart-note-pickup hidden>Самовывоз — без доставки и монтажа. Монтаж можно заказать отдельно: посчитаем после замера.</p>
     </div>
 
     <form class="cart-form" data-cart-form data-endpoint="../forms/send.php">
       <h2>Оформление</h2>
+      <fieldset class="cart-delivery">
+        <legend>Получение</legend>
+        <label class="cart-option"><input type="radio" name="delivery" value="delivery" checked><span><b>Доставка и монтаж</b><small data-delivery-hint>Москва и МО до 50 км от МКАД. Замер бесплатно.</small></span></label>
+        <label class="cart-option"><input type="radio" name="delivery" value="pickup"><span><b>Самовывоз с производства</b><small>Москва, ТиНАО, Краснопахорский район, квартал № 205, 1, стр. 1 · ежедневно 10:00–20:00 · <a href="https://yandex.ru/maps/?rtext=~55.404982%2C37.402583&amp;rtt=auto" target="_blank" rel="noopener">маршрут</a></small></span></label>
+      </fieldset>
       <label class="cart-field"><span>Имя</span><input name="name" autocomplete="name" required maxlength="100" placeholder="Как к вам обращаться"></label>
       <label class="cart-field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" required placeholder="+7 999 000-00-00"></label>
-      <label class="cart-field"><span>Город или посёлок</span><input name="city" autocomplete="address-level2" required maxlength="120" placeholder="Например, Истра"></label>
+      <label class="cart-field" data-city-field><span>Город или посёлок</span><input name="city" autocomplete="address-level2" required maxlength="120" placeholder="Например, Истра"></label>
       <label class="cart-field"><span>Комментарий</span><textarea name="comment" maxlength="3000" placeholder="Размер проёма, стадия строительства, удобное время для звонка"></textarea></label>
       <label class="cart-consent"><input type="checkbox" name="privacy_consent" value="1" required><span>Соглашаюсь с <a href="../content/privacy-policy-portal-systems.pdf" rel="nofollow noopener" target="_blank">политикой конфиденциальности</a></span></label>
       <input class="cart-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">

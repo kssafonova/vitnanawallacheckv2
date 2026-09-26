@@ -20,8 +20,8 @@
         <div class="grid">
           <div><h3>Системы</h3><a href="${base}systems/hs/">Подъёмно-раздвижная HS</a><a href="${base}index.html#systems">Складная FS</a><a href="${base}index.html#systems">Панорамные окна</a></div>
           <div><h3>Проект</h3><a href="${base}catalog/">Готовые конфигурации</a><a href="${base}index.html#projects">Проекты</a><a href="${base}index.html#calculator">Калькулятор</a></div>
-          <div><h3>Бюро</h3><a href="${base}index.html#why">Подход</a><a href="${base}index.html#faq">FAQ</a><a href="${base}index.html#contact">Контакты</a></div>
-          <div><h3>Регион</h3><p>Москва и Московская область</p><p>Проектирование · производство · монтаж</p></div>
+          <div><h3>Компания</h3><a href="${base}about/">О компании</a><a href="${base}about/#why">Почему мы</a><a href="${base}contacts/">Контакты</a><a href="${base}contacts/#pickup">Самовывоз</a><a href="${base}about/#requisites">Реквизиты</a></div>
+          <div><h3>Связь</h3><a href="tel:+79774102479">+7 977 410-24-79</a><a href="mailto:info@steclodom.ru">info@steclodom.ru</a><p>Ежедневно, 10:00–20:00</p><p>Москва и Московская область</p></div>
         </div>
         <div class="bottom"><span>© PORTAL SYSTEMS</span><span>Архитектурное остекление</span></div>
       </div></footer>`;
