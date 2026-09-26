@@ -45,6 +45,13 @@
   --space-section:clamp(64px, 38.67px + 7.037vw, 140px);
   --space-head:clamp(28px, 18.67px + 2.593vw, 56px);  /* от заголовка секции до контента */
   --header-h:72px;
+
+  /* Глубина компонентов: мягкие тени в два слоя (контактная + рассеянная). Только для элементов, не для фона. */
+  --sh-1:0 1px 2px rgba(17,17,15,.06),0 2px 8px -2px rgba(17,17,15,.06);          /* покой: плитки, поля, карточки */
+  --sh-2:0 1px 2px rgba(17,17,15,.05),0 10px 28px -10px rgba(17,17,15,.18);        /* панели: формы, итог расчёта */
+  --sh-3:0 2px 4px rgba(17,17,15,.06),0 22px 44px -14px rgba(17,17,15,.26);        /* наведение, выбранный вариант */
+  --sh-btn:0 1px 1px rgba(0,0,0,.2),0 8px 18px -8px rgba(17,17,15,.55);           /* тёмная кнопка при наведении */
+  --ease-ui:cubic-bezier(.2,.7,.2,1);
 }
 @media(min-width:900px){:root{--header-h:88px}}
 
@@ -52,12 +59,12 @@
 :root{
   --ui-black:#050505;
   --ui-ink:#11110f;
-  --ui-paper:#ebe8dc;
-  --ui-bg:#f7f7f3;
+  --ui-paper:#ededeb;   /* второй фон секций — светло-серый, без желтизны */
+  --ui-bg:#f5f5f4;
   --ui-white:#fff;
   --ui-muted:#6f6c64;
-  --ui-line:#aaa59a;
-  --ui-line-soft:#d5d1c7;
+  --ui-line:#a9a8a5;
+  --ui-line-soft:#cfcecd;
   --ui-accent:#b1a27a;
   --ui-max:1680px;   /* ширина контента с полями — одна на весь сайт */
 }
@@ -89,11 +96,11 @@ p{text-wrap:pretty}
   display:flex;flex-direction:column;min-width:0;background:#fff;color:var(--ui-ink);
   border:1px solid var(--ui-line);text-decoration:none;overflow:hidden
 }
-.product-card__media{position:relative;aspect-ratio:1.12/1;overflow:hidden;background:#e6e3da}
+.product-card__media{position:relative;aspect-ratio:1.12/1;overflow:hidden;background:#e1e0df}
 .product-card__media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .55s ease,filter .55s ease}
 .product-card__index{
   position:absolute;top:12px;left:12px;min-width:30px;height:30px;padding:0 8px;display:grid;place-items:center;
-  background:rgba(247,247,243,.94);border:1px solid rgba(17,17,15,.18);
+  background:rgba(245,245,244,.94);border:1px solid rgba(17,17,15,.18);
   font:600 var(--fs-caption)/1 var(--font);letter-spacing:.08em
 }
 .product-card__scheme{position:absolute;right:12px;bottom:12px;width:92px;padding:8px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 18px rgba(0,0,0,.18)}
@@ -167,7 +174,7 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
    ============================================================ */
 .m-card{position:relative;display:flex;flex-direction:column;min-width:0;background:#fff;color:var(--ui-ink);text-decoration:none}
 .m-card a{color:inherit;text-decoration:none}
-.m-card__media{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;background:#e6e3da}
+.m-card__media{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;background:#e1e0df}
 .m-card__media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
 .m-card__badge{
   position:absolute;top:8px;left:8px;padding:6px 7px;background:var(--ui-ink);color:#fff;
@@ -200,7 +207,7 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 /* «Индивидуальный расчёт»: вся карточка — ссылка в калькулятор */
 .m-card.m-card--project{background:#0b0b0a;color:#fff;cursor:pointer} /* 0,2,0: сильнее `.catalog-page a{color:inherit}` */
 .m-card--project .m-card__media{display:grid;place-items:center;background:#0b0b0a}
-.m-card--project .m-card__media svg{width:78%;height:auto;fill:none;stroke:#d8d4cb;stroke-width:1}
+.m-card--project .m-card__media svg{width:78%;height:auto;fill:none;stroke:#d3d2d0;stroke-width:1}
 .m-card--project .m-card__price small,.m-card--project .m-card__meta{color:#aaa79f}
 .m-card--project .m-card__cart{pointer-events:none}
 @media(hover:hover){
@@ -237,10 +244,10 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
    ============================================================ */
 lead-form{display:block}
 .lead-form{
-  --lf-ink:var(--ui-ink);--lf-muted:#6f6c64;--lf-line:#cfcac0;--lf-field:#fff;--lf-btn:#0b0b0a;--lf-btn-ink:#fff;--lf-note:#e9e4d4;
+  --lf-ink:var(--ui-ink);--lf-muted:#6f6c64;--lf-line:#c9c8c6;--lf-field:#fff;--lf-btn:#0b0b0a;--lf-btn-ink:#fff;--lf-note:#dfdfde;
   position:relative;display:grid;gap:12px;padding:18px;background:#fff;border:1px solid var(--ui-line-soft);color:var(--lf-ink);font-family:var(--font)
 }
-.lead-form--dark{background:rgba(8,8,8,.72);border-color:rgba(255,255,255,.26);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);--lf-ink:#f4f2ec;--lf-muted:#a8a59e;--lf-line:rgba(255,255,255,.28);--lf-field:rgba(255,255,255,.06);--lf-btn:#f4f2ec;--lf-btn-ink:#0b0b0a;--lf-note:rgba(177,162,122,.16)}
+.lead-form--dark{background:rgba(8,8,8,.72);border-color:rgba(255,255,255,.26);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);--lf-ink:#f1f0ef;--lf-muted:#a8a59e;--lf-line:rgba(255,255,255,.28);--lf-field:rgba(255,255,255,.06);--lf-btn:#f1f0ef;--lf-btn-ink:#0b0b0a;--lf-note:rgba(177,162,122,.16)}
 .lead-form__row{display:grid;gap:12px}
 .lead-form__field{display:grid;gap:6px}
 .lead-form__field span{color:var(--lf-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
@@ -289,3 +296,43 @@ lead-form{display:block}
 .lead-form button:focus-visible,.lead-form a:focus-visible,.lead-form input:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
 @media(min-width:560px){.lead-form__row{grid-template-columns:1fr 1fr}}
 @media(min-width:768px){.lead-form{padding:26px}}
+
+
+/* ============================================================
+   Глубина компонентов (поверх плоского стиля): тени, подъём при наведении, мягкий фокус.
+   Фон секций не трогаем — только элементы.
+   ============================================================ */
+.ui-btn{transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s,color .2s}
+.ui-btn.ui-btn--dark{box-shadow:0 1px 2px rgba(0,0,0,.18)}
+.ui-btn.ui-btn--light{box-shadow:0 1px 2px rgba(0,0,0,.12)}
+@media(hover:hover){
+  .ui-btn:hover{transform:translateY(-1px)}
+  .ui-btn.ui-btn--dark:hover{box-shadow:var(--sh-btn)}
+  .ui-btn.ui-btn--light:hover{box-shadow:0 10px 22px -10px rgba(0,0,0,.45)}
+}
+.ui-btn:active{transform:translateY(0);box-shadow:none}
+
+/* Карточки товара: белые, с тенью; при наведении приподнимаются */
+.m-card{box-shadow:var(--sh-1);transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)}
+.m-card__swatch{box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 1px 2px rgba(17,17,15,.18)}
+.m-card__chip{transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s}
+.m-card__chip.is-active{box-shadow:0 4px 10px -4px rgba(17,17,15,.45)}
+@media(hover:hover){
+  .m-card:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}
+  .m-card.m-card--project:hover{box-shadow:0 2px 4px rgba(0,0,0,.2),0 26px 50px -16px rgba(0,0,0,.55)}
+}
+
+/* Форма заявки — панель с тенью, поля с мягким фокусом */
+.lead-form{box-shadow:var(--sh-2);border-color:transparent}
+.lead-form--dark{box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+.lead-form__field input,.lead-form__field textarea{box-shadow:inset 0 1px 2px rgba(17,17,15,.05);transition:border-color .2s,box-shadow .2s}
+.lead-form__field input:focus,.lead-form__field textarea:focus{box-shadow:0 0 0 3px rgba(17,17,15,.08)}
+.lead-form--dark .lead-form__field input:focus,.lead-form--dark .lead-form__field textarea:focus{box-shadow:0 0 0 3px rgba(255,255,255,.12)}
+.lead-form__file{background:rgba(17,17,15,.02)}
+.lead-form--dark .lead-form__file{background:rgba(255,255,255,.03)}
+.lead-form .lead-form__submit{box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),opacity .2s}
+@media(hover:hover){.lead-form .lead-form__submit:hover{opacity:1;transform:translateY(-1px);box-shadow:var(--sh-btn)}}
+.lead-form__free{background:#f1f1ef;border-left-color:var(--ui-ink)}
+.lead-form__free svg{stroke:var(--ui-ink)}
+.lead-form--dark .lead-form__free{background:rgba(255,255,255,.06);border-left-color:#f4f2ec}
+.lead-form--dark .lead-form__free svg{stroke:#f4f2ec}
