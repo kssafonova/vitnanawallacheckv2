@@ -317,18 +317,12 @@ function variantPage(v) {
       .map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
   };
 
-  const swatches = colorOptions.map(x => `<a class="product-swatch${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}><span class="product-swatch__dot" style="--sw:${x.c.hex}"></span><span><strong>${esc(x.c.name)}</strong><small>RAL ${x.c.ral}</small></span></a>`).join('');
-  const schemes = schemeOptions.map(x => `<a class="product-scheme${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${esc(schemeText(x.s))}<span>→</span></a>`).join('');
   const tech = [
     ['Профильная база', m.profile], ['Механизм', m.hardware], ['Направляющая', m.track], ['Глубина рамы', m.frame_depth],
     ['Глубина створки', m.sash_depth], ['Заполнение', m.filling], ['Стеклопакет', m.glass], ['Секции', String(m.sections)],
   ].map(([a, b]) => `<div><small>${esc(a)}</small><strong>${esc(b)}</strong></div>`).join('');
   const limits = m.limits.map(l => `<li>${esc(l)}</li>`).join('');
 
-  const priceBlock = soon
-    ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_DAYS} дней</b>изготовление после подтверждения заказа</div></div>
-      <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;
   const customLink = hasCalc ? raschetHref(base, m, c) : '#product-contact';
@@ -361,28 +355,35 @@ ${jsonLd(crumbs)}
 <site-menu data-base="${base}"></site-menu>
 <main>
 <nav class="p-wrap p-crumbs" aria-label="Хлебные крошки"><a href="${base}">Главная</a><span>/</span><a href="${base}catalog/">Каталог</a><span>/</span><a href="${systemHref(m, base)}">${m.system}</a><span>/</span>${esc(m.code)}</nav>
-<section class="product-hero">
-  <div class="product-hero__grid">
-    <div class="product-media"${v.imageOpen ? ' data-media-toggle' : ''} data-reveal>
-      <img src="${base + v.image}" alt="${esc(`${m.code} — ${size}, ${c.name}, закрыто`)}" fetchpriority="high">${v.imageOpen ? `
-      <img class="product-media__open" src="${base + v.imageOpen}" alt="${esc(`${m.code} — ${size}, ${c.name}, открыто`)}" loading="lazy">
-      <div class="product-media__states" role="group" aria-label="Вид конструкции"><button type="button" class="is-active" aria-pressed="true" data-media-state="closed">Закрыто</button><button type="button" aria-pressed="false" data-media-state="open">Открыто</button></div>` : ''}
-      <span class="product-media__label">${esc(s.code)} · ${esc(colorName)}</span>
-    </div>
-    <aside class="product-buy">
-      <div class="product-buy__top"><span class="product-buy__code">${esc(m.code)}</span><span class="product-buy__status">${soon ? 'скоро в продаже' : 'готовая конфигурация'}</span></div>
-      <h1>${esc(m.name)}<small>${esc(size)} · ${esc(colorName)}</small></h1>
-      <p class="product-buy__lead">${esc(m.lead)}</p>
-      ${priceBlock}
-      <div class="product-quick">
-        <div><small>Схема</small><strong>${esc(s.code)}</strong></div><div><small>Ширина прохода</small><strong>${esc(m.opening)}</strong></div>
-        <div><small>Секции</small><strong>${m.sections}</strong></div><div><small>Сценарий</small><strong>${esc(m.use)}</strong></div>
+<section class="pdp">
+  <div class="p-wrap pdp__grid">
+    <div class="pdp-gallery m-card${soon ? ' m-card--soon' : ''}" data-3d="${esc(JSON.stringify({ ...model3d(m), colors: { [c.slug]: c.hex }, mirror: { [s.slug]: isMirror(m, s) } }))}" data-media-toggle>
+      <div class="m-card__media pdp-gallery__media">
+        <img src="${base + v.image}" alt="${esc(`${m.code} — ${size}, ${c.name}, закрыто`)}" fetchpriority="high">${v.imageOpen ? `
+        <img class="m-card__open" src="${base + v.imageOpen}" alt="${esc(`${m.code} — ${size}, ${c.name}, открыто`)}" loading="lazy">` : ''}
+        ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
       </div>
-      <div class="product-variant"><div class="product-variant__head"><span>Цвет</span><span>${esc(c.name)} · RAL ${c.ral}</span></div><div class="product-swatches">${swatches}</div></div>
-      <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
-      <div class="product-actions">${soon
+      <div class="pdp-gallery__states" role="group" aria-label="Вид конструкции"><button type="button" class="is-active" aria-pressed="true" data-media-state="closed">Закрыто</button><button type="button" aria-pressed="false" data-media-state="open">Открыто</button></div>
+    </div>
+    <aside class="pdp-buy">
+      <p class="m-card__meta">${esc(m.code)} · ${esc(size)} · ${sectionsText(m.sections)}</p>
+      <h1>${esc(m.name)}</h1>
+      <div class="pdp-buy__price">${soon
+        ? '<strong>Скоро</strong><small>цену и старт продаж сообщим по запросу</small>'
+        : `<strong>${money(m.price)}</strong><small>за конструкцию · без доставки и монтажа</small>`}</div>
+      ${soon ? '' : `<p class="pdp-buy__term"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>Срок — ${PROD_DAYS} дней</b> изготовление после подтверждения заказа</span></p>`}
+      <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(c.name)} RAL ${c.ral}</b></span><div class="m-card__swatches">${colorOptions.map(x => `<a class="m-card__swatch${x === v ? ' is-active' : ''}" href="${base + x.path}" style="--sw:${x.c.hex}" title="${esc(x.c.name)} RAL ${x.c.ral}" aria-label="Цвет ${esc(x.c.name)} RAL ${x.c.ral}"${x === v ? ' aria-current="page"' : ''}></a>`).join('')}<span class="m-card__ral">+ любой RAL</span></div></div>
+      <div class="m-card__opt"><span class="m-card__label">Схема: <b>${esc(s.code)}</b></span><div class="m-card__chips">${schemeOptions.map(x => `<a class="m-card__chip${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${esc(x.s.short)}</a>`).join('')}</div></div>
+      <div class="pdp-buy__actions">${soon
         ? `<a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a>`
         : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customLink}">${hasCalc ? 'Рассчитать под свой размер' : 'Индивидуальный расчёт'} <span>→</span></a></div>
+      <ul class="pdp-buy__facts">
+        <li><small>Ширина прохода</small><strong>${esc(m.opening)}</strong></li>
+        <li><small>Схема</small><strong>${esc(schemeText(s))}</strong></li>
+        <li><small>Стеклопакет</small><strong>${esc(m.glass)}</strong></li>
+        <li><small>Сценарий</small><strong>${esc(m.use)}</strong></li>
+      </ul>
+      <p class="pdp-buy__lead">${esc(m.lead)}</p>
       <p class="product-sku">Артикул: ${v.sku}</p>
     </aside>
   </div>
@@ -434,6 +435,7 @@ ${jsonLd(crumbs)}
 <script src="${base}assets/js/components/site-footer.js"></script>
 <script src="${base}assets/js/shop.js"></script>
 <script src="${base}assets/js/product.js"></script>
+<script type="module" src="${base}assets/js/card3d.js"></script>
 <script src="${base}assets/js/components/lead-form.js"></script>
 </body>
 </html>
@@ -449,14 +451,7 @@ const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS /
 const blocks = {
   'raschet/index.html': {
     'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS-порталы', context: 'страница калькулятора' }),
-    'raschet-models': hsAvail().map(m => {
-      const v = firstOf(m);
-      return `<a class="rs-model" href="../${v.path}">
-          <span class="rs-model__img"><img src="../${v.image}" alt="" loading="lazy" decoding="async"></span>
-          <span class="rs-model__body"><small>${esc(m.code)} · ${m.width} × ${m.height} мм</small><strong>${esc(m.name)}</strong><em>${money(m.price)}</em></span>
-          <i aria-hidden="true">→</i>
-        </a>`;
-    }).join('\n        '),
+    'raschet-models': hsAvail().map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'catalog/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/', 'project')].join('\n\n      '),
@@ -465,6 +460,9 @@ const blocks = {
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
+  },
+  'systems/fs/index.html': {
+    'fs-cards': fsModels.map(m => marketCard(m, '../../')).join('\n\n      '),
   },
   'cart/index.html': {
     'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
