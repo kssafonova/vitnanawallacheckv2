@@ -3,6 +3,7 @@
 (() => {
   const root = document.querySelector('[data-hsx-open]');
   if (!root) return;
+  const SELF = (document.currentScript && document.currentScript.src) || location.href;
 
   const CAT = '../../catalog/hs-portaly/';
   const DATA = {
@@ -76,6 +77,25 @@
     range.value = progress;
     range.setAttribute('aria-valuetext', `${Math.round(progress)}% открыто`);
     draw();
+    sync3d();
+  }
+
+  // «В интерьере» — 3D-сцена (hs-interior3d.js + three.js) грузится только при первом открытии вкладки.
+  // Пока грузится или если WebGL недоступен — рисованный интерьер на canvas (drawInterior).
+  let i3d = null, i3dState = 'idle';
+  function sync3d() {
+    if (i3d && view === 'interior') i3d.set({ width: family().width, height: family().height, variant: variant(), key: variantKey, progress: progress / 100 });
+  }
+  function load3d() {
+    if (i3dState !== 'idle') return;
+    i3dState = 'loading'; visual.classList.add('is-loading');
+    import(new URL('hs-interior3d.js', SELF).href).then(m => {
+      i3d = m.createInterior(visual, {
+        viewSrc: new URL('../images/systems/hs-interior-view.webp', SELF).href,
+        onReady() { i3dState = 'ready'; visual.classList.remove('is-loading'); visual.classList.add('has-3d'); sync3d(); }
+      });
+      if (!i3d) throw new Error('no webgl');
+    }).catch(() => { i3dState = 'failed'; visual.classList.remove('is-loading'); });
   }
 
   function resize() {
@@ -126,7 +146,7 @@
     const W = canvas.getBoundingClientRect().width, H = canvas.getBoundingClientRect().height;
     if (!W || !H) return;
     ctx.clearRect(0, 0, W, H);
-    if (view === 'interior') return;
+    if (view === 'interior') { drawInterior(W, H); return; }
 
     const f = family(), v = variant(), p = progress / 100, n = v.sections, mobile = W < 650;
     const left = W * (mobile ? .07 : .09), right = left;
@@ -214,6 +234,135 @@
     }
   }
 
+  // Позиции створок в проёме [ix, ix + iw] при открытии p: общая логика для схемы и интерьера
+  function leaves(ix, iw, p, stackGap) {
+    const v = variant(), n = v.sections, leafW = iw / n, out = [];
+    [...Array(n).keys()].filter(i => !v.moving.includes(i)).forEach(i => out.push({ i, x: ix + i * leafW, w: leafW, moving: false }));
+    v.moving.forEach(i => {
+      const mi = v.moving.indexOf(i), target = v.targets[mi];
+      let x = lerp(ix + i * leafW, ix + target * leafW, p);
+      if (v.moving.length > 1 && v.targets.every(t => t === target)) x += (mi - (v.moving.length - 1) / 2) * stackGap * p;
+      out.push({ i, x, w: leafW, moving: true });
+    });
+    return out;
+  }
+
+  // «В интерьере»: гостиная в перспективе, в задней стене — выбранный портал; ползунок открывает и здесь.
+  // Солнце падает через стекло на пол; в открытом проёме пятно света ярче.
+  function drawInterior(W, H) {
+    const v = variant(), p = progress / 100, mobile = W < 650;
+    const vpX = W * .5, vpY = H * .5;
+    const bx0 = W * .12, bx1 = W * .88, by0 = H * .07, by1 = H * .76; // задняя стена
+    const fl = (x, y) => vpX + (x - vpX) * ((y - vpY) / (by1 - vpY)); // x на полу на глубине y для точки x у задней стены
+
+    // потолок, стены, пол
+    ctx.fillStyle = '#f4f4f3'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#e4e3e1';
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(bx0, by0); ctx.lineTo(bx0, by1); ctx.lineTo(0, H * 1.08); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#dcdbd8';
+    ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(bx1, by0); ctx.lineTo(bx1, by1); ctx.lineTo(W, H * 1.08); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#ecebe9'; ctx.fillRect(bx0, by0, bx1 - bx0, by1 - by0);
+    const floor = ctx.createLinearGradient(0, by1, 0, H);
+    floor.addColorStop(0, '#c9c8c4'); floor.addColorStop(1, '#b3b1ad');
+    ctx.fillStyle = floor;
+    ctx.beginPath(); ctx.moveTo(bx0, by1); ctx.lineTo(bx1, by1); ctx.lineTo(W, H * 1.08); ctx.lineTo(0, H * 1.08); ctx.closePath(); ctx.fill();
+    // доски пола сходятся к точке схода
+    ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 1;
+    for (let k = 0; k <= 14; k++) { const x = bx0 + (bx1 - bx0) * k / 14; ctx.beginPath(); ctx.moveTo(x, by1); ctx.lineTo(fl(x, H), H); ctx.stroke(); }
+    // светильники в потолке
+    ctx.fillStyle = 'rgba(27,27,25,.18)';
+    [.3, .5, .7].forEach(t => { const x = bx0 + (bx1 - bx0) * t; ctx.beginPath(); ctx.ellipse(x, by0 * .55, W * .012, 2, 0, 0, Math.PI * 2); ctx.fill(); });
+
+    // проём портала в задней стене
+    const ox0 = bx0 + (bx1 - bx0) * .05, ox1 = bx1 - (bx1 - bx0) * .05, oy0 = by0 + (by1 - by0) * .08, oy1 = by1;
+    const fw = ox1 - ox0, fh = oy1 - oy0, frame = Math.max(4, fw * .012), prof = Math.max(2.5, fw * .007);
+    const ix = ox0 + frame, iy = oy0 + frame, iw = fw - frame * 2, ih = fh - frame;
+
+    // за стеклом: небо, лес, настил террасы
+    const sky = ctx.createLinearGradient(0, iy, 0, iy + ih);
+    sky.addColorStop(0, '#b9cdd8'); sky.addColorStop(.55, '#e7ecec'); sky.addColorStop(.56, '#aeb3ab'); sky.addColorStop(1, '#9fa39c');
+    ctx.fillStyle = sky; ctx.fillRect(ix, iy, iw, ih);
+    ctx.save(); ctx.beginPath(); ctx.rect(ix, iy, iw, ih); ctx.clip();
+    const hz = iy + ih * .56;
+    [[.07, '#9aa79f', 1.1], [.12, '#7d8c84', 1.35], [.19, '#5f6f67', 1.6]].forEach(([hgt, col, sc], row) => {
+      ctx.fillStyle = col;
+      const step = iw / (mobile ? 14 : 22);
+      for (let x = ix - step; x < ix + iw + step; x += step * (.7 + ((row * 7 + x) % 5) / 10)) {
+        const th = ih * hgt * (.7 + Math.abs(Math.sin(x * .37 + row)) * .6), tw = step * .55 * sc;
+        ctx.beginPath(); ctx.moveTo(x, hz - th); ctx.lineTo(x + tw / 2, hz); ctx.lineTo(x - tw / 2, hz); ctx.closePath(); ctx.fill();
+      }
+    });
+    ctx.strokeStyle = 'rgba(255,255,255,.22)';
+    for (let k = 1; k < 6; k++) { const y = hz + (iy + ih - hz) * k / 6; ctx.beginPath(); ctx.moveTo(ix, y); ctx.lineTo(ix + iw, y); ctx.stroke(); }
+    ctx.restore();
+
+    // створки
+    const ls = leaves(ix, iw, p, mobile ? 3 : 5);
+    const glassSpans = [];
+    ls.forEach(l => {
+      ctx.fillStyle = l.moving ? 'rgba(225,236,240,.22)' : 'rgba(225,236,240,.14)'; ctx.fillRect(l.x, iy, l.w, ih);
+      ctx.fillStyle = '#1b1b19';
+      ctx.fillRect(l.x, iy, l.w, prof); ctx.fillRect(l.x, iy + ih - prof, l.w, prof);
+      ctx.fillRect(l.x, iy, prof, ih); ctx.fillRect(l.x + l.w - prof, iy, prof, ih);
+      ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(l.x + l.w * .2, iy + ih * .22); ctx.lineTo(l.x + l.w * .42, iy + ih * .08); ctx.stroke();
+      glassSpans.push([l.x + prof, l.x + l.w - prof]);
+    });
+    const lead = variantKey === 'center' ? ls.filter(l => l.moving) : [ls.find(l => l.i === (variantKey === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)))];
+    lead.forEach(l => {
+      const right = variantKey === 'left' || (variantKey === 'center' && l.i === Math.min(...v.moving));
+      const hx = right ? l.x + l.w - prof - 7 : l.x + prof + 7, hy = iy + ih * .5, len = mobile ? 10 : 16;
+      ctx.strokeStyle = '#c9c7c2'; ctx.lineWidth = mobile ? 2 : 2.8; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(hx, hy - len); ctx.lineTo(hx, hy + len); ctx.stroke(); ctx.lineCap = 'butt';
+    });
+    ctx.fillStyle = '#1b1b19';
+    ctx.fillRect(ox0, oy0, fw, frame); ctx.fillRect(ox0, oy0, frame, fh); ctx.fillRect(ox1 - frame, oy0, frame, fh);
+    ctx.fillStyle = '#8f8d88'; ctx.fillRect(ox0, oy1 - 2, fw, 3);
+
+    // солнце на полу: проекция стекла и открытого проёма (свет падает справа)
+    const cov = ls.map(l => [l.x, l.x + l.w]).sort((a, b) => a[0] - b[0]);
+    const gaps = []; let cur = ix;
+    cov.forEach(([a, b]) => { if (a - cur > 2) gaps.push([cur, a]); cur = Math.max(cur, b); });
+    if (ix + iw - cur > 2) gaps.push([cur, ix + iw]);
+    const depth = H * 1.02, shift = -W * .09;
+    const patch = ([a, b], alpha) => {
+      const g = ctx.createLinearGradient(0, by1, 0, depth);
+      g.addColorStop(0, `rgba(255,255,255,${alpha})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g; ctx.beginPath();
+      ctx.moveTo(a, by1); ctx.lineTo(b, by1); ctx.lineTo(fl(b, depth) + shift, depth); ctx.lineTo(fl(a, depth) + shift, depth); ctx.closePath(); ctx.fill();
+    };
+    ctx.save(); ctx.globalCompositeOperation = 'soft-light';
+    glassSpans.forEach(sp => patch(sp, .55));
+    ctx.restore();
+    gaps.forEach(sp => patch(sp, .42));
+
+    // мебель: ковёр, диван, растение — силуэтами, по краям, чтобы не закрывать портал
+    ctx.fillStyle = 'rgba(245,245,244,.55)';
+    const ry0 = H * .84, ry1 = H * 1.02, rx0 = W * .3, rx1 = W * .7;
+    ctx.beginPath(); ctx.moveTo(fl(rx0, ry0), ry0); ctx.lineTo(fl(rx1, ry0), ry0); ctx.lineTo(fl(rx1, ry1), ry1); ctx.lineTo(fl(rx0, ry1), ry1); ctx.closePath(); ctx.fill();
+    const sofa = (x, y, w, h) => {
+      ctx.fillStyle = '#6f6d69'; ctx.fillRect(x, y, w, h);
+      ctx.fillStyle = '#85837e'; ctx.fillRect(x, y - h * .55, w, h * .6);
+      ctx.fillStyle = '#5c5a56'; ctx.fillRect(x - w * .04, y - h * .35, w * .06, h * 1.35); ctx.fillRect(x + w * .98, y - h * .35, w * .06, h * 1.35);
+      ctx.fillStyle = 'rgba(27,27,25,.18)'; ctx.fillRect(x - w * .04, y + h, w * 1.08, 3);
+    };
+    sofa(-W * .04, H * .86, W * .28, H * .09);
+    // растение в горшке справа
+    const px = W * .92, py = H * .9;
+    ctx.fillStyle = '#3f3e3b'; ctx.fillRect(px - W * .025, py, W * .05, H * .1);
+    ctx.fillStyle = '#56645a';
+    for (let k = 0; k < 9; k++) { const a = -Math.PI / 2 + (k - 4) * .28; ctx.beginPath(); ctx.ellipse(px + Math.cos(a) * W * .035, py - H * .06 + Math.sin(a) * H * .07, W * .012, H * .045, a + Math.PI / 2, 0, Math.PI * 2); ctx.fill(); }
+    // торшер слева у стены
+    ctx.strokeStyle = '#2b2b29'; ctx.lineWidth = 1.5;
+    const lx = W * .06; ctx.beginPath(); ctx.moveTo(lx, H * .82); ctx.lineTo(lx, H * .42); ctx.lineTo(lx + W * .05, H * .36); ctx.stroke();
+    ctx.fillStyle = '#2b2b29'; ctx.beginPath(); ctx.moveTo(lx + W * .035, H * .36); ctx.lineTo(lx + W * .075, H * .36); ctx.lineTo(lx + W * .065, H * .4); ctx.lineTo(lx + W * .045, H * .4); ctx.closePath(); ctx.fill();
+
+    // лёгкая виньетка
+    const vg = ctx.createRadialGradient(vpX, vpY, Math.min(W, H) * .3, vpX, vpY, Math.max(W, H) * .75);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.14)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  }
+
   const snap = () => { progress = [0, 50, 100].reduce((a, b) => Math.abs(progress - b) < Math.abs(progress - a) ? b : a); update(); };
 
   widthGroup.addEventListener('click', e => {
@@ -233,6 +382,7 @@
     visual.classList.toggle('is-interior', view === 'interior');
     tabs.forEach(x => x.setAttribute('aria-selected', String(x === t)));
     draw();
+    if (view === 'interior') { load3d(); sync3d(); }
   }));
   range.addEventListener('input', () => { progress = +range.value; update(); });
   range.addEventListener('change', snap);
@@ -245,7 +395,7 @@
     progress = Math.max(0, Math.min(100, q * 100));
     update();
   };
-  canvas.addEventListener('pointerdown', ev => { if (view !== 'scheme') return; dragging = true; canvas.setPointerCapture(ev.pointerId); fromPointer(ev); });
+  canvas.addEventListener('pointerdown', ev => { dragging = true; canvas.setPointerCapture(ev.pointerId); fromPointer(ev); });
   canvas.addEventListener('pointermove', ev => { if (dragging) fromPointer(ev); });
   canvas.addEventListener('pointerup', ev => { if (!dragging) return; dragging = false; try { canvas.releasePointerCapture(ev.pointerId); } catch (_) {} snap(); });
   canvas.addEventListener('pointercancel', () => { if (dragging) { dragging = false; snap(); } });

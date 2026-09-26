@@ -242,7 +242,6 @@
 .hsx-visual__interior{opacity:0}
 .hsx-visual.is-interior .hsx-visual__interior{opacity:1}
 .hsx-visual__interior{z-index:0}
-.hsx-visual.is-interior canvas{cursor:default}
 .hsx-visual::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(17,17,15,.06),transparent 30%)}
 .hsx-visual canvas{position:relative;z-index:1;display:block;width:100%;aspect-ratio:1.47/1;touch-action:none;cursor:ew-resize}
 
@@ -445,3 +444,18 @@
 @media(hover:hover){.hsx-primary:hover{transform:translateY(-1px);box-shadow:var(--sh-btn)}}
 .hsx-glass-option{transition:box-shadow .2s}
 @media(max-width:767px){.hsx-glass-option,.hsx-frame,.hsx-rows article{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}}
+
+/* «В интерьере»: 3D-сцена поверх схемы (схема задаёт высоту блока) */
+.hsx-visual .hsx-3d{position:absolute;inset:0;z-index:2;display:none;width:100%;height:100%;cursor:grab;touch-action:none}
+.hsx-visual .hsx-3d:active{cursor:grabbing}
+.hsx-visual.is-interior.has-3d .hsx-3d{display:block}
+.hsx-visual.is-interior.has-3d canvas[data-hsx-canvas]{visibility:hidden}
+.hsx-hint{
+  position:absolute;left:12px;bottom:12px;z-index:3;display:none;padding:7px 10px;background:rgba(17,17,15,.72);color:#fff;
+  font:500 var(--fs-caption)/1.2 var(--font);letter-spacing:.02em;pointer-events:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)
+}
+.hsx-visual.is-interior.has-3d .hsx-hint{display:block}
+.hsx-visual.is-loading::before{
+  content:"Загружаем интерьер…";position:absolute;right:12px;top:12px;z-index:3;padding:7px 10px;background:rgba(255,255,255,.85);color:var(--ui-ink);
+  font:500 var(--fs-caption)/1.2 var(--font)
+}
