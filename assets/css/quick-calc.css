@@ -7,7 +7,7 @@
    ============================================================ */
 .qc{
   --qc-bg:var(--ui-bg);
-  --qc-line:#cfcac0;
+  --qc-line:#c9c8c6;
   --qc-ink:var(--ui-ink);
   --qc-muted:#77736a;
   --qc-on:#0b0b0a;
@@ -63,7 +63,7 @@
 .qc__leaf-name{font-size:var(--fs-caption)}
 .qc__leaf-open{margin-top:auto;padding-top:8px;border-top:1px solid var(--qc-line);color:var(--qc-muted);font-size:var(--fs-caption);line-height:1.25}
 .qc__rec{
-  position:absolute;left:-1px;right:-1px;bottom:100%;display:none;padding:5px 4px 4px;background:#d9d6cf;color:#34312d;text-align:center;
+  position:absolute;left:-1px;right:-1px;bottom:100%;display:none;padding:5px 4px 4px;background:#d5d4d3;color:#34312d;text-align:center;
   font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
 }
 .qc__leaf.is-rec .qc__rec{display:block}
@@ -84,11 +84,9 @@
 .qc__sw{border-color:rgba(17,17,15,.25)}
 .qc__opt-t{grid-column:1 / -1;grid-row:2;min-width:0;font-size:var(--fs-caption);line-height:1.25;letter-spacing:-.01em}
 .qc__opt-t small{display:block;margin-top:3px;color:var(--qc-muted);font:500 var(--fs-label)/1.1 var(--font)}
-.qc__radio{grid-column:2;grid-row:1;justify-self:end;width:20px;height:20px;border:1px solid #9f998d;border-radius:50%}
 .qc__opt[aria-pressed="true"]{background:var(--qc-on);border-color:var(--qc-on);color:#fff}
 .qc__opt[aria-pressed="true"] .qc__opt-t small{color:rgba(255,255,255,.6)}
-.qc__opt[aria-pressed="true"] .qc__radio{border-color:#fff;box-shadow:inset 0 0 0 4px var(--qc-on);background:#fff}
-.qc__opt[aria-pressed="true"] .qc__sw{border-color:rgba(255,255,255,.4)}
+.qc__opt[aria-pressed="true"] .qc__opt[aria-pressed="true"] .qc__sw{border-color:rgba(255,255,255,.4)}
 
 /* 05 дополнительно */
 .qc__extras{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -97,12 +95,7 @@
   padding:12px 10px;border:1px solid var(--qc-line);background:rgba(255,255,255,.35);cursor:pointer
 }
 .qc__extra input{position:absolute;opacity:0;width:1px;height:1px}
-.qc__box{display:grid;place-items:center;width:22px;height:22px;border:1px solid #5f5b55;background:#fff}
-.qc__box svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2;opacity:0}
-.qc__extra input:checked+.qc__box{background:var(--qc-on);border-color:var(--qc-on)}
-.qc__extra input:checked+.qc__box svg{opacity:1}
-.qc__extra input:focus-visible+.qc__box{outline:2px solid var(--ui-accent);outline-offset:2px}
-.qc__extra b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
+.qc__extra input:checked+.qc__extra input:checked+.qc__extra input:focus-visible+.qc__extra b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
 .qc__extra small{display:block;margin-top:3px;color:var(--qc-muted);font-size:var(--fs-caption)}
 .qc__extra-ico{display:none}
 .qc__extra-ico svg{width:44px;height:30px;fill:none;stroke:#8d887d;stroke-width:1}
@@ -141,7 +134,7 @@
 .qc__cta.is-open{background:#2a2a27}
 .qc__free{
   display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;margin:0;padding:12px 14px;
-  background:#e9e4d4;border-left:2px solid var(--ui-accent);font-size:var(--fs-small);line-height:1.4
+  background:#dfdfde;border-left:2px solid var(--ui-accent);font-size:var(--fs-small);line-height:1.4
 }
 .qc__free svg{width:22px;height:22px;fill:none;stroke:#7d6c3c;stroke-width:1.8}
 .qc__free b{font-weight:600}
@@ -181,10 +174,9 @@
 .qc button:focus-visible,.qc input:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
 
 @media(min-width:560px){
-  .qc__opt{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto;min-height:66px}
+  .qc__opt{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto;min-height:66px}
   .qc__opt-t{grid-column:2;grid-row:1;font-size:var(--fs-small)}
-  .qc__radio{grid-column:3}
-  .qc__extra{grid-template-columns:22px minmax(0,1fr) auto;align-items:center}
+    .qc__extra{grid-template-columns:22px minmax(0,1fr) auto;align-items:center}
   .qc__extra-ico{display:block}
   .qc__extra b{font-size:var(--fs-small)}
   .qc__legend em{display:inline-flex}
@@ -236,7 +228,7 @@
 .qc-teaser__form button i{font-style:normal}
 .qc-teaser__form button:hover{background:#2a2a27}
 .qc-teaser__points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 0;padding:0;list-style:none}
-.qc-teaser__points li{display:grid;gap:8px;align-content:start;padding:12px 10px;border:1px solid #d3cdc1;font-size:var(--fs-caption);line-height:1.3}
+.qc-teaser__points li{display:grid;gap:8px;align-content:start;padding:12px 10px;border:1px solid #cccbc8;font-size:var(--fs-caption);line-height:1.3}
 .qc-teaser__points svg{width:24px;height:24px;fill:none;stroke:var(--ui-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:399px){.qc-teaser__points br{display:none}}
 @media(min-width:900px){
@@ -245,3 +237,51 @@
   .qc-teaser__form{grid-template-columns:1fr 1fr auto}
   .qc-teaser .qc-teaser__form button{grid-column:auto;gap:24px;min-width:190px}
 }
+
+/* ---------- Глубина и выбор без лишних радиокнопок ----------
+   Выбранная плитка — чёрная, этого достаточно; кружки-радио и квадратики убраны.
+   «Дополнительно» — можно выбрать несколько: плитка-переключатель с «+», выбранная — чёрная с «✓». */
+.qc__num,.qc__leaf,.qc__opt,.qc__extra{background:#fff;box-shadow:var(--sh-1)}
+.qc__size{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
+.qc__size .qc__num{box-shadow:none}
+.qc__leaf,.qc__opt,.qc__extra{border-color:transparent;transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s,color .2s}
+.qc__leaf[aria-pressed="true"],.qc__opt[aria-pressed="true"]{box-shadow:var(--sh-3)}
+@media(hover:hover){
+  .qc__leaf:hover,.qc__opt:hover,.qc__extra:hover{transform:translateY(-2px);box-shadow:var(--sh-2)}
+  .qc__leaf[aria-pressed="true"]:hover,.qc__opt[aria-pressed="true"]:hover{box-shadow:var(--sh-3)}
+}
+.qc__extra{grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px}
+.qc__extra-ico{display:block}
+.qc__extra-ico svg{width:34px;height:26px;fill:none;stroke:currentColor;stroke-width:1.1;opacity:.75}
+.qc__extra-t b{display:block;font:400 var(--fs-caption)/1.25 var(--font)}
+.qc__extra-t small{display:block;margin-top:3px;color:var(--qc-muted);font-size:var(--fs-caption)}
+.qc__add{position:relative;width:24px;height:24px;border:1px solid #bdbcb9;border-radius:50%;transition:background-color .2s,border-color .2s}
+.qc__add::before,.qc__add::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1px;background:currentColor;transform:translate(-50%,-50%)}
+.qc__add::after{transform:translate(-50%,-50%) rotate(90deg)}
+.qc__extra:has(input:checked){background:var(--qc-on);color:#fff;box-shadow:var(--sh-3)}
+.qc__extra:has(input:checked) .qc__extra-t small{color:rgba(255,255,255,.65)}
+.qc__extra:has(input:checked) .qc__add{border-color:#fff;background:#fff}
+.qc__extra:has(input:checked) .qc__add::before{width:5px;left:38%;top:55%;background:var(--qc-on);transform:translate(-50%,-50%) rotate(45deg)}
+.qc__extra:has(input:checked) .qc__add::after{width:10px;left:56%;top:48%;background:var(--qc-on);transform:translate(-50%,-50%) rotate(-50deg)}
+.qc__extra input:focus-visible~.qc__add{outline:2px solid var(--ui-accent);outline-offset:2px}
+.qc__project{background:#fff;border-style:solid;border-color:transparent;box-shadow:var(--sh-1);transition:box-shadow .2s,transform .2s var(--ease-ui)}
+@media(hover:hover){.qc__project:hover{transform:translateY(-1px);box-shadow:var(--sh-2)}}
+/* итог — приподнятая панель */
+.qc__summary{padding:14px;background:#fff;box-shadow:var(--sh-2)}
+.qc__photo{box-shadow:0 1px 0 rgba(17,17,15,.04)}
+.qc__cta,.qc__submit{box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s}
+@media(hover:hover){.qc__cta:hover,.qc__submit:hover{transform:translateY(-1px);box-shadow:var(--sh-btn)}}
+.qc__free{background:#f1f1ef;border-left-color:var(--ui-ink)}
+.qc__free svg{stroke:var(--ui-ink)}
+.qc__field input,.qc__field textarea{box-shadow:inset 0 1px 2px rgba(17,17,15,.05)}
+.qc__field input:focus,.qc__field textarea:focus{box-shadow:0 0 0 3px rgba(17,17,15,.08)}
+.qc__num:focus-within{box-shadow:inset 0 0 0 1px var(--ui-ink),0 0 0 3px rgba(17,17,15,.06)}
+@media(min-width:768px){.qc__summary{padding:20px}}
+@media(min-width:560px){.qc__extra-t b{font-size:var(--fs-small)}}
+
+/* анонс калькулятора */
+.qc-teaser__media{box-shadow:var(--sh-2)}
+.qc-teaser__form{background:#fff;border-color:transparent;box-shadow:var(--sh-2)}
+.qc-teaser__form label+label{border-left-color:#e3e2e0}
+.qc-teaser .qc-teaser__form button{transition:background-color .2s}
+.qc-teaser__points li{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
