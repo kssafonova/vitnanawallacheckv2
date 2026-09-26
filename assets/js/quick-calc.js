@@ -81,14 +81,14 @@
       `<button type="button" class="qc__opt" data-${group}="${k}" aria-pressed="${on}"${extra}>${inner}</button>`;
 
     const STEPS = [
-      { n: 1, t: 'Проём', s: 'Проём' }, { n: 2, t: 'Створки', s: 'Створки' }, { n: 3, t: 'Стекло и цвет', s: 'Стекло' }, { n: 4, t: 'Опции', s: 'Опции' }, { n: 5, t: 'Итог', s: 'Итог', mobile: true },
+      { n: 1, t: 'Проём и створки', s: 'Проём' }, { n: 2, t: 'Стекло и цвет', s: 'Стекло' }, { n: 3, t: 'Опции', s: 'Опции' }, { n: 4, t: 'Итог', s: 'Итог', mobile: true },
     ];
     root.innerHTML = `
 <form class="qc" novalidate>
   <header class="qc__head">
     ${d.eyebrow ? `<p class="qc__eyebrow">${esc(d.eyebrow)}</p>` : ''}
     <${d.h1 ? 'h1' : 'h2'} class="qc__title">${esc(d.title || 'Сколько стоит раздвижная дверь под ваш размер')}</${d.h1 ? 'h1' : 'h2'}>
-    <p class="qc__lead">Четыре шага — и ориентировочная цена. Без регистрации и без телефона.</p>
+    <p class="qc__lead">Три шага — и ориентировочная цена. Без регистрации и без телефона.</p>
   </header>
 
   <div class="qc__panel" data-step="1">
@@ -108,12 +108,7 @@
             <label class="qc__num"><span>Высота</span><input name="height" inputmode="numeric" autocomplete="off" maxlength="4" value="${st.h}" data-qc-h aria-describedby="${id}-hint"><i>мм</i></label>
           </div>
           <p class="qc__hint" id="${id}-hint" data-qc-hint></p>
-          <p class="qc__tip" data-qc-tip></p>
-          <button type="button" class="qc__project" data-qc-project>${ICON.clip}<span><b>Уже есть проект или план?</b> Прикрепите файл — посчитаем по нему</span><i aria-hidden="true">→</i></button>
-        </section>
-
-        <section class="qc__pane" role="tabpanel" id="${id}-p2" aria-labelledby="${id}-t2" data-pane="2">
-          <div class="qc__legend"><b>Сколько створок</b><em data-qc-leafhint></em></div>
+          <div class="qc__legend qc__legend--gap"><b>Сколько створок</b><em data-qc-leafhint></em></div>
           <div class="qc__leaves">${[2, 3, 4].map(n => `
             <button type="button" class="qc__leaf" data-leaves="${n}" aria-pressed="${n === st.n}">
               <span class="qc__rec">Рекомендуем</span>
@@ -122,9 +117,10 @@
               <span class="qc__leaf-open">≈ ${Math.round(OPEN[n] * 100)}% открытия</span>
             </button>`).join('')}
           </div>
+          <button type="button" class="qc__project" data-qc-project>${ICON.clip}<span><b>Уже есть проект или план?</b> Прикрепите файл — посчитаем по нему</span><i aria-hidden="true">→</i></button>
         </section>
 
-        <section class="qc__pane" role="tabpanel" id="${id}-p3" aria-labelledby="${id}-t3" data-pane="3">
+        <section class="qc__pane" role="tabpanel" id="${id}-p2" aria-labelledby="${id}-t2" data-pane="2">
           <div class="qc__legend"><b>Стеклопакет</b></div>
           <div class="qc__opts">${GLASS.map(g => opt('glass', g.k,
             `<span class="qc__ico">${g.icon}</span><span class="qc__opt-t">${g.t}${g.rec ? '<small>рекомендуем</small>' : ''}</span>`, g.k === st.glass)).join('')}
@@ -135,7 +131,7 @@
           </div>
         </section>
 
-        <section class="qc__pane" role="tabpanel" id="${id}-p4" aria-labelledby="${id}-t4" data-pane="4">
+        <section class="qc__pane" role="tabpanel" id="${id}-p3" aria-labelledby="${id}-t3" data-pane="3">
           <div class="qc__legend"><b>Дополнительно</b><em>можно несколько</em></div>
           <div class="qc__extras">${EXTRAS.map(x => `
             <label class="qc__extra"><input type="checkbox" name="extra_${x.k}" data-extra="${x.k}"><span class="qc__extra-ico">${x.icon}</span><span class="qc__extra-t"><b>${x.t}</b><small>по расчёту</small></span><i class="qc__add" aria-hidden="true"></i></label>`).join('')}
@@ -149,7 +145,7 @@
         </div>
       </div>
 
-      <aside class="qc__summary" role="tabpanel" id="${id}-p5" aria-labelledby="${id}-t5" data-pane="5">
+      <aside class="qc__summary" role="tabpanel" id="${id}-p4" aria-labelledby="${id}-t4" data-pane="4">
         <figure class="qc__photo">
           <img class="qc__img" data-qc-img="closed" src="${esc(d.img || '')}" alt="Раздвижная дверь: вид в закрытом положении" decoding="async">
           <img class="qc__img is-open" data-qc-img="open" src="${esc(d.img || '')}" alt="" aria-hidden="true" decoding="async">
@@ -190,7 +186,7 @@
 
     <div class="qc__bar" data-qc-bar>
       <div><small>Ориентировочно</small><strong data-qc-barprice></strong></div>
-      <button type="button" class="qc__bar-next" data-qc-next><span data-qc-nextlabel>Далее</span> <i aria-hidden="true">→</i></button>
+      <button type="button" class="qc__bar-next" data-qc-next><span data-qc-barlabel>Далее</span> <i aria-hidden="true">→</i></button>
     </div>
   </div>
 </form>`;
@@ -246,9 +242,8 @@
       $('[data-qc-price]').textContent = price ? `≈ ${fmt(price)} ₽` : 'По расчёту';
       $('[data-qc-barprice]').textContent = price ? `≈ ${fmt(price)} ₽` : 'по расчёту';
       const ex = EXTRAS.filter(x => st.extras.has(x.k)).map(x => x.t.split(' ')[0].toLowerCase());
-      const tv = { 1: `${fmt(st.w)} × ${fmt(st.h)}`, 2: `${st.n} ${leafWord(st.n)}`, 3: `${g.t} · ${c.t}`, 4: ex.length ? ex.join(', ') : 'без опций', 5: price ? `≈ ${fmt(price)} ₽` : 'по расчёту' };
+      const tv = { 1: `${fmt(st.w)} × ${fmt(st.h)} · ${st.n} ств.`, 2: `${g.t} · ${c.t}`, 3: ex.length ? ex.join(', ') : 'без опций', 4: price ? `≈ ${fmt(price)} ₽` : 'по расчёту' };
       $$('[data-tabval]').forEach(el => { el.textContent = tv[el.dataset.tabval]; });
-      $('[data-qc-tip]').textContent = rec === st.n ? `Для ширины ${fmt(st.w)} мм подойдёт ${rec} ${leafWord(rec)} — выберем на следующем шаге.` : '';
       $('[data-qc-leafhint]').textContent = `для ${fmt(st.w)} мм рекомендуем ${rec}`;
       const badge = $('[data-qc-badge]');
       if (badge) badge.innerHTML = photoScheme(st.n);
@@ -283,14 +278,14 @@
       if (b.dataset.leaves) { st.n = +b.dataset.leaves; st.manualLeaves = true; update(); }
       else if (b.dataset.glass) { st.glass = b.dataset.glass; update(); }
       else if (b.dataset.color) { st.color = b.dataset.color; update(); }
-      else if ('qcCta' in b.dataset) { if (!mq.matches) go(5); openSend(true); }
-      else if ('qcProject' in b.dataset) { if (!mq.matches) go(5); openSend(false); fileIn.click(); }
+      else if ('qcCta' in b.dataset) { if (!mq.matches) go(4); openSend(true); }
+      else if ('qcProject' in b.dataset) { if (!mq.matches) go(4); openSend(false); fileIn.click(); }
     });
     // ---- шаги ----
     const panel = $('.qc__panel');
     const mq = matchMedia('(min-width: 1100px)');
-    const last = () => (mq.matches ? 4 : 5);
-    const NEXT = { 1: 'Далее: створки', 2: 'Далее: стекло и цвет', 3: 'Далее: опции', 4: 'Смотреть итог' };
+    const last = () => (mq.matches ? 3 : 4);
+    const NEXT = { 1: 'Далее: стекло и цвет', 2: 'Далее: опции', 3: 'Смотреть итог' };
     let step = 1;
     function go(n, scroll) {
       step = Math.max(1, Math.min(last(), n));
@@ -303,7 +298,9 @@
       });
       $$('[data-pane]').forEach(p => p.classList.toggle('is-active', +p.dataset.pane === step));
       const final = step === last();
-      $$('[data-qc-nextlabel]').forEach(el => { el.textContent = final ? (mq.matches ? 'Получить точный расчёт' : 'Получить точный расчёт') : NEXT[step]; });
+      $$('[data-qc-nextlabel]').forEach(el => { el.textContent = final ? 'Получить точный расчёт' : NEXT[step]; });
+      // в нижней строке телефона — коротко, чтобы кнопка не переносилась в две строки
+      $$('[data-qc-barlabel]').forEach(el => { el.textContent = final ? 'Получить расчёт' : 'Далее'; });
       $('[data-qc-back]').hidden = step === 1;
       root.querySelector('[data-qc-progress]').style.setProperty('--p', (step - 1) / (last() - 1));
       if (scroll) {
@@ -317,15 +314,15 @@
       if (b.dataset.go) go(+b.dataset.go, true);
       else if ('qcBack' in b.dataset) go(step - 1, true);
       else if (step < last()) go(step + 1, true);
-      else { if (!mq.matches) go(5); openSend(true); }
+      else { if (!mq.matches) go(4); openSend(true); }
     });
     $('.qc__tabs').addEventListener('keydown', e => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       e.preventDefault(); go(step + (e.key === 'ArrowRight' ? 1 : -1)); $(`[data-go="${step}"]`).focus();
     });
     (mq.addEventListener ? mq.addEventListener('change', () => go(step)) : mq.addListener(() => go(step)));
-    // Enter в поле размера — к следующему шагу, а не отправка формы
-    [inW, inH].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(2, true); } }));
+    // Enter в поле размера — не отправлять форму (створки на этом же шаге, ниже)
+    [inW, inH].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } }));
 
     const openIn = $('[data-qc-open]');
     const setOpen = v => { st.open = v; root.style.setProperty('--qc-open', (v / 100).toFixed(2)); };
@@ -355,7 +352,7 @@
       fileName.textContent = f.name;
       root.querySelector('[data-qc-filebox]').classList.add('has-file');
       update();
-      if (!mq.matches) go(5);
+      if (!mq.matches) go(4);
       openSend(false);
     });
 

@@ -293,7 +293,7 @@
 .qc__panel{position:relative;margin-top:clamp(18px,2.4vw,32px);background:#fff;box-shadow:var(--sh-2)}
 .qc__head{margin:0}
 /* вкладки шагов — шапка той же панели */
-.qc__tabs{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#f6f6f5;border-bottom:1px solid #e3e2e0}
+.qc__tabs{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#f6f6f5;border-bottom:1px solid #e3e2e0}
 .qc .qc__tab{
   position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;align-items:center;min-height:56px;padding:10px 8px;
   border:0;border-right:1px solid #e3e2e0;background:transparent;color:#7a7771;text-align:left;cursor:pointer;transition:background-color .2s,color .2s
@@ -367,7 +367,7 @@
 .qc__bar small{display:block;color:var(--qc-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
 .qc__bar strong{display:block;margin-top:5px;font:400 var(--fs-h4)/1 var(--font);letter-spacing:-.02em;white-space:nowrap}
 .qc__bar .qc__bar-next{min-height:48px;padding:0 16px;font-size:var(--fs-small)}
-.qc__panel[data-step="5"] .qc__bar{display:none}
+.qc__panel[data-step="4"] .qc__bar{display:none}
 
 @media(min-width:560px){
   .qc__tab-v{display:block}
@@ -378,7 +378,7 @@
   .qc__panel .qc__summary{padding:24px 28px}
 }
 @media(min-width:1100px){
-  .qc__tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .qc__tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
   .qc__tab--m{display:none!important}
   .qc__body{grid-template-columns:minmax(0,1.3fr) minmax(360px,.7fr)}
   .qc__stage{padding:34px 36px 30px}
@@ -402,6 +402,43 @@
   .qc__panel .qc__extras{grid-template-columns:1fr 1fr}
 }
 @media(max-width:1099px){
-  .qc__panel[data-step="5"] .qc__stage{padding:6px 16px 0}
-  .qc__panel[data-step="5"] .qc__nav{margin:0;padding:0;border:0}
+  .qc__panel[data-step="4"] .qc__stage{padding:6px 16px 0}
+  .qc__panel[data-step="4"] .qc__nav{margin:0;padding:0;border:0}
 }
+
+/* Шаг 1 «Проём и створки»: размер и выбор створок в одной панели, между ними — ровный отступ */
+.qc__pane[data-pane="1"] .qc__legend--gap{margin-top:26px;padding-top:22px;border-top:1px solid #e3e2e0}
+.qc__pane[data-pane="1"] .qc__leaves{padding-top:14px}
+.qc__pane[data-pane="1"] .qc__project{margin-top:20px}
+
+/* ---------- Кнопки калькулятора — как везде на сайте: одна высота, КАПС-подпись, стрелка справа ----------
+   «Далее», «Получить точный расчёт», «Отправить заявку», кнопка в нижней строке телефона — один вид */
+.qc .qc__next,.qc .qc__bar-next,.qc .qc__cta,.qc .qc__submit{
+  min-height:52px;padding:0 20px;gap:18px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+}
+.qc .qc__next i,.qc .qc__bar-next i,.qc .qc__cta i,.qc .qc__submit i{font-size:var(--fs-body)}
+.qc .qc__bar .qc__bar-next{min-height:48px;padding:0 16px}
+.qc .qc__back{font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+@media(min-width:1100px){.qc .qc__nav .qc__next{min-width:260px}}
+
+/* ---------- Текст в калькуляторе на телефоне — по шкале, без раздувания ----------
+   `.qc button{font:inherit}` перебивал размер у плитки «Уже есть проект» — задаём явно */
+.qc .qc__project{font:300 var(--fs-small)/1.35 var(--font)}
+.qc .qc__project b{font-weight:500}
+@media(max-width:767px){
+  .qc__legend b{font:500 var(--fs-body)/1.2 var(--font);letter-spacing:-.01em}
+  .qc__num input{font-size:var(--fs-h4)}
+  .qc__leaf strong{font-size:var(--fs-h4)}
+  .qc__leaf-open{font-size:var(--fs-caption)}
+}
+
+/* «Рекомендуем» — внутри плитки, место под метку есть у всех трёх: ряд плиток ровный, ничего не торчит сверху */
+.qc .qc__rec{
+  position:static;display:block;visibility:hidden;margin:0 0 6px;padding:0;background:none;color:var(--qc-muted);text-align:left;
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
+}
+.qc .qc__leaf.is-rec .qc__rec{visibility:visible}
+.qc .qc__leaf[aria-pressed="true"] .qc__rec{color:rgba(255,255,255,.7)}
+.qc__pane[data-pane="1"] .qc__leaves{padding-top:12px}
+/* узкие плитки телефона: слово не помещается — рекомендация уже написана строкой выше («для 3 600 мм рекомендуем 3») */
+@media(max-width:559px){.qc .qc__rec{display:none}}
