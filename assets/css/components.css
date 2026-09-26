@@ -32,6 +32,7 @@
   --fs-body:   clamp(15px, 14.33px + .185vw, 17px);   /* основной текст */
   --fs-lead:   clamp(17px, 16px + .278vw, 20px);      /* лид-абзацы */
   --fs-h4:     clamp(18px, 16.67px + .37vw, 22px);    /* мелкие заголовки, значения */
+  --fs-price:  clamp(20px, 18px + .556vw, 26px);      /* цена в карточке товара */
   --fs-h3:     clamp(22px, 17.33px + 1.296vw, 36px);  /* заголовки карточек и аккордеонов */
   --fs-num:    clamp(30px, 22.67px + 2.037vw, 52px);  /* цены, крупные цифры */
   --fs-h2s:    clamp(32px, 24px + 2.222vw, 56px);     /* подзаголовки поверх фото */
@@ -336,3 +337,21 @@ lead-form{display:block}
 .lead-form__free svg{stroke:var(--ui-ink)}
 .lead-form--dark .lead-form__free{background:rgba(255,255,255,.06);border-left-color:#f4f2ec}
 .lead-form--dark .lead-form__free svg{stroke:#f4f2ec}
+
+/* ---------- Карточка в каталоге — упрощённая: размер → название → цвет → открывание → кнопка и цена ----------
+   Узкая карточка (телефон, 2 в ряд): цена над кнопкой. Шире 280 px: кнопка слева, цена справа. */
+.m-card{container-type:inline-size}
+.m-card__body{gap:10px}
+.m-card__meta{margin:0}
+.m-card__title{font:400 var(--fs-body)/1.3 var(--font);letter-spacing:-.01em}
+.m-card__label{color:var(--ui-muted)}
+.m-card__note{display:block;color:#aaa79f;font:300 var(--fs-caption)/1.4 var(--font)}
+.m-card__buy{display:grid;gap:10px;margin-top:auto;padding-top:6px}
+.m-card__buy .m-card__price{order:-1}
+.m-card__price strong{font:500 var(--fs-price)/1 var(--font);letter-spacing:-.03em}
+.m-card__price small{margin-top:5px;color:var(--ui-muted);font:400 var(--fs-caption)/1.2 var(--font)}
+.m-card .m-card__buy .m-card__cart.ui-btn{margin-top:0}
+@container (min-width:280px){
+  .m-card__buy{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px}
+  .m-card__buy .m-card__price{order:0;text-align:right}
+}
