@@ -72,7 +72,19 @@
 }
 
 /* local nav is intentionally hidden on phones; global header remains */
-.hs-localnav{display:none}
+/* Мини-меню разделов: стоит сразу под баннером, при прокрутке прилипает под шапкой; на всех ширинах, на телефоне листается вбок */
+.hs-localnav{
+  position:sticky;top:var(--header-h);z-index:90;display:flex;overflow-x:auto;min-height:44px;padding:0 var(--hs-pad);
+  background:rgba(245,245,244,.96);border-bottom:1px solid var(--hs-line-soft);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  scrollbar-width:none;-webkit-overflow-scrolling:touch
+}
+.hs-localnav::-webkit-scrollbar{display:none}
+.hs-localnav a{
+  flex:0 0 auto;display:flex;align-items:center;min-height:44px;padding:0 10px;border-right:1px solid var(--hs-line-soft);
+  color:#68645c;text-decoration:none;font-size:var(--fs-label);font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap
+}
+@media(max-width:899px){.hs-localnav a:first-child{padding-left:0}.hs-localnav a:last-child{border-right:0}}
+.hs-page [id]{scroll-margin-top:calc(var(--header-h) + 44px + 12px)}
 
 /* hero */
 .hs-page .hero{
@@ -1129,31 +1141,8 @@
 /* desktop */
 @media(min-width:900px){
   .hs-page{padding-bottom:0}
-  .hs-localnav{
-    position:sticky;
-    top:var(--header-h);
-    z-index:90;
-    display:flex;
-    overflow-x:auto;
-    min-height:44px;
-    padding:0 48px;
-    background:rgba(245,245,244,.96);
-    border-bottom:1px solid var(--hs-line-soft);
-    backdrop-filter:blur(12px);
-  }
-  .hs-localnav a{
-    flex:0 0 auto;
-    display:flex;
-    align-items:center;
-    min-height:44px;
-    padding:0 12px;
-    border-right:1px solid var(--hs-line-soft);
-    color:#68645c;
-    text-decoration:none;
-    font-size:var(--fs-label);
-    font-weight:600;
-    text-transform:uppercase;
-  }
+  .hs-localnav{padding:0 48px}
+  .hs-localnav a{padding:0 12px}
   .hs-page .hero{min-height:calc(100svh - var(--header-h) - 44px)}
   .hs-page .hero__body{min-height:calc(100svh - var(--header-h) - 44px);padding:68px 48px 26px}
   .hs-page .hero__copy{font-size:var(--fs-body)}
@@ -1240,8 +1229,14 @@
   .hs-home-process__steps p{grid-column:auto;margin:0}
 }
 
-/* Первый экран HS на телефоне: без ленты цен — готовые конфигурации идут сразу следом; текст на фото читается */
+/* Первый экран HS без ленты цен (убрана по решению владельца) и ниже прежнего — «Готовые конфигурации»
+   начинаются раньше и на первом экране уже видно начало блока */
+.hs-page .hero,.hs-page .hero__body{min-height:calc(84svh - var(--header-h))}
+.hs-page .hs-stock{padding-top:44px}
+@media(min-width:900px){
+  .hs-page .hero,.hs-page .hero__body{min-height:calc(82svh - var(--header-h))}
+  .hs-page .hs-stock{padding-top:64px}
+}
 @media(max-width:899px){
-  .hs-hero-products{display:none}
   .hs-page .hero__media:after{background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.34) 36%,rgba(0,0,0,.82))}
 }
