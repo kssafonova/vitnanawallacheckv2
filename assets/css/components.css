@@ -228,6 +228,28 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 .m-card__open[hidden]{display:none}
 @media(hover:hover){.m-card:hover .m-card__open{opacity:1}}
 
+/* 3D-превью (assets/js/card3d.js): canvas поверх фото; фото остаётся без JS и без WebGL */
+.m-card__3d{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .45s ease;touch-action:pan-y;cursor:grab}
+.m-card__media.is-3d .m-card__3d{opacity:1}
+/* visibility, а не opacity: правило «открытое фото при наведении» не должно просвечивать сквозь прозрачный canvas */
+.m-card .m-card__media.is-3d img{visibility:hidden}
+.m-card.is-rotating .m-card__3d{cursor:grabbing}
+.m-card__3d-toggle,.m-card__3d-hint{
+  /* левый нижний угол фото: у карточки container-type:inline-size, фото квадратное → его низ = 100cqw */
+  position:absolute;top:calc(100cqw - 8px);left:8px;z-index:2;transform:translateY(-100%);padding:7px 9px;background:rgba(255,255,255,.86);color:var(--ui-ink);
+  border:1px solid rgba(17,17,15,.14);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
+}
+.m-card__3d-toggle{cursor:pointer}
+.m-card__3d-toggle.is-open{background:var(--ui-ink);color:#fff;border-color:var(--ui-ink)}
+.m-card__3d-hint{pointer-events:none;opacity:0;transition:opacity .3s ease}
+.m-card:has(.m-card__media.is-3d) .m-card__3d-hint{opacity:.9}
+.m-card:not(:has(.m-card__media.is-3d)) .m-card__3d-toggle{display:none}
+@media(hover:hover){.m-card__3d-toggle{display:none}}
+@media(hover:none){.m-card__3d-hint{display:none}}
+@media(min-width:768px){.m-card__3d-toggle,.m-card__3d-hint{top:calc(100cqw - 12px);left:12px}}
+/* узкая карточка (2 в ряд на телефоне): мини-схема не помещается рядом с кнопкой — открывание видно на самой модели */
+@container (max-width:240px){.m-card__media.is-3d .m-card__scheme{display:none}}
+
 /* ============================================================
    Мини-схема открывания поверх фото (генерирует tools/build.mjs → smallSvg)
    Тёмное «стекло» на фото, светлые створки, подвижные ярче, стрелка — акцентом.

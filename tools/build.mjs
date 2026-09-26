@@ -141,6 +141,20 @@ const customHref = (m, base) => (m.system === 'HS' ? `${base}raschet/` : `${base
 // Карточка модели «как на маркетплейсе»: фото, цена, цвет и схема переключаются прямо в карточке
 // (assets/js/shop.js), кнопка «В корзину». Без JS цвета и схемы — обычные ссылки на страницы вариантов.
 // rel — путь от страницы до корня сайта.
+// Параметры 3D-превью карточки (assets/js/card3d.js): размер, створки, куда едут, ручки, цвета RAL, зеркальность схем.
+// Раскладка — как у мини-схемы smallSvg (незеркальный вид), isMirror отражает её для схемы.
+const LAYOUT_3D = {
+  HS2: { kinds: ['move', 'fix'], to: { 0: 1 }, handles: [[0, 'l']] },
+  HS3: { kinds: ['move', 'move', 'fix'], to: { 0: 2, 1: 2 }, handles: [[0, 'l']] },
+  HS4: { kinds: ['fix', 'move', 'move', 'fix'], to: { 1: 0, 2: 3 }, handles: [[1, 'r'], [2, 'l']] },
+  FS3: { kinds: ['fold', 'fold', 'fold'], handles: [[2, 'r']] },
+  FS4: { kinds: ['fold', 'fold', 'fold', 'swing'], handles: [[3, 'l']] },
+};
+const model3d = m => ({
+  sys: m.system, w: m.width, h: m.height, ...LAYOUT_3D[m.model],
+  colors: Object.fromEntries(m.colors.map(c => [c.slug, c.hex])),
+  mirror: Object.fromEntries(m.schemes.map(s => [s.slug, isMirror(m, s)])),
+});
 const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
 function marketCard(m, rel) {
   const first = firstOf(m);
@@ -166,7 +180,7 @@ function marketCard(m, rel) {
   const action = soon
     ? `<a class="ui-btn m-card__cart" href="${href(first)}#product-contact" data-card-link data-card-hash="#product-contact">Сообщить о старте</a>`
     : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
-  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}">
+  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}" data-3d="${esc(JSON.stringify(model3d(m)))}">
         <a class="m-card__media" href="${href(first)}" data-card-link>
           <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
           <img class="m-card__open" src="${rel}${first.imageOpen}" alt="" loading="lazy" decoding="async" data-card-img-open>` : ''}
