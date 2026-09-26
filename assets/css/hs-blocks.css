@@ -236,11 +236,12 @@
 .hsx-tabs button[aria-selected="true"]{color:var(--hx-ink)}
 .hsx-tabs button[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--hx-ink)}
 
-.hsx-visual{position:relative;margin-top:12px;overflow:hidden;background:#cbcac7}
+.hsx-visual{position:relative;margin-top:12px;overflow:hidden;background:#ecebe9}
 .hsx-visual__bg,.hsx-visual__interior{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .35s ease}
 .hsx-visual__bg{object-position:center 47%;filter:saturate(.7) contrast(.98) brightness(1.05)}
 .hsx-visual__interior{opacity:0}
 .hsx-visual.is-interior .hsx-visual__interior{opacity:1}
+.hsx-visual__interior{z-index:0}
 .hsx-visual.is-interior canvas{cursor:default}
 .hsx-visual::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(17,17,15,.06),transparent 30%)}
 .hsx-visual canvas{position:relative;z-index:1;display:block;width:100%;aspect-ratio:1.47/1;touch-action:none;cursor:ew-resize}

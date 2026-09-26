@@ -81,7 +81,7 @@ assets/css/site.css         главная и общие секции; catalog.c
 assets/css/hs-blocks.css    HS: блоки «Характеристики и устройство» и «Как открывается дверь» (классы .hsx-*)
 assets/js/components/       <site-menu> и <site-footer> — веб-компоненты шапки и подвала (Shadow DOM, атрибут data-base)
 assets/js/                  calculator*.js, hs-system.js, product.js, site.js
-assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема, проход, ссылка на товар)
+assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема на canvas без фото: стена, рама, створки, улица за стеклом, размерная линия прохода; ссылка на товар)
 assets/js/quick-calc.js     калькулятор HS на /raschet/ ([data-quick-calc]): цена, рендер модели, ползунок «Закрыто — Открыто», заявка с файлом
 assets/css/quick-calc.css   его стили (.qc*) и анонс «Калькулятор» на главной и HS (.qc-teaser)
 assets/css/raschet.css      страница /raschet/: шаги «Что дальше», готовые конфигурации
