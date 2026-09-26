@@ -1259,7 +1259,7 @@
 @media(min-width:640px){.hs-page .hs-stock-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.hs-page .hs-stock-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-/* ---------- В стиле каталога: «Готовые двери» на светлом фоне, процесс — белые плитки ---------- */
+/* ---------- «Готовые двери» на светлом фоне, как каталог ---------- */
 .hs-page .hs-stock{background:var(--ui-bg);color:var(--ui-ink)}
 .hs-page .hs-stock .hs-kicker{color:var(--ui-muted)}
 .hs-page .hs-stock .hs-section-head h2{color:var(--ui-ink)}
@@ -1269,11 +1269,4 @@
 .hs-page .hs-stock .m-card.is-match{box-shadow:0 0 0 2px var(--ui-ink),var(--sh-3)}
 .hs-page .hs-stock .m-card__match{background:var(--ui-ink);color:#fff}
 .hs-page .hs-stock .m-card.is-match.is-pulse{animation-name:m-card-pulse}
-.hs-page .hs-home-process{background:var(--ui-bg)}
-.hs-page .hs-home-process__steps{display:grid;gap:clamp(8px,1vw,14px);border:0}
-.hs-page .hs-home-process__steps article{display:block;padding:clamp(16px,1.8vw,24px);background:#fff;border:0;box-shadow:var(--sh-1);transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)}
-.hs-page .hs-home-process__steps article>span{display:block;margin-bottom:12px;color:var(--ui-muted)}
-.hs-page .hs-home-process__steps h3{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
-.hs-page .hs-home-process__steps p{margin:6px 0 0;color:var(--ui-muted);font-size:var(--fs-small);line-height:1.5}
-@media(hover:hover){.hs-page .hs-home-process__steps article:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
-@media(min-width:768px){.hs-page .hs-home-process__steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
