@@ -173,7 +173,6 @@ function marketCard(m, rel) {
         return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
       }).join('')}</div>`
     : '';
-  const schemesSvg = m.schemes.map(s => `<span data-scheme-svg="${s.slug}"${s === s0 ? '' : ' hidden'}>${smallSvg(m, s)}</span>`).join('');
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
     : `<strong>${money(m.price)}</strong><small>за конструкцию</small>`;
@@ -185,7 +184,6 @@ function marketCard(m, rel) {
           <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
           <img class="m-card__open" src="${rel}${first.imageOpen}" alt="" loading="lazy" decoding="async" data-card-img-open>` : ''}
           ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
-          <span class="m-card__scheme" aria-hidden="true">${schemesSvg}</span>
         </a>
         <div class="m-card__body">
           <p class="m-card__meta">${esc(sizeText(m))} · ${sectionsText(m.sections)}</p>
