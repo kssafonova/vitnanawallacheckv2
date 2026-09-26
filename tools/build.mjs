@@ -256,7 +256,7 @@ function calcTeaser(rel, eyebrow) {
 
 // Карточка «Индивидуальный расчёт» — вся карточка ведёт на страницу калькулятора
 function projectCard(calcHref, id) {
-  return `<a class="m-card m-card--project" href="${calcHref}"${id ? ` id="${id}"` : ''}>
+  return `<a class="m-card m-card--project m-card--wide" href="${calcHref}"${id ? ` id="${id}"` : ''}>
         <span class="m-card__media">
           <svg viewBox="0 0 340 220" aria-hidden="true"><rect x="26" y="24" width="288" height="170"/><path d="M92 24v170M157 24v170M239 24v170M45 174 126 93M117 174l82-82M190 174l82-82"/></svg>
         </span>

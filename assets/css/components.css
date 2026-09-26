@@ -235,8 +235,8 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 .m-card .m-card__media.is-3d img{visibility:hidden}
 .m-card.is-rotating .m-card__3d{cursor:grabbing}
 .m-card__3d-toggle,.m-card__3d-hint{
-  /* левый нижний угол фото: у карточки container-type:inline-size, фото квадратное → его низ = 100cqw */
-  position:absolute;top:calc(100cqw - 8px);left:8px;z-index:2;transform:translateY(-100%);padding:7px 9px;background:rgba(255,255,255,.86);color:var(--ui-ink);
+  /* левый нижний угол фото: у карточки container-type:inline-size, низ фото = ширина / --m-ar (см. «Широкая карточка») */
+  position:absolute;top:calc(100cqw / var(--m-ar) - 8px);left:8px;z-index:2;transform:translateY(-100%);padding:7px 9px;background:rgba(255,255,255,.86);color:var(--ui-ink);
   border:1px solid rgba(17,17,15,.14);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
 }
 .m-card__3d-toggle{cursor:pointer}
@@ -246,7 +246,7 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 .m-card:not(:has(.m-card__media.is-3d)) .m-card__3d-toggle{display:none}
 @media(hover:hover){.m-card__3d-toggle{display:none}}
 @media(hover:none){.m-card__3d-hint{display:none}}
-@media(min-width:768px){.m-card__3d-toggle,.m-card__3d-hint{top:calc(100cqw - 12px);left:12px}}
+@media(min-width:768px){.m-card__3d-toggle,.m-card__3d-hint{top:calc(100cqw / var(--m-ar) - 12px);left:12px}}
 /* узкая карточка (2 в ряд на телефоне): мини-схема не помещается рядом с кнопкой — открывание видно на самой модели */
 @container (max-width:240px){.m-card__media.is-3d .m-card__scheme{display:none}}
 
@@ -378,3 +378,30 @@ lead-form{display:block}
   .m-card__buy{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px}
   .m-card__buy .m-card__price{order:0;text-align:right}
 }
+
+/* ---------- Широкая карточка (решение владельца: «нормальная карточка», как в магазинах техники) ----------
+   Сетка: 1 в ряд на телефоне, 2 на планшете, 3 на компьютере; «Индивидуальный расчёт» с 1100 px — баннер во всю ширину ряда.
+   Фото горизонтальное 4:3 — портал широкий, в квадрате по бокам пусто. --m-ar — пропорция фото (для кнопки «Открыть»). */
+.m-card{--m-ar:1.3333}
+.m-card__media{aspect-ratio:4/3;background:#e9e9e7}
+.m-card__body{gap:12px;padding:18px}
+.m-card__title{font:400 var(--fs-h4)/1.25 var(--font);letter-spacing:-.02em}
+.m-card .m-card__opt{grid-template-columns:auto 1fr;align-items:center;gap:12px}
+.m-card .m-card__label{min-width:88px}
+.m-card .m-card__swatch{width:32px;height:32px}
+.m-card .m-card__chip{padding:9px 12px}
+.m-card .m-card__buy{padding-top:14px;border-top:1px solid var(--ui-line-soft)}
+.m-card__scheme{width:88px}
+@media(min-width:768px){.m-card__body{padding:22px}.m-card__scheme{width:104px}}
+.m-card--project .m-card__buy{border-top-color:#343430}
+/* Баннер «Индивидуальный расчёт»: схема слева, текст и кнопка справа */
+@media(min-width:1100px){
+  .m-card.m-card--project.m-card--wide{grid-column:1/-1;flex-direction:row;align-items:stretch}
+  .m-card--project.m-card--wide .m-card__media{flex:0 0 38%;aspect-ratio:auto;min-height:220px}
+  .m-card--project.m-card--wide .m-card__media svg{width:62%}
+  .m-card--project.m-card--wide .m-card__body{flex:1;justify-content:center;padding:36px 44px;gap:14px}
+  .m-card--project.m-card--wide .m-card__title{font-size:var(--fs-h3)}
+  .m-card--project.m-card--wide .m-card__note{max-width:52ch;font-size:var(--fs-small)}
+  .m-card--project.m-card--wide .m-card__buy{flex:0;max-width:560px;margin-top:10px}
+}
+.m-card--project .m-card__media{aspect-ratio:16/9}
