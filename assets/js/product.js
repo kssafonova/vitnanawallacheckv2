@@ -34,7 +34,7 @@
     items.forEach(el=>io.observe(el));
   };
 
-  // Фото «Закрыто / Открыто» — один ракурс, переключение без перезагрузки
+  // «Закрыто / Открыто»: фото (без WebGL) — класс is-open; 3D-модель слушает те же кнопки (card3d.js)
   const initMedia=()=>{
     const media=document.querySelector('[data-media-toggle]');
     if(!media)return;
