@@ -161,7 +161,7 @@ function initCard(card, R) {
   const hint = document.createElement('span');
   hint.className = 'm-card__3d-hint';
   hint.setAttribute('aria-hidden', 'true');
-  hint.textContent = '3D · потяните';
+  hint.innerHTML = '3D<span> · потяните</span>';
   card.appendChild(hint);
 
   const state = {

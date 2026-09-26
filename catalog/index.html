@@ -19,11 +19,17 @@
     <p class="ui-eyebrow">Москва и МО</p>
     <h1>Каталог</h1>
     <p class="catalog-hero__lead">Готовые двери с ценой. Любой цвет RAL и другой размер — рассчитаем.</p>
-    <nav class="catalog-switch" aria-label="Категории каталога">
-      <a href="#hs"><span>Раздвижные HS</span></a>
-      <a href="#fs"><span>Складные FS</span></a>
-      <a href="#project"><span>Под ваш размер</span></a>
-    </nav>
+    <div class="catalog-tools">
+      <nav class="catalog-switch" aria-label="Категории каталога">
+        <a href="#hs"><span>Раздвижные HS</span></a>
+        <a href="#fs"><span>Складные FS</span></a>
+        <a href="#project"><span>Под ваш размер</span></a>
+      </nav>
+      <div class="catalog-view" role="group" aria-label="Вид каталога" hidden>
+        <button type="button" data-view="list" aria-label="Списком" title="Списком"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="7"/><rect x="4" y="13" width="16" height="7"/></svg></button>
+        <button type="button" data-view="grid" aria-label="Плиткой 2 × 2" title="Плиткой"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg></button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -141,6 +147,7 @@
 <script src="../assets/js/components/site-menu.js"></script>
 <script src="../assets/js/components/site-footer.js"></script>
 <script src="../assets/js/shop.js"></script>
+<script src="../assets/js/catalog-view.js"></script>
 <script type="module" src="../assets/js/card3d.js"></script>
 </body>
 </html>

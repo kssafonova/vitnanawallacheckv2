@@ -375,7 +375,7 @@ ${jsonLd(crumbs)}
       <p class="product-buy__lead">${esc(m.lead)}</p>
       ${priceBlock}
       <div class="product-quick">
-        <div><small>Схема</small><strong>${esc(s.code)}</strong></div><div><small>Открывание</small><strong>${esc(m.opening)}</strong></div>
+        <div><small>Схема</small><strong>${esc(s.code)}</strong></div><div><small>Ширина прохода</small><strong>${esc(m.opening)}</strong></div>
         <div><small>Секции</small><strong>${m.sections}</strong></div><div><small>Сценарий</small><strong>${esc(m.use)}</strong></div>
       </div>
       <div class="product-variant"><div class="product-variant__head"><span>Цвет</span><span>${esc(c.name)} · RAL ${c.ral}</span></div><div class="product-swatches">${swatches}</div></div>
