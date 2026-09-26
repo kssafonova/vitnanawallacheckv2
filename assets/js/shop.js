@@ -88,6 +88,7 @@
       card.querySelectorAll('[data-scheme-svg]').forEach(el=>{el.hidden=el.dataset.schemeSvg!==state.s});
       const btn=card.querySelector('[data-add-to-cart]');
       if(btn){btn.dataset.sku=v.sku;syncButton(btn)}
+      card.dispatchEvent(new CustomEvent('ps-card-variant',{detail:{c:state.c,s:state.s}}));
     };
     card.addEventListener('click',e=>{
       const opt=e.target.closest('[data-color],[data-scheme]');
