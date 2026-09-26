@@ -362,7 +362,7 @@ lead-form{display:block}
 .lead-form--dark .lead-form__free svg{stroke:#f4f2ec}
 
 /* ---------- Карточка в каталоге — упрощённая: размер → название → цвет → открывание → кнопка и цена ----------
-   Узкая карточка (телефон, 2 в ряд): цена над кнопкой. Шире 280 px: кнопка слева, цена справа. */
+   Узкая карточка (до 340 px): цена над кнопкой. Шире 340 px: кнопка слева, цена справа. */
 .m-card{container-type:inline-size}
 .m-card__body{gap:10px}
 .m-card__meta{margin:0}
@@ -374,7 +374,7 @@ lead-form{display:block}
 .m-card__price strong{font:500 var(--fs-price)/1 var(--font);letter-spacing:-.03em}
 .m-card__price small{margin-top:5px;color:var(--ui-muted);font:400 var(--fs-caption)/1.2 var(--font)}
 .m-card .m-card__buy .m-card__cart.ui-btn{margin-top:0}
-@container (min-width:280px){
+@container (min-width:340px){
   .m-card__buy{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px}
   .m-card__buy .m-card__price{order:0;text-align:right}
 }
@@ -421,4 +421,54 @@ lead-form{display:block}
   .m-card .m-card__buy{padding-top:10px}
   .m-card .m-card__3d-hint span{display:none}
   .m-card .m-card__3d-toggle,.m-card .m-card__3d-hint{padding:6px 7px}
+}
+
+/* ============================================================
+   Вопросы и ответы (.page-faq / .faq-list) — HS и другие страницы. Аккордеон на <details>, тонкие линии, «+».
+   ============================================================ */
+.page-faq{padding:var(--space-section) 0;background:var(--ui-bg);color:var(--ui-ink)}
+.page-faq__grid{display:grid;gap:var(--space-head)}
+.page-faq__head .ui-eyebrow{margin:0 0 14px}
+.page-faq__head h2{max-width:14ch;margin:0;font:300 var(--fs-h2)/.95 var(--font);letter-spacing:-.06em}
+.faq-list{border-top:1px solid var(--ui-line)}
+.faq-list__item{border-bottom:1px solid var(--ui-line)}
+.faq-list__item summary{
+  position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;cursor:pointer;list-style:none;
+  font:400 var(--fs-h4)/1.3 var(--font);letter-spacing:-.02em
+}
+.faq-list__item summary::-webkit-details-marker{display:none}
+.faq-list__item summary i{position:relative;flex:none;width:18px;height:18px}
+.faq-list__item summary i::before,.faq-list__item summary i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:currentColor;transition:transform .25s var(--ease-ui)}
+.faq-list__item summary i::after{transform:rotate(90deg)}
+.faq-list__item[open] summary i::after{transform:rotate(0)}
+.faq-list__item p{max-width:720px;margin:0;padding:0 38px 22px 0;color:var(--ui-muted);font:300 var(--fs-body)/1.6 var(--font)}
+@media(hover:hover){.faq-list__item summary:hover{color:var(--ui-muted)}}
+@media(min-width:900px){.page-faq__grid{grid-template-columns:.8fr 1.2fr;gap:60px;align-items:start}.page-faq__head{position:sticky;top:calc(var(--header-h) + 76px)}}
+
+/* ============================================================
+   Проекты — компактно и одинаково на главной и HS: секция внизу страницы, 3 карточки в ряд,
+   фото 4:3 (на телефоне — лента с прокруткой). Двойной класс и !important — поверх прежних слоёв site.css / hs-system.css.
+   ============================================================ */
+.projects-intro.projects-intro{padding:var(--space-section) 0 var(--space-head);background:var(--ui-bg);color:var(--ui-ink)}
+.projects-intro.projects-intro .wrap{display:grid;gap:14px;max-width:var(--ui-max);margin:0 auto;padding:0 var(--ui-pad)}
+.projects-intro.projects-intro h2{margin:0;font:300 var(--fs-h2)/.95 var(--font);letter-spacing:-.06em;text-transform:none}
+.projects-intro.projects-intro p{max-width:640px;margin:0;color:var(--ui-muted);font:300 var(--fs-body)/1.58 var(--font)}
+.projects.projects{
+  display:grid!important;grid-auto-flow:column;grid-auto-columns:min(78vw,380px);grid-template-columns:none;grid-template-rows:none!important;gap:14px;
+  max-width:var(--ui-max);margin:0 auto!important;padding:0 var(--ui-pad) var(--space-section)!important;scroll-padding:0 var(--ui-pad);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;background:var(--ui-bg)!important;gap:14px!important
+}
+.projects.projects::-webkit-scrollbar{display:none}
+.projects.projects .project{position:relative;flex:none!important;min-height:0!important;aspect-ratio:4/3;overflow:hidden;scroll-snap-align:start;grid-row:auto!important;box-shadow:var(--sh-1)}
+.projects.projects .project img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease-ui)}
+.projects.projects .project__copy{left:16px!important;right:16px!important;bottom:14px!important;text-align:left}
+.projects.projects .project__copy small{margin-bottom:6px;font-size:var(--fs-label)}
+.projects.projects .project__copy h3{font:300 var(--fs-h4)/1.15 var(--font)!important;letter-spacing:-.02em;text-transform:none}
+.projects.projects .project__copy p{display:none}
+@media(hover:hover){.projects.projects .project:hover img{transform:scale(1.04)}}
+@media(min-width:900px){.projects.projects{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr))!important;overflow:visible}}
+/* Средняя карточка (4 в ряд, лента в корзине): подписи «Цвет / Схема» над выбором, «+ любой RAL» — отдельной строкой */
+@container (max-width:340px){
+  .m-card .m-card__opt{grid-template-columns:minmax(0,1fr);gap:6px}
+  .m-card .m-card__label{min-width:0}
+  .m-card .m-card__ral{flex-basis:100%;margin-left:0}
 }

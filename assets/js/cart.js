@@ -37,7 +37,7 @@
       <li class="cart-item" data-sku="${esc(sku)}">
         <a class="cart-item__img" href="${base+esc(v.url)}"><img src="${base+esc(v.image)}" alt="${esc(v.code)} · ${esc(v.name)}" loading="lazy"></a>
         <div class="cart-item__body">
-          <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>от, ${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
+          <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
           <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
           <p class="cart-item__meta">${esc(v.size)} · срок ${daysText(services.production_days||14)} · арт. ${esc(sku)}</p>
           <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(v.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
@@ -56,15 +56,19 @@
     const items=lines();
     root.hidden=!items.length;
     empty.hidden=!!items.length;
+    const head=document.querySelector('[data-cart-head]'),steps=document.querySelector('[data-cart-steps]');
+    if(head)head.hidden=!items.length;
+    if(steps)steps.hidden=!items.length;
     if(!items.length)return;
     list.innerHTML=items.map(itemHtml).join('');
     const count=items.reduce((n,i)=>n+i.qty,0);
     root.querySelector('[data-cart-count]').textContent=count;
+    const hc=document.querySelector('[data-cart-head-count]');if(hc)hc.textContent=count;
     const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),pickup=mode()==='pickup';
-    root.querySelector('[data-cart-goods]').textContent='от '+money(goods);
+    root.querySelector('[data-cart-goods]').textContent=money(goods);
     root.querySelector('[data-cart-service-label]').textContent=pickup?'Самовывоз':`Доставка и монтаж, ≈${services.install_delivery_pct}%`;
-    root.querySelector('[data-cart-service]').textContent=pickup?'0 ₽':'от '+money(service);
-    root.querySelector('[data-cart-total]').textContent='от '+money(goods+service);
+    root.querySelector('[data-cart-service]').textContent=pickup?'0 ₽':'≈ '+money(service);
+    root.querySelector('[data-cart-total]').textContent=money(goods+service);
     root.querySelector('[data-cart-note-delivery]').hidden=pickup;
     root.querySelector('[data-cart-note-pickup]').hidden=!pickup;
     root.querySelector('[data-cart-days]').textContent=daysText(services.production_days||14);
@@ -109,9 +113,9 @@
     const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),total=goods+service,pickup=mode()==='pickup';
     const deliveryLine=pickup
       ?`Получение: САМОВЫВОЗ с производства (${factory.address||'квартал № 205'})`
-      :`Получение: доставка и монтаж — оценка от ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
-    const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = от ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
-      +`\n\nКонструкции: от ${money(goods)}\n${deliveryLine}\nИтого: от ${money(total)}`
+      :`Получение: доставка и монтаж — оценка ≈ ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
+    const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
+      +`\n\nКонструкции: ${money(goods)}\n${deliveryLine}\nИтого: ${money(total)}`
       +`\nСрок изготовления: ${daysText(services.production_days||14)}. Ориентировочно ${pickup?'самовывоз':'доставка и монтаж'} с ${etaText()} — дату нужно подтвердить клиенту.`;
     const data=new FormData(form);
     data.set('source','cart');data.set('order_id',id);data.set('project',project);data.set('delivery',mode());
@@ -139,11 +143,11 @@
       if(data.services)services={...services,...data.services};
       if(data.factory)factory=data.factory;
       const hint=form.querySelector('[data-delivery-hint]');
-      if(hint&&services.install_delivery_zone)hint.textContent=`${services.install_delivery_zone}. Оценка ≈${services.install_delivery_pct}% от стоимости, от ${money(services.install_delivery_min)}. Замер бесплатно.`;
+      if(hint&&services.install_delivery_zone)hint.textContent=`${services.install_delivery_zone}. Оценка ≈${services.install_delivery_pct}% от стоимости, минимум ${money(services.install_delivery_min)}. Замер бесплатно.`;
       // Артикулы, которых больше нет в продаже, убираем и сообщаем об этом
       const gone=cart.items().filter(i=>!catalog.has(i.sku));
       if(gone.length){gone.forEach(i=>cart.remove(i.sku));note.hidden=false;note.textContent='Часть товаров больше недоступна к заказу и убрана из корзины.'}
       render();
     })
-    .catch(()=>{empty.hidden=false;empty.querySelector('p').textContent='Не удалось загрузить каталог. Обновите страницу.'});
+    .catch(()=>{empty.hidden=false;empty.querySelector('.cart-head__lead').textContent='Не удалось загрузить каталог. Обновите страницу.'});
 })();

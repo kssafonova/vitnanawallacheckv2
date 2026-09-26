@@ -281,7 +281,7 @@ function variantPage(v) {
   const schemeOptions = m.schemes.map(sch => family.find(x => x.c.slug === c.slug && x.s.slug === sch.slug));
   const colorName = `${c.name} RAL ${c.ral}`;
   const title = `${m.code} ${m.name} — ${size}, ${colorName} | ${BRAND}`;
-  const description = `${m.title} ${size}, ${colorName}, ${s.label[0].toLowerCase() + s.label.slice(1)}. ${soon ? 'Скоро в продаже.' : `Стоимость от ${money(m.price)}.`} Изготовление и монтаж в Москве и МО.`;
+  const description = `${m.title} ${size}, ${colorName}, ${s.label[0].toLowerCase() + s.label.slice(1)}. ${soon ? 'Скоро в продаже.' : `Стоимость ${money(m.price)}.`} Изготовление и монтаж в Москве и МО.`;
   const imageUrl = SITE + v.image;
 
   const product = {
@@ -327,7 +327,7 @@ function variantPage(v) {
 
   const priceBlock = soon
     ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции от</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_DAYS} дней</b>изготовление после подтверждения заказа</div></div>
+    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_DAYS} дней</b>изготовление после подтверждения заказа</div></div>
       <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;
@@ -427,7 +427,7 @@ ${jsonLd(crumbs)}
   <div class="product-lifestyle__copy"><small>${esc(m.code)} · ${esc(size)}</small><h2>Система внутри архитектуры</h2><p>${esc(m.use)}. Портал подбираем по проёму, планировке и маршруту движения, а не только по размеру из каталога.</p></div>
 </section>
 
-<div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>от</small><strong>${money(m.price)}</strong>`}</div>${soon ? '<a class="ui-btn ui-btn--dark" href="#product-contact">Узнать о старте <span>→</span></a>' : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}</div>
+<div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>цена</small><strong>${money(m.price)}</strong>`}</div>${soon ? '<a class="ui-btn ui-btn--dark" href="#product-contact">Узнать о старте <span>→</span></a>' : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}</div>
 </main>
 <site-footer data-base="${base}"></site-footer>
 <script src="${base}assets/js/components/site-menu.js"></script>
@@ -453,7 +453,7 @@ const blocks = {
       const v = firstOf(m);
       return `<a class="rs-model" href="../${v.path}">
           <span class="rs-model__img"><img src="../${v.image}" alt="" loading="lazy" decoding="async"></span>
-          <span class="rs-model__body"><small>${esc(m.code)} · ${m.width} × ${m.height} мм</small><strong>${esc(m.name)}</strong><em>от ${money(m.price)}</em></span>
+          <span class="rs-model__body"><small>${esc(m.code)} · ${m.width} × ${m.height} мм</small><strong>${esc(m.name)}</strong><em>${money(m.price)}</em></span>
           <i aria-hidden="true">→</i>
         </a>`;
     }).join('\n        '),
@@ -466,9 +466,12 @@ const blocks = {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
   },
+  'cart/index.html': {
+    'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
+  },
   'index.html': {
     'home-calc': calcTeaser('', 'Калькулятор'),
-    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>от ${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
+    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },
 };
 

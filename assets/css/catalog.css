@@ -100,21 +100,20 @@
 .catalog-view button[aria-pressed="true"]{background:var(--ui-ink);color:#fff;box-shadow:var(--sh-3)}
 @media(hover:hover){.catalog-view button:not([aria-pressed="true"]):hover{color:var(--ui-ink);box-shadow:var(--sh-3)}}
 
-/* Плитка: 2 в ряд на телефоне (2 × 2), с 900 px — 3; «Индивидуальный расчёт» — во всю ширину ряда */
-main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.4vw,24px)}
-main[data-view="grid"] .catalog-section__grid .m-card--project{grid-column:1/-1}
-@media(min-width:900px){main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-/* Список: одна карточка в ряд; с 640 px — горизонтальная: фото слева, описание справа */
-main[data-view="list"] .catalog-section__grid{grid-template-columns:minmax(0,1fr)}
-@media(min-width:640px){
-  main[data-view="list"] .catalog-section__grid .m-card{--m-ar:2.963;grid-column:auto;flex-direction:row;align-items:flex-start} /* 4:3 фото на 45 % ширины → низ фото = 100cqw / 2,963 */
-  main[data-view="list"] .catalog-section__grid .m-card__media{flex:0 0 45%;aspect-ratio:4/3;min-height:0}
-  main[data-view="list"] .catalog-section__grid .m-card__body{flex:1;align-self:stretch;padding:clamp(20px,2.4vw,40px)}
-  main[data-view="list"] .catalog-section__grid .m-card--project{align-items:stretch}
-  main[data-view="list"] .catalog-section__grid .m-card--project .m-card__media{aspect-ratio:auto;align-self:stretch;min-height:220px}
-  main[data-view="list"] .catalog-section__grid .m-card--project .m-card__body{justify-content:center}
-}
+/* Список: крупные карточки — 1 в ряд на телефоне, 2 × 2 с 640 px. Плитка: 2 × 2 на телефоне, 3 с 768 px, 4 с 1100 px.
+   «Индивидуальный расчёт» — во всю ширину ряда (с 1100 px — баннер, components.css .m-card--wide) */
+main[data-view="list"] .catalog-section__grid{grid-template-columns:minmax(0,1fr);gap:clamp(14px,1.8vw,28px)}
+@media(min-width:640px){main[data-view="list"] .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.2vw,18px)}
+@media(min-width:768px){main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1100px){main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* «Индивидуальный расчёт» в каталоге — обычная четвёртая карточка: в списке получается 2 × 2, в плитке — ровно 4 в ряд */
+main[data-view] .catalog-section__grid .m-card.m-card--project.m-card--wide{grid-column:auto;flex-direction:column}
+main[data-view] .catalog-section__grid .m-card--project.m-card--wide .m-card__media{flex:none;aspect-ratio:4/3;min-height:0}
+main[data-view] .catalog-section__grid .m-card--project.m-card--wide .m-card__body{justify-content:flex-start;padding:clamp(12px,1.6vw,22px);gap:12px}
+main[data-view] .catalog-section__grid .m-card--project.m-card--wide .m-card__title{font-size:var(--fs-h4)}
+main[data-view] .catalog-section__grid .m-card--project.m-card--wide .m-card__note{font-size:var(--fs-caption)}
+main[data-view] .catalog-section__grid .m-card--project.m-card--wide .m-card__buy{max-width:none;margin-top:auto}
 /* телефон: вкладки одной прокручиваемой строкой, переключатель вида справа */
 .catalog-tools{align-items:center}
 .catalog-tools .catalog-switch{flex-wrap:nowrap;min-width:0;overflow-x:auto;padding:4px 2px 8px;margin:-4px -2px -8px}
