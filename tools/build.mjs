@@ -452,7 +452,7 @@ const blocks = {
   },
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
-    'hs-calc': calcTeaser('../../', '05 · Калькулятор'),
+    'hs-calc': calcTeaser('../../', '03 · Калькулятор'),
     'hs-hero-products': featured.map(m => `<a class="hs-hero-product" href="../../${firstOf(m).path}">
         <span><small>${esc(m.code)}</small><strong>${esc(sizeText(m))}</strong></span>
         <span><small>от</small><b>${money(m.price)}</b></span>
