@@ -1,4 +1,4 @@
-/* 3D-превью в карточках товаров и на странице товара ([data-3d] с .m-card__media внутри): портал собирается из параметров модели (tools/build.mjs → model3d),
+/* 3D-превью в карточках товаров (.m-card[data-3d]): портал собирается из параметров модели (tools/build.mjs → model3d),
    его можно крутить мышью или пальцем, при наведении (или по кнопке на телефоне) створки открываются по схеме.
    Цвет и схема переключаются свотчами карточки (событие ps-card-variant из shop.js).
    Один WebGL-рендерер на все карточки: кадр рисуется в него и копируется в canvas карточки, рендер только по изменению.
@@ -152,14 +152,12 @@ function initCard(card, R) {
   media.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
-  // Страница товара (data-3d-states): открытие — кнопками «Закрыто / Открыто» [data-media-state], без наведения и своей кнопки
-  const states = [...card.querySelectorAll('[data-media-state]')];
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'm-card__3d-toggle';
   btn.innerHTML = '<span>Открыть</span>';
   btn.setAttribute('aria-label', 'Показать открытым');
-  if (!states.length) card.appendChild(btn);
+  card.appendChild(btn);
   const hint = document.createElement('span');
   hint.className = 'm-card__3d-hint';
   hint.setAttribute('aria-hidden', 'true');
@@ -251,8 +249,7 @@ function initCard(card, R) {
   media.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
   canvas.addEventListener('dblclick', e => { e.preventDefault(); yawT = YAW0; pitchT = PITCH0; kick(); });
 
-  states.forEach(b => b.addEventListener('click', () => setOpen(b.dataset.mediaState === 'open')));
-  if (canHover && !states.length) {
+  if (canHover) {
     media.addEventListener('pointerenter', () => setOpen(true));
     card.addEventListener('pointerleave', () => setOpen(false));
   }
@@ -270,7 +267,7 @@ function initCard(card, R) {
 }
 
 // Инициализация, когда карточка подъезжает к экрану
-const cards = [...document.querySelectorAll('[data-3d]')];
+const cards = [...document.querySelectorAll('.m-card[data-3d]')];
 if (cards.length) {
   const start = card => {
     const r = renderer();

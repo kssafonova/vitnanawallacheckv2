@@ -26,11 +26,3 @@
   .fs-coming__meta{grid-template-columns:repeat(4,1fr);max-width:980px}
   .fs-coming__meta div{padding:15px;border-right:1px solid rgba(255,255,255,.2)}
 }
-
-/* Модели FS — карточки каталога (.m-card), заголовок секции как в каталоге */
-.fs-models{padding:var(--space-section) 0;background:var(--ui-bg);color:var(--ui-ink)}
-.fs-models__head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:clamp(16px,2vw,28px);padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
-.fs-models__head h2{margin:0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em}
-.fs-models__head a{flex:none;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
-.fs-models__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(14px,1.8vw,28px)}
-@media(min-width:640px){.fs-models__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
