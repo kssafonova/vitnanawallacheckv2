@@ -516,3 +516,64 @@
 /* Шаги процесса: заголовок и описание рядом — только когда колонке хватает ширины */
 @media(min-width:768px) and (max-width:1099px){.process .step p{margin-top:8px}}
 @media(min-width:1100px){.process .step>div{display:grid;grid-template-columns:.62fr 1.38fr;gap:22px;align-items:start}}
+
+/* ============================================================
+   Главная, «Системы»: раскрытая система — одна сетка.
+   Телефон: текст → схема (canvas) + ползунок → таблица → узкие плашки готовых решений → «Подробнее о системе».
+   С 900 px: слева текст, таблица, плашки, кнопка; справа схема.
+   ============================================================ */
+.sx{display:grid;gap:18px;padding:0 0 28px;grid-template-areas:"text" "visual" "specs" "ready" "more"}
+.sx__text{grid-area:text;margin:0;max-width:560px;color:#c7c7c0;font-size:var(--fs-body);line-height:1.5}
+.sx__visual{grid-area:visual;min-width:0}
+.sx__stage{position:relative;aspect-ratio:16/9;max-height:260px;background:#0e0e0d;border:1px solid var(--sx-line);touch-action:pan-y;cursor:ew-resize;overflow:hidden}
+.sx__stage canvas{display:block;width:100%;height:100%}
+.sx__state{
+  position:absolute;left:10px;top:10px;padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--sx-line);
+  color:#e9e8e5;font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase
+}
+.sx__range{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:8px;color:#a9a8a2;font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.sx__range input{width:100%;height:36px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+.sx__range input::-webkit-slider-runnable-track{height:1px;background:rgba(255,255,255,.4)}
+.sx__range input::-moz-range-track{height:1px;background:rgba(255,255,255,.4)}
+.sx__range input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-8.5px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.12)}
+.sx__range input::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#fff}
+.sx__range input:focus-visible{outline:2px solid var(--sx-accent);outline-offset:2px}
+
+.sx__specs{grid-area:specs;margin:0;border-top:1px solid var(--sx-line)}
+.sx__specs div{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--sx-line)}
+.sx__specs dt{color:#8f8e88;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.sx__specs dd{margin:0;color:#f3f2f1;font-size:var(--fs-small);line-height:1.3}
+
+.sx__ready{grid-area:ready}
+.sx__ready-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:#a9a8a2;font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.sx__ready-head a{display:inline-flex;align-items:center;gap:6px;min-height:32px;color:#fff;text-decoration:none}
+.sx__ready-head b{font-weight:400}
+.sx__soon{padding:5px 7px;border:1px solid var(--sx-line);color:#d6d5d0}
+.sx__strips{display:grid;gap:6px}
+.sx-strip{
+  display:grid;grid-template-columns:52px minmax(0,1fr) auto 14px;gap:10px;align-items:center;min-height:46px;padding:0 12px;
+  border:1px solid var(--sx-line);background:#0e0e0d;color:#f3f2f1;text-decoration:none;transition:border-color .2s,background-color .2s
+}
+.sx-strip small{color:#8f8e88;font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em}
+.sx-strip strong{overflow:hidden;font:400 var(--fs-small)/1.2 var(--font);text-overflow:ellipsis;white-space:nowrap}
+.sx-strip em{color:#d6d5d0;font-style:normal;font-size:var(--fs-small);white-space:nowrap}
+.sx-strip i{font-style:normal;color:#8f8e88}
+.sx-strip.is-soon em{color:#8f8e88}
+@media(hover:hover){.sx-strip:hover{border-color:#f3f2f1;background:#161615}.sx-strip:hover i{color:#fff}}
+
+.sx__more{
+  grid-area:more;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:52px;padding:0 18px;
+  background:#f3f2f1;color:#0b0b0a;text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase;
+  transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui)
+}
+.sx__more i{font-style:normal;font-size:var(--fs-body)}
+@media(hover:hover){.sx__more:hover{transform:translateY(-1px);box-shadow:0 12px 24px -12px rgba(255,255,255,.35)}}
+.sx__more:focus-visible,.sx-strip:focus-visible{outline:2px solid var(--sx-accent);outline-offset:2px}
+
+@media(min-width:600px){.sx__more{justify-self:start;min-width:300px}}
+@media(min-width:900px){
+  .sx{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);grid-template-areas:"text visual" "specs visual" "ready visual" "more visual";
+      column-gap:clamp(32px,4vw,72px);row-gap:20px;align-items:start;padding:4px 0 36px 70px}
+  .sx__visual{align-self:start}
+  .sx__stage{max-height:none;aspect-ratio:16/10}
+}

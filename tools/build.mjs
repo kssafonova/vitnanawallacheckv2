@@ -461,11 +461,7 @@ const blocks = {
   },
   'index.html': {
     'home-calc': calcTeaser('', 'Калькулятор'),
-    'hs-mini-cards': featured.map(m => `<a class="sysx-mini-card" href="${firstOf(m).path}">
-            <span class="sysx-mini-thumb"><img src="${m.image}" alt="" loading="lazy"></span>
-            <span class="sysx-mini-copy"><small>${esc(m.code)} · ${m.width} × ${m.height}</small><strong>${esc(m.name)}</strong><em>от ${money(m.price)}</em></span>
-            <span class="sysx-mini-arrow">→</span>
-          </a>`).join('\n          '),
+    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>от ${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },
 };
 
