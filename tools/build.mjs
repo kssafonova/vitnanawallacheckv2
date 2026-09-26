@@ -451,7 +451,7 @@ const blocks = {
   },
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
-    'hs-calc': calcTeaser('../../', '03 · Калькулятор'),
+    'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
   },
   'index.html': {
     'home-calc': calcTeaser('', 'Калькулятор'),

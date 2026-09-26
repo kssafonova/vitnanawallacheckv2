@@ -14,7 +14,7 @@
   --hs-pad:var(--ui-pad);
   --hs-max:var(--ui-max);
   --hs-h1:var(--fs-h1);
-  --hs-h2:var(--fs-h2);
+  --hs-h2:var(--fs-h2s); /* заголовки секций HS — один размер со «Спецификацией» и «Калькулятором» (32 → 56 px) */
   --hs-h3:var(--fs-h4);
   margin:0;
   background:var(--hs-bg);

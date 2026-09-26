@@ -361,29 +361,46 @@
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   }
 
-  // Итог под схемой: одна карточка выбранного готового решения (фото и цена — из карточек #stock, цены не дублируем)
-  // и одна строка для тех, кому размер не подходит: калькулятор с этой конфигурацией или бесплатный замер.
+  // Связка со следующим блоком: под схемой — строка «Под эту схему есть готовая дверь … Показать ↓»,
+  // а в «Готовых размерах» (#stock, сразу ниже) подходящая карточка подсвечивается и переключается на выбранную схему.
+  // Цена и данные берутся из карточек — не дублируются. Кому размер не подходит — калькулятор с этой конфигурацией или замер.
   const next = $('[data-hsx-next]');
   const sideText = () => ({ left: 'активная слева', right: 'активная справа', center: 'открывание от центра' }[variantKey]);
-  function renderNext() {
-    if (!next) return;
-    const f = family(), v = variant();
-    let img = '', price = '';
+  function matchCard() {
+    const v = variant();
     for (const card of document.querySelectorAll('#stock [data-card]')) {
       let list = []; try { list = JSON.parse(card.dataset.variants || '[]'); } catch (_) {}
       const hit = list.find(x => x.href === v.href);
-      if (hit) { img = hit.img; price = ((card.querySelector('.m-card__price strong') || {}).textContent || '').trim(); break; }
+      if (hit) return { card, hit };
     }
-    $('[data-next-card]').href = v.href;
-    if (img) $('[data-next-img]').src = img;
+    return null;
+  }
+  function renderNext() {
+    if (!next) return;
+    const f = family(), v = variant(), m = matchCard();
     $('[data-next-title]').textContent = `${f.code} · ${fmt(f.width)} × ${fmt(f.height)} мм`;
-    $('[data-next-price]').textContent = price;
-    $('[data-next-side]').textContent = `${price ? '· ' : ''}${sideText()}`;
-    const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, from: `HS, схемы: ${f.code}, ${sideText()}` });
+    const price = m ? ((m.card.querySelector('.m-card__price strong') || {}).textContent || '').trim() : '';
+    $('[data-next-price]').textContent = price ? ` · ${price}` : '';
+    document.querySelectorAll('#stock .m-card.is-match').forEach(c => c.classList.remove('is-match'));
+    if (m) {
+      m.card.classList.add('is-match');
+      if (!m.card.querySelector('.m-card__match')) {
+        const media = m.card.querySelector('.m-card__media');
+        media && media.insertAdjacentHTML('beforeend', '<span class="m-card__match">Под вашу схему</span>');
+      }
+      const chip = m.card.querySelector(`[data-scheme="${m.hit.s}"]`);
+      if (chip && chip.getAttribute('aria-current') !== 'true') chip.click();
+    }
+    const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, from: `HS, подбор: ${f.code}, ${sideText()}` });
     $('[data-next-calc]').href = `../../raschet/?${q}`;
     $('[data-next-form]').dataset.comment = `Нужен бесплатный замер. Смотрели ${f.code}, ${sideText()}.`;
   }
   if (next) next.addEventListener('click', e => {
+    if (e.target.closest('[data-next-show]')) {
+      const m = matchCard();
+      if (m) { e.preventDefault(); m.card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); m.card.classList.remove('is-pulse'); void m.card.offsetWidth; m.card.classList.add('is-pulse'); }
+      return;
+    }
     const a = e.target.closest('[data-next-form]'); if (!a) return;
     const ta = document.querySelector('#project-form textarea[name="comment"]');
     if (ta && !ta.value.trim()) ta.value = a.dataset.comment || '';
