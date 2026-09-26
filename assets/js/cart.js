@@ -1,6 +1,8 @@
 // Страница корзины /cart/: список товаров, количество, итог и оформление заказа.
 // Цены и названия — из data/catalog.json (собирает tools/build.mjs), в корзине только артикулы.
 // Заказ уходит в forms/send.php (source=cart), после успеха — /cart/done/?order=НОМЕР.
+// Получение: доставка и монтаж (оценка — процент от стоимости, не меньше минимума; из site-config.json через catalog.json)
+// или самовывоз с производства.
 (() => {
   const root=document.querySelector('[data-cart-root]');
   const cart=window.PSCart;
@@ -14,6 +16,10 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money=n=>new Intl.NumberFormat('ru-RU').format(n)+' ₽';
   let catalog=new Map();
+  let services={install_delivery_pct:12,install_delivery_min:45000},factory={};
+  const mode=()=>form.elements.delivery.value==='pickup'?'pickup':'delivery';
+  // Оценка доставки и монтажа, округлённая до тысячи; при самовывозе — 0
+  const serviceCost=goods=>mode()==='pickup'?0:Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
 
   const lines=()=>cart.items().map(i=>({...i,v:catalog.get(i.sku)})).filter(i=>i.v);
   // Варианты той же модели: другие цвета при той же схеме и другие схемы при том же цвете
@@ -50,7 +56,13 @@
     list.innerHTML=items.map(itemHtml).join('');
     const count=items.reduce((n,i)=>n+i.qty,0);
     root.querySelector('[data-cart-count]').textContent=count;
-    root.querySelector('[data-cart-total]').textContent='от '+money(items.reduce((n,i)=>n+i.v.price*i.qty,0));
+    const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),pickup=mode()==='pickup';
+    root.querySelector('[data-cart-goods]').textContent='от '+money(goods);
+    root.querySelector('[data-cart-service-label]').textContent=pickup?'Самовывоз':`Доставка и монтаж, ≈${services.install_delivery_pct}%`;
+    root.querySelector('[data-cart-service]').textContent=pickup?'0 ₽':'от '+money(service);
+    root.querySelector('[data-cart-total]').textContent='от '+money(goods+service);
+    root.querySelector('[data-cart-note-delivery]').hidden=pickup;
+    root.querySelector('[data-cart-note-pickup]').hidden=!pickup;
   };
 
   list.addEventListener('click',e=>{
@@ -73,6 +85,11 @@
     return `PS-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${[...r].map(x=>abc[x%abc.length]).join('')}`;
   };
 
+  // Самовывоз: город не нужен
+  const cityField=form.querySelector('[data-city-field]');
+  const syncMode=()=>{const pickup=mode()==='pickup';cityField.hidden=pickup;form.elements.city.required=!pickup;render()};
+  form.addEventListener('change',e=>{if(e.target.name==='delivery')syncMode()});
+
   const phone=form.elements.phone;
   phone.addEventListener('input',()=>phone.setCustomValidity(''));
   form.addEventListener('submit',async e=>{
@@ -82,10 +99,15 @@
     const items=lines();
     if(!items.length){render();return}
     const id=orderId();
-    const total=items.reduce((n,i)=>n+i.v.price*i.qty,0);
-    const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = от ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')+`\n\nИтого: от ${money(total)}`;
+    const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),total=goods+service,pickup=mode()==='pickup';
+    const deliveryLine=pickup
+      ?`Получение: САМОВЫВОЗ с производства (${factory.address||'квартал № 205'})`
+      :`Получение: доставка и монтаж — оценка от ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
+    const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = от ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
+      +`\n\nКонструкции: от ${money(goods)}\n${deliveryLine}\nИтого: от ${money(total)}`;
     const data=new FormData(form);
-    data.set('source','cart');data.set('order_id',id);data.set('project',project);
+    data.set('source','cart');data.set('order_id',id);data.set('project',project);data.set('delivery',mode());
+    if(pickup)data.delete('city');
     const button=form.querySelector('button[type="submit"]'),old=button.innerHTML;
     button.disabled=true;button.textContent='Отправляем…';status.textContent='';
     try{
@@ -93,7 +115,7 @@
       const json=await res.json().catch(()=>({}));
       if(!res.ok||!json.ok)throw new Error(json.message||'HTTP '+res.status);
       const number=json.order_id||id;
-      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,items:items.map(i=>({title:`${i.v.code} · ${i.v.name}`,meta:`${i.v.size} · ${i.v.color}`,qty:i.qty,sum:i.v.price*i.qty}))}))}catch(e){}
+      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,items:items.map(i=>({title:`${i.v.code} · ${i.v.name}`,meta:`${i.v.size} · ${i.v.color}`,qty:i.qty,sum:i.v.price*i.qty}))}))}catch(e){}
       cart.clear();
       location.href='done/?order='+encodeURIComponent(number);
     }catch(err){
@@ -106,6 +128,10 @@
     .then(r=>{if(!r.ok)throw new Error('catalog.json');return r.json()})
     .then(data=>{
       catalog=new Map(data.variants.filter(v=>v.available).map(v=>[v.sku,v]));
+      if(data.services)services={...services,...data.services};
+      if(data.factory)factory=data.factory;
+      const hint=form.querySelector('[data-delivery-hint]');
+      if(hint&&services.install_delivery_zone)hint.textContent=`${services.install_delivery_zone}. Оценка ≈${services.install_delivery_pct}% от стоимости, от ${money(services.install_delivery_min)}. Замер бесплатно.`;
       // Артикулы, которых больше нет в продаже, убираем и сообщаем об этом
       const gone=cart.items().filter(i=>!catalog.has(i.sku));
       if(gone.length){gone.forEach(i=>cart.remove(i.sku));note.hidden=false;note.textContent='Часть товаров больше недоступна к заказу и убрана из корзины.'}

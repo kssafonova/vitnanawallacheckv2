@@ -1,0 +1,123 @@
+@import url('./components.css');
+
+/* ============================================================
+   Информационные страницы: «О компании», «Контакты».
+   Референс — vitrocsa.com: крупный кадр, короткий манифест, цифры, спокойные списки на линиях.
+   ============================================================ */
+.pg{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+.pg a{color:inherit;text-decoration:none}
+:where(.pg) :is(button,input,textarea){font:inherit} /* :where — не перебивает шрифт .ui-btn */
+.pg img{display:block;max-width:100%}
+.pg-section{padding:var(--space-section) 0}
+.pg-section--paper{background:var(--ui-paper)}
+.pg-section--dark{background:#0a0a09;color:#f4f2eb}
+.pg-section--dark .ui-eyebrow{color:#8c887f}
+.pg-h2{margin:0;font:300 var(--fs-h2)/.9 var(--font);letter-spacing:-.065em}
+.pg-lead{max-width:680px;margin:22px 0 0;color:var(--ui-muted);font:300 var(--fs-lead)/1.5 var(--font)}
+.pg-section--dark .pg-lead{color:#aaa79f}
+.pg-actions{display:grid;gap:8px;margin-top:30px;max-width:460px}
+.pg-actions .ui-btn{width:100%}
+/* Контурная кнопка на тёмном фоне */
+.ui-btn.ui-btn--ghost-light{color:#fff;border-color:rgba(255,255,255,.55);background:transparent}
+
+/* Первый экран: фото на всю ширину, текст снизу */
+.pg-hero{position:relative;min-height:calc(88svh - var(--header-h));display:flex;align-items:flex-end;background:#111;color:#fff;overflow:hidden}
+.pg-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pg-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.72))}
+.pg-hero__body{position:relative;z-index:1;width:100%;padding-top:var(--space-section);padding-bottom:var(--space-head)}
+.pg-hero .ui-eyebrow{color:#d8d5cc}
+.pg-hero h1{max-width:12ch;margin:0;font:300 var(--fs-h1)/.86 var(--font);letter-spacing:-.07em}
+.pg-hero__lead{max-width:620px;margin:24px 0 0;color:#e2dfd6;font:300 var(--fs-lead)/1.5 var(--font)}
+
+/* Шапка страницы без фото */
+.pg-head{padding:calc(var(--space-section) * .75) 0 var(--space-head);border-bottom:1px solid var(--ui-line)}
+.pg-head h1{margin:0;font:300 var(--fs-h1)/.86 var(--font);letter-spacing:-.07em}
+
+/* Цифры */
+.pg-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--ui-line)}
+.pg-figures>div{padding:18px 14px 22px 0;border-bottom:1px solid var(--ui-line)}
+.pg-figures>div:nth-child(odd){border-right:1px solid var(--ui-line)}
+.pg-figures>div:nth-child(even){padding-left:14px}
+.pg-figures b{display:block;font:300 var(--fs-num)/1 var(--font);letter-spacing:-.05em}
+.pg-figures span{display:block;margin-top:10px;color:var(--ui-muted);font-size:var(--fs-small);line-height:1.4}
+
+/* «Почему мы»: пронумерованный список на линиях */
+.pg-why{margin:var(--space-head) 0 0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.pg-why li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:6px 14px;padding:22px 0;border-bottom:1px solid var(--ui-line)}
+.pg-why__num{grid-row:span 2;color:#7a766e;font-size:var(--fs-caption);letter-spacing:.08em}
+.pg-why h3{margin:0;font:300 var(--fs-h3)/1 var(--font);letter-spacing:-.045em}
+.pg-why p{margin:6px 0 0;max-width:560px;color:#5f5b54;font-size:var(--fs-body);line-height:1.55}
+
+/* Фото + текст */
+.pg-split{display:grid;gap:30px;align-items:center}
+.pg-split__media{aspect-ratio:4/3;overflow:hidden;background:#e6e3da}
+.pg-split__media img{width:100%;height:100%;object-fit:cover}
+.pg-split__text p{max-width:560px;margin:18px 0 0;color:var(--ui-muted);font-size:var(--fs-body);line-height:1.6}
+.pg-section--dark .pg-split__text p{color:#aaa79f}
+
+/* Шаги */
+.pg-steps{margin:var(--space-head) 0 0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.pg-steps li{display:grid;grid-template-columns:34px 1fr;gap:4px 14px;padding:16px 0;border-bottom:1px solid var(--ui-line)}
+.pg-steps span{grid-row:span 2;color:#7a766e;font-size:var(--fs-caption)}
+.pg-steps b{font:300 var(--fs-lead)/1.2 var(--font)}
+.pg-steps p{margin:0;color:#66615a;font-size:var(--fs-caption);line-height:1.5}
+.pg-section--dark .pg-steps,.pg-section--dark .pg-steps li{border-color:#343430}
+.pg-section--dark .pg-steps p{color:#97948c}
+
+/* Реквизиты и контактные строки: подпись — значение */
+.pg-rows{margin:var(--space-head) 0 0;border-top:1px solid var(--ui-line)}
+.pg-rows>div{display:grid;gap:4px;padding:14px 0;border-bottom:1px solid var(--ui-line)}
+.pg-rows--flush{margin-top:0}
+.pg-rows dt{color:#77736a;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.pg-rows dd{margin:0;font-size:var(--fs-body);line-height:1.45;overflow-wrap:anywhere}
+.pg-rows dd a{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ui-line)}
+.pg-todo{color:#9a5b1f}
+
+/* Карта: загружается только по нажатию — без сторонних запросов, пока посетитель сам не захочет */
+.ct-map{position:relative;width:100%;min-width:0;aspect-ratio:1/1;overflow:hidden;background:#e9e6dd;border:1px solid var(--ui-line-soft)}
+.ct-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ct-map__stub{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;
+  background:
+    linear-gradient(90deg,rgba(17,17,15,.06) 1px,transparent 1px) 0 0/40px 40px,
+    linear-gradient(0deg,rgba(17,17,15,.06) 1px,transparent 1px) 0 0/40px 40px,#ece9e0}
+.ct-map__pin{display:block;width:18px;height:18px;margin:0 auto 14px;border:1px solid var(--ui-ink);background:var(--ui-ink);transform:rotate(45deg)}
+.ct-map__stub b{display:block;font:300 var(--fs-h4)/1.2 var(--font)}
+.ct-map__stub small{display:block;max-width:320px;margin:8px auto 18px;color:var(--ui-muted);font-size:var(--fs-caption);line-height:1.45}
+.ct-map__stub .ui-btn{margin:0 auto}
+
+/* Форма */
+.pg-form{display:grid;gap:14px;padding:18px;background:#fff;border:1px solid var(--ui-line-soft)}
+.pg-field{display:grid;gap:6px}
+.pg-field span{color:#666159;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.pg-field input,.pg-field textarea{width:100%;padding:11px 0;border:0;border-bottom:1px solid #8e8a81;border-radius:0;background:transparent;color:var(--ui-ink);font-size:var(--fs-body);outline:none}
+.pg-field input:focus,.pg-field textarea:focus{border-bottom-color:var(--ui-ink)}
+.pg-field textarea{min-height:84px;resize:vertical}
+.pg-form .ui-btn{width:100%}
+.pg-form__status{min-height:1em;margin:0;color:var(--ui-muted);font-size:var(--fs-caption)}
+.pg-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+@media(min-width:768px){
+  .pg-actions{grid-template-columns:repeat(2,max-content);max-width:none}
+  .pg-actions .ui-btn{width:auto}
+  .pg-figures{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .pg-figures>div{padding:22px 20px 26px;border-right:1px solid var(--ui-line)}
+  .pg-figures>div:nth-child(even){padding-left:20px}
+  .pg-figures>div:first-child{padding-left:0}
+  .pg-figures>div:last-child{border-right:0}
+  .pg-why{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;border-top:0}
+  .pg-why li{border-top:1px solid var(--ui-line);border-bottom:0;padding:28px 0 34px}
+  .pg-split{grid-template-columns:1fr 1fr;gap:64px}
+  .pg-split--rev .pg-split__media{order:2}
+  .pg-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0 24px;border-top:0}
+  .pg-steps li{grid-template-columns:1fr;border-top:1px solid var(--ui-line);border-bottom:0}
+  .pg-section--dark .pg-steps li{border-top-color:#343430}
+  .pg-steps span{grid-row:auto}
+  .pg-rows>div{grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:24px}
+  .ct-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+  .ct-map{aspect-ratio:4/3}
+  .pg-form{padding:24px}
+}
+@media(min-width:1100px){
+  .pg-why{column-gap:80px}
+  .pg-split{gap:110px}
+}
