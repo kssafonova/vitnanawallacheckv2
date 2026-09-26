@@ -1,0 +1,57 @@
+@import url('./components.css');
+
+/* ============================================================
+   Страница калькулятора /raschet/. Сам калькулятор — quick-calc.css (.qc*).
+   ============================================================ */
+.rs-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+.rs-page a{color:inherit}
+.rs-crumbs{display:flex;flex-wrap:wrap;gap:8px;padding-top:18px;padding-bottom:4px;color:var(--ui-muted);font:500 var(--fs-label)/1.4 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.rs-crumbs a{text-decoration:none}
+.rs-crumbs a:hover{color:var(--ui-ink)}
+.rs-calc{padding:clamp(20px,3vw,44px) 0 var(--space-section)}
+.rs-noscript{padding:16px;border:1px solid var(--ui-line-soft);font-size:var(--fs-body)}
+
+.rs-head{margin-bottom:var(--space-head)}
+.rs-head--row{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px}
+.rs-h2{margin:0;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.05em}
+.rs-link{display:inline-flex;align-items:center;gap:10px;min-height:44px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor}
+
+/* Что дальше: четыре шага с иконками. Телефон — прокрутка вбок */
+.rs-steps{padding:var(--space-section) 0;background:#0b0b0a;color:#f4f2ec}
+.rs-steps .ui-eyebrow{color:#a8a59e}
+.rs-steps__list{
+  display:flex;gap:10px;margin:0 calc(-1 * var(--ui-pad));padding:0 var(--ui-pad) 4px;list-style:none;
+  overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--ui-pad);scrollbar-width:none
+}
+.rs-steps__list::-webkit-scrollbar{display:none}
+.rs-steps__list li{
+  flex:0 0 74%;scroll-snap-align:start;display:grid;align-content:start;gap:8px;min-height:230px;padding:20px 18px;
+  border:1px solid #2e2e2b;background:#121211
+}
+.rs-steps__list svg{width:44px;height:44px;margin-bottom:10px;fill:none;stroke:#d9c690;stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
+.rs-steps__n{color:#8e8a82;font-size:var(--fs-label);letter-spacing:.08em}
+.rs-steps__list b{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.rs-steps__list p{margin:0;color:#a8a59e;font-size:var(--fs-small);line-height:1.45}
+
+/* Готовые конфигурации */
+.rs-models{padding:var(--space-section) 0}
+.rs-models__list{display:grid;gap:10px}
+.rs-model{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border:1px solid var(--ui-line-soft);background:#fff;text-decoration:none;transition:border-color .2s}
+.rs-model:hover{border-color:var(--ui-ink)}
+.rs-model__img{display:block;aspect-ratio:1;overflow:hidden;background:#e4e3e0}
+.rs-model__img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 48%}
+.rs-model__body{display:grid;gap:4px}
+.rs-model small{color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.rs-model strong{font:400 var(--fs-body)/1.25 var(--font)}
+.rs-model em{font-style:normal;font:400 var(--fs-h4)/1.1 var(--font);letter-spacing:-.02em}
+.rs-model i{font-style:normal;font-size:var(--fs-body)}
+
+@media(min-width:768px){
+  .rs-steps__list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;padding:0;overflow:visible}
+  .rs-steps__list li{min-height:260px;padding:26px 22px}
+  .rs-models__list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rs-model{grid-template-columns:1fr;padding:0 0 16px;gap:12px}
+  .rs-model__img{aspect-ratio:5/4}
+  .rs-model__body{padding:0 16px}
+  .rs-model i{display:none}
+}
