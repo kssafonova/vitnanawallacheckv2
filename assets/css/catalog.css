@@ -89,3 +89,33 @@
 .catalog-section__head h2{margin:0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em}
 .catalog-section__head a{flex:none;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
 @media(hover:hover){.catalog-section__head a:hover{color:var(--ui-ink)}}
+
+/* ---------- Вид листинга: «Списком» / «Плиткой» (assets/js/catalog-view.js → main[data-view]) ---------- */
+.catalog-tools{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:clamp(24px,3vw,36px)}
+.catalog-tools .catalog-switch{margin-top:0}
+.catalog-view{display:flex;flex:none;gap:6px}
+.catalog-view[hidden]{display:none}
+.catalog-view button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:#fff;color:var(--ui-muted);box-shadow:var(--sh-1);cursor:pointer;transition:background-color .2s,color .2s,box-shadow .2s}
+.catalog-view button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5}
+.catalog-view button[aria-pressed="true"]{background:var(--ui-ink);color:#fff;box-shadow:var(--sh-3)}
+@media(hover:hover){.catalog-view button:not([aria-pressed="true"]):hover{color:var(--ui-ink);box-shadow:var(--sh-3)}}
+
+/* Плитка: 2 в ряд на телефоне (2 × 2), с 900 px — 3; «Индивидуальный расчёт» — во всю ширину ряда */
+main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.4vw,24px)}
+main[data-view="grid"] .catalog-section__grid .m-card--project{grid-column:1/-1}
+@media(min-width:900px){main[data-view="grid"] .catalog-section__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Список: одна карточка в ряд; с 640 px — горизонтальная: фото слева, описание справа */
+main[data-view="list"] .catalog-section__grid{grid-template-columns:minmax(0,1fr)}
+@media(min-width:640px){
+  main[data-view="list"] .catalog-section__grid .m-card{--m-ar:2.963;grid-column:auto;flex-direction:row;align-items:flex-start} /* 4:3 фото на 45 % ширины → низ фото = 100cqw / 2,963 */
+  main[data-view="list"] .catalog-section__grid .m-card__media{flex:0 0 45%;aspect-ratio:4/3;min-height:0}
+  main[data-view="list"] .catalog-section__grid .m-card__body{flex:1;align-self:stretch;padding:clamp(20px,2.4vw,40px)}
+  main[data-view="list"] .catalog-section__grid .m-card--project{align-items:stretch}
+  main[data-view="list"] .catalog-section__grid .m-card--project .m-card__media{aspect-ratio:auto;align-self:stretch;min-height:220px}
+  main[data-view="list"] .catalog-section__grid .m-card--project .m-card__body{justify-content:center}
+}
+/* телефон: вкладки одной прокручиваемой строкой, переключатель вида справа */
+.catalog-tools{align-items:center}
+.catalog-tools .catalog-switch{flex-wrap:nowrap;min-width:0;overflow-x:auto;padding:4px 2px 8px;margin:-4px -2px -8px}
+.catalog-tools .catalog-switch a{white-space:nowrap}

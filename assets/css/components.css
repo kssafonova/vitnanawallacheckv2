@@ -409,3 +409,16 @@ lead-form{display:block}
 .m-card__media{background:#fff}
 .m-card__swatches{align-items:center}
 .m-card__ral{margin-left:4px;color:var(--ui-muted);font:400 var(--fs-caption)/1.2 var(--font);white-space:nowrap}
+/* Компактная карточка (плитка 2 × 2 на телефоне): подписи над выбором, мельче отступы */
+@container (max-width:260px){
+  .m-card .m-card__body{gap:9px;padding:12px}
+  .m-card .m-card__title{font-size:var(--fs-body)}
+  .m-card .m-card__opt{grid-template-columns:minmax(0,1fr);gap:6px}
+  .m-card .m-card__label{min-width:0}
+  .m-card .m-card__swatch{width:28px;height:28px}
+  .m-card .m-card__chip{padding:8px 9px}
+  .m-card .m-card__ral{flex-basis:100%;margin-left:0}
+  .m-card .m-card__buy{padding-top:10px}
+  .m-card .m-card__3d-hint span{display:none}
+  .m-card .m-card__3d-toggle,.m-card .m-card__3d-hint{padding:6px 7px}
+}
