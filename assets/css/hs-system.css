@@ -14,7 +14,7 @@
   --hs-pad:var(--ui-pad);
   --hs-max:var(--ui-max);
   --hs-h1:var(--fs-h1);
-  --hs-h2:var(--fs-h2s); /* заголовки секций HS — один размер со «Спецификацией» и «Калькулятором» (32 → 56 px) */
+  --hs-h2:var(--fs-h2); /* заголовки секций HS — общий токен сайта */
   --hs-h3:var(--fs-h4);
   margin:0;
   background:var(--hs-bg);
@@ -128,10 +128,10 @@
 }
 .hs-page .hero__actions .btn{
   width:100%;
-  min-height:48px;
-  padding:0 11px;
-  font-size:var(--fs-caption);
-  letter-spacing:.07em;
+  min-height:var(--btn-h);
+  padding:0 16px;
+  font:600 var(--fs-label)/1 var(--font);
+  letter-spacing:.1em;
 }
 .hs-page .hero__actions .btn--fill{background:#fff;border-color:#fff;color:#111}
 
@@ -1008,7 +1008,7 @@
 .hs-page .project__copy h3{max-width:11ch;font-size:var(--fs-h3)}
 .hs-page .project__copy p{margin-top:7px;font-size:var(--fs-caption);line-height:1.4;color:#dad9d7}
 .hs-page .projects__cta{padding:16px var(--hs-pad) 54px;background:var(--hs-bg)}
-.hs-page .projects__cta .btn{width:100%;font-size:var(--fs-caption)}
+.hs-page .projects__cta .btn{width:100%;min-height:var(--btn-h);font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em}
 
 /* process */
 .hs-home-process{background:#fff}

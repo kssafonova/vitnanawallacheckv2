@@ -36,7 +36,8 @@
   --fs-h3:     clamp(22px, 17.33px + 1.296vw, 36px);  /* заголовки карточек и аккордеонов */
   --fs-num:    clamp(30px, 22.67px + 2.037vw, 52px);  /* цены, крупные цифры */
   --fs-h2s:    clamp(32px, 24px + 2.222vw, 56px);     /* подзаголовки поверх фото */
-  --fs-h2:     clamp(38px, 22.67px + 4.259vw, 84px);  /* заголовки секций */
+  --btn-h:     54px;                                  /* высота кнопки: одна на весь сайт (в карточке товара — 44) */
+  --fs-h2:     clamp(34px, 25.33px + 2.407vw, 60px);  /* заголовки секций (один размер на всех страницах) */
   --fs-h1:     clamp(46px, 24px + 6.111vw, 112px);    /* заголовок первого экрана */
   --fs-display:clamp(58px, 24px + 9.444vw, 160px);    /* акцидентные надписи */
   --fs-mega:   clamp(64px, 44px + 5.556vw, 124px);    /* крупные цифры-акценты в инфоблоках (158 / 246 мм) */
@@ -82,7 +83,7 @@ p{text-wrap:pretty}
 .ui-title{margin:0;font:300 var(--fs-h2)/.9 var(--font);letter-spacing:-.065em}
 .ui-lead{max-width:680px;margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.58 var(--font)}
 .ui-btn{
-  min-height:54px;padding:0 16px;border:1px solid var(--ui-ink);border-radius:0;background:transparent;color:var(--ui-ink);
+  min-height:var(--btn-h);padding:0 16px;border:1px solid var(--ui-ink);border-radius:0;background:transparent;color:var(--ui-ink);
   display:inline-flex;align-items:center;justify-content:space-between;gap:22px;text-decoration:none;
   font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;cursor:pointer
 }
@@ -278,7 +279,7 @@ lead-form{display:block}
 .lead-form__free b{font-weight:600}
 .lead-form__hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .lead-form .lead-form__submit{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;min-height:56px;padding:0 20px;border:0;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;min-height:var(--btn-h);padding:0 20px;border:0;
   background:var(--lf-btn);color:var(--lf-btn-ink);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase;transition:opacity .2s
 }
 .lead-form__submit i{font-style:normal;font-size:var(--fs-body)}

@@ -472,12 +472,12 @@
 }
 
 /* Hero CTA hierarchy: catalogue first, individual calculation second */
-.hero__actions .ui-btn--light{font-weight:700}
+.hero__actions .ui-btn--light{font-weight:600}
 .hero__actions .ui-btn:not(.ui-btn--light){background:rgba(5,5,5,.12)}
 
 @media(max-width:520px){
   .hero__actions{grid-template-columns:1fr}
-  .hero__actions .ui-btn{width:100%;min-height:52px}
+  .hero__actions .ui-btn{width:100%;min-height:var(--btn-h)}
 }
 
 @media(min-width:900px){
@@ -562,7 +562,7 @@
 @media(hover:hover){.sx-strip:hover{border-color:#f3f2f1;background:#161615}.sx-strip:hover i{color:#fff}}
 
 .sx__more{
-  grid-area:more;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:52px;padding:0 18px;
+  grid-area:more;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:var(--btn-h);padding:0 18px;
   background:#f3f2f1;color:#0b0b0a;text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase;
   transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui)
 }

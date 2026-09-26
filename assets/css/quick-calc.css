@@ -213,7 +213,7 @@
 }
 @media(hover:hover){.qc-teaser:hover .qc-teaser__open{opacity:1}.qc-teaser:hover .qc-teaser__media img{transform:scale(1.02)}}
 .qc-teaser__eyebrow{margin:0 0 12px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.12em;text-transform:uppercase}
-.qc-teaser .qc-teaser__title{margin:0;max-width:13ch;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.05em}
+.qc-teaser .qc-teaser__title{margin:0;max-width:13ch;font:300 var(--fs-h2)/.98 var(--font);letter-spacing:-.05em}
 .qc-teaser__lead{margin:14px 0 0;max-width:520px;color:#625e57;font-size:var(--fs-body);line-height:1.45}
 .qc-teaser__form{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:20px;border:1px solid #c9c3b6;background:rgba(255,255,255,.55)}
 .qc-teaser__form label{display:block;padding:12px 14px 10px;cursor:text}
@@ -222,10 +222,10 @@
 .qc-teaser__form input{display:block;width:100%;margin-top:8px;padding:0;border:0;background:transparent;color:var(--ui-ink);font:300 var(--fs-h3)/1.1 var(--font);letter-spacing:-.03em;outline:none}
 .qc-teaser__form label:focus-within{box-shadow:inset 0 0 0 1px var(--ui-ink)}
 .qc-teaser .qc-teaser__form button{
-  grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 20px;border:0;
-  background:#0b0b0a;color:#fff;cursor:pointer;font:400 var(--fs-body)/1 var(--font)
+  grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;min-height:var(--btn-h);padding:0 20px;border:0;
+  background:#0b0b0a;color:#fff;cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
 }
-.qc-teaser__form button i{font-style:normal}
+.qc-teaser__form button i{font-style:normal;font-size:var(--fs-body)}
 .qc-teaser__form button:hover{background:#2a2a27}
 .qc-teaser__points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 0;padding:0;list-style:none}
 .qc-teaser__points li{display:grid;gap:8px;align-content:start;padding:12px 10px;border:1px solid #cccbc8;font-size:var(--fs-caption);line-height:1.3}
@@ -234,8 +234,8 @@
 @media(min-width:900px){
   .qc-teaser{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,72px);align-items:center}
   .qc-teaser__media{aspect-ratio:5/4}
-  .qc-teaser__form{grid-template-columns:1fr 1fr auto}
-  .qc-teaser .qc-teaser__form button{grid-column:auto;gap:24px;min-width:190px}
+  .qc-teaser__form{grid-template-columns:1fr 1fr}
+  .qc-teaser .qc-teaser__form button{grid-column:1 / -1;gap:24px}
 }
 
 /* ---------- Глубина и выбор без лишних радиокнопок ----------
@@ -414,7 +414,7 @@
 /* ---------- Кнопки калькулятора — как везде на сайте: одна высота, КАПС-подпись, стрелка справа ----------
    «Далее», «Получить точный расчёт», «Отправить заявку», кнопка в нижней строке телефона — один вид */
 .qc .qc__next,.qc .qc__bar-next,.qc .qc__cta,.qc .qc__submit{
-  min-height:52px;padding:0 20px;gap:18px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+  min-height:var(--btn-h);padding:0 20px;gap:18px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
 }
 .qc .qc__next i,.qc .qc__bar-next i,.qc .qc__cta i,.qc .qc__submit i{font-size:var(--fs-body)}
 .qc .qc__bar .qc__bar-next{min-height:48px;padding:0 16px}
