@@ -201,16 +201,8 @@ function marketCard(m, rel) {
 // Цены моделей по числу секций — из products.json; фото — рендеры моделей (светлая рама — если есть белый цвет).
 const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
 const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
-const calcRenders = rel => JSON.stringify(Object.fromEntries(hsAvail().map(m => {
-  const pick = pred => {
-    const col = m.colors.find(pred);
-    const v = col && find(m.model, col.slug, defScheme(m).slug);
-    return v ? { closed: rel + v.image, open: rel + (v.imageOpen || v.image) } : null;
-  };
-  return [m.sections, { light: pick(c => c.slug === 'belyi'), dark: pick(c => c.slug !== 'belyi') }];
-})));
 const calcBox = (rel, attrs = {}) => {
-  const all = { refs: calcRefs(), renders: calcRenders(rel), endpoint: `${rel}forms/send.php`, img: `${rel}assets/images/systems/hs-overview.jpg`, ...attrs };
+  const all = { refs: calcRefs(), base: rel, ...attrs };
   return `<div class="qc-root" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
 };
 const colorKeyOf = c => ({ belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral');
@@ -226,30 +218,15 @@ const ICO = {
   sill: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18M5 18V6h14v12"/><path d="M8 18l3-3h7" opacity=".6"/></svg>',
 };
 
-// Блок «Калькулятор» на главной и странице HS: фото, короткий расчёт (ширина × высота) → страница /raschet/
+// Блок «Сколько стоит» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
+// ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
-  const m = hsAvail().find(x => x.sections === 3) || hsAvail()[0];
-  const v = firstOf(m);
-  return `<div class="qc-teaser">
-      <a class="qc-teaser__media" href="${rel}raschet/" tabindex="-1" aria-hidden="true">
-        <img src="${rel}${v.image}" alt="" loading="lazy" decoding="async">
-        ${v.imageOpen ? `<img class="qc-teaser__open" src="${rel}${v.imageOpen}" alt="" loading="lazy" decoding="async">` : ''}
-        <span class="qc-teaser__tag">Цена сразу · без телефона</span>
-      </a>
-      <div class="qc-teaser__body">
-        <p class="qc-teaser__eyebrow">${esc(eyebrow)}</p>
-        <h2 class="qc-teaser__title">Сколько стоит раздвижная дверь под ваш размер</h2>
-        <p class="qc-teaser__lead">Укажите примерный размер проёма — калькулятор предложит число створок, покажет вид и ориентировочную цену.</p>
-        <form class="qc-teaser__form" action="${rel}raschet/" method="get">
-          <label><span>Ширина, мм</span><input name="w" inputmode="numeric" maxlength="4" value="3600" autocomplete="off"></label>
-          <label><span>Высота, мм</span><input name="h" inputmode="numeric" maxlength="4" value="2300" autocomplete="off"></label>
-          <button type="submit">Рассчитать <i aria-hidden="true">→</i></button>
-        </form>
-        <ul class="qc-teaser__points">
-          <li>${ICO.price}<span>Цена сразу, <br>без регистрации</span></li>
-          <li>${ICO.clip}<span>Можно приложить <br>готовый проект</span></li>
-          <li>${ICO.ruler}<span>Замер — <br>бесплатно</span></li>
-        </ul>
+  return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-href="${rel}raschet/">
+      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Сколько стоит раздвижная дверь под ваш размер</h2></header>
+      <div class="qc-draw__fig" data-open-draw></div>
+      <div class="qc-draw__foot">
+        <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
+        <a class="qc-draw__go" href="${rel}raschet/" data-od-link>Подробный расчёт <span aria-hidden="true">→</span></a>
       </div>
     </div>`;
 }
@@ -449,14 +426,6 @@ const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS /
 const blocks = {
   'raschet/index.html': {
     'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS-порталы', context: 'страница калькулятора' }),
-    'raschet-models': hsAvail().map(m => {
-      const v = firstOf(m);
-      return `<a class="rs-model" href="../${v.path}">
-          <span class="rs-model__img"><img src="../${v.image}" alt="" loading="lazy" decoding="async"></span>
-          <span class="rs-model__body"><small>${esc(m.code)} · ${m.width} × ${m.height} мм</small><strong>${esc(m.name)}</strong><em>${money(m.price)}</em></span>
-          <i aria-hidden="true">→</i>
-        </a>`;
-    }).join('\n        '),
   },
   'catalog/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/', 'project')].join('\n\n      '),
