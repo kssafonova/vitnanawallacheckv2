@@ -31,7 +31,10 @@ const sizeText = m => `${m.width} × ${m.height} мм`;
 const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');           // ALUMARK S158 → alumark-s158
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
 const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
-const mirrored = s => /(^B\d|-R)$/.test(s.code);                                        // зеркальные схемы
+const mirrored = s => /(^B\d|-R)$/.test(s.code);
+// HS/36 (D1) рисуем зеркально: подвижная пара справа, движение влево — так попросила владелец
+const flipModel = m => m.model === 'HS3';
+const isMirror = (m, s) => mirrored(s) !== flipModel(m);                                        // зеркальные схемы
 const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порталы');
 
 // ---------- варианты ----------
@@ -60,21 +63,40 @@ for (const m of data.models) {
 }
 const byModel = model => variants.filter(v => v.m.model === model);
 const find = (model, colorSlug, schemeSlug) => variants.find(v => v.m.model === model && v.c.slug === colorSlug && v.s.slug === schemeSlug);
-const firstOf = m => find(m.model, m.colors[0].slug, m.schemes[0].slug);
+// Схема по умолчанию: default_scheme в products.json, иначе первая
+const defScheme = m => m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0];
+const firstOf = m => find(m.model, m.colors[0].slug, defScheme(m).slug);
 
 // ---------- схемы (SVG) ----------
-// Мелкая схема в углу фото: без текста
+// Мелкая схема в углу фото: без текста. Рисуем створки прямоугольниками:
+// подвижные светлее, стрелка движения — акцентным цветом. Стили — .scheme-mini в components.css.
 function smallSvg(m, s) {
-  const W = 100;
-  const frame = '<rect x="2" y="2" width="96" height="48"/>';
-  let body = '';
-  if (m.model === 'HS2') body = '<line x1="50" y1="2" x2="50" y2="50"/><path d="M13 38h30m-7-6 7 6-7 6"/>';
-  else if (m.model === 'HS3') body = '<line x1="34" y1="2" x2="34" y2="50"/><line x1="66" y1="2" x2="66" y2="50"/><path d="M11 38h47m-7-6 7 6-7 6"/>';
-  else if (m.model === 'HS4') body = '<line x1="26" y1="2" x2="26" y2="50"/><line x1="50" y1="2" x2="50" y2="50"/><line x1="74" y1="2" x2="74" y2="50"/><path d="M46 38H31m6-6-6 6 6 6M54 38h15m-6-6 6 6-6 6"/>';
-  else if (m.model === 'FS3') body = '<path d="M18 10l16 16-16 16M34 10l16 16-16 16M50 10l16 16-16 16"/>';
-  else body = '<path d="M14 9l14 17-14 17M28 9l14 17-14 17M42 9l14 17-14 17"/><line x1="75" y1="4" x2="75" y2="48"/>';
-  if (mirrored(s)) body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
-  return `<svg viewBox="0 0 100 52">${frame}${body}</svg>`;
+  const W = 100, X0 = 5, X1 = 95, Y0 = 5, Y1 = 51, GAP = 1.6;
+  const kinds = { HS2: ['move', 'fix'], HS3: ['move', 'move', 'fix'], HS4: ['fix', 'move', 'move', 'fix'],
+                  FS3: ['fold', 'fold', 'fold'], FS4: ['fold', 'fold', 'fold', 'move'] }[m.model];
+  const n = kinds.length, pw = (X1 - X0 - GAP * (n - 1)) / n;
+  const px = i => X0 + i * (pw + GAP);
+  const r = v => Math.round(v * 10) / 10;
+  let panes = kinds.map((k, i) => `<rect class="sm-pane${k === 'fix' ? '' : ' is-move'}" x="${r(px(i))}" y="${Y0}" width="${r(pw)}" height="${Y1 - Y0}"/>`).join('');
+  // ручки — на замковой стойке: у внешнего края ведущей створки или в центре при открывании от центра
+  const handles = { HS2: [[0, 'l']], HS3: [[0, 'l']], HS4: [[1, 'r'], [2, 'l']], FS3: [], FS4: [[3, 'l']] }[m.model];
+  panes += handles.map(([i, side]) => { const x = r(side === 'l' ? px(i) + 4 : px(i) + pw - 4); return `<line class="sm-handle" x1="${x}" y1="24" x2="${x}" y2="32"/>`; }).join('');
+  const arrow = (x1, x2, y = 42) => {
+    const d = x2 > x1 ? -4 : 4;
+    return `<path class="sm-arrow" d="M${r(x1)} ${y}H${r(x2)}M${r(x2 + d)} ${y - 3.5}L${r(x2)} ${y}L${r(x2 + d)} ${y + 3.5}"/>`;
+  };
+  let marks = '';
+  if (m.model === 'HS2') marks = arrow(px(0) + 8, px(1) + pw * 0.55);
+  else if (m.model === 'HS3') marks = arrow(px(0) + 8, px(2) + pw * 0.55);
+  else if (m.model === 'HS4') marks = arrow(px(1) + pw * 0.8, px(0) + pw * 0.35) + arrow(px(2) + pw * 0.2, px(3) + pw * 0.65);
+  else {
+    // складные: зигзаг сложения и стрелка к краю
+    const z = [0, 1, 2].map(i => `${r(px(i))} ${i % 2 ? Y1 - 6 : Y0 + 6}L${r(px(i) + pw)} ${i % 2 ? Y0 + 6 : Y1 - 6}`).join('L');
+    marks = `<path class="sm-fold" d="M${z}"/>` + arrow(px(2) + pw * 0.7, px(0) + pw * 0.3, Y1 - 4);
+  }
+  let body = panes + marks;
+  if (isMirror(m, s)) body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
+  return `<svg class="scheme-mini" viewBox="0 0 100 56"><rect class="sm-frame" x="2.5" y="2.5" width="95" height="51"/>${body}</svg>`;
 }
 
 // Большой чертёж. Подписи — font-size="24" в единицах viewBox:
@@ -98,7 +120,7 @@ function largeSvg(m, s) {
   } else {
     body = '<path d="M105 72l85 88-85 88M190 72l85 88-85 88M275 72l85 88-85 88"/><line x1="500" y1="44" x2="500" y2="276"/>';
   }
-  if (mirrored(s)) {
+  if (isMirror(m, s)) {
     body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
     labels = labels.map(l => ({ ...l, x: W - l.x })).reverse();
   }
@@ -124,7 +146,7 @@ function marketCard(m, rel) {
   const first = firstOf(m);
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
-  const s0 = m.schemes[0], c0 = m.colors[0];
+  const s0 = defScheme(m), c0 = m.colors[0];
   const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
   const swatches = m.colors.map((c, i) => {
     const v = find(m.model, c.slug, s0.slug);
@@ -133,10 +155,11 @@ function marketCard(m, rel) {
   const chips = m.schemes.length > 1
     ? `<div class="m-card__chips">${m.schemes.map((s, i) => {
         const v = find(m.model, c0.slug, s.slug);
-        return `<a class="m-card__chip${i ? '' : ' is-active'}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${i ? '' : ' aria-current="true"'}>${esc(s.short)}</a>`;
+        const on = s === s0;
+        return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
       }).join('')}</div>`
     : '';
-  const schemesSvg = m.schemes.map((s, i) => `<span data-scheme-svg="${s.slug}"${i ? ' hidden' : ''}>${smallSvg(m, s)}</span>`).join('');
+  const schemesSvg = m.schemes.map(s => `<span data-scheme-svg="${s.slug}"${s === s0 ? '' : ' hidden'}>${smallSvg(m, s)}</span>`).join('');
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
     : `<strong>${money(m.price)}</strong><small>от, за конструкцию</small>`;
@@ -194,7 +217,7 @@ function variantPage(v) {
   const product = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: `${m.title} ${m.code} «${m.name}» ${size}, ${colorName}, ${s.label}`,
+    name: `${m.name} ${m.code}, ${size}, ${colorName}, ${s.label}`,
     sku: v.sku,
     url,
     image: [imageUrl],

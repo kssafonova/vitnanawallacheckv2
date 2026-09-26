@@ -30,12 +30,8 @@
   position:absolute;top:12px;left:12px;padding:7px 8px;background:rgba(247,247,243,.94);
   font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase
 }
-.product-media__scheme{
-  position:absolute;right:12px;bottom:12px;width:110px;padding:9px;background:rgba(247,247,243,.94);
-  border:1px solid rgba(17,17,15,.13)
-}
+.product-media__scheme{position:absolute;right:14px;bottom:14px;width:clamp(116px,12vw,156px);padding:10px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .product-media__scheme svg{display:block;width:100%;height:auto}
-.product-media__scheme svg *{fill:none;stroke:#111;stroke-width:1.1;vector-effect:non-scaling-stroke}
 
 .product-buy{padding:24px 20px 30px}
 .product-buy__top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}

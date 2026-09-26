@@ -40,6 +40,7 @@
 | `--fs-h2` | 38 → 84 px | заголовки секций |
 | `--fs-h1` | 46 → 112 px | заголовок первого экрана |
 | `--fs-display` | 58 → 160 px | акцидентные надписи |
+| `--fs-mega` | 64 → 124 px | крупные цифры-акценты в инфоблоках (158 / 246 мм) |
 | `--ui-pad` | 20 → 48 px | боковые поля |
 | `--space-section` | 64 → 140 px | вертикальный ритм секций |
 | `--space-head` | 28 → 56 px | от заголовка секции до контента |
@@ -64,8 +65,10 @@ data/products.json          модели, цвета, схемы, цены — �
 data/site-config.json       домен и SEO-настройки
 assets/css/components.css   токены, шрифты, общие компоненты (подключается во все CSS через @import)
 assets/css/site.css         главная и общие секции; catalog.css, product.css, hs-system.css, fs-system.css, calculator.css
+assets/css/hs-blocks.css    HS: блоки «Характеристики и устройство» и «Как открывается дверь» (классы .hsx-*)
 assets/js/components/       <site-menu> и <site-footer> — веб-компоненты шапки и подвала (Shadow DOM, атрибут data-base)
 assets/js/                  calculator*.js, hs-system.js, product.js, site.js
+assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема, проход, ссылка на товар)
 assets/fonts/               Manrope (woff2, кириллица + латиница), OFL.txt
 assets/images/              фото (webp/jpg)
 forms/send.php, config.php  отправка заявок на почту (PHP mail) — работает только на REG.RU
@@ -163,5 +166,5 @@ node tools/check-site.mjs --shots .check  # плюс скриншоты во в�
 - `index.html` и `systems/*` помечены `index,follow`, остальные — `noindex`; до запуска всё закрыто `robots.txt`.
 - Почта в `forms/config.php` не заполнена.
 - Справочные цены калькулятора HS заданы в `assets/js/hs-system.js` (`refs`) отдельно от каталога —
-  генератор предупреждает, если они разошлись с `products.json`. Интерактивная схема на странице HS
-  показывает вариант HS / 36 «2 активные справа», которого нет в каталоге.
+  генератор предупреждает, если они разошлись с `products.json`. Конфигуратор «Как открывается дверь»
+  (`hs-opening.js`) показывает HS/36 слева и справа, а в каталоге у HS/36 одна схема — обе стороны ведут на неё.

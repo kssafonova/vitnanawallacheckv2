@@ -113,16 +113,16 @@
     };
 
     const families={
-      hs30:{label:'HS / 30',width:3000,height:2300,variants:{
-        left:{label:'Активная слева',name:'HS / 30 · активная слева',sections:2,active:1,moving:[0],fixed:[1],targets:[1],opening:'створка → вправо',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[0,1],passageFrom:'left',use:'Выход на террасу'},
-        right:{label:'Активная справа',name:'HS / 30 · активная справа',sections:2,active:1,moving:[1],fixed:[0],targets:[0],opening:'створка ← влево',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,2],passageFrom:'right',use:'Выход на террасу'}
+      hs30:{label:'HS/30',width:3000,height:2300,variants:{
+        left:{label:'Активная слева',name:'HS/30 · активная слева',sections:2,active:1,moving:[0],fixed:[1],targets:[1],opening:'створка → вправо',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[0,1],passageFrom:'left',use:'Выход на террасу'},
+        right:{label:'Активная справа',name:'HS/30 · активная справа',sections:2,active:1,moving:[1],fixed:[0],targets:[0],opening:'створка ← влево',passage:'≈ 1500 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,2],passageFrom:'right',use:'Выход на террасу'}
       }},
-      hs36:{label:'HS / 36',width:3600,height:2300,variants:{
-        left:{label:'2 активные слева',name:'HS / 36 · 2 активные слева',sections:3,active:2,moving:[0,1],fixed:[2],targets:[2,2],opening:'2 створки → вправо',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[0,2],passageFrom:'left',use:'Широкий выход'},
-        right:{label:'2 активные справа',name:'HS / 36 · 2 активные справа',sections:3,active:2,moving:[1,2],fixed:[0],targets:[0,0],opening:'2 створки ← влево',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[1,3],passageFrom:'right',use:'Широкий выход'}
+      hs36:{label:'HS/36',width:3600,height:2300,variants:{
+        left:{label:'2 активные слева',name:'HS/36 · 2 активные слева',sections:3,active:2,moving:[0,1],fixed:[2],targets:[2,2],opening:'2 створки → вправо',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[0,2],passageFrom:'left',use:'Широкий выход'},
+        right:{label:'2 активные справа',name:'HS/36 · 2 активные справа',sections:3,active:2,moving:[1,2],fixed:[0],targets:[0,0],opening:'2 створки ← влево',passage:'≈ 2400 мм*',ratio:.66,openPct:'максимум около 66% проёма',openSlots:[1,3],passageFrom:'right',use:'Широкий выход'}
       }},
-      hs48:{label:'HS / 48',width:4800,height:2300,variants:{
-        center:{label:'Открывание от центра',name:'HS / 48 · от центра',sections:4,active:2,moving:[1,2],fixed:[0,3],targets:[0,3],opening:'← от центра →',passage:'≈ 2400 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,3],passageFrom:'center',use:'Главный панорамный выход'}
+      hs48:{label:'HS/48',width:4800,height:2300,variants:{
+        center:{label:'Открывание от центра',name:'HS/48 · от центра',sections:4,active:2,moving:[1,2],fixed:[0,3],targets:[0,3],opening:'← от центра →',passage:'≈ 2400 мм*',ratio:.50,openPct:'максимум около 50% проёма',openSlots:[1,3],passageFrom:'center',use:'Главный панорамный выход'}
       }}
     };
 

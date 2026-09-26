@@ -38,6 +38,7 @@
   --fs-h2:     clamp(38px, 22.67px + 4.259vw, 84px);  /* заголовки секций */
   --fs-h1:     clamp(46px, 24px + 6.111vw, 112px);    /* заголовок первого экрана */
   --fs-display:clamp(58px, 24px + 9.444vw, 160px);    /* акцидентные надписи */
+  --fs-mega:   clamp(64px, 44px + 5.556vw, 124px);    /* крупные цифры-акценты в инфоблоках (158 / 246 мм) */
 
   /* Сетка и ритм */
   --ui-pad:clamp(20px, 10.67px + 2.593vw, 48px);      /* боковые поля */
@@ -95,12 +96,8 @@ p{text-wrap:pretty}
   background:rgba(247,247,243,.94);border:1px solid rgba(17,17,15,.18);
   font:600 var(--fs-caption)/1 var(--font);letter-spacing:.08em
 }
-.product-card__scheme{
-  position:absolute;right:12px;bottom:12px;width:92px;padding:8px;background:rgba(247,247,243,.94);
-  border:1px solid rgba(17,17,15,.12)
-}
+.product-card__scheme{position:absolute;right:12px;bottom:12px;width:92px;padding:8px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .product-card__scheme svg{display:block;width:100%;height:auto}
-.product-card__scheme svg *{fill:none;stroke:#111;stroke-width:1.15;vector-effect:non-scaling-stroke}
 .product-card__body{display:flex;flex-direction:column;flex:1;padding:16px 14px 14px}
 .product-card__top{display:flex;justify-content:space-between;gap:12px;align-items:start}
 .product-card__code{font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.11em;text-transform:uppercase}
@@ -176,9 +173,8 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
   position:absolute;top:8px;left:8px;padding:6px 7px;background:var(--ui-ink);color:#fff;
   font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
 }
-.m-card__scheme{position:absolute;right:8px;bottom:8px;width:58px;padding:5px;background:rgba(247,247,243,.94);border:1px solid rgba(17,17,15,.12)}
+.m-card__scheme{position:absolute;right:8px;bottom:8px;width:76px;padding:7px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .m-card__scheme svg{display:block;width:100%;height:auto}
-.m-card__scheme svg *{fill:none;stroke:#111;stroke-width:1.15;vector-effect:non-scaling-stroke}
 .m-card__scheme [hidden]{display:none}
 .m-card__body{display:flex;flex-direction:column;gap:9px;flex:1;padding:12px 10px 10px}
 .m-card__price strong{display:block;font:400 var(--fs-h4)/1 var(--font);letter-spacing:-.03em;white-space:nowrap}
@@ -215,10 +211,22 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 }
 @media(min-width:768px){
   .m-card__body{gap:11px;padding:16px 14px 14px}
-  .m-card__scheme{width:72px;padding:6px}
+  .m-card__scheme{width:92px;padding:8px}
   .m-card__badge{top:12px;left:12px}
 }
 /* Второе фото карточки — открытый вид, показывается при наведении (тот же ракурс) */
 .m-card__open{position:absolute;inset:0;opacity:0;transition:opacity .35s ease}
 .m-card__open[hidden]{display:none}
 @media(hover:hover){.m-card:hover .m-card__open{opacity:1}}
+
+/* ============================================================
+   Мини-схема открывания поверх фото (генерирует tools/build.mjs → smallSvg)
+   Тёмное «стекло» на фото, светлые створки, подвижные ярче, стрелка — акцентом.
+   ============================================================ */
+.scheme-mini *{vector-effect:non-scaling-stroke}
+.scheme-mini .sm-frame{fill:none;stroke:rgba(255,255,255,.9);stroke-width:1.3}
+.scheme-mini .sm-pane{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.38);stroke-width:.8}
+.scheme-mini .sm-pane.is-move{fill:rgba(236,244,244,.24);stroke:rgba(255,255,255,.85)}
+.scheme-mini .sm-handle{stroke:#fff;stroke-width:1.5;stroke-linecap:round}
+.scheme-mini .sm-arrow{fill:none;stroke:#d9c690;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.scheme-mini .sm-fold{fill:none;stroke:#d9c690;stroke-width:1.2;stroke-linejoin:round;opacity:.9}

@@ -1,0 +1,311 @@
+/* ============================================================
+   HS: «Характеристики и устройство» (#specification)
+   и «Как открывается дверь» (#schemes).
+   Дизайн по макетам владельца (пакеты hs-characteristics, hs-tech-seal-mechanism,
+   steclodom-opening-block-v5), переведён на токены сайта и Manrope.
+   Все размеры шрифтов — токены из components.css.
+   ============================================================ */
+
+.hsx-spec,.hsx-open{
+  --hx-bg:#f4f2ec;
+  --hx-panel:#eee9df;
+  --hx-ink:var(--ui-ink);
+  --hx-text:#35322e;
+  --hx-muted:#77736a;
+  --hx-line:#d0cbc1;
+  --hx-line-2:#bcb6ab;
+  background:var(--hx-bg);
+  color:var(--hx-ink);
+}
+.hsx-eyebrow{
+  display:block;margin:0 0 10px;color:var(--hx-muted);
+  font:600 var(--fs-label)/1.25 var(--font);letter-spacing:.1em;text-transform:uppercase
+}
+
+/* ---------- ХАРАКТЕРИСТИКИ ---------- */
+.hsx-spec__head{
+  display:grid;gap:18px;align-items:end;margin-bottom:var(--space-head)
+}
+.hs-page .hsx-spec__title{
+  margin:0;max-width:13ch;
+  font:300 var(--fs-h2)/.92 var(--font);letter-spacing:-.055em
+}
+.hsx-spec__intro{margin:0;max-width:470px;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.5}
+
+.hsx-stats{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  border-top:1px solid var(--hx-line-2);border-left:1px solid var(--hx-line-2)
+}
+.hsx-stat{
+  min-width:0;min-height:104px;padding:14px 14px 13px;
+  border-right:1px solid var(--hx-line-2);border-bottom:1px solid var(--hx-line-2)
+}
+.hsx-stat .hsx-eyebrow{margin-bottom:8px;letter-spacing:.06em}
+.hsx-stat strong{display:block;font:300 var(--fs-num)/.95 var(--font);letter-spacing:-.05em;white-space:nowrap}
+.hsx-stat>span:last-child{display:block;margin-top:7px;color:var(--hx-muted);font-size:var(--fs-caption);line-height:1.35}
+
+.hsx-chapters{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:14px;
+  border-top:1px solid var(--hx-line-2);border-left:1px solid var(--hx-line-2)
+}
+.hsx-chapter{
+  min-width:0;min-height:66px;padding:12px 13px;border:0;
+  border-right:1px solid var(--hx-line-2);border-bottom:1px solid var(--hx-line-2);
+  background:transparent;color:#605b54;text-align:left;cursor:pointer;
+  display:grid;grid-template-columns:26px minmax(0,1fr);align-content:start;gap:0 8px;
+  transition:background .2s,color .2s
+}
+.hsx-chapter__n{color:#8e887f;font-size:var(--fs-label);padding-top:3px}
+.hsx-chapter__name{font-size:var(--fs-body);line-height:1.15;color:inherit}
+.hsx-chapter__sub{grid-column:2;margin-top:5px;color:#a09a91;font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.05em;text-transform:uppercase}
+.hsx-chapter:hover{background:rgba(17,17,15,.035)}
+.hsx-chapter.is-active{background:var(--hx-ink);color:#fff}
+.hsx-chapter.is-active .hsx-chapter__n{color:#fff}
+.hsx-chapter.is-active .hsx-chapter__sub{color:rgba(255,255,255,.55)}
+.hsx-chapter:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+
+.hsx-panel{display:none;padding-top:clamp(18px,2.4vw,30px)}
+.hsx-panel.is-active{display:block}
+.hsx-panel__head{display:grid;gap:14px;align-items:end;margin-bottom:16px}
+.hs-page .hsx-panel__title{margin:0;max-width:14ch;font:300 var(--fs-h2s)/.92 var(--font);letter-spacing:-.055em}
+.hsx-panel__lead{margin:0;max-width:580px;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.5}
+
+/* 01 Профиль */
+.hsx-frames{display:grid;grid-template-columns:1fr;border-top:1px solid var(--hx-line);border-left:1px solid var(--hx-line)}
+.hsx-frame{
+  min-width:0;min-height:340px;padding:22px 20px 0;display:flex;flex-direction:column;
+  border-right:1px solid var(--hx-line);border-bottom:1px solid var(--hx-line)
+}
+.hsx-frame__big{margin:12px 0 8px;font:300 var(--fs-mega)/.83 var(--font);letter-spacing:-.065em}
+.hsx-frame__big small{margin-left:10px;color:var(--hx-muted);font-size:var(--fs-caption);letter-spacing:0}
+.hs-page .hsx-frame h3{margin:0;font:400 var(--fs-h4)/1.15 var(--font);letter-spacing:-.03em}
+.hsx-frame p{margin:6px 0 0;max-width:460px;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.45}
+.hsx-frame__art{margin-top:auto;padding-top:18px}
+.hsx-frame__art svg{display:block;width:100%;height:auto}
+
+.hsx-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid var(--hx-line)}
+.hsx-fact-cell{
+  min-width:0;min-height:106px;padding:16px 14px;
+  border-right:1px solid var(--hx-line);border-bottom:1px solid var(--hx-line)
+}
+.hsx-fact-cell strong{display:block;margin:2px 0 6px;font:400 var(--fs-h4)/1.15 var(--font);letter-spacing:-.02em}
+.hsx-fact-cell>span:last-child:not(.hsx-eyebrow){color:var(--hx-muted);font-size:var(--fs-caption);line-height:1.35}
+.hsx-fact-cell.is-dark{background:var(--hx-ink);color:#fff;border-color:#343430}
+.hsx-fact-cell.is-dark .hsx-eyebrow{color:#a8a59e}
+.hsx-footnote{margin:12px 0 0;color:#8e8a82;font-size:var(--fs-caption);line-height:1.45}
+
+/* 02 Стеклопакеты */
+.hsx-glass{display:grid;gap:16px;padding:6px 0 24px}
+.hsx-glass__art svg{display:block;width:100%;height:auto;max-height:340px}
+.hsx-glass__legend{
+  list-style:none;margin:0;padding:12px 0 0;border-top:1px solid var(--hx-line);
+  display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--hx-text);font-size:var(--fs-caption)
+}
+.hsx-glass__legend b{font-weight:600;color:var(--hx-muted);margin-right:4px}
+.hsx-glass__legend i{font-style:normal;color:var(--hx-muted)}
+.hsx-glass__legend .is-total{margin-left:auto;font-weight:600}
+.hsx-glass-options{display:grid;grid-template-columns:1fr;border-top:1px solid var(--hx-line);border-bottom:1px solid var(--hx-line)}
+.hsx-glass-option{min-width:0;padding:18px 0;border-bottom:1px solid var(--hx-line)}
+.hsx-glass-option:last-child{border-bottom:0}
+.hsx-glass-option h4{margin:8px 0 4px;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em}
+.hsx-glass-option>p{margin:0 0 14px;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.45}
+.hsx-mini{margin:0;border-top:1px solid var(--hx-line)}
+.hsx-mini div{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;min-height:36px;padding:6px 0;
+  border-bottom:1px solid #dcd8d0;font-size:var(--fs-caption);line-height:1.3
+}
+.hsx-mini dt{color:var(--hx-muted)}
+.hsx-mini dd{margin:0;color:var(--hx-text)}
+.hsx-checks{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:14px;font-size:var(--fs-small)}
+.hsx-checks>span:first-child{width:100%;margin-bottom:2px}
+.hsx-pill{
+  padding:8px 12px;border:1px solid var(--hx-line);color:#5f5b55;
+  font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.04em;text-transform:uppercase
+}
+
+/* 03–04 Герметичность и механизм: схема слева, пункты справа */
+.hsx-split{display:grid;grid-template-columns:1fr;border-top:1px solid var(--hx-line)}
+.hsx-visual-box{
+  position:relative;min-height:340px;overflow:hidden;background:var(--hx-panel);
+  border-left:1px solid var(--hx-line);border-right:1px solid var(--hx-line);border-bottom:1px solid var(--hx-line)
+}
+.hsx-caption{
+  position:absolute;left:12px;bottom:10px;color:#8f897f;
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase
+}
+.hsx-caption.is-right{left:auto;right:12px}
+.hsx-rows{border-left:1px solid var(--hx-line);border-right:1px solid var(--hx-line);border-bottom:1px solid var(--hx-line);background:rgba(255,255,255,.2)}
+.hsx-rows article{
+  display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:16px 14px;
+  border-bottom:1px solid var(--hx-line)
+}
+.hsx-rows article:last-child{border-bottom:0}
+.hsx-rows article>span{padding-top:4px;color:#948e84;font-size:var(--fs-label)}
+.hsx-rows h4{margin:0;font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.hsx-rows p{margin:6px 0 0;color:var(--hx-muted);font-size:var(--fs-small);line-height:1.45}
+
+/* схема узла герметичности (условная) */
+.hsx-seal{position:absolute;inset:34px 18px 44px}
+.hsx-seal__track{position:absolute;left:0;right:0;bottom:14%;height:12%;background:#050505;border:1px solid #191919}
+.hsx-seal__track::after{content:"";position:absolute;left:4%;right:4%;top:45%;height:2px;background:#2a2a2a}
+.hsx-seal__frame{
+  position:absolute;bottom:26%;width:36%;height:58%;
+  border:7px solid #090909;background:#202424
+}
+.hsx-seal__frame::before{content:"";position:absolute;inset:10%;border:2px solid #687274;background:linear-gradient(180deg,#252a2b,#1f2222)}
+.hsx-seal__frame.is-left{left:5%}
+.hsx-seal__frame.is-right{right:5%}
+.hsx-seal__line{position:absolute;width:4px;top:24%;bottom:30%;background:var(--ui-accent)}
+.hsx-seal__line.is-one{left:41%}
+.hsx-seal__line.is-two{right:41%}
+.hsx-seal__roller{position:absolute;bottom:23%;width:26px;height:26px;border-radius:50%;background:#f7f5ef;border:4px solid #171717}
+.hsx-seal__roller.is-a{left:17%}
+.hsx-seal__roller.is-b{left:28%}
+.hsx-seal__drain{position:absolute;left:56%;bottom:12%;width:20%;height:18px;border-bottom:3px solid #9ebec6;transform:skewX(-28deg)}
+.hsx-seal__drip{position:absolute;left:73%;bottom:9%;width:30px;height:3px;background:#9ebec6;transform:rotate(14deg)}
+.hsx-callout{
+  position:absolute;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:#11110f;color:#fff;border:2px solid var(--hx-panel);font:600 var(--fs-label)/1 var(--font)
+}
+.hsx-callout.is-1{left:37%;top:32%}
+.hsx-callout.is-2{left:45%;bottom:20%}
+.hsx-callout.is-3{left:74%;bottom:3%}
+.hsx-callout.is-4{right:6%;bottom:19%}
+
+.hsx-strip{
+  margin-top:10px;padding:16px;background:var(--hx-ink);color:#fff;
+  display:grid;gap:10px;align-items:end
+}
+.hsx-strip .hsx-eyebrow{color:#8e8a82;margin-bottom:6px}
+.hsx-strip strong{font:300 var(--fs-num)/1 var(--font);letter-spacing:-.05em}
+.hsx-strip p{margin:0;color:#a8a59e;font-size:var(--fs-small);line-height:1.45}
+
+/* механизм: холст из hs-system.js */
+.hsx-visual-box.hs-canvas-shell{display:flex;flex-direction:column;background:var(--hx-panel)}
+.hsx-visual-box .hs-canvas-stage{position:relative;flex:1;min-height:280px;aspect-ratio:auto;touch-action:none;cursor:ew-resize}
+.hsx-visual-box #hsSystemCanvas{display:block;width:100%;height:100%}
+.hsx-mech-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 12px;border-top:1px solid var(--hx-line)}
+.hsx-mech-legend{display:flex;align-items:center;gap:6px;color:#5f5a53;font:600 var(--fs-label)/1 var(--font);letter-spacing:.05em;text-transform:uppercase}
+.hsx-mech-legend i{display:inline-block;width:10px;height:10px;border:1px solid #3a3a38;margin-left:8px}
+.hsx-mech-legend i:first-child{margin-left:0}
+.hsx-mech-legend i.is-active{background:#dbe3e3}
+.hsx-mech-state{margin-left:auto;color:var(--hx-muted);font-size:var(--fs-caption)}
+.hsx-mech-btn{min-height:40px;padding:0 16px;border:0;background:var(--hx-ink);color:#fff;cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+
+@media(min-width:768px){
+  .hsx-spec__head{grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:clamp(28px,6vw,110px)}
+  .hsx-spec__intro{justify-self:end;margin-bottom:6px}
+  .hsx-stats,.hsx-chapters{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hsx-chapter{min-height:72px}
+  .hsx-panel__head{grid-template-columns:minmax(0,.9fr) minmax(320px,1.1fr);gap:48px}
+  .hsx-frames{grid-template-columns:1fr 1fr}
+  .hsx-frame{min-height:420px;padding:28px 28px 0}
+  .hsx-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hsx-fact-cell{padding:20px 18px}
+  .hsx-glass-options{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hsx-glass-option{padding:20px 24px 18px 0;border-bottom:0;border-right:1px solid var(--hx-line)}
+  .hsx-glass-option+.hsx-glass-option{padding-left:24px}
+  .hsx-glass-option:last-child{border-right:0}
+  .hsx-checks>span:first-child{width:auto;margin:0 6px 0 0}
+  .hsx-strip{grid-template-columns:.5fr 1.5fr;padding:16px 18px}
+}
+@media(min-width:1100px){
+  .hsx-split{grid-template-columns:1.05fr .95fr}
+  .hsx-visual-box{min-height:500px;border-right:0}
+  .hsx-rows article{min-height:92px;padding:18px 18px 16px}
+  .hsx-seal{inset:52px 48px 56px 44px}
+  .hsx-seal__frame{border-width:10px;width:34%;height:63%}
+  .hsx-seal__roller{width:32px;height:32px}
+  .hsx-callout{width:36px;height:36px}
+  .hsx-glass{grid-template-columns:1fr;padding-bottom:30px}
+}
+
+/* ---------- КАК ОТКРЫВАЕТСЯ ДВЕРЬ ---------- */
+.hsx-open__head{display:grid;gap:14px;align-items:start}
+.hs-page .hsx-open__title{margin:0;font:300 var(--fs-h2)/.9 var(--font);letter-spacing:-.065em;max-width:12ch}
+.hsx-open__copy p{margin:0;max-width:430px;color:#5e5952;font-size:var(--fs-small);line-height:1.5}
+.hsx-open__note{display:none}
+
+.hsx-controls{display:grid;gap:14px;margin-top:22px}
+.hsx-label{margin-bottom:7px;color:#312e2a;font-size:var(--fs-small)}
+.hsx-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--hx-line-2);background:rgba(255,255,255,.08)}
+.hsx-seg--sides{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hsx-seg--sides.is-single{grid-template-columns:1fr}
+.hsx-width,.hsx-side{
+  min-width:0;min-height:52px;border:0;border-right:1px solid var(--hx-line);
+  background:transparent;color:inherit;cursor:pointer;transition:background .15s,color .15s
+}
+.hsx-width:last-child,.hsx-side:last-child{border-right:0}
+.hsx-width{padding:8px 10px;text-align:left}
+.hsx-width strong{display:block;font:400 var(--fs-body)/1.1 var(--font);letter-spacing:-.03em}
+.hsx-width span{display:block;margin-top:3px;color:#7a756e;font-size:var(--fs-caption)}
+.hsx-side{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px;font-size:var(--fs-small)}
+.hsx-side svg{width:28px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.2}
+.hsx-width[aria-pressed="true"],.hsx-side[aria-pressed="true"]{background:var(--hx-ink);color:#fff}
+.hsx-width[aria-pressed="true"] span{color:#c9c5be}
+.hsx-width:focus-visible,.hsx-side:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+
+.hsx-tabs{display:flex;gap:28px;align-items:flex-end;margin-top:20px;border-bottom:1px solid var(--hx-line-2)}
+.hsx-tabs button{
+  position:relative;padding:0 0 9px;border:0;background:none;color:#817b72;cursor:pointer;font-size:var(--fs-small)
+}
+.hsx-tabs button[aria-selected="true"]{color:var(--hx-ink)}
+.hsx-tabs button[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--hx-ink)}
+
+.hsx-visual{position:relative;margin-top:12px;overflow:hidden;background:#cec8bd}
+.hsx-visual__bg,.hsx-visual__interior{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .35s ease}
+.hsx-visual__bg{object-position:center 47%;filter:saturate(.7) contrast(.98) brightness(1.05)}
+.hsx-visual__interior{opacity:0}
+.hsx-visual.is-interior .hsx-visual__interior{opacity:1}
+.hsx-visual.is-interior canvas{cursor:default}
+.hsx-visual::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(17,17,15,.06),transparent 30%)}
+.hsx-visual canvas{position:relative;z-index:1;display:block;width:100%;aspect-ratio:1.47/1;touch-action:none;cursor:ew-resize}
+
+.hsx-slider{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 0 14px;color:#47433e;font-size:var(--fs-caption)}
+.hsx-slider input{width:100%;height:28px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer}
+.hsx-slider input::-webkit-slider-runnable-track{height:1px;background:#969087}
+.hsx-slider input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-9px;border:0;border-radius:50%;background:var(--hx-ink);box-shadow:0 0 0 4px var(--hx-bg)}
+.hsx-slider input::-moz-range-track{height:1px;background:#969087}
+.hsx-slider input::-moz-range-thumb{width:18px;height:18px;border:4px solid var(--hx-bg);border-radius:50%;background:var(--hx-ink)}
+.hsx-slider input:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
+
+.hsx-result{display:grid;grid-template-columns:1fr;border-bottom:1px solid var(--hx-line)}
+.hsx-result__main{padding:4px 0 14px}
+.hsx-result__k{margin-bottom:7px;color:#777168;font-size:var(--fs-caption)}
+.hsx-passage{font:300 var(--fs-num)/.9 var(--font);letter-spacing:-.055em;white-space:nowrap}
+.hsx-passage small{font-size:.42em;letter-spacing:0}
+.hsx-result__pct{margin-top:8px;color:#8b857c;font-size:var(--fs-caption)}
+.hsx-fact{display:grid;grid-template-columns:minmax(120px,.8fr) 1fr;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--hx-line)}
+.hsx-fact b{color:#9b958a;font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.05em;text-transform:uppercase}
+.hsx-fact span{color:#34312d;font-size:var(--fs-small);line-height:1.3}
+.hsx-fact span br{display:none}
+
+.hsx-actions{display:grid;gap:12px;padding-top:14px}
+.hs-page .hsx-primary{
+  min-height:52px;padding:0 18px;background:var(--hx-ink);color:#fff;text-decoration:none;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase
+}
+.hsx-primary i{font-style:normal;font-size:var(--fs-body)}
+.hsx-secondary{justify-self:start;padding-bottom:3px;border-bottom:1px solid currentColor;color:inherit;text-decoration:none;font-size:var(--fs-small)}
+.hsx-note{display:none;margin:0;color:#8e887f;font-size:var(--fs-caption);line-height:1.45}
+
+@media(min-width:900px){
+  .hsx-open__head{grid-template-columns:minmax(0,1.42fr) minmax(300px,.58fr);gap:52px}
+  .hsx-open__copy{margin-top:18px;padding-left:28px;border-left:1px solid var(--hx-line)}
+  .hsx-open__copy .hsx-open__note{display:block;margin-top:18px;color:#928c82;font-size:var(--fs-caption)}
+  .hsx-controls{grid-template-columns:1.16fr .84fr;gap:38px;margin-top:28px}
+  .hsx-width,.hsx-side{min-height:62px}
+  .hsx-width{padding:10px 15px}
+  .hsx-visual canvas{aspect-ratio:2.36/1}
+  .hsx-result{grid-template-columns:1.12fr .83fr .5fr .9fr 1.05fr;border-top:1px solid var(--hx-line);padding:14px 0 15px}
+  .hsx-result__main{padding:0 24px 0 0}
+  .hsx-fact{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding:0 17px;border-top:0;border-left:1px solid var(--hx-line)}
+  .hsx-fact span br{display:inline}
+  .hsx-actions{display:flex;align-items:center;gap:32px}
+  .hsx-primary{width:320px}
+  .hsx-note{display:block;margin-left:auto;max-width:320px;text-align:right}
+}
+/* длинные подписи (ВОЗДУХОПРОНИЦАЕМОСТЬ) в узких ячейках на телефоне */
+.hsx-fact-cell .hsx-eyebrow,.hsx-stat .hsx-eyebrow{overflow-wrap:anywhere;hyphens:auto}
+@media(max-width:767px){.hsx-fact-cell .hsx-eyebrow{letter-spacing:.03em}}
