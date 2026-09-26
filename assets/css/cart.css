@@ -149,7 +149,7 @@
 .cart-item__img img{object-fit:contain}
 .cart-item__title{font-size:var(--fs-h4);letter-spacing:-.02em}
 
-/* ---------- В стиле каталога: поля как в <lead-form>, способы получения — плитки, шаги — белые плитки ---------- */
+/* ---------- Поля как в <lead-form>, способы получения — плитки выбора, шаги — таблица в тонких линиях ---------- */
 .cart-field span{color:var(--ui-muted);letter-spacing:.08em}
 .cart-field input,.cart-field textarea{
   width:100%;padding:12px 13px;border:1px solid var(--ui-line-soft);background:#fff;color:var(--ui-ink);border-radius:0;
@@ -160,8 +160,8 @@
 .cart-option:has(input:checked){box-shadow:inset 0 0 0 1px var(--ui-ink),var(--sh-2)}
 .cart-steps{background:var(--ui-bg);padding-top:0}
 .cart-steps .ui-wrap{padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
-.cart-steps__list{display:grid;gap:clamp(8px,1vw,14px);margin-top:18px;border:0}
-.cart-steps__list li{display:block;padding:clamp(16px,1.8vw,24px);background:#fff;border:0!important;box-shadow:var(--sh-1)}
+.cart-steps__list{display:grid;gap:0;margin-top:18px;background:#fff;border:0;border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
+.cart-steps__list li{display:block;padding:clamp(16px,1.8vw,24px);border:0!important;border-right:1px solid var(--ui-line)!important;border-bottom:1px solid var(--ui-line)!important}
 .cart-steps__list span{display:block;margin-bottom:12px;color:var(--ui-muted)}
 .cart-steps__list b{display:block;font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
 .cart-steps__list p{margin-top:6px;color:var(--ui-muted);font-size:var(--fs-small)}
