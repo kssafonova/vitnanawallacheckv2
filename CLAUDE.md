@@ -81,7 +81,7 @@ assets/css/site.css         главная и общие секции; catalog.c
 assets/css/hs-blocks.css    HS: блоки «Характеристики и устройство» и «Как открывается дверь» (классы .hsx-*)
 assets/js/components/       <site-menu> и <site-footer> — веб-компоненты шапки и подвала (Shadow DOM, атрибут data-base)
 assets/js/                  calculator*.js, hs-system.js, product.js, site.js
-assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема на canvas без фото: стена, рама, створки, улица за стеклом, размерная линия прохода; ссылка на товар)
+assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема на canvas без фото, размерная линия прохода) и итог под ним: карточка выбранного готового решения (фото и цена из карточек #stock) + строка «Проём другого размера? Рассчитаем бесплатно (/raschet/ с этой конфигурацией) или вызовите замерщика (#project-form, комментарий заполняется)»
 assets/js/hs-interior3d.js  HS: вкладка «В интерьере» — 3D-гостиная (three.js): портал из параметров конфигурации, ползунок открывает, солнце через стекло, вид за окном — assets/images/systems/hs-interior-view.webp. Грузится только при открытии вкладки; без WebGL — рисованный интерьер на canvas
 assets/vendor/three/        three.js r169 (three.module.min.js + RoomEnvironment.js, лицензия MIT) — локальная копия, не CDN
 assets/js/quick-calc.js     калькулятор HS на /raschet/ ([data-quick-calc]): цена, рендер модели, ползунок «Закрыто — Открыто», заявка с файлом

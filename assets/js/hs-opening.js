@@ -71,9 +71,7 @@
     $('[data-hsx-leaves]').textContent = v.sections;
     $('[data-hsx-dir]').innerHTML = v.dir;
     $('[data-hsx-use]').innerHTML = v.use;
-    const cta = $('[data-hsx-cta]');
-    cta.href = v.href;
-    cta.querySelector('span').textContent = `Выбрать ${f.code}`;
+    renderNext();
     range.value = progress;
     range.setAttribute('aria-valuetext', `${Math.round(progress)}% открыто`);
     draw();
@@ -362,6 +360,34 @@
     vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.14)');
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   }
+
+  // Итог под схемой: одна карточка выбранного готового решения (фото и цена — из карточек #stock, цены не дублируем)
+  // и одна строка для тех, кому размер не подходит: калькулятор с этой конфигурацией или бесплатный замер.
+  const next = $('[data-hsx-next]');
+  const sideText = () => ({ left: 'активная слева', right: 'активная справа', center: 'открывание от центра' }[variantKey]);
+  function renderNext() {
+    if (!next) return;
+    const f = family(), v = variant();
+    let img = '', price = '';
+    for (const card of document.querySelectorAll('#stock [data-card]')) {
+      let list = []; try { list = JSON.parse(card.dataset.variants || '[]'); } catch (_) {}
+      const hit = list.find(x => x.href === v.href);
+      if (hit) { img = hit.img; price = ((card.querySelector('.m-card__price strong') || {}).textContent || '').trim(); break; }
+    }
+    $('[data-next-card]').href = v.href;
+    if (img) $('[data-next-img]').src = img;
+    $('[data-next-title]').textContent = `${f.code} · ${fmt(f.width)} × ${fmt(f.height)} мм`;
+    $('[data-next-price]').textContent = price;
+    $('[data-next-side]').textContent = `${price ? '· ' : ''}${sideText()}`;
+    const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, from: `HS, схемы: ${f.code}, ${sideText()}` });
+    $('[data-next-calc]').href = `../../raschet/?${q}`;
+    $('[data-next-form]').dataset.comment = `Нужен бесплатный замер. Смотрели ${f.code}, ${sideText()}.`;
+  }
+  if (next) next.addEventListener('click', e => {
+    const a = e.target.closest('[data-next-form]'); if (!a) return;
+    const ta = document.querySelector('#project-form textarea[name="comment"]');
+    if (ta && !ta.value.trim()) ta.value = a.dataset.comment || '';
+  });
 
   const snap = () => { progress = [0, 50, 100].reduce((a, b) => Math.abs(progress - b) < Math.abs(progress - a) ? b : a); update(); };
 
