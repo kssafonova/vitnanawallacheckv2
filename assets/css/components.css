@@ -405,3 +405,7 @@ lead-form{display:block}
   .m-card--project.m-card--wide .m-card__buy{flex:0;max-width:560px;margin-top:10px}
 }
 .m-card--project .m-card__media{aspect-ratio:16/9}
+/* Белый фон под моделью (решение владельца) и подпись «+ любой RAL» рядом с цветами */
+.m-card__media{background:#fff}
+.m-card__swatches{align-items:center}
+.m-card__ral{margin-left:4px;color:var(--ui-muted);font:400 var(--fs-caption)/1.2 var(--font);white-space:nowrap}

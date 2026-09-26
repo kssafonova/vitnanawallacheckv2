@@ -196,3 +196,5 @@
 .product-price-note{background:#f1f1ef;border-left-color:var(--ui-ink)}
 .product-options li{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
 .product-media__scheme,.product-media__states{box-shadow:0 8px 20px -8px rgba(0,0,0,.45)}
+/* Срок изготовления у цены */
+.product-price__term b{display:block;margin-bottom:3px;color:var(--ui-ink);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}

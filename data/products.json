@@ -35,16 +35,16 @@
       "architecture": "assets/images/projects/terrace.webp",
       "colors": [
         {
-          "name": "Белый",
-          "ral": "9016",
-          "slug": "belyi",
-          "hex": "#f2f2ed"
-        },
-        {
           "name": "Антрацит",
           "ral": "7016",
           "slug": "antratsit",
           "hex": "#383b3a"
+        },
+        {
+          "name": "Белый",
+          "ral": "9016",
+          "slug": "belyi",
+          "hex": "#f2f2ed"
         }
       ],
       "scheme_title": "Схема",
