@@ -285,3 +285,123 @@
 .qc-teaser__form label+label{border-left-color:#e3e2e0}
 .qc-teaser .qc-teaser__form button{transition:background-color .2s}
 .qc-teaser__points li{background:#fff;border-color:transparent;box-shadow:var(--sh-1)}
+
+/* ============================================================
+   Калькулятор как одна форма: белая панель, сверху шаги-вкладки, внутри — текущий шаг,
+   справа (с 1100 px) — итог с фото и ценой. На телефоне итог — пятый шаг, снизу панель «цена + Далее».
+   ============================================================ */
+.qc__panel{position:relative;margin-top:clamp(18px,2.4vw,32px);background:#fff;box-shadow:var(--sh-2)}
+.qc__head{margin:0}
+/* вкладки шагов — шапка той же панели */
+.qc__tabs{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#f6f6f5;border-bottom:1px solid #e3e2e0}
+.qc .qc__tab{
+  position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;align-items:center;min-height:56px;padding:10px 8px;
+  border:0;border-right:1px solid #e3e2e0;background:transparent;color:#7a7771;text-align:left;cursor:pointer;transition:background-color .2s,color .2s
+}
+.qc__tab:last-of-type{border-right:0}
+.qc__tab-n{
+  grid-row:1 / span 2;display:grid;place-items:center;width:24px;height:24px;border:1px solid currentColor;border-radius:50%;
+  font:500 var(--fs-label)/1 var(--font)
+}
+.qc__tab-t{font:500 var(--fs-label)/1.15 var(--font);letter-spacing:.02em}
+.qc__tab-v{display:none;overflow:hidden;color:#9a978f;font-size:var(--fs-caption);line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+.qc__tab[aria-selected="true"]{background:#fff;color:var(--qc-ink)}
+.qc__tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--qc-ink)}
+.qc__tab[aria-selected="true"] .qc__tab-n{background:var(--qc-ink);border-color:var(--qc-ink);color:#fff}
+.qc__tab.is-done{color:var(--qc-ink)}
+.qc__tab.is-done .qc__tab-n{font-size:0;background:var(--qc-ink);border-color:var(--qc-ink)}
+.qc__tab.is-done .qc__tab-n::before{content:"";width:9px;height:5px;margin-top:-2px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg)}
+.qc__tab:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+@media(hover:hover){.qc__tab:not([aria-selected="true"]):hover{background:#efefed;color:var(--qc-ink)}}
+.qc__progress{display:none}
+
+.qc__body{display:grid}
+.qc__stage{display:grid;align-content:start;padding:20px 16px 18px}
+.qc__pane{display:none}
+.qc__pane.is-active{display:block;animation:qc-in .28s var(--ease-ui)}
+@keyframes qc-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.qc__pane.is-active{animation:none}}
+.qc__legend{align-items:center;margin-bottom:12px}
+.qc__legend b{font:500 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em;text-transform:none}
+.qc__legend em{display:inline-flex;text-transform:none;letter-spacing:0;font:400 var(--fs-caption)/1.2 var(--font)}
+.qc__legend--gap{margin-top:22px}
+.qc__tip{margin:12px 0 0;color:var(--qc-muted);font-size:var(--fs-small);line-height:1.45}
+.qc__tip:empty{display:none}
+
+/* плитки внутри панели — плоские, с рамкой; выбранная — чёрная */
+.qc__panel .qc__size{border:1px solid #e0dfdc;background:#fafaf9;box-shadow:none}
+.qc__panel .qc__num+.qc__num{border-left-color:#e0dfdc}
+.qc__panel .qc__leaf,.qc__panel .qc__opt,.qc__panel .qc__extra{border:1px solid #e0dfdc;background:#fafaf9;box-shadow:none;transform:none}
+.qc__panel .qc__leaf[aria-pressed="true"],.qc__panel .qc__opt[aria-pressed="true"],.qc__panel .qc__extra:has(input:checked){background:var(--qc-on);border-color:var(--qc-on);box-shadow:0 6px 16px -8px rgba(17,17,15,.55)}
+@media(hover:hover){
+  .qc__panel .qc__leaf:hover,.qc__panel .qc__opt:hover,.qc__panel .qc__extra:hover{transform:none;box-shadow:none;border-color:var(--qc-ink)}
+  .qc__panel .qc__leaf[aria-pressed="true"]:hover,.qc__panel .qc__opt[aria-pressed="true"]:hover{box-shadow:0 6px 16px -8px rgba(17,17,15,.55)}
+}
+.qc__panel .qc__project{margin-top:18px;background:transparent;border:1px dashed #c9c8c5;box-shadow:none}
+@media(hover:hover){.qc__panel .qc__project:hover{transform:none;box-shadow:none;border-color:var(--qc-ink)}}
+
+/* навигация по шагам */
+.qc__nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid #ecebe9}
+.qc .qc__back{min-height:44px;padding:0;border:0;background:none;color:var(--qc-muted);font:500 var(--fs-small)/1 var(--font);cursor:pointer}
+.qc__back[hidden]{visibility:hidden;display:block}
+.qc .qc__back:hover{color:var(--qc-ink)}
+.qc .qc__next,.qc .qc__bar-next{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:18px;min-height:52px;padding:0 20px;border:0;
+  background:var(--qc-on);color:#fff;font:400 var(--fs-body)/1 var(--font);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.2);
+  transition:transform .2s var(--ease-ui),box-shadow .2s var(--ease-ui)
+}
+.qc__next i,.qc__bar-next i{font-style:normal}
+@media(hover:hover){.qc .qc__next:hover,.qc .qc__bar-next:hover{transform:translateY(-1px);box-shadow:var(--sh-btn)}}
+.qc__nav .qc__next{display:none}
+
+/* итог: внутри панели, без своей тени */
+.qc__panel .qc__summary{display:none;padding:16px;background:#f6f6f5;box-shadow:none;border-top:1px solid #e3e2e0}
+.qc__panel .qc__summary.is-active{display:grid;animation:qc-in .28s var(--ease-ui)}
+
+/* телефон: снизу панели — цена и «Далее», прилипает к низу экрана */
+.qc__bar{
+  position:sticky;bottom:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid #e3e2e0;box-shadow:0 -10px 24px -18px rgba(17,17,15,.4)
+}
+.qc__bar small{display:block;color:var(--qc-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.qc__bar strong{display:block;margin-top:5px;font:400 var(--fs-h4)/1 var(--font);letter-spacing:-.02em;white-space:nowrap}
+.qc__bar .qc__bar-next{min-height:48px;padding:0 16px;font-size:var(--fs-small)}
+.qc__panel[data-step="5"] .qc__bar{display:none}
+
+@media(min-width:560px){
+  .qc__tab-v{display:block}
+  .qc .qc__tab{padding:12px 12px;min-height:64px}
+}
+@media(min-width:768px){
+  .qc__stage{padding:28px 28px 24px}
+  .qc__panel .qc__summary{padding:24px 28px}
+}
+@media(min-width:1100px){
+  .qc__tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .qc__tab--m{display:none!important}
+  .qc__body{grid-template-columns:minmax(0,1.3fr) minmax(360px,.7fr)}
+  .qc__stage{padding:34px 36px 30px}
+  .qc__nav .qc__next{display:inline-flex}
+  .qc__panel .qc__summary{display:grid;align-content:start;gap:16px;padding:28px;border-top:0;border-left:1px solid #e3e2e0;animation:none}
+  .qc__bar{display:none}
+  .qc__summary{position:static}
+}
+
+/* телефон: вкладки — номер над коротким названием; панель не уезжает под шапку */
+.qc__panel{scroll-margin-top:calc(var(--header-h) + 8px)}
+.qc__tab-full{display:none}
+.qc .qc__tab{grid-template-columns:1fr;justify-items:center;gap:6px;padding:10px 4px;text-align:center}
+.qc__tab-n{grid-row:auto}
+.qc__legend{flex-wrap:wrap;row-gap:4px}
+.qc__panel .qc__extras{grid-template-columns:1fr}
+@media(min-width:560px){
+  .qc__tab-full{display:inline}.qc__tab-short{display:none}
+  .qc .qc__tab{grid-template-columns:auto minmax(0,1fr);justify-items:start;gap:2px 10px;padding:12px;text-align:left}
+  .qc__tab-n{grid-row:1 / span 2}
+  .qc__panel .qc__extras{grid-template-columns:1fr 1fr}
+}
+@media(max-width:1099px){
+  .qc__panel[data-step="5"] .qc__stage{padding:6px 16px 0}
+  .qc__panel[data-step="5"] .qc__nav{margin:0;padding:0;border:0}
+}

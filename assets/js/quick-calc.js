@@ -80,92 +80,118 @@
     const opt = (group, k, inner, on, extra = '') =>
       `<button type="button" class="qc__opt" data-${group}="${k}" aria-pressed="${on}"${extra}>${inner}</button>`;
 
+    const STEPS = [
+      { n: 1, t: 'Проём', s: 'Проём' }, { n: 2, t: 'Створки', s: 'Створки' }, { n: 3, t: 'Стекло и цвет', s: 'Стекло' }, { n: 4, t: 'Опции', s: 'Опции' }, { n: 5, t: 'Итог', s: 'Итог', mobile: true },
+    ];
     root.innerHTML = `
 <form class="qc" novalidate>
   <header class="qc__head">
     ${d.eyebrow ? `<p class="qc__eyebrow">${esc(d.eyebrow)}</p>` : ''}
     <${d.h1 ? 'h1' : 'h2'} class="qc__title">${esc(d.title || 'Сколько стоит раздвижная дверь под ваш размер')}</${d.h1 ? 'h1' : 'h2'}>
-    <p class="qc__lead">Укажите примерную ширину и высоту проёма. Цену покажем сразу — без регистрации и без телефона.</p>
-    <button type="button" class="qc__project" data-qc-project>${ICON.clip}<span><b>Уже есть проект или план?</b> Прикрепите файл — посчитаем по нему</span><i aria-hidden="true">→</i></button>
+    <p class="qc__lead">Четыре шага — и ориентировочная цена. Без регистрации и без телефона.</p>
   </header>
-  <div class="qc__grid">
-    <div class="qc__steps">
-      <div class="qc__step" role="group" aria-labelledby="${id}-s1">
-        <div class="qc__legend"><span>01</span><b id="${id}-s1">Размер проёма</b><em>ширина × высота, мм <span class="qc__info" title="Примерный размер проёма в свету. Точный снимем на бесплатном замере.">${ICON.info}</span></em></div>
-        <div class="qc__size">
-          <label class="qc__num"><span>Ширина</span><input name="width" inputmode="numeric" autocomplete="off" maxlength="4" value="${st.w}" data-qc-w aria-describedby="${id}-hint"><i>мм</i></label>
-          <label class="qc__num"><span>Высота</span><input name="height" inputmode="numeric" autocomplete="off" maxlength="4" value="${st.h}" data-qc-h aria-describedby="${id}-hint"><i>мм</i></label>
-        </div>
-        <p class="qc__hint" id="${id}-hint" data-qc-hint></p>
-      </div>
-      <div class="qc__step" role="group" aria-labelledby="${id}-s2">
-        <div class="qc__legend"><span>02</span><b id="${id}-s2">Сколько створок</b></div>
-        <div class="qc__leaves">${[2, 3, 4].map(n => `
-          <button type="button" class="qc__leaf" data-leaves="${n}" aria-pressed="${n === st.n}">
-            <span class="qc__rec">Рекомендуем</span>
-            <span class="qc__leaf-top"><strong>${n}</strong>${leafIcon(n)}</span>
-            <span class="qc__leaf-name">${leafWord(n)}</span>
-            <span class="qc__leaf-open">≈ ${Math.round(OPEN[n] * 100)}% открытия</span>
-          </button>`).join('')}
-        </div>
-      </div>
-      <div class="qc__step" role="group" aria-labelledby="${id}-s3">
-        <div class="qc__legend"><span>03</span><b id="${id}-s3">Стеклопакет</b></div>
-        <div class="qc__opts">${GLASS.map(g => opt('glass', g.k,
-          `<span class="qc__ico">${g.icon}</span><span class="qc__opt-t">${g.t}${g.rec ? '<small>рекомендуем</small>' : ''}</span>`, g.k === st.glass)).join('')}
-        </div>
-      </div>
-      <div class="qc__step" role="group" aria-labelledby="${id}-s4">
-        <div class="qc__legend"><span>04</span><b id="${id}-s4">Цвет</b></div>
-        <div class="qc__opts">${COLORS.map(c => opt('color', c.k,
-          `<span class="qc__sw" style="background:${c.sw}"></span><span class="qc__opt-t">${c.t}</span>`, c.k === st.color)).join('')}
-        </div>
-      </div>
-      <div class="qc__step" role="group" aria-labelledby="${id}-s5">
-        <div class="qc__legend"><span>05</span><b id="${id}-s5">Дополнительно</b></div>
-        <div class="qc__extras">${EXTRAS.map(x => `
-          <label class="qc__extra"><input type="checkbox" name="extra_${x.k}" data-extra="${x.k}"><span class="qc__extra-ico">${x.icon}</span><span class="qc__extra-t"><b>${x.t}</b><small>по расчёту</small></span><i class="qc__add" aria-hidden="true"></i></label>`).join('')}
-        </div>
-      </div>
+
+  <div class="qc__panel" data-step="1">
+    <div class="qc__tabs" role="tablist" aria-label="Шаги расчёта">${STEPS.map(x => `
+      <button type="button" class="qc__tab${x.mobile ? ' qc__tab--m' : ''}" role="tab" id="${id}-t${x.n}" aria-controls="${id}-p${x.n}" aria-selected="${x.n === 1}" data-go="${x.n}">
+        <span class="qc__tab-n">${x.n}</span><span class="qc__tab-t"><span class="qc__tab-full">${x.t}</span><span class="qc__tab-short" aria-hidden="true">${x.s}</span></span><small class="qc__tab-v" data-tabval="${x.n}"></small>
+      </button>`).join('')}
+      <span class="qc__progress" aria-hidden="true"><i data-qc-progress></i></span>
     </div>
 
-    <aside class="qc__summary">
-      <figure class="qc__photo">
-        <img class="qc__img" data-qc-img="closed" src="${esc(d.img || '')}" alt="Раздвижная дверь: вид в закрытом положении" decoding="async">
-        <img class="qc__img is-open" data-qc-img="open" src="${esc(d.img || '')}" alt="" aria-hidden="true" decoding="async">
-        <span class="qc__badge" data-qc-badge></span>
-        <figcaption class="qc__view">
-          <span>Закрыто</span>
-          <input type="range" min="0" max="100" step="1" value="0" data-qc-open aria-label="Показать дверь открытой">
-          <span>Открыто</span>
-        </figcaption>
-      </figure>
-      <div class="qc__conf"><small>Предварительная конфигурация</small><strong data-qc-conf></strong><span data-qc-confsub></span></div>
-      <div class="qc__total">
-        <div class="qc__price"><small>Ориентировочная стоимость</small><strong data-qc-price></strong><span>без доставки и монтажа</span></div>
-        <button type="button" class="qc__cta" data-qc-cta aria-expanded="false" aria-controls="${id}-send">Получить точный расчёт <i aria-hidden="true">→</i></button>
-      </div>
-      <p class="qc__free">${ICON.check}<span><b>Замер — бесплатно.</b> Инженер приедет, проверит проём, порог и примыкание — и назовёт точную цену.</span></p>
-      <p class="qc__note" data-qc-note></p>
+    <div class="qc__body">
+      <div class="qc__stage">
+        <section class="qc__pane" role="tabpanel" id="${id}-p1" aria-labelledby="${id}-t1" data-pane="1">
+          <div class="qc__legend"><b>Размер проёма</b><em>ширина × высота, мм <span class="qc__info" title="Примерный размер проёма в свету. Точный снимем на бесплатном замере.">${ICON.info}</span></em></div>
+          <div class="qc__size">
+            <label class="qc__num"><span>Ширина</span><input name="width" inputmode="numeric" autocomplete="off" maxlength="4" value="${st.w}" data-qc-w aria-describedby="${id}-hint"><i>мм</i></label>
+            <label class="qc__num"><span>Высота</span><input name="height" inputmode="numeric" autocomplete="off" maxlength="4" value="${st.h}" data-qc-h aria-describedby="${id}-hint"><i>мм</i></label>
+          </div>
+          <p class="qc__hint" id="${id}-hint" data-qc-hint></p>
+          <p class="qc__tip" data-qc-tip></p>
+          <button type="button" class="qc__project" data-qc-project>${ICON.clip}<span><b>Уже есть проект или план?</b> Прикрепите файл — посчитаем по нему</span><i aria-hidden="true">→</i></button>
+        </section>
 
-      <div class="qc__send" id="${id}-send" data-qc-send hidden>
-        <p class="qc__send-title">Точный расчёт и бесплатный замер</p>
-        <p class="qc__send-lead">Оставьте телефон — инженер перезвонит, уточнит детали и договорится о замере. Если есть проект, прикрепите его: посчитаем по чертежам.</p>
-        <label class="qc__field"><span>Имя</span><input name="name" autocomplete="name" required placeholder="Как к вам обращаться"></label>
-        <label class="qc__field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+7 999 000-00-00"></label>
-        <label class="qc__file" data-qc-filebox>
-          <input type="file" name="project_file" accept=".pdf,.dwg,.dxf,.jpg,.jpeg,.png,.webp,.heic,.zip" data-qc-file>
-          ${ICON.clip}<span><b data-qc-filename>Прикрепить проект</b><small>PDF, DWG, JPG, PNG или ZIP · до 15 МБ</small></span>
-        </label>
-        <label class="qc__field"><span>Комментарий</span><textarea name="comment" rows="2" placeholder="Стадия стройки, сроки, пожелания"></textarea></label>
-        <input type="hidden" name="source" value="calculator">
-        <input type="hidden" name="project" data-qc-summary>
-        <input class="qc__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button type="submit" class="qc__submit">Отправить заявку <i aria-hidden="true">→</i></button>
-        <p class="qc__legal">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
-        <p class="qc__status" data-qc-status role="status" aria-live="polite"></p>
+        <section class="qc__pane" role="tabpanel" id="${id}-p2" aria-labelledby="${id}-t2" data-pane="2">
+          <div class="qc__legend"><b>Сколько створок</b><em data-qc-leafhint></em></div>
+          <div class="qc__leaves">${[2, 3, 4].map(n => `
+            <button type="button" class="qc__leaf" data-leaves="${n}" aria-pressed="${n === st.n}">
+              <span class="qc__rec">Рекомендуем</span>
+              <span class="qc__leaf-top"><strong>${n}</strong>${leafIcon(n)}</span>
+              <span class="qc__leaf-name">${leafWord(n)}</span>
+              <span class="qc__leaf-open">≈ ${Math.round(OPEN[n] * 100)}% открытия</span>
+            </button>`).join('')}
+          </div>
+        </section>
+
+        <section class="qc__pane" role="tabpanel" id="${id}-p3" aria-labelledby="${id}-t3" data-pane="3">
+          <div class="qc__legend"><b>Стеклопакет</b></div>
+          <div class="qc__opts">${GLASS.map(g => opt('glass', g.k,
+            `<span class="qc__ico">${g.icon}</span><span class="qc__opt-t">${g.t}${g.rec ? '<small>рекомендуем</small>' : ''}</span>`, g.k === st.glass)).join('')}
+          </div>
+          <div class="qc__legend qc__legend--gap"><b>Цвет рамы</b></div>
+          <div class="qc__opts">${COLORS.map(c => opt('color', c.k,
+            `<span class="qc__sw" style="background:${c.sw}"></span><span class="qc__opt-t">${c.t}</span>`, c.k === st.color)).join('')}
+          </div>
+        </section>
+
+        <section class="qc__pane" role="tabpanel" id="${id}-p4" aria-labelledby="${id}-t4" data-pane="4">
+          <div class="qc__legend"><b>Дополнительно</b><em>можно несколько</em></div>
+          <div class="qc__extras">${EXTRAS.map(x => `
+            <label class="qc__extra"><input type="checkbox" name="extra_${x.k}" data-extra="${x.k}"><span class="qc__extra-ico">${x.icon}</span><span class="qc__extra-t"><b>${x.t}</b><small>по расчёту</small></span><i class="qc__add" aria-hidden="true"></i></label>`).join('')}
+          </div>
+          <p class="qc__tip">Опции посчитаем отдельно после замера — в ориентировочную цену они не входят.</p>
+        </section>
+
+        <div class="qc__nav">
+          <button type="button" class="qc__back" data-qc-back>← Назад</button>
+          <button type="button" class="qc__next" data-qc-next><span data-qc-nextlabel>Далее</span> <i aria-hidden="true">→</i></button>
+        </div>
       </div>
-    </aside>
+
+      <aside class="qc__summary" role="tabpanel" id="${id}-p5" aria-labelledby="${id}-t5" data-pane="5">
+        <figure class="qc__photo">
+          <img class="qc__img" data-qc-img="closed" src="${esc(d.img || '')}" alt="Раздвижная дверь: вид в закрытом положении" decoding="async">
+          <img class="qc__img is-open" data-qc-img="open" src="${esc(d.img || '')}" alt="" aria-hidden="true" decoding="async">
+          <span class="qc__badge" data-qc-badge></span>
+          <figcaption class="qc__view">
+            <span>Закрыто</span>
+            <input type="range" min="0" max="100" step="1" value="0" data-qc-open aria-label="Показать дверь открытой">
+            <span>Открыто</span>
+          </figcaption>
+        </figure>
+        <div class="qc__conf"><small>Предварительная конфигурация</small><strong data-qc-conf></strong><span data-qc-confsub></span></div>
+        <div class="qc__total">
+          <div class="qc__price"><small>Ориентировочная стоимость</small><strong data-qc-price></strong><span>без доставки и монтажа</span></div>
+          <button type="button" class="qc__cta" data-qc-cta aria-expanded="false" aria-controls="${id}-send">Получить точный расчёт <i aria-hidden="true">→</i></button>
+        </div>
+        <p class="qc__free">${ICON.check}<span><b>Замер — бесплатно.</b> Инженер приедет, проверит проём, порог и примыкание — и назовёт точную цену.</span></p>
+        <p class="qc__note" data-qc-note></p>
+
+        <div class="qc__send" id="${id}-send" data-qc-send hidden>
+          <p class="qc__send-title">Точный расчёт и бесплатный замер</p>
+          <p class="qc__send-lead">Оставьте телефон — инженер перезвонит, уточнит детали и договорится о замере. Если есть проект, прикрепите его: посчитаем по чертежам.</p>
+          <label class="qc__field"><span>Имя</span><input name="name" autocomplete="name" required placeholder="Как к вам обращаться"></label>
+          <label class="qc__field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+7 999 000-00-00"></label>
+          <label class="qc__file" data-qc-filebox>
+            <input type="file" name="project_file" accept=".pdf,.dwg,.dxf,.jpg,.jpeg,.png,.webp,.heic,.zip" data-qc-file>
+            ${ICON.clip}<span><b data-qc-filename>Прикрепить проект</b><small>PDF, DWG, JPG, PNG или ZIP · до 15 МБ</small></span>
+          </label>
+          <label class="qc__field"><span>Комментарий</span><textarea name="comment" rows="2" placeholder="Стадия стройки, сроки, пожелания"></textarea></label>
+          <input type="hidden" name="source" value="calculator">
+          <input type="hidden" name="project" data-qc-summary>
+          <input class="qc__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" class="qc__submit">Отправить заявку <i aria-hidden="true">→</i></button>
+          <p class="qc__legal">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+          <p class="qc__status" data-qc-status role="status" aria-live="polite"></p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="qc__bar" data-qc-bar>
+      <div><small>Ориентировочно</small><strong data-qc-barprice></strong></div>
+      <button type="button" class="qc__bar-next" data-qc-next><span data-qc-nextlabel>Далее</span> <i aria-hidden="true">→</i></button>
+    </div>
   </div>
 </form>`;
 
@@ -218,6 +244,12 @@
       $('[data-qc-conf]').textContent = `HS · ${st.n} секции`;
       $('[data-qc-confsub]').textContent = `${fmt(st.w)} × ${fmt(st.h)} мм · ${g.t} · ${c.t}`;
       $('[data-qc-price]').textContent = price ? `≈ ${fmt(price)} ₽` : 'По расчёту';
+      $('[data-qc-barprice]').textContent = price ? `≈ ${fmt(price)} ₽` : 'по расчёту';
+      const ex = EXTRAS.filter(x => st.extras.has(x.k)).map(x => x.t.split(' ')[0].toLowerCase());
+      const tv = { 1: `${fmt(st.w)} × ${fmt(st.h)}`, 2: `${st.n} ${leafWord(st.n)}`, 3: `${g.t} · ${c.t}`, 4: ex.length ? ex.join(', ') : 'без опций', 5: price ? `≈ ${fmt(price)} ₽` : 'по расчёту' };
+      $$('[data-tabval]').forEach(el => { el.textContent = tv[el.dataset.tabval]; });
+      $('[data-qc-tip]').textContent = rec === st.n ? `Для ширины ${fmt(st.w)} мм подойдёт ${rec} ${leafWord(rec)} — выберем на следующем шаге.` : '';
+      $('[data-qc-leafhint]').textContent = `для ${fmt(st.w)} мм рекомендуем ${rec}`;
       const badge = $('[data-qc-badge]');
       if (badge) badge.innerHTML = photoScheme(st.n);
       // фото: рендер модели с таким числом створок; белый есть только у 2-створчатой, остальные — тёмная рама
@@ -251,9 +283,50 @@
       if (b.dataset.leaves) { st.n = +b.dataset.leaves; st.manualLeaves = true; update(); }
       else if (b.dataset.glass) { st.glass = b.dataset.glass; update(); }
       else if (b.dataset.color) { st.color = b.dataset.color; update(); }
-      else if ('qcCta' in b.dataset) openSend(true);
-      else if ('qcProject' in b.dataset) { openSend(false); fileIn.click(); }
+      else if ('qcCta' in b.dataset) { if (!mq.matches) go(5); openSend(true); }
+      else if ('qcProject' in b.dataset) { if (!mq.matches) go(5); openSend(false); fileIn.click(); }
     });
+    // ---- шаги ----
+    const panel = $('.qc__panel');
+    const mq = matchMedia('(min-width: 1100px)');
+    const last = () => (mq.matches ? 4 : 5);
+    const NEXT = { 1: 'Далее: створки', 2: 'Далее: стекло и цвет', 3: 'Далее: опции', 4: 'Смотреть итог' };
+    let step = 1;
+    function go(n, scroll) {
+      step = Math.max(1, Math.min(last(), n));
+      panel.dataset.step = step;
+      $$('[data-go]').forEach(t => {
+        const k = +t.dataset.go;
+        t.setAttribute('aria-selected', String(k === step));
+        t.tabIndex = k === step ? 0 : -1;
+        t.classList.toggle('is-done', k < step);
+      });
+      $$('[data-pane]').forEach(p => p.classList.toggle('is-active', +p.dataset.pane === step));
+      const final = step === last();
+      $$('[data-qc-nextlabel]').forEach(el => { el.textContent = final ? (mq.matches ? 'Получить точный расчёт' : 'Получить точный расчёт') : NEXT[step]; });
+      $('[data-qc-back]').hidden = step === 1;
+      root.querySelector('[data-qc-progress]').style.setProperty('--p', (step - 1) / (last() - 1));
+      if (scroll) {
+        const top = panel.getBoundingClientRect().top;
+        if (top < 0 || top > innerHeight * .5) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    root.addEventListener('click', e => {
+      const b = e.target.closest('[data-go],[data-qc-next],[data-qc-back]');
+      if (!b || !root.contains(b)) return;
+      if (b.dataset.go) go(+b.dataset.go, true);
+      else if ('qcBack' in b.dataset) go(step - 1, true);
+      else if (step < last()) go(step + 1, true);
+      else { if (!mq.matches) go(5); openSend(true); }
+    });
+    $('.qc__tabs').addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); go(step + (e.key === 'ArrowRight' ? 1 : -1)); $(`[data-go="${step}"]`).focus();
+    });
+    (mq.addEventListener ? mq.addEventListener('change', () => go(step)) : mq.addListener(() => go(step)));
+    // Enter в поле размера — к следующему шагу, а не отправка формы
+    [inW, inH].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(2, true); } }));
+
     const openIn = $('[data-qc-open]');
     const setOpen = v => { st.open = v; root.style.setProperty('--qc-open', (v / 100).toFixed(2)); };
     if (openIn) openIn.addEventListener('input', () => setOpen(+openIn.value));
@@ -282,6 +355,7 @@
       fileName.textContent = f.name;
       root.querySelector('[data-qc-filebox]').classList.add('has-file');
       update();
+      if (!mq.matches) go(5);
       openSend(false);
     });
 
@@ -315,6 +389,7 @@
     });
 
     update();
+    go(1);
   }
 
   document.querySelectorAll('[data-quick-calc]').forEach(init);
