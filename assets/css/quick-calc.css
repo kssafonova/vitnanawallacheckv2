@@ -2,7 +2,7 @@
    Быстрый калькулятор HS (.qc) — assets/js/quick-calc.js.
    Дизайн по макету владельца «Сколько стоит раздвижная дверь под ваш размер».
    Mobile-first; с 1100 px — форма слева, итог с фото справа.
-   Плюс раскрытие карточки «Индивидуальный расчёт» (.m-card--project.is-open).
+   Страница /raschet/ и блок-анонс «Калькулятор» на главной и HS (.qc-teaser).
    Размеры шрифтов — только токены из components.css.
    ============================================================ */
 .qc{
@@ -110,8 +110,19 @@
 
 /* итог */
 .qc__summary{display:grid;gap:16px;align-content:start}
-.qc__photo{position:relative;aspect-ratio:16/10;overflow:hidden;background:#dcd8cf}
-.qc__photo img{display:block;width:100%;height:100%;object-fit:cover}
+.qc__photo{position:relative;margin:0;aspect-ratio:4/3;overflow:hidden;background:#e4e3e0}
+.qc__img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 48%;transition:opacity .25s}
+.qc__img.is-open{opacity:var(--qc-open,0)}
+.qc__view{
+  position:absolute;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  padding:6px 12px;background:rgba(12,12,11,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.22);
+  color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
+}
+.qc__view input{width:100%;height:32px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;cursor:ew-resize}
+.qc__view input::-webkit-slider-runnable-track{height:1px;background:rgba(255,255,255,.6)}
+.qc__view input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(12,12,11,.35)}
+.qc__view input::-moz-range-track{height:1px;background:rgba(255,255,255,.6)}
+.qc__view input::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#fff}
 .qc__badge{position:absolute;left:10px;top:10px;width:84px;padding:7px;background:rgba(12,12,11,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.24)}
 .qc__badge svg{display:block;width:100%;height:auto}
 .qc__conf small,.qc__price small{display:block;color:var(--qc-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}
@@ -197,23 +208,40 @@
   .qc__price{padding-right:0;border-right:0}
 }
 
-/* ---------- Карточка «Индивидуальный расчёт» ---------- */
-.m-card__teaser{display:flex;flex-direction:column;flex:1;color:inherit;text-decoration:none}
-.m-card__calc[hidden]{display:none}
-.m-card.m-card--project.is-open{grid-column:1 / -1;background:var(--ui-bg);color:var(--ui-ink);cursor:default;scroll-margin-top:calc(var(--header-h) + 8px)}
-.m-card--project.is-open .m-card__teaser{display:none}
-.m-card__calc-bar{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:0 0 0 16px;
-  background:#0b0b0a;color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+/* ---------- Анонс «Калькулятор» на главной и странице HS (.qc-teaser) → страница /raschet/ ---------- */
+.qc-teaser-section{padding:var(--space-section) 0;background:var(--ui-paper);color:var(--ui-ink);scroll-margin-top:var(--header-h)}
+.calc-legacy[hidden]{display:none}
+.qc-teaser{display:grid;gap:22px}
+.qc-teaser__media{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:#e4e3e0}
+.qc-teaser__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 48%;transition:opacity .5s ease,transform .8s ease}
+.qc-teaser__open{opacity:0}
+.qc-teaser__tag{
+  position:absolute;left:12px;top:12px;padding:8px 10px;background:rgba(12,12,11,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase
 }
-.m-card .m-card__calc-close{
-  display:flex;align-items:center;gap:10px;min-height:52px;padding:0 16px;border:0;border-left:1px solid #2c2c29;background:transparent;color:#fff;cursor:pointer;
-  font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase
+@media(hover:hover){.qc-teaser:hover .qc-teaser__open{opacity:1}.qc-teaser:hover .qc-teaser__media img{transform:scale(1.02)}}
+.qc-teaser__eyebrow{margin:0 0 12px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.qc-teaser .qc-teaser__title{margin:0;max-width:13ch;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.05em}
+.qc-teaser__lead{margin:14px 0 0;max-width:520px;color:#625e57;font-size:var(--fs-body);line-height:1.45}
+.qc-teaser__form{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:20px;border:1px solid #c9c3b6;background:rgba(255,255,255,.55)}
+.qc-teaser__form label{display:block;padding:12px 14px 10px;cursor:text}
+.qc-teaser__form label+label{border-left:1px solid #c9c3b6}
+.qc-teaser__form span{display:block;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.qc-teaser__form input{display:block;width:100%;margin-top:8px;padding:0;border:0;background:transparent;color:var(--ui-ink);font:300 var(--fs-h3)/1.1 var(--font);letter-spacing:-.03em;outline:none}
+.qc-teaser__form label:focus-within{box-shadow:inset 0 0 0 1px var(--ui-ink)}
+.qc-teaser .qc-teaser__form button{
+  grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 20px;border:0;
+  background:#0b0b0a;color:#fff;cursor:pointer;font:400 var(--fs-body)/1 var(--font)
 }
-.m-card__calc-close:hover{background:#1c1c1a}
-.m-card__calc-body{padding:22px 16px 28px;text-align:left}
-@media(min-width:768px){.m-card__calc-body{padding:32px 28px 36px}}
-@media(min-width:1100px){.m-card__calc-body{padding:44px 44px 48px}}
-
-/* ---------- Страница товара: блок «Под ваш проём» ---------- */
-.product-calc{padding:var(--space-section) 0;background:var(--ui-bg);border-top:1px solid var(--ui-line-soft);scroll-margin-top:var(--header-h)}
+.qc-teaser__form button i{font-style:normal}
+.qc-teaser__form button:hover{background:#2a2a27}
+.qc-teaser__points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.qc-teaser__points li{display:grid;gap:8px;align-content:start;padding:12px 10px;border:1px solid #d3cdc1;font-size:var(--fs-caption);line-height:1.3}
+.qc-teaser__points svg{width:24px;height:24px;fill:none;stroke:var(--ui-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:399px){.qc-teaser__points br{display:none}}
+@media(min-width:900px){
+  .qc-teaser{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,72px);align-items:center}
+  .qc-teaser__media{aspect-ratio:5/4}
+  .qc-teaser__form{grid-template-columns:1fr 1fr auto}
+  .qc-teaser .qc-teaser__form button{grid-column:auto;gap:24px;min-width:190px}
+}

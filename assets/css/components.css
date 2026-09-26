@@ -41,7 +41,7 @@
   --fs-mega:   clamp(64px, 44px + 5.556vw, 124px);    /* крупные цифры-акценты в инфоблоках (158 / 246 мм) */
 
   /* Сетка и ритм */
-  --ui-pad:clamp(20px, 10.67px + 2.593vw, 48px);      /* боковые поля */
+  --ui-pad:max(clamp(20px, 10.67px + 2.593vw, 48px), 4.5vw); /* боковые поля: 20 px на телефоне, 4,5 % ширины на больших экранах */
   --space-section:clamp(64px, 38.67px + 7.037vw, 140px);
   --space-head:clamp(28px, 18.67px + 2.593vw, 56px);  /* от заголовка секции до контента */
   --header-h:72px;
@@ -59,7 +59,7 @@
   --ui-line:#aaa59a;
   --ui-line-soft:#d5d1c7;
   --ui-accent:#b1a27a;
-  --ui-max:1440px;
+  --ui-max:1680px;   /* ширина контента с полями — одна на весь сайт */
 }
 *{box-sizing:border-box}
 /* База: запрет автоувеличения шрифта в iOS/Android при повороте — частая причина «скачущих» размеров */
@@ -230,3 +230,62 @@ a.product-card__chip:hover{border-color:currentColor;color:inherit}
 .scheme-mini .sm-handle{stroke:#fff;stroke-width:1.5;stroke-linecap:round}
 .scheme-mini .sm-arrow{fill:none;stroke:#d9c690;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .scheme-mini .sm-fold{fill:none;stroke:#d9c690;stroke-width:1.2;stroke-linejoin:round;opacity:.9}
+
+/* ============================================================
+   Форма заявки <lead-form> — одна на весь сайт (assets/js/components/lead-form.js).
+   Светлая по умолчанию, .lead-form--dark — на тёмном фоне.
+   ============================================================ */
+lead-form{display:block}
+.lead-form{
+  --lf-ink:var(--ui-ink);--lf-muted:#6f6c64;--lf-line:#cfcac0;--lf-field:#fff;--lf-btn:#0b0b0a;--lf-btn-ink:#fff;--lf-note:#e9e4d4;
+  position:relative;display:grid;gap:12px;padding:18px;background:#fff;border:1px solid var(--ui-line-soft);color:var(--lf-ink);font-family:var(--font)
+}
+.lead-form--dark{background:rgba(8,8,8,.72);border-color:rgba(255,255,255,.26);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);--lf-ink:#f4f2ec;--lf-muted:#a8a59e;--lf-line:rgba(255,255,255,.28);--lf-field:rgba(255,255,255,.06);--lf-btn:#f4f2ec;--lf-btn-ink:#0b0b0a;--lf-note:rgba(177,162,122,.16)}
+.lead-form__row{display:grid;gap:12px}
+.lead-form__field{display:grid;gap:6px}
+.lead-form__field span{color:var(--lf-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.lead-form__field input,.lead-form__field textarea{
+  width:100%;min-height:50px;padding:12px 14px;border:1px solid var(--lf-line);border-radius:0;background:var(--lf-field);color:var(--lf-ink);
+  font:400 var(--fs-body)/1.3 var(--font);outline:none;resize:vertical;-webkit-appearance:none;appearance:none
+}
+.lead-form__field textarea{min-height:76px}
+.lead-form__field input::placeholder,.lead-form__field textarea::placeholder{color:var(--lf-muted);opacity:.85}
+.lead-form__field input:focus,.lead-form__field textarea:focus{border-color:var(--lf-ink)}
+.lead-form__file{
+  position:relative;display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:center;min-height:60px;padding:10px 14px;
+  border:1px dashed var(--lf-line);cursor:pointer;transition:border-color .2s,background .2s
+}
+.lead-form__file:hover{border-color:var(--lf-ink)}
+.lead-form__file input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.lead-form__file svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5}
+.lead-form__file b{display:block;overflow:hidden;font:500 var(--fs-small)/1.25 var(--font);text-overflow:ellipsis;white-space:nowrap}
+.lead-form__file small{display:block;margin-top:3px;color:var(--lf-muted);font-size:var(--fs-caption)}
+.lead-form__file.has-file{border-style:solid;border-color:var(--lf-ink)}
+.lead-form__file:focus-within{outline:2px solid var(--ui-accent);outline-offset:2px}
+.lead-form__free{
+  display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;margin:0;padding:11px 14px;
+  background:var(--lf-note);border-left:2px solid var(--ui-accent);font-size:var(--fs-small);line-height:1.4
+}
+.lead-form__free svg{width:20px;height:20px;fill:none;stroke:var(--ui-accent);stroke-width:2}
+.lead-form__free b{font-weight:600}
+.lead-form__hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.lead-form .lead-form__submit{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;min-height:56px;padding:0 20px;border:0;
+  background:var(--lf-btn);color:var(--lf-btn-ink);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase;transition:opacity .2s
+}
+.lead-form__submit i{font-style:normal;font-size:var(--fs-body)}
+.lead-form__submit:hover{opacity:.88}
+.lead-form__submit:disabled{opacity:.6;cursor:progress}
+.lead-form .lead-form__calc{display:flex;align-items:center;gap:6px;min-height:44px;color:var(--lf-muted);font-size:var(--fs-small);text-decoration:none}
+.lead-form__calc b{color:var(--lf-ink);font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.lead-form__calc i{font-style:normal;color:var(--lf-ink)}
+.lead-form__legal{margin:0;color:var(--lf-muted);font-size:var(--fs-caption);line-height:1.4}
+.lead-form__status{margin:0;font-size:var(--fs-small);line-height:1.45}
+.lead-form__status:empty{display:none}
+.lead-form__status.is-error{color:#b4533a}
+.lead-form--dark .lead-form__status.is-error{color:#f0a58f}
+.lead-form__status.is-ok{padding:12px 14px;background:#e3eadf;color:#26402a}
+.lead-form__status a{color:inherit}
+.lead-form button:focus-visible,.lead-form a:focus-visible,.lead-form input:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
+@media(min-width:560px){.lead-form__row{grid-template-columns:1fr 1fr}}
+@media(min-width:768px){.lead-form{padding:26px}}
