@@ -11,8 +11,8 @@
   --hs-line-soft:#d8d4ca;
   --hs-accent:#b1a27a;
   --hs-dark:#11110f;
-  --hs-pad:var(--ui-pad);
-  --hs-max:1440px;
+  --hs-pad:max(var(--ui-pad),4.5vw);
+  --hs-max:1680px;
   --hs-h1:var(--fs-h1);
   --hs-h2:var(--fs-h2);
   --hs-h3:var(--fs-h4);
@@ -1226,3 +1226,17 @@
 /* Заголовки секций: чуть шире, чтобы не рвать фразу на 5 строк */
 .hs-home-approach__grid h2,.hs-section-head h2{max-width:14ch}
 .hs-home-process__title h2{max-width:none}
+/* Телефон: этапы «От проёма до готового HS-портала» — карточками с прокруткой вбок */
+@media(max-width:767px){
+  .hs-home-process__steps{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    margin-inline:calc(-1 * var(--hs-pad));padding:0 var(--hs-pad) 4px;scroll-padding-inline:var(--hs-pad);
+    border-top:0;scrollbar-width:none
+  }
+  .hs-home-process__steps::-webkit-scrollbar{display:none}
+  .hs-home-process__steps article{
+    flex:0 0 72%;scroll-snap-align:start;grid-template-columns:1fr;align-content:start;gap:6px;
+    padding:14px;border:1px solid var(--hs-line)
+  }
+  .hs-home-process__steps p{grid-column:auto;margin:0}
+}
