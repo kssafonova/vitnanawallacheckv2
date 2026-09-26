@@ -104,7 +104,7 @@
     const top = H * (mobile ? .11 : .09), bottom = H * (mobile ? .12 : .09);
     const fw = W - left - right, fh = H - top - bottom, leafW = fw / n;
 
-    ctx.fillStyle = 'rgba(247,247,243,.16)';
+    ctx.fillStyle = 'rgba(245,245,244,.16)';
     ctx.fillRect(0, 0, W, H);
 
     ctx.strokeStyle = 'rgba(17,17,15,.88)';

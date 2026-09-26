@@ -44,7 +44,7 @@
         const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;
         ctx.clearRect(0,0,w,h);
         const bg=ctx.createLinearGradient(0,0,0,h);
-        bg.addColorStop(0,'#f0eee8');bg.addColorStop(1,'#d9d5cb');
+        bg.addColorStop(0,'#edeceb');bg.addColorStop(1,'#d3d2d1');
         ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
 
         const mobile=w<640,left=w*.065,right=w-left,top=h*.14,bottom=h*.79;
@@ -62,7 +62,7 @@
         ctx.fillStyle='#151615';ctx.fillRect(ax+12,ay+paneH*.45,3,mobile?30:40);
 
         const wheelY=bottom-2;
-        ctx.fillStyle='#f4f2ec';ctx.strokeStyle='#252625';ctx.lineWidth=1.4;
+        ctx.fillStyle='#f1f0ef';ctx.strokeStyle='#252625';ctx.lineWidth=1.4;
         [ax+aw*.27,ax+aw*.73].forEach(x=>{ctx.beginPath();ctx.arc(x,wheelY,5,0,Math.PI*2);ctx.fill();ctx.stroke()});
 
         if(p<.08){ctx.strokeStyle='#9a8660';ctx.lineWidth=2;ctx.strokeRect(ax-3,ay-3,aw+6,paneH+6)}
@@ -194,7 +194,7 @@
 
     const drawDiagram=()=>{
       const s=current(),g=geometry();
-      ctx.fillStyle='#e9e6de';ctx.fillRect(0,0,g.w,g.h);
+      ctx.fillStyle='#e4e4e3';ctx.fillRect(0,0,g.w,g.h);
       const {op,free}=drawPortal(s,g);
       dimensionH(g.left,g.right,g.top-30,s.width+' мм');
       dimensionV(g.left-24,g.top,g.bottom,s.height+' мм');
@@ -205,10 +205,10 @@
 
     const drawFacade=()=>{
       const s=current(),g0=geometry(),{w,h}=g0;
-      const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#cbd2cf');sky.addColorStop(.50,'#e9e8e2');sky.addColorStop(.51,'#cfc5b4');sky.addColorStop(1,'#b2a58f');
+      const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#cbd2cf');sky.addColorStop(.50,'#e6e6e5');sky.addColorStop(.51,'#cfc5b4');sky.addColorStop(1,'#b2a58f');
       ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
       const wallX=w*.04,wallY=h*.09,wallW=w*.92,wallH=h*.72;
-      ctx.fillStyle='#e1ded4';ctx.fillRect(wallX,wallY,wallW,wallH);
+      ctx.fillStyle='#dcdbd9';ctx.fillRect(wallX,wallY,wallW,wallH);
       ctx.fillStyle='#c7baa6';ctx.fillRect(0,h*.81,w,h*.19);
       // architectural datum lines
       ctx.fillStyle='rgba(70,68,62,.07)';ctx.fillRect(wallX+wallW*.07,wallY,2,wallH);ctx.fillRect(wallX+wallW*.91,wallY,2,wallH);

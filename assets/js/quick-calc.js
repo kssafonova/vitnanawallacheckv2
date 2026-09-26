@@ -32,7 +32,7 @@
   ];
   // Цвета каталога (белый, антрацит) в одной цене — как в data/products.json; другой RAL дороже
   const COLORS = [
-    { k: 'white', t: 'Белый', f: 1, sw: 'linear-gradient(135deg,#fbfaf7,#dcdad4)' },
+    { k: 'white', t: 'Белый', f: 1, sw: 'linear-gradient(135deg,#f9f9f9,#d9d8d7)' },
     { k: 'anthracite', t: 'Антрацит', f: 1, sw: 'linear-gradient(135deg,#4a4f53,#25282b)' },
     { k: 'ral', t: 'Другой RAL', f: 1.09, sw: 'linear-gradient(135deg,#c9c3b6,#8d887d)' },
   ];
@@ -112,19 +112,19 @@
       <div class="qc__step" role="group" aria-labelledby="${id}-s3">
         <div class="qc__legend"><span>03</span><b id="${id}-s3">Стеклопакет</b></div>
         <div class="qc__opts">${GLASS.map(g => opt('glass', g.k,
-          `<span class="qc__ico">${g.icon}</span><span class="qc__opt-t">${g.t}${g.rec ? '<small>рекомендуем</small>' : ''}</span><i class="qc__radio"></i>`, g.k === st.glass)).join('')}
+          `<span class="qc__ico">${g.icon}</span><span class="qc__opt-t">${g.t}${g.rec ? '<small>рекомендуем</small>' : ''}</span>`, g.k === st.glass)).join('')}
         </div>
       </div>
       <div class="qc__step" role="group" aria-labelledby="${id}-s4">
         <div class="qc__legend"><span>04</span><b id="${id}-s4">Цвет</b></div>
         <div class="qc__opts">${COLORS.map(c => opt('color', c.k,
-          `<span class="qc__sw" style="background:${c.sw}"></span><span class="qc__opt-t">${c.t}</span><i class="qc__radio"></i>`, c.k === st.color)).join('')}
+          `<span class="qc__sw" style="background:${c.sw}"></span><span class="qc__opt-t">${c.t}</span>`, c.k === st.color)).join('')}
         </div>
       </div>
       <div class="qc__step" role="group" aria-labelledby="${id}-s5">
         <div class="qc__legend"><span>05</span><b id="${id}-s5">Дополнительно</b></div>
         <div class="qc__extras">${EXTRAS.map(x => `
-          <label class="qc__extra"><input type="checkbox" name="extra_${x.k}" data-extra="${x.k}"><i class="qc__box">${ICON.check}</i><span><b>${x.t}</b><small>По расчёту</small></span><span class="qc__extra-ico">${x.icon}</span></label>`).join('')}
+          <label class="qc__extra"><input type="checkbox" name="extra_${x.k}" data-extra="${x.k}"><span class="qc__extra-ico">${x.icon}</span><span class="qc__extra-t"><b>${x.t}</b><small>по расчёту</small></span><i class="qc__add" aria-hidden="true"></i></label>`).join('')}
         </div>
       </div>
     </div>

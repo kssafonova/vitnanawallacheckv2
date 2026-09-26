@@ -17,7 +17,7 @@
 .rs-link{display:inline-flex;align-items:center;gap:10px;min-height:44px;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor}
 
 /* Что дальше: четыре шага с иконками. Телефон — прокрутка вбок */
-.rs-steps{padding:var(--space-section) 0;background:#0b0b0a;color:#f4f2ec}
+.rs-steps{padding:var(--space-section) 0;background:#0b0b0a;color:#f1f0ef}
 .rs-steps .ui-eyebrow{color:#a8a59e}
 .rs-steps__list{
   display:flex;gap:10px;margin:0 calc(-1 * var(--ui-pad));padding:0 var(--ui-pad) 4px;list-style:none;
@@ -55,3 +55,8 @@
   .rs-model__body{padding:0 16px}
   .rs-model i{display:none}
 }
+
+/* ---------- Глубина ---------- */
+.rs-model{border-color:transparent;box-shadow:var(--sh-1);transition:transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui)}
+@media(hover:hover){.rs-model:hover{transform:translateY(-3px);box-shadow:var(--sh-3)}}
+.rs-steps__list li{box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 20px 40px -24px rgba(0,0,0,.9)}

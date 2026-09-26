@@ -1,5 +1,5 @@
 @import url('./components.css');
-:root{--black:#050505;--white:#f7f7f3;--paper:#ebe8dc;--line:rgba(255,255,255,.34);--ink:#111;--muted:#666;--accent:#b1a27a;--pad:20px;--radius:0;--max:1440px}
+:root{--black:#050505;--white:#f5f5f4;--paper:#e4e4e3;--line:rgba(255,255,255,.34);--ink:#111;--muted:#666;--accent:#b1a27a;--pad:20px;--radius:0;--max:1440px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--white);color:var(--ink);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}body.menu-open{overflow:hidden}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}button{color:inherit}img{display:block;width:100%;height:auto}summary{list-style:none}summary::-webkit-details-marker{display:none}.wrap{width:min(100%,var(--max));margin:0 auto;padding-inline:var(--pad)}.eyebrow{margin:0 0 14px;font-size:var(--fs-label);line-height:1;letter-spacing:.18em;text-transform:uppercase}.display{margin:0;font-size:var(--fs-h2);line-height:.91;font-weight:300;letter-spacing:-.065em}.lead{margin:0;font-size:var(--fs-lead);line-height:1.48;letter-spacing:-.02em}.arrow{font-size:1.2em;font-weight:300}.btn{min-height:58px;display:inline-flex;align-items:center;justify-content:space-between;gap:24px;padding:0 18px;border:1px solid currentColor;background:transparent;font-size:var(--fs-body);text-transform:uppercase;letter-spacing:.04em;cursor:pointer}.btn--fill{background:var(--accent);border-color:var(--accent);color:#050505}.rule{border-top:1px solid currentColor;opacity:.45}
 
 /* HEADER — mobile base */
@@ -52,7 +52,7 @@
 
 
 /* ===== Systems 2026 — isolated responsive component ===== */
-.sysx{--sx-line:rgba(255,255,255,.22);--sx-muted:#aaa9a3;--sx-accent:#c6b482;background:#050505;color:#f4f4f0;padding:38px 0 54px}
+.sysx{--sx-line:rgba(255,255,255,.22);--sx-muted:#aaa9a3;--sx-accent:#c6b482;background:#050505;color:#f3f2f1;padding:38px 0 54px}
 .sysx-intro{padding-bottom:26px;border-bottom:1px solid var(--sx-line)}
 .sysx-title{margin:0;font-size:var(--fs-h2);line-height:.92;font-weight:300;letter-spacing:-.065em}
 .sysx-lead{max-width:690px;margin:18px 0 0;color:#c7c7c0;font-size:var(--fs-lead);line-height:1.48}
@@ -103,9 +103,9 @@
 /* Hero now matches the actual shared header height */
 .hero{min-height:calc(100svh - var(--header-h))}
 .hero__body{min-height:calc(100svh - var(--header-h));padding:48px var(--ui-pad) 22px}
-.hero__kicker{font-size:var(--fs-caption);font-weight:600;letter-spacing:.15em;color:#dedbd2}
+.hero__kicker{font-size:var(--fs-caption);font-weight:600;letter-spacing:.15em;color:#d9d8d7}
 .hero h1{max-width:760px;font-size:var(--fs-h1)}
-.hero__copy{max-width:560px;font-size:var(--fs-body);line-height:1.55;color:#e3e0d8}
+.hero__copy{max-width:560px;font-size:var(--fs-body);line-height:1.55;color:#dfdedc}
 .hero__actions{gap:7px}
 .hero__stats{margin-top:30px}
 .hero__stat{min-height:68px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -222,7 +222,7 @@
   max-width:11ch;font-size:var(--fs-h2s);
   text-transform:none;letter-spacing:-.055em
 }
-.project__copy p{max-width:480px;margin:12px 0 0;font-size:var(--fs-small);line-height:1.5;color:#dfdcd4}
+.project__copy p{max-width:480px;margin:12px 0 0;font-size:var(--fs-small);line-height:1.5;color:#dbdad8}
 .projects__cta{padding:24px var(--ui-pad) 76px;background:var(--ui-bg)}
 .projects__cta .btn{width:100%}
 
@@ -406,7 +406,7 @@
   font-size:var(--fs-label);font-weight:600;letter-spacing:.11em;text-transform:uppercase
 }
 .sysx-mini-head a{
-  display:inline-flex;align-items:center;gap:7px;color:#f0eee7;
+  display:inline-flex;align-items:center;gap:7px;color:#ececeb;
   padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.45)
 }
 .sysx-mini-head a b{font-size:var(--fs-small);font-weight:300}
@@ -418,7 +418,7 @@
 .sysx-mini-card{
   min-width:0;display:grid;grid-template-rows:76px 1fr;
   position:relative;background:#11110f;border:1px solid var(--sx-line);
-  color:#f5f3ed;text-decoration:none;overflow:hidden
+  color:#f2f1f0;text-decoration:none;overflow:hidden
 }
 .sysx-mini-thumb{position:relative;display:block;overflow:hidden;background:#252522}
 .sysx-mini-thumb img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:transform .35s ease}
@@ -468,7 +468,7 @@
 .sysx-pano-visual figcaption{
   position:absolute;z-index:2;left:12px;right:12px;bottom:11px;
   display:flex;justify-content:space-between;gap:12px;
-  color:#e6e3da;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase
+  color:#e1e0df;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase
 }
 
 /* Hero CTA hierarchy: catalogue first, individual calculation second */
