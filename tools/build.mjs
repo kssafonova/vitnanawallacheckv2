@@ -229,11 +229,11 @@ const ICO = {
   sill: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18M5 18V6h14v12"/><path d="M8 18l3-3h7" opacity=".6"/></svg>',
 };
 
-// Блок «Сколько стоит» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
+// Блок «Цена по размерам проёма» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
   return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
-      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Сколько стоит раздвижная дверь под ваш размер</h2></header>
+      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2></header>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
         <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
