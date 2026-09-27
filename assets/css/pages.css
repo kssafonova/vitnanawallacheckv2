@@ -193,3 +193,15 @@
 .pj-empty{margin:24px 0 0;color:var(--ui-muted);font:400 var(--fs-body)/1.5 var(--font)}
 .pj-empty[hidden]{display:none}
 .pj-empty button{text-decoration:underline;text-underline-offset:4px}
+/* «Проекты» на телефоне — чище, как у Vitrocsa: вместо ленты вкладок — список «Все проекты ⌄», под ним «Объект · Статус · Сбросить»;
+   без счётчика, крупнее отступы между проектами */
+.pj-system-select{display:none}
+@media(max-width:767px){
+  .pj-tabs{display:none}
+  .pj-system-select{display:block;flex-basis:100%}
+  .pj-bar__row{gap:6px 24px}
+  .pj-filters{gap:22px}
+  .pj-count{display:none}
+  .pj-grid{gap:48px}
+  .pj-card{gap:16px}
+}
