@@ -74,7 +74,7 @@ catalog/hs-portaly/<slug>/  страницы вариантов HS (модель
 catalog/fs-portaly/<slug>/  страницы вариантов FS (пока «скоро»)
 cart/, cart/done/           корзина с оформлением и страница «Заказ принят»
 raschet/                    калькулятор HS — одна страница на весь сайт (адрес принимает ?w=&h=&n=&glass=&color=&from=)
-projects/                   «Проекты» (по мотивам vitrocsa.com/projects): заголовок, вкладки систем, фильтры «Объект» / «Статус», сетка, просмотр крупно
+projects/                   «Проекты» (как vitrocsa.com/projects): заголовок и абзац, линия, фильтры в строку, подсказка «Наведите…», сетка 3 в ряд — под фото название, подробности плашкой при наведении
 data/projects.json          проекты для /projects/ (status: real — реальный объект, render — визуализация с пометкой); карточки собирает build.mjs
 about/                      «О компании»: цифры, «Почему мы» (#why), производство, реквизиты (#requisites)
 contacts/                   «Контакты»: телефон, часы, адрес производства, Яндекс Карты, самовывоз (#pickup), форма
@@ -89,7 +89,7 @@ assets/js/hs-opening.js     HS: конфигуратор «Как открыва
 assets/js/hs-interior3d.js  HS: вкладка «В интерьере» — 3D-гостиная (three.js): портал из параметров конфигурации, ползунок открывает, солнце через стекло, вид за окном — assets/images/systems/hs-interior-view.webp. Грузится только при открытии вкладки; без WebGL — рисованный интерьер на canvas
 assets/vendor/three/        three.js r169 (three.module.min.js + RoomEnvironment.js, лицензия MIT) — локальная копия, не CDN
 assets/js/card3d.js       3D-превью в карточках .m-card[data-3d] (three.js из assets/vendor/three): крутить, открыть по наведению / кнопке
-assets/js/projects.js       «Проекты»: фильтры и просмотр проекта крупно (<dialog>)
+assets/js/projects.js       «Проекты»: фильтры; на телефоне плашка с подробностями открывается нажатием
 assets/js/catalog-view.js   каталог: переключатель вида «Списком / Плиткой»
 assets/js/opening-draw.js   чертёж проёма (window.PSOpening): размеры на размерных линиях, створки, цена; блок «Цена по размерам проёма» ([data-open-teaser])
 assets/js/quick-calc.js     калькулятор HS на /raschet/ ([data-quick-calc]): чертёж + параметры + цена + <lead-form>

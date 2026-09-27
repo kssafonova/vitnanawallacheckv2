@@ -430,7 +430,8 @@ ${jsonLd(crumbs)}
 }
 
 // ---------- страница «Проекты» (/projects/) ----------
-// Карточки из data/projects.json: фото, название, система, объект, место, описание, «Смотреть» (крупное фото — assets/js/projects.js).
+// Карточки из data/projects.json, как у vitrocsa.com/projects: под фото — название; система, объект, место и описание —
+// тёмная плашка поверх фото при наведении (на телефоне — по нажатию, assets/js/projects.js).
 // status: render — визуализация, на карточке пометка; реальные объекты — status: real.
 function projectsGrid() {
   const pj = JSON.parse(read('data/projects.json'));
@@ -438,17 +439,17 @@ function projectsGrid() {
     const sys = p.systems.map(k => pj.systems[k]).join(', ');
     const meta = [['Система', sys], ['Объект', pj.types[p.type]], p.place ? ['Место', p.place] : null].filter(Boolean);
     return `<article class="pj-card" data-system="${p.systems.join(' ')}" data-type="${p.type}" data-status="${p.status}">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: ${esc(p.title)}">
+        <div class="pj-card__media" tabindex="0" aria-label="${esc(p.title)}: подробнее о проекте">
           <img src="../${p.image}" alt="${esc(p.title)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async">
           ${p.status === 'render' ? '<span class="pj-card__badge">Визуализация</span>' : ''}
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">${p.status === 'real' ? 'Реализованный проект' : 'Визуализация решения'}</p>
-          <h2>${esc(p.title)}</h2>
-          <dl class="pj-card__meta">${meta.map(([a, b]) => `<div><dt>${a}:</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>
-          <p class="pj-card__text">${esc(p.text)}</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">${esc(p.title)}</p>
+            <dl class="pj-card__meta">${meta.map(([a, b]) => `<div><dt>${a}:</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>
+            <p class="pj-card__text">${esc(p.text)}</p>
+            <p class="pj-card__tag">${p.status === 'real' ? 'Реализованный проект' : 'Визуализация решения'}</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">${esc(p.title)}</h2>
       </article>`;
   }).join('\n      ');
 }

@@ -1,4 +1,5 @@
-// Страница «Проекты»: фильтры (система — вкладки, объект и статус — списки, «Сбросить») и просмотр проекта крупно (<dialog>).
+// Страница «Проекты» (как vitrocsa.com/projects): фильтры — вкладки систем, «Объект», «Статус», «Сбросить»;
+// подробности проекта — тёмная плашка поверх фото при наведении (CSS), на сенсорных экранах — по нажатию (.is-open).
 // Карточки собирает tools/build.mjs из data/projects.json; без JS видны все проекты.
 (() => {
   const root = document.querySelector('[data-projects]');
@@ -30,21 +31,14 @@
   }));
   apply();
 
-  // Просмотр крупно
-  const dlg = document.querySelector('[data-pj-dialog]');
-  if (!dlg || typeof dlg.showModal !== 'function') return;
-  const $ = s => dlg.querySelector(s);
-  root.addEventListener('click', e => {
-    const b = e.target.closest('[data-pj-open]');
-    if (!b) return;
-    const c = b.closest('.pj-card'), img = c.querySelector('img');
-    $('[data-pj-img]').src = img.src; $('[data-pj-img]').alt = img.alt;
-    $('[data-pj-tag]').textContent = c.querySelector('.pj-card__tag').textContent;
-    $('[data-pj-title]').textContent = c.querySelector('h2').textContent;
-    $('[data-pj-meta]').innerHTML = c.querySelector('.pj-card__meta').innerHTML;
-    $('[data-pj-text]').textContent = c.querySelector('.pj-card__text').textContent;
-    dlg.showModal();
-  });
-  $('[data-pj-close]').addEventListener('click', () => dlg.close());
-  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  // Сенсорные экраны: нажатие по фото показывает / прячет подробности (открыта одна карточка)
+  if (matchMedia('(hover: none)').matches) {
+    root.addEventListener('click', e => {
+      const m = e.target.closest('.pj-card__media');
+      if (!m) return;
+      const open = !m.classList.contains('is-open');
+      root.querySelectorAll('.pj-card__media.is-open').forEach(x => x.classList.remove('is-open'));
+      m.classList.toggle('is-open', open);
+    });
+  }
 })();
