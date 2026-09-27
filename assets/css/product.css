@@ -8,13 +8,6 @@
 .product-page img{display:block;max-width:100%}
 .p-wrap{width:min(100%,var(--ui-max));margin-inline:auto;padding-inline:var(--ui-pad)}
 
-.p-crumbs{
-  min-height:48px;display:flex;align-items:center;gap:8px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;
-  color:#77736a;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--ui-line-soft)
-}
-.p-crumbs::-webkit-scrollbar{display:none}
-.p-crumbs span{color:#aaa59a}
-
 /* Hero */
 .product-hero{background:#fff;border-bottom:1px solid var(--ui-line)}
 .product-hero__grid{display:grid}

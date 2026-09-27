@@ -5,9 +5,6 @@
    ============================================================ */
 .rs-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
 .rs-page a{color:inherit}
-.rs-crumbs{display:flex;flex-wrap:wrap;gap:8px;padding-top:18px;padding-bottom:4px;color:var(--ui-muted);font:500 var(--fs-label)/1.4 var(--font);letter-spacing:.08em;text-transform:uppercase}
-.rs-crumbs a{text-decoration:none}
-.rs-crumbs a:hover{color:var(--ui-ink)}
 .rs-calc{padding:clamp(20px,3vw,44px) 0 var(--space-section)}
 .rs-noscript{padding:16px;border:1px solid var(--ui-line-soft);font-size:var(--fs-body)}
 

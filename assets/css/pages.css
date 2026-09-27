@@ -136,8 +136,6 @@
    строка фильтров (вкладки систем слева, «Объект» / «Статус» / «Сбросить» справа); сетка 3 в ряд — под фото только
    название, подробности — тёмная плашка поверх фото при наведении (на телефоне — по нажатию). Шрифты и цвета — сайта.
    ============================================================ */
-.pj-crumbs{display:flex;flex-wrap:wrap;gap:8px;padding-top:18px;color:var(--ui-muted);font:500 var(--fs-label)/1.4 var(--font);letter-spacing:.1em;text-transform:uppercase}
-.pj-crumbs a:hover{color:var(--ui-ink)}
 .pj-head{padding:clamp(32px,5vw,72px) 0 clamp(32px,5vw,80px)}
 .pj-head__grid{display:grid;gap:20px}
 .pj-head h1{margin:0;font:300 var(--fs-h1)/.9 var(--font);letter-spacing:-.07em}

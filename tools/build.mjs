@@ -349,7 +349,7 @@ ${jsonLd(crumbs)}
 <body class="product-page${soon ? ' product-page--soon' : ''}" data-sku="${v.sku}">
 <site-menu data-base="${base}"></site-menu>
 <main>
-<nav class="p-wrap p-crumbs" aria-label="Хлебные крошки"><a href="${base}">Главная</a><span>/</span><a href="${base}catalog/">Каталог</a><span>/</span><a href="${systemHref(m, base)}">${m.system}</a><span>/</span>${esc(m.code)}</nav>
+<nav class="crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="${base}">Главная</a><span aria-hidden="true">—</span><a href="${base}catalog/">Каталог</a><span aria-hidden="true">—</span><a href="${systemHref(m, base)}">${m.system}</a><span aria-hidden="true">—</span><span aria-current="page">${esc(m.code)}</span></div></nav>
 <section class="product-hero">
   <div class="product-hero__grid">
     <div class="product-media"${v.imageOpen ? ' data-media-toggle' : ''} data-reveal>

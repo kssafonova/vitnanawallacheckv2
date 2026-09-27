@@ -542,3 +542,17 @@ lead-form{display:block}
 /* Ссылка «Все проекты» под блоком проектов (главная, HS) → /projects/ */
 .projects-all{max-width:var(--ui-max);margin:calc(var(--space-section) * -.6) auto 0;padding:0 var(--ui-pad) var(--space-section);background:var(--ui-bg)}
 .projects-all a{display:inline-flex;align-items:center;gap:10px;min-height:44px;border-bottom:1px solid var(--ui-ink);color:var(--ui-ink);text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+/* Хлебные крошки — на всех страницах, кроме главной: КАПС-подпись, разделитель «—», текущая страница чёрным.
+   .crumbs — полоса над первым экраном; .crumbs--over — поверх фото первого экрана (о компании, HS, FS). */
+.crumbs{border-bottom:1px solid var(--ui-line-soft);background:var(--ui-bg)}
+.crumbs__in{display:flex;align-items:center;gap:10px;min-height:46px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;color:var(--ui-muted);font:500 var(--fs-label)/1.2 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.crumbs__in::-webkit-scrollbar{display:none}
+.crumbs a{color:inherit;text-decoration:none;transition:color .15s}
+.crumbs a:hover{color:var(--ui-ink)}
+.crumbs [aria-hidden="true"]{color:var(--ui-line)}
+.crumbs [aria-current]{color:var(--ui-ink)}
+.crumbs--over{position:absolute;inset:0 0 auto;z-index:2;border-bottom:1px solid rgba(255,255,255,.22);background:transparent}
+.crumbs--over .crumbs__in,.crumbs--over [aria-current]{color:#fff}
+.crumbs--over a{color:rgba(255,255,255,.72)}
+.crumbs--over a:hover{color:#fff}
+.crumbs--over [aria-hidden="true"]{color:rgba(255,255,255,.45)}
