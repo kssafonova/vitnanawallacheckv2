@@ -27,150 +27,154 @@
 </section>
 
 <section class="pj-list" data-projects>
+  <div class="pj-bar">
+    <div class="ui-wrap pj-bar__row">
+      <div class="pj-tabs" role="group" aria-label="Система">
+        <button type="button" data-pj-system="" aria-pressed="true">Все проекты</button>
+        <button type="button" data-pj-system="hs" aria-pressed="false">HS · раздвижные</button>
+        <button type="button" data-pj-system="fs" aria-pressed="false">FS · складные</button>
+        <button type="button" data-pj-system="pano" aria-pressed="false">Панорамное остекление</button>
+      </div>
+      <div class="pj-filters">
+        <label class="pj-select"><select data-pj-type aria-label="Объект"><option value="">Объект</option><option value="house">Частный дом</option><option value="terrace">Терраса</option><option value="interior">Интерьер</option></select></label>
+        <label class="pj-select"><select data-pj-status aria-label="Статус"><option value="">Статус</option><option value="real">Реализованные</option><option value="render">Визуализации</option></select></label>
+        <button type="button" class="pj-reset" data-pj-reset>Сбросить <span aria-hidden="true">↻</span></button>
+      </div>
+    </div>
+  </div>
   <div class="ui-wrap">
-    <div class="pj-tabs" role="group" aria-label="Система">
-      <button type="button" data-pj-system="" aria-pressed="true">Все проекты</button>
-      <button type="button" data-pj-system="hs" aria-pressed="false">HS · раздвижные</button>
-      <button type="button" data-pj-system="fs" aria-pressed="false">FS · складные</button>
-      <button type="button" data-pj-system="pano" aria-pressed="false">Панорамное остекление</button>
-    </div>
-    <div class="pj-filters">
-      <label><span>Объект</span><select data-pj-type><option value="">Все</option><option value="house">Частный дом</option><option value="terrace">Терраса</option><option value="interior">Интерьер</option></select></label>
-      <label><span>Статус</span><select data-pj-status><option value="">Все</option><option value="real">Реализованные</option><option value="render">Визуализации</option></select></label>
-      <button type="button" class="pj-reset" data-pj-reset>Сбросить</button>
-      <p class="pj-count" data-pj-count aria-live="polite"></p>
-    </div>
+    <p class="pj-hint"><span class="pj-hint--hover">Наведите на изображение, чтобы узнать больше о проекте</span><span class="pj-hint--touch">Нажмите на изображение, чтобы узнать больше о проекте</span><span class="pj-count" data-pj-count aria-live="polite"></span></p>
     <div class="pj-grid">
       <!-- build:projects-grid -->
       <article class="pj-card" data-system="pano hs" data-type="house" data-status="real">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Дом с панорамным фасадом">
+        <div class="pj-card__media" tabindex="0" aria-label="Дом с панорамным фасадом: подробнее о проекте">
           <img src="../assets/images/projects/house.webp" alt="Дом с панорамным фасадом" loading="eager" decoding="async">
           
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Реализованный проект</p>
-          <h2>Дом с панорамным фасадом</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление, HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
-          <p class="pj-card__text">Единый контур остекления с крупными светопрозрачными плоскостями и выходом на участок.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Дом с панорамным фасадом</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление, HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
+            <p class="pj-card__text">Единый контур остекления с крупными светопрозрачными плоскостями и выходом на участок.</p>
+            <p class="pj-card__tag">Реализованный проект</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Дом с панорамным фасадом</h2>
       </article>
       <article class="pj-card" data-system="pano" data-type="interior" data-status="real">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Свет во всю высоту">
+        <div class="pj-card__media" tabindex="0" aria-label="Свет во всю высоту: подробнее о проекте">
           <img src="../assets/images/projects/interior.webp" alt="Свет во всю высоту" loading="eager" decoding="async">
           
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Реализованный проект</p>
-          <h2>Свет во всю высоту</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
-          <p class="pj-card__text">Окна в пол с минимальным визуальным шумом и акцентом на вид из интерьера.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Свет во всю высоту</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
+            <p class="pj-card__text">Окна в пол с минимальным визуальным шумом и акцентом на вид из интерьера.</p>
+            <p class="pj-card__tag">Реализованный проект</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Свет во всю высоту</h2>
       </article>
       <article class="pj-card" data-system="hs" data-type="terrace" data-status="real">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Выход на террасу">
+        <div class="pj-card__media" tabindex="0" aria-label="Выход на террасу: подробнее о проекте">
           <img src="../assets/images/projects/terrace.webp" alt="Выход на террасу" loading="eager" decoding="async">
           
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Реализованный проект</p>
-          <h2>Выход на террасу</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
-          <p class="pj-card__text">Тёплый подъёмно-раздвижной портал для ежедневного прохода из гостиной на террасу.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Выход на террасу</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div><div><dt>Место:</dt><dd>Московская область</dd></div></dl>
+            <p class="pj-card__text">Тёплый подъёмно-раздвижной портал для ежедневного прохода из гостиной на террасу.</p>
+            <p class="pj-card__tag">Реализованный проект</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Выход на террасу</h2>
       </article>
       <article class="pj-card" data-system="hs pano" data-type="terrace" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Терраса с видом на город">
+        <div class="pj-card__media" tabindex="0" aria-label="Терраса с видом на город: подробнее о проекте">
           <img src="../assets/images/hero/hero-house.webp" alt="Терраса с видом на город" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Терраса с видом на город</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная, Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
-          <p class="pj-card__text">Остекление по всей длине террасы: раздвижные створки HS и глухие панорамные поля.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Терраса с видом на город</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная, Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
+            <p class="pj-card__text">Остекление по всей длине террасы: раздвижные створки HS и глухие панорамные поля.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Терраса с видом на город</h2>
       </article>
       <article class="pj-card" data-system="hs" data-type="house" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Гостиная с выходом в сад">
+        <div class="pj-card__media" tabindex="0" aria-label="Гостиная с выходом в сад: подробнее о проекте">
           <img src="../assets/images/systems/hs.webp" alt="Гостиная с выходом в сад" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Гостиная с выходом в сад</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div></dl>
-          <p class="pj-card__text">Две створки HS: одна сдвигается, проход на террасу — половина ширины проёма.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Гостиная с выходом в сад</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div></dl>
+            <p class="pj-card__text">Две створки HS: одна сдвигается, проход на террасу — половина ширины проёма.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Гостиная с выходом в сад</h2>
       </article>
       <article class="pj-card" data-system="fs" data-type="house" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Открытый угол гостиной">
+        <div class="pj-card__media" tabindex="0" aria-label="Открытый угол гостиной: подробнее о проекте">
           <img src="../assets/images/systems/fs.webp" alt="Открытый угол гостиной" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Открытый угол гостиной</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>FS · складная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div></dl>
-          <p class="pj-card__text">Складные створки FS собираются пакетом у края — проём открывается почти полностью.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Открытый угол гостиной</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>FS · складная</dd></div><div><dt>Объект:</dt><dd>Частный дом</dd></div></dl>
+            <p class="pj-card__text">Складные створки FS собираются пакетом у края — проём открывается почти полностью.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Открытый угол гостиной</h2>
       </article>
       <article class="pj-card" data-system="fs" data-type="terrace" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Веранда со складной стеной">
+        <div class="pj-card__media" tabindex="0" aria-label="Веранда со складной стеной: подробнее о проекте">
           <img src="../assets/images/systems/fs-view.webp" alt="Веранда со складной стеной" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Веранда со складной стеной</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>FS · складная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
-          <p class="pj-card__text">Складная стена FS между столовой и верандой: летом — одно пространство.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Веранда со складной стеной</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>FS · складная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
+            <p class="pj-card__text">Складная стена FS между столовой и верандой: летом — одно пространство.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Веранда со складной стеной</h2>
       </article>
       <article class="pj-card" data-system="pano" data-type="interior" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Панорама над долиной">
+        <div class="pj-card__media" tabindex="0" aria-label="Панорама над долиной: подробнее о проекте">
           <img src="../assets/images/systems/panorama.webp" alt="Панорама над долиной" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Панорама над долиной</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div></dl>
-          <p class="pj-card__text">Глухое панорамное остекление в пол: минимум профиля, максимум вида.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Панорама над долиной</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div></dl>
+            <p class="pj-card__text">Глухое панорамное остекление в пол: минимум профиля, максимум вида.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Панорама над долиной</h2>
       </article>
       <article class="pj-card" data-system="pano" data-type="interior" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Гостиная с видом на лес">
+        <div class="pj-card__media" tabindex="0" aria-label="Гостиная с видом на лес: подробнее о проекте">
           <img src="../assets/images/systems/panorama_view.webp" alt="Гостиная с видом на лес" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Гостиная с видом на лес</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div></dl>
-          <p class="pj-card__text">Угловое панорамное остекление с узкими импостами.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Гостиная с видом на лес</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>Панорамное остекление</dd></div><div><dt>Объект:</dt><dd>Интерьер</dd></div></dl>
+            <p class="pj-card__text">Угловое панорамное остекление с узкими импостами.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Гостиная с видом на лес</h2>
       </article>
       <article class="pj-card" data-system="hs" data-type="terrace" data-status="render">
-        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: Выход на террасу у озера">
+        <div class="pj-card__media" tabindex="0" aria-label="Выход на террасу у озера: подробнее о проекте">
           <img src="../assets/images/systems/hs-overview.jpg" alt="Выход на террасу у озера" loading="lazy" decoding="async">
           <span class="pj-card__badge">Визуализация</span>
-        </button>
-        <div class="pj-card__body">
-          <p class="pj-card__tag">Визуализация решения</p>
-          <h2>Выход на террасу у озера</h2>
-          <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
-          <p class="pj-card__text">HS с активной створкой справа: створка уходит за глухую, не занимая места в комнате.</p>
-          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+          <div class="pj-card__over">
+            <p class="pj-card__name">Выход на террасу у озера</p>
+            <dl class="pj-card__meta"><div><dt>Система:</dt><dd>HS · подъёмно-раздвижная</dd></div><div><dt>Объект:</dt><dd>Терраса</dd></div></dl>
+            <p class="pj-card__text">HS с активной створкой справа: створка уходит за глухую, не занимая места в комнате.</p>
+            <p class="pj-card__tag">Визуализация решения</p>
+          </div>
         </div>
+        <h2 class="pj-card__title">Выход на террасу у озера</h2>
       </article>
       <!-- /build:projects-grid -->
     </div>
@@ -189,11 +193,6 @@
 </section>
 </main>
 
-<dialog class="pj-dialog" data-pj-dialog aria-label="Проект">
-  <button type="button" class="pj-dialog__close" data-pj-close aria-label="Закрыть">×</button>
-  <img alt="" data-pj-img>
-  <div class="pj-dialog__body"><p class="pj-card__tag" data-pj-tag></p><h2 data-pj-title></h2><dl class="pj-card__meta" data-pj-meta></dl><p data-pj-text></p></div>
-</dialog>
 
 <site-footer data-base="../"></site-footer>
 <script src="../assets/js/components/site-menu.js"></script>
