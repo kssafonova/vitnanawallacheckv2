@@ -1,5 +1,6 @@
 /* Калькулятор HS — страница /raschet/ ([data-quick-calc]). Один экран без шагов (решение владельца):
-   слева чертёж проёма (assets/js/opening-draw.js, размеры вводятся на размерных линиях), справа параметры
+   слева чертёж проёма (assets/js/opening-draw.js, только показ), справа выбор размера (готовые двери или «Свой размер»
+   с полями ширины и высоты), параметры
    плоскими кнопками и цена, ниже — общая минимальная форма <lead-form>, в письмо уходят параметры расчёта.
    Адрес принимает ?w=3600&h=2300&n=3&glass=standard&color=anthracite&from=… (так ведут товар и блок «Цена по размерам проёма»).
    Размер и створки как у готовой двери (data-doors), стандартный стеклопакет, цвет модели, без опций — это товар каталога:
@@ -54,6 +55,7 @@
   <div class="qcx__grid">
     <div class="qcx__draw" data-qcx-draw></div>
     <div class="qcx__side">
+      <div class="qcx__row qcx__row--size" data-qcx-size></div>
       <div class="qcx__row"><span class="qcx__lbl">Створки</span><div class="qcx__seg" role="group">${[2, 3, 4].map(n =>
         `<button type="button" data-leaves="${n}" aria-pressed="${n === st.n}">${n}</button>`).join('')}</div></div>
       <div class="qcx__row"><span class="qcx__lbl">Стеклопакет</span>${seg('glass', GLASS, st.glass)}</div>
@@ -72,7 +74,8 @@
 </div>`;
 
     const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
-    const draw = P.mount($('[data-qcx-draw]'), { w: st.w, h: st.h, n: st.n, onChange: v => { st.w = v.w; st.h = v.h; st.n = v.n; update(); } });
+    const draw = P.mount($('[data-qcx-draw]'), { w: st.w, h: st.h, n: st.n });
+    const size = P.sizeControl($('[data-qcx-size]'), { doors: ready, w: st.w, h: st.h, n: st.n, onChange: v => { st.w = v.w; st.h = v.h; st.n = v.n; draw.set(v); update(); } });
     const form = $('lead-form');
 
     // Готовая дверь каталога: размер и створки совпали, стеклопакет стандартный, цвет есть у модели, без опций
@@ -135,7 +138,7 @@
     root.addEventListener('click', e => {
       const b = e.target.closest('button[data-leaves],button[data-glass],button[data-color],button[data-extra]');
       if (!b || b.disabled) return;
-      if (b.dataset.leaves) { st.n = +b.dataset.leaves; draw.set({ n: st.n }); }
+      if (b.dataset.leaves) { st.n = +b.dataset.leaves; draw.set({ n: st.n }); size.set({ n: st.n }); }
       else if (b.dataset.glass) st.glass = b.dataset.glass;
       else if (b.dataset.color) st.color = b.dataset.color;
       else st.extras.has(b.dataset.extra) ? st.extras.delete(b.dataset.extra) : st.extras.add(b.dataset.extra);

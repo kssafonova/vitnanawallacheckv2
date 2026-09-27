@@ -233,7 +233,8 @@ const ICO = {
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
   return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
-      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2></header>
+      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2><p>Выберите ширину проёма — покажем готовую дверь и цену. Другой размер введите сами: посчитаем индивидуальный заказ.</p></header>
+      <div class="qc-draw__size" data-open-size></div>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
         <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
