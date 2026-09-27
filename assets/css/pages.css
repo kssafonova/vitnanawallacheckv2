@@ -121,3 +121,12 @@
   .pg-why{column-gap:80px}
   .pg-split{gap:110px}
 }
+
+/* «О компании»: заголовок подсекции с тонкой линией сверху; паспорт производства; секции подряд без двойных отступов */
+.pg-head-line{margin-bottom:var(--space-head);padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
+.pg-head-line .ui-eyebrow{margin:0 0 14px}
+.pg-passport{margin-top:22px}
+.pg-passport>div{grid-template-columns:minmax(0,120px) minmax(0,1fr)!important;gap:16px!important}
+.pg-passport dd{font-size:var(--fs-small)}
+.pg > main > .pg-section + .pg-section{padding-top:0}
+.cta-rows{margin-top:14px}
