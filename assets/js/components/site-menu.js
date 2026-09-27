@@ -32,7 +32,7 @@
       <header class="head"><div class="in">
         <a class="brand" href="${base}index.html#top">PORTAL SYSTEMS</a>
         <nav class="nav" aria-label="Основная навигация">
-          <a href="${base}systems/hs/">HS система</a><a href="${base}catalog/">Каталог</a><a href="${base}index.html#projects">Проекты</a><a href="${base}raschet/">Калькулятор</a><a href="${base}about/">О компании</a><a href="${base}contacts/">Контакты</a>
+          <a href="${base}systems/hs/">HS система</a><a href="${base}catalog/">Каталог</a><a href="${base}projects/">Проекты</a><a href="${base}raschet/">Калькулятор</a><a href="${base}about/">О компании</a><a href="${base}contacts/">Контакты</a>
         </nav>
         <div class="tools">
           <a class="cart" href="${base}cart/" aria-label="Корзина"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg><b class="count" hidden>0</b></a>
@@ -44,7 +44,7 @@
           <a href="${base}systems/hs/"><span>HS система</span><span>↘</span></a>
           <a href="${base}index.html#systems"><span>Все системы</span><span>↘</span></a>
           <a href="${base}catalog/"><span>Каталог</span><span>↘</span></a>
-          <a href="${base}index.html#projects"><span>Проекты</span><span>↘</span></a>
+          <a href="${base}projects/"><span>Проекты</span><span>↘</span></a>
           <a href="${base}raschet/"><span>Калькулятор</span><span>↘</span></a>
           <a href="${base}about/"><span>О компании</span><span>↘</span></a>
           <a href="${base}contacts/"><span>Контакты</span><span>↘</span></a>

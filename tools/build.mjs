@@ -429,6 +429,30 @@ ${jsonLd(crumbs)}
 `;
 }
 
+// ---------- страница «Проекты» (/projects/) ----------
+// Карточки из data/projects.json: фото, название, система, объект, место, описание, «Смотреть» (крупное фото — assets/js/projects.js).
+// status: render — визуализация, на карточке пометка; реальные объекты — status: real.
+function projectsGrid() {
+  const pj = JSON.parse(read('data/projects.json'));
+  return pj.projects.map((p, i) => {
+    const sys = p.systems.map(k => pj.systems[k]).join(', ');
+    const meta = [['Система', sys], ['Объект', pj.types[p.type]], p.place ? ['Место', p.place] : null].filter(Boolean);
+    return `<article class="pj-card" data-system="${p.systems.join(' ')}" data-type="${p.type}" data-status="${p.status}">
+        <button type="button" class="pj-card__media" data-pj-open aria-label="Смотреть: ${esc(p.title)}">
+          <img src="../${p.image}" alt="${esc(p.title)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async">
+          ${p.status === 'render' ? '<span class="pj-card__badge">Визуализация</span>' : ''}
+        </button>
+        <div class="pj-card__body">
+          <p class="pj-card__tag">${p.status === 'real' ? 'Реализованный проект' : 'Визуализация решения'}</p>
+          <h2>${esc(p.title)}</h2>
+          <dl class="pj-card__meta">${meta.map(([a, b]) => `<div><dt>${a}:</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>
+          <p class="pj-card__text">${esc(p.text)}</p>
+          <button type="button" class="pj-card__more" data-pj-open>Смотреть <span aria-hidden="true">→</span></button>
+        </div>
+      </article>`;
+  }).join('\n      ');
+}
+
 // ---------- блоки в страницах с ручной вёрсткой ----------
 const models = data.models;
 const hs = models.filter(m => m.system === 'HS');
@@ -447,6 +471,9 @@ const blocks = {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
   },
+  'projects/index.html': {
+    'projects-grid': projectsGrid(),
+  },
   'cart/index.html': {
     'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
   },
@@ -460,7 +487,7 @@ const blocks = {
 // ---------- sitemap ----------
 const sitemapUrls = [
   ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
-  ['raschet/', 'monthly', '0.8'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
+  ['raschet/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
 ];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
