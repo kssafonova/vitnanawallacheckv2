@@ -556,3 +556,36 @@ lead-form{display:block}
 .crumbs--over a{color:rgba(255,255,255,.72)}
 .crumbs--over a:hover{color:#fff}
 .crumbs--over [aria-hidden="true"]{color:rgba(255,255,255,.45)}
+
+/* ---------- Карточка товара по макету владельца: «Проём:» → «Схема:» → «Цвет:» (подписи над выбором) → линия →
+   цена «за конструкцию» → кнопка «В корзину» во всю ширину. Размеры проёма — из таблицы в data/products.json (sizes). ---------- */
+.m-card .m-card__opt{grid-template-columns:minmax(0,1fr);gap:8px}
+.m-card .m-card__label{min-width:0;color:var(--ui-muted);font:400 var(--fs-small)/1.2 var(--font)}
+.m-card .m-card__chips{gap:8px}
+.m-card .m-card__chip{
+  display:inline-flex;align-items:center;justify-content:center;min-width:64px;min-height:46px;padding:0 16px;
+  border:1px solid var(--ui-line-soft);font:500 var(--fs-small)/1 var(--font);letter-spacing:.06em
+}
+.m-card .m-card__chip--num{letter-spacing:.02em}
+.m-card .m-card__swatches{gap:10px}
+.m-card .m-card__swatch{width:48px;height:48px}
+.m-card .m-card__swatch.is-active{outline:1px solid var(--ui-ink);outline-offset:3px}
+.m-card .m-card__ral{
+  display:inline-grid;place-items:center;flex:none;width:48px;height:48px;margin:0;padding:2px;border:1px solid var(--ui-line-soft);
+  color:var(--ui-ink);font:400 var(--fs-label)/1.15 var(--font);text-align:center;white-space:normal
+}
+.m-card .m-card__buy{grid-template-columns:minmax(0,1fr);align-items:stretch;gap:18px;padding-top:18px}
+.m-card .m-card__buy .m-card__price{order:0;text-align:left}
+.m-card .m-card__price strong{font:400 var(--fs-h3)/1 var(--font);letter-spacing:-.03em}
+.m-card .m-card__price small{margin-top:8px;font-size:var(--fs-small)}
+.m-card .m-card__buy .m-card__cart.ui-btn{min-height:var(--btn-h);justify-content:space-between;padding:0 20px}
+@container (max-width:300px){
+  .m-card .m-card__chips{gap:6px}
+  .m-card .m-card__chip{min-width:0;min-height:38px;padding:0 10px;font-size:var(--fs-caption)}
+  .m-card .m-card__swatch{width:34px;height:34px}
+  .m-card .m-card__ral{width:auto;height:34px;padding:0 6px;white-space:nowrap}
+  .m-card .m-card__buy{gap:12px;padding-top:12px}
+  .m-card .m-card__price strong{font-size:var(--fs-price)}
+  .m-card .m-card__buy .m-card__cart.ui-btn{min-height:44px;padding:0 12px}
+}
+.m-card--project .m-card__buy .m-card__price{order:-1}

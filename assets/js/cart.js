@@ -28,11 +28,13 @@
   const serviceCost=goods=>mode()==='pickup'?0:Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
 
   const lines=()=>cart.items().map(i=>({...i,v:catalog.get(i.sku)})).filter(i=>i.v);
-  // Варианты той же модели: другие цвета при той же схеме и другие схемы при том же цвете
-  const siblings=(v,key)=>[...catalog.values()].filter(x=>x.model===v.model&&(key==='color'?x.scheme_slug===v.scheme_slug:x.color_slug===v.color_slug));
+  // Варианты той же модели: другой проём / цвет / схема при остальных тех же (проём — ширина из таблицы размеров)
+  const siblings=(v,key)=>[...catalog.values()].filter(x=>x.model===v.model
+    &&(key==='width'||x.width===v.width)&&(key==='color'||x.color_slug===v.color_slug)&&(key==='scheme'||x.scheme_slug===v.scheme_slug));
 
   const itemHtml=({sku,qty,v})=>{
-    const colors=siblings(v,'color'),schemes=siblings(v,'scheme');
+    const colors=siblings(v,'color'),schemes=siblings(v,'scheme'),widths=siblings(v,'width');
+    const sizeChips=widths.length>1?`<div class="m-card__chips">${widths.map(x=>`<button type="button" class="m-card__chip${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" aria-pressed="${x.sku===sku}">${esc(x.size_short)}</button>`).join('')}</div>`:'';
     const swatches=colors.map(x=>`<button type="button" class="m-card__swatch${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" style="--sw:${esc(x.hex)}" title="${esc(x.color)}" aria-label="Цвет ${esc(x.color)}" aria-pressed="${x.sku===sku}"></button>`).join('');
     const chips=schemes.length>1?`<div class="m-card__chips">${schemes.map(x=>`<button type="button" class="m-card__chip${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" aria-pressed="${x.sku===sku}">${esc(x.scheme_short)}</button>`).join('')}</div>`:'';
     return `
@@ -42,6 +44,7 @@
           <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
           <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
           <p class="cart-item__meta">${esc(v.size)} · срок ${termText()} · арт. ${esc(sku)}</p>
+          <div class="m-card__opt"><span class="m-card__label">Проём: <b>${esc(v.size_short)}</b></span>${sizeChips}</div>
           <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(v.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
           <div class="m-card__opt"><span class="m-card__label">${esc(v.scheme_title)}: <b>${esc(v.scheme_short)}</b></span>${chips}</div>
           <div class="cart-item__foot">

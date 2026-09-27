@@ -5,36 +5,15 @@
   if (!root) return;
   const SELF = (document.currentScript && document.currentScript.src) || location.href;
 
-  const CAT = '../../catalog/hs-portaly/';
-  const DATA = {
-    hs30: {
-      code: 'HS/30', width: 3000, height: 2300, def: 'right',
-      variants: {
-        left:  { label: 'Слева',  sections: 2, moving: [0], targets: [1], passage: 1500, ratio: .5,
-                 dir: 'левая,<br> сдвигается вправо', use: 'выхода на террасу,<br> из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sleva/' },
-        right: { label: 'Справа', sections: 2, moving: [1], targets: [0], passage: 1500, ratio: .5,
-                 dir: 'правая,<br> сдвигается влево', use: 'выхода на террасу,<br> из гостиной', href: CAT + 'alumark-s158-3000x2300-belyi-aktivnaya-sprava/' }
-      }
-    },
-    hs36: {
-      code: 'HS/36', width: 3600, height: 2300, def: 'right',
-      variants: {
-        left:  { label: 'Слева',  sections: 3, moving: [0, 1], targets: [2, 2], passage: 2400, ratio: .667,
-                 dir: 'две левые,<br> сдвигаются вправо', use: 'широкого выхода<br> на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' },
-        right: { label: 'Справа', sections: 3, moving: [1, 2], targets: [0, 0], passage: 2400, ratio: .667,
-                 dir: 'две правые,<br> сдвигаются влево', use: 'широкого выхода<br> на террасу', href: CAT + 'alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/' }
-      }
-    },
-    hs48: {
-      code: 'HS/48', width: 4800, height: 2300, def: 'center',
-      variants: {
-        center: { label: 'От центра', sections: 4, moving: [1, 2], targets: [0, 3], passage: 2400, ratio: .5,
-                  dir: 'две центральные<br> расходятся', use: 'главного выхода,<br> большой террасы', href: CAT + 'alumark-s158-4800x2300-antratsit-otkryvanie-ot-centra/' }
-      }
-    }
-  };
+  // Размеры из таблицы (data/products.json → sizes) собирает генератор: <script data-hsx-json> (блок build:hsx-data).
+  // families: «модель-ширина» → код, размер, створки, проход, схемы (left / right / center) со ссылкой и артикулом.
+  let DATA = {}, START = '', DEFS = {};
+  try { const j = JSON.parse(root.querySelector('[data-hsx-json]').textContent); DATA = j.families; START = j.start; DEFS = j.defaults || {}; } catch (_) { return; }
+  const keys = Object.keys(DATA);
+  if (!keys.length) return;
 
   const $ = s => root.querySelector(s);
+  const sectionsGroup = $('[data-hsx-sections]');
   const widthGroup = $('[data-hsx-widths]');
   const sideGroup = $('[data-hsx-sides]');
   const range = $('[data-hsx-range]');
@@ -45,7 +24,7 @@
   const fmt = n => new Intl.NumberFormat('ru-RU').format(n);
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  let familyKey = 'hs30', variantKey = DATA.hs30.def, progress = 0, view = 'scheme', dragging = false;
+  let familyKey = DATA[START] ? START : keys[0], variantKey = DATA[familyKey].def, progress = 0, view = 'scheme', dragging = false;
   const family = () => DATA[familyKey];
   const variant = () => family().variants[variantKey];
 
@@ -55,6 +34,19 @@
     return `<svg viewBox="0 0 42 34" aria-hidden="true"><g${flip}><rect x="1" y="1" width="40" height="32"/><path d="M21 1v32M8 17h10m0 0-4-4m4 4-4 4"/></g></svg>`;
   };
 
+  // Створки → ширины этого числа створок → схемы
+  const mm = w => (w / 1000).toFixed(1).replace('.', ',');
+  const word = n => (n < 5 ? 'створки' : 'створок');
+  function renderSizes() {
+    const f = family(), counts = [...new Set(keys.map(k => DATA[k].sections))];
+    sectionsGroup.innerHTML = counts.map(n => {
+      const ws = keys.filter(k => DATA[k].sections === n).map(k => DATA[k].width);
+      return `<button type="button" class="hsx-width" data-sections="${n}" aria-pressed="${n === f.sections}"><strong>${n} ${word(n)}</strong><span>${mm(Math.min(...ws))}–${mm(Math.max(...ws))} м</span></button>`;
+    }).join('');
+    const same = keys.filter(k => DATA[k].sections === f.sections);
+    widthGroup.style.gridTemplateColumns = `repeat(${same.length},minmax(0,1fr))`;
+    widthGroup.innerHTML = same.map(k => `<button type="button" class="hsx-width" data-family="${k}" aria-pressed="${k === familyKey}"><strong>${mm(DATA[k].width)} м</strong><span>проход ≈ ${mm(DATA[k].variants[DATA[k].def].passage)} м</span></button>`).join('');
+  }
   function renderSides() {
     const keys = Object.keys(family().variants);
     sideGroup.classList.toggle('is-single', keys.length === 1);
@@ -67,10 +59,10 @@
     const f = family(), v = variant();
     $('[data-hsx-passage]').textContent = fmt(v.passage);
     $('[data-hsx-percent]').textContent = `${Math.round(v.ratio * 100)}% ширины проёма`;
-    $('[data-hsx-size]').textContent = `${fmt(f.width)} × ${fmt(f.height)} мм`;
+    $('[data-hsx-size]').textContent = `${fmt(f.width)} × ${(f.heights || [f.height]).map(fmt).join('/')} мм`;
     $('[data-hsx-leaves]').textContent = v.sections;
-    $('[data-hsx-dir]').innerHTML = v.dir;
-    $('[data-hsx-use]').innerHTML = v.use;
+    $('[data-hsx-dir]').textContent = [v.dir, f.note].filter(Boolean).join(' ');
+    $('[data-hsx-use]').textContent = f.use;
     renderNext();
     range.value = progress;
     range.setAttribute('aria-valuetext', `${Math.round(progress)}% открыто`);
@@ -365,12 +357,12 @@
   // а в «Готовых размерах» (#stock, сразу ниже) подходящая карточка подсвечивается и переключается на выбранную схему.
   // Цена и данные берутся из карточек — не дублируются. Кому размер не подходит — калькулятор с этой конфигурацией или замер.
   const next = $('[data-hsx-next]');
-  const sideText = () => ({ left: 'активная слева', right: 'активная справа', center: 'открывание от центра' }[variantKey]);
+  const sideText = () => `схема «${variant().label.toLowerCase()}»`;
   function matchCard() {
     const v = variant();
     for (const card of document.querySelectorAll('#stock [data-card]')) {
       let list = []; try { list = JSON.parse(card.dataset.variants || '[]'); } catch (_) {}
-      const hit = list.find(x => x.href === v.href);
+      const hit = list.find(x => x.sku === v.sku);
       if (hit) return { card, hit };
     }
     return null;
@@ -378,9 +370,7 @@
   function renderNext() {
     if (!next) return;
     const f = family(), v = variant(), m = matchCard();
-    $('[data-next-title]').textContent = `${f.code} · ${fmt(f.width)} × ${fmt(f.height)} мм`;
-    const price = m ? ((m.card.querySelector('.m-card__price strong') || {}).textContent || '').trim() : '';
-    $('[data-next-price]').textContent = price ? ` · ${price}` : '';
+    $('[data-next-title]').textContent = `${f.code} · ${fmt(f.width)} × ${(f.heights || [f.height]).map(fmt).join('/')} мм`;
     document.querySelectorAll('#stock .m-card.is-match').forEach(c => c.classList.remove('is-match'));
     if (m) {
       m.card.classList.add('is-match');
@@ -388,9 +378,15 @@
         const media = m.card.querySelector('.m-card__media');
         media && media.insertAdjacentHTML('beforeend', '<span class="m-card__match">Под вашу схему</span>');
       }
-      const chip = m.card.querySelector(`[data-scheme="${m.hit.s}"]`);
-      if (chip && chip.getAttribute('aria-current') !== 'true') chip.click();
+      // карточка переключается на выбранный проём и схему (цвет остаётся)
+      [`[data-size="${m.hit.w}"]`, `[data-scheme="${m.hit.s}"]`].forEach(sel => {
+        const chip = m.card.querySelector(sel);
+        if (chip && chip.getAttribute('aria-current') !== 'true') chip.click();
+      });
     }
+    // цена — из карточки, уже переключённой на этот проём
+    const price = m ? ((m.card.querySelector('.m-card__price strong') || {}).textContent || '').trim() : '';
+    $('[data-next-price]').textContent = price ? ` · ${price}` : '';
     const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, from: `HS, подбор: ${f.code}, ${sideText()}` });
     $('[data-next-calc]').href = `../../raschet/?${q}`;
     $('[data-next-form]').dataset.comment = `Нужен бесплатный замер. Смотрели ${f.code}, ${sideText()}.`;
@@ -408,11 +404,20 @@
 
   const snap = () => { progress = [0, 50, 100].reduce((a, b) => Math.abs(progress - b) < Math.abs(progress - a) ? b : a); update(); };
 
+  sectionsGroup.addEventListener('click', e => {
+    const b = e.target.closest('[data-sections]'); if (!b) return;
+    const n = +b.dataset.sections;
+    if (n === family().sections) return;
+    // ширина по умолчанию для этого числа створок — как в карточке каталога (default_width)
+    familyKey = DATA[DEFS[n]] ? DEFS[n] : keys.find(k => DATA[k].sections === n);
+    variantKey = family().def; progress = 0;
+    renderSizes(); renderSides(); update();
+  });
   widthGroup.addEventListener('click', e => {
     const b = e.target.closest('[data-family]'); if (!b) return;
-    familyKey = b.dataset.family; variantKey = family().def; progress = 0;
-    [...widthGroup.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    renderSides(); update();
+    const side = variantKey;
+    familyKey = b.dataset.family; variantKey = family().variants[side] ? side : family().def; progress = 0;
+    renderSizes(); renderSides(); update();
   });
   sideGroup.addEventListener('click', e => {
     const b = e.target.closest('[data-variant]'); if (!b) return;
@@ -444,5 +449,5 @@
   canvas.addEventListener('pointercancel', () => { if (dragging) { dragging = false; snap(); } });
 
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas); else addEventListener('resize', resize);
-  renderSides(); update(); resize();
+  renderSizes(); renderSides(); update(); resize();
 })();

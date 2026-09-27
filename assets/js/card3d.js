@@ -1,6 +1,6 @@
 /* 3D-превью в карточках товаров (.m-card[data-3d]): портал собирается из параметров модели (tools/build.mjs → model3d),
    его можно крутить мышью или пальцем, при наведении (или по кнопке на телефоне) створки открываются по схеме.
-   Цвет и схема переключаются свотчами карточки (событие ps-card-variant из shop.js).
+   Проём, цвет и схема переключаются в карточке (событие ps-card-variant из shop.js): другой проём — модель пересобирается по ширине.
    Один WebGL-рендерер на все карточки: кадр рисуется в него и копируется в canvas карточки, рендер только по изменению.
    Нет WebGL — остаётся фото. three.js — локально из assets/vendor/three. */
 import * as THREE from '../vendor/three/three.module.min.js';
@@ -168,7 +168,7 @@ function initCard(card, R) {
     c: card.querySelector('[data-color].is-active')?.dataset.color || Object.keys(cfg.colors)[0],
     s: card.querySelector('[data-scheme].is-active')?.dataset.scheme || Object.keys(cfg.mirror)[0]
   };
-  const model = buildPortal(cfg, cfg.colors[state.c]);
+  let model = buildPortal(cfg, cfg.colors[state.c]);
   const setScheme = () => { model.portal.scale.x = cfg.mirror[state.s] ? -1 : 1; };
   setScheme();
 
@@ -256,7 +256,8 @@ function initCard(card, R) {
   btn.addEventListener('click', () => setOpen(progT < 0.5));
 
   card.addEventListener('ps-card-variant', e => {
-    const { c, s } = e.detail;
+    const { w, c, s } = e.detail;
+    if (w && w !== cfg.w) { cfg = { ...cfg, w }; state.c = c; model = buildPortal(cfg, cfg.colors[c]); setScheme(); }
     if (c !== state.c) { state.c = c; model.mat.color.set(cfg.colors[c]); }
     if (s !== state.s) { state.s = s; setScheme(); }
     kick();
