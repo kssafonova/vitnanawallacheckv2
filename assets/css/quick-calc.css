@@ -15,6 +15,8 @@
 .od-handle{stroke:var(--ui-ink);stroke-width:2;stroke-linecap:round}
 .od-dim{fill:none;stroke:var(--ui-muted);stroke-width:.8}
 .od-floor{stroke:var(--ui-line);stroke-width:.8;stroke-dasharray:4 5}
+.od-fold{fill:none;stroke:var(--ui-muted);stroke-width:.9;stroke-dasharray:6 5}
+.od-fold--door{stroke:var(--ui-ink);stroke-dasharray:none}
 /* Подписи FIX / ACTIVE: 26 единиц viewBox; прячем, где чертёж уже 600 px (иначе мельче 11 px) */
 .od-tag{fill:var(--ui-ink);font:500 26px var(--font);letter-spacing:.14em;text-anchor:middle}
 @container od (max-width:600px){.od-tag{display:none}}
@@ -73,7 +75,6 @@
 }
 .qcx__seg button[aria-pressed="true"]{background:var(--ui-ink);color:#fff}
 .qcx__seg button:disabled{color:var(--ui-line);cursor:not-allowed}
-.qcx__seg button.is-rec:not([aria-pressed="true"])::after{content:" · рекоменд.";color:var(--ui-muted);font-size:var(--fs-caption)}
 @media(hover:hover){.qcx__seg button:not([aria-pressed="true"]):not(:disabled):hover{background:#fff}}
 .qcx__seg--multi button{display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .qcx__seg--multi i::before{content:"+";font-style:normal}
@@ -133,3 +134,35 @@
 .sz__f input::placeholder{color:var(--ui-line);font-size:var(--fs-body)}
 .sz__x{padding-bottom:14px;color:var(--ui-muted);font:300 var(--fs-h4)/1 var(--font)}
 .sz__hint{grid-column:1 / -1;margin:0;color:var(--ui-muted);font:400 var(--fs-caption)/1.45 var(--font)}
+
+/* ---------- Калькулятор по ТЗ: тип, секции с проходом и «Рекомендуем», эскизы схем, опции с пояснением, резюме, дисклеймер ---------- */
+.qcx__seg button{display:grid;gap:4px;align-content:center;justify-items:center;padding:8px 14px;text-align:center}
+.qcx__seg button b{font:400 var(--fs-small)/1.2 var(--font)}
+.qcx__seg button small{color:var(--ui-muted);font:400 var(--fs-caption)/1.3 var(--font)}
+.qcx__seg button[aria-pressed="true"] small{color:rgba(255,255,255,.72)}
+.qcx__seg button:disabled small{color:var(--ui-line)}
+.qcx__seg button em{display:inline-block;margin-left:6px;padding:3px 6px;border:1px solid currentColor;font:600 var(--fs-label)/1 var(--font);font-style:normal;letter-spacing:.06em;text-transform:uppercase;vertical-align:2px}
+.qcx__seg--cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.qcx__seg--wide button,.qcx__seg--stack button{justify-items:start;text-align:left;min-height:56px}
+.qcx__seg--stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.qcx__seg--multi button{grid-template-columns:auto 1fr;justify-items:start;text-align:left;column-gap:10px}
+.qcx__seg--multi button i{grid-row:1 / span 2;align-self:center}
+.qcx__ico{width:64px;height:34px;fill:none;stroke:currentColor;stroke-width:1}
+.qcx__ico .i-fold{stroke-dasharray:2 2;opacity:.7}
+.qcx__ico .i-arrow{stroke-width:1.3}
+.qcx__desc{margin:0;color:var(--ui-muted);font:400 var(--fs-caption)/1.45 var(--font)}
+.qcx__desc:empty{display:none}
+.qcx__left{display:grid;gap:18px;align-content:start}
+.qcx__sum{display:grid;margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.qcx__sum li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--ui-line-soft)}
+.qcx__sum span{color:var(--ui-muted);font:400 var(--fs-caption)/1.4 var(--font)}
+.qcx__sum b{font:400 var(--fs-small)/1.4 var(--font)}
+.qcx__sum li:last-child b{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.qcx__disc{margin:6px 0 0;padding:12px 14px;border-left:2px solid var(--ui-ink);background:#fff;color:var(--ui-muted);font:400 var(--fs-caption)/1.5 var(--font)}
+@media(min-width:1100px){.qcx__left{position:sticky;top:calc(var(--header-h) + 24px)}}
+/* Проверка размера (ТЗ 1.2): ошибка — красным, предупреждение — плашкой */
+.sz__msg{display:grid;gap:8px}
+.sz__msg:empty{display:none}
+.sz__err,.sz__warn{margin:0;padding:10px 12px;font:400 var(--fs-caption)/1.45 var(--font)}
+.sz__err{border-left:2px solid #a33a2a;background:#fbeeeb;color:#8a2f22}
+.sz__warn{border-left:2px solid var(--ui-ink);background:#fff;color:var(--ui-ink)}
