@@ -7,8 +7,10 @@
   const VB_W = 1000, VB_H = 620;
   const PAD = { l: 40, r: 150, t: 110, b: 40 };           // место под размерные линии: сверху ширина, справа высота
   const KINDS = { 2: ['move', 'fix'], 3: ['move', 'move', 'fix'], 4: ['fix', 'move', 'move', 'fix'] };
+  const word = n => (n < 5 ? 'створки' : 'створок');
   const W_MIN = 1400, W_MAX = 12000, H_MIN = 1800, H_MAX = 3100;
-  const recommend = w => (w <= 3300 ? 2 : w <= 4300 ? 3 : 4);
+  // Число створок по ширине — по таблице размеров: 2 секции до 4,2 м (готовые 3,0–5,0), 3 — до 6,0 м (4,5–6,0), дальше 4 (до 8,0)
+  const recommend = w => (w <= 4200 ? 2 : w <= 6000 ? 3 : 4);
   const fmt = n => new Intl.NumberFormat('ru-RU').format(n);
   const r1 = v => Math.round(v * 10) / 10;
 
@@ -86,19 +88,21 @@
     return Math.ceil(ref.price * (st.w * st.h) / (ref.w * ref.h) * glassF * colorF / 1000) * 1000;
   }
 
-  // Готовая дверь из каталога: ширина, высота и число створок совпадают с моделью (data-doors из build.mjs); иначе — индивидуальный заказ
-  const matchReady = (ready, st) => (ready || []).find(r => r.w === st.w && r.h === st.h && r.n === st.n) || null;
+  // Готовая дверь из каталога: ширина и число створок как у размера из таблицы, высота — одна из стандартных (hs: 2300 / 2400);
+  // data-doors из build.mjs. Иначе — индивидуальный заказ
+  const fits = (d, st) => d.w === st.w && d.n === st.n && (d.hs || [d.h]).includes(st.h);
+  const matchReady = (ready, st) => (ready || []).find(r => fits(r, st)) || null;
 
-  // Выбор размера: кнопки готовых дверей (ширина, «HS/30 · готовая») + «Свой размер» с явными полями ввода
+  // Выбор размера: кнопки готовых дверей из таблицы размеров по возрастанию ширины («3,6 м · 2 створки») + «Свой размер» с полями
   function sizeControl(el, { doors = [], w, h, n, onChange }) {
     const cur = { w, h, n };
-    const isDoor = d => d.w === cur.w && d.h === cur.h && d.n === cur.n;
+    const isDoor = d => fits(d, cur);
     const m = v => (v / 1000).toFixed(1).replace('.', ',');
     el.classList.add('sz');
     el.innerHTML = `
       <p class="sz__lbl">Ширина проёма</p>
       <div class="sz__seg" role="group" aria-label="Размер проёма">${doors.map((d, i) =>
-        `<button type="button" data-sz="${i}"><b>${m(d.w)} м</b><small>${d.code} · готовая</small></button>`).join('')}<button type="button" data-sz="custom"><b>Свой размер</b><small>ширина и высота</small></button></div>
+        `<button type="button" data-sz="${i}"><b>${m(d.w)} м</b><small>${d.n} ${word(d.n)} · готовая</small></button>`).join('')}<button type="button" data-sz="custom"><b>Свой размер</b><small>ширина и высота</small></button></div>
       <div class="sz__fields" hidden>
         <label class="sz__f"><span>Ширина, мм</span><input inputmode="numeric" maxlength="5" autocomplete="off" placeholder="например, 3900" data-sz-w></label>
         <span class="sz__x" aria-hidden="true">×</span>
@@ -121,7 +125,7 @@
         inW.focus(); inW.select();
       } else {
         const d = doors[+b.dataset.sz];
-        custom = false; Object.assign(cur, { w: d.w, h: d.h, n: d.n }); paint(); emit();
+        custom = false; Object.assign(cur, { w: d.w, h: (d.hs || [d.h]).includes(cur.h) ? cur.h : d.h, n: d.n }); paint(); emit();
       }
     });
     const read = () => {
@@ -143,7 +147,6 @@
 
   // Блок «Цена по размерам проёма» ([data-open-teaser], главная и HS): чертёж; размер готовой двери — цена каталога и ссылка на товар,
   // нестандартный — индивидуальный заказ: цена ориентировочная, срок дольше, ссылка в калькулятор с этими размерами
-  const word = n => (n < 5 ? 'створки' : 'створок');
   document.querySelectorAll('[data-open-teaser]').forEach(box => {
     let refs = {}, ready = [];
     try { refs = JSON.parse(box.dataset.refs || '{}'); ready = JSON.parse(box.dataset.doors || '[]'); } catch (_) { /* пусто */ }
@@ -154,7 +157,7 @@
       if (r) {
         const v = r.colors.anthracite || Object.values(r.colors)[0];
         out.textContent = `${fmt(r.price)} ₽`;
-        leaves.textContent = `Готовая дверь ${r.code} · ${size}`;
+        leaves.textContent = `Готовая дверь ${r.code} · ${size}${r.passage ? ` · проход ≈ ${fmt(r.passage)} мм` : ''}`;
         note.textContent = `срок — ${term} · без доставки и монтажа`;
         link.href = v.url; link.firstChild.textContent = 'Открыть дверь ';
       } else {

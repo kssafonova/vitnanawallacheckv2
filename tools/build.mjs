@@ -5,7 +5,7 @@
 //   node tools/build.mjs --check  ничего не писать; код 1, если файлы на диске устарели
 //
 // Что собирает:
-//   catalog/<cat>/<slug>/index.html   страницы всех вариантов (модель × цвет × схема), всё в HTML
+//   catalog/<cat>/<slug>/index.html   страницы всех вариантов (модель × размер × цвет × схема), всё в HTML
 //   блоки между <!-- build:имя --> и <!-- /build:имя --> в catalog/index.html, systems/hs/index.html, index.html
 //   sitemap.xml
 // Папки catalog/hs-portaly и catalog/fs-portaly принадлежат генератору: лишние варианты удаляются.
@@ -27,7 +27,10 @@ const BRAND = config.brand || 'PORTAL SYSTEMS';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const nbsp = '\u00a0';
 const money = n => new Intl.NumberFormat('ru-RU').format(n).replace(/\s/g, nbsp) + nbsp + '₽';
-const sizeText = m => `${m.width} × ${m.height} мм`;
+const fmtN = n => new Intl.NumberFormat('ru-RU').format(n).replace(/\s/g, nbsp);
+const metres = w => (w / 1000).toFixed(1).replace('.', ',');                          // 3600 → 3,6
+// Высоты стандартной двери (heights) — одна цена, точную уточняем на замере: «3600 × 2300/2400 мм»
+const sizeText = m => `${m.width} × ${(m.heights || [m.height]).join('/')} мм`;
 const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');           // ALUMARK S158 → alumark-s158
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
 const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
@@ -38,34 +41,47 @@ const isMirror = (m, s) => mirrored(s) !== flipModel(m);                        
 const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порталы');
 
 // ---------- варианты ----------
+// Размер модели (sizes в products.json) → «модель этого размера»: ширина, цена, проход, код HS2/36, название «… 3,6 м».
+// Остальной код работает с ней как с обычной моделью (m.width, m.price, m.code, m.name).
+const sized = (m, z) => ({
+  ...m, ...z, base: m,
+  code: `${m.code_prefix}/${z.width / 100}`,
+  name: `${m.name_base} ${metres(z.width)} м`,
+  leaf: Math.round(z.width / m.sections),
+  opening: z.passage ? `≈ ${fmtN(z.passage)} мм · ${Math.round(z.passage / z.width * 100)}% проёма` : m.opening_text,
+});
+const sizesOf = m => m.sizes.map(z => sized(m, z));
+const defSize = m => sizesOf(m).find(x => x.width === m.default_width) || sizesOf(m)[0];
 const missingPhotos = [];
 const variants = [];
-// Фото варианта: assets/images/products/<model>/<цвет>-<схема>.webp (+ -open.webp — открытый вид),
+// Фото варианта: assets/images/products/<model>/<цвет>-<схема>.webp (+ -open.webp — открытый вид), одни на все размеры модели;
 // их делает tools/recolor-photos.mjs из студийного рендера. Нет фото — общее фото модели.
-for (const m of data.models) {
-  for (const c of m.colors) {
-    for (const s of m.schemes) {
-      const slug = `${profileSlug(m)}-${m.width}x${m.height}-${c.slug}-${s.slug}`;
-      const photo = `assets/images/products/${m.model.toLowerCase()}/${c.slug}-${s.slug}.webp`;
-      const photoOpen = photo.replace(/\.webp$/, '-open.webp');
-      const hasPhoto = exists(photo);
-      if (!hasPhoto) missingPhotos.push(`${photo}  — ${m.code} ${m.name}, ${c.name} RAL ${c.ral}, ${s.code}`);
-      variants.push({
-        m, c, s,
-        sku: `STD-${m.model}-${profileCode(m)}-${m.width}X${m.height}-${c.ral}-${s.code}`,
-        path: `catalog/${m.cat}/${slug}/`,
-        image: hasPhoto ? photo : m.image,
-        imageOpen: hasPhoto && exists(photoOpen) ? photoOpen : null,
-        available: m.status === 'available',
-      });
+for (const base of data.models) {
+  for (const m of sizesOf(base)) {
+    for (const c of m.colors) {
+      for (const s of m.schemes) {
+        const slug = `${profileSlug(m)}-${m.width}x${m.height}-${c.slug}-${s.slug}`;
+        const photo = `assets/images/products/${m.model.toLowerCase()}/${c.slug}-${s.slug}.webp`;
+        const photoOpen = photo.replace(/\.webp$/, '-open.webp');
+        const hasPhoto = exists(photo);
+        if (!hasPhoto && !missingPhotos.some(x => x.startsWith(photo))) missingPhotos.push(`${photo}  — ${m.model}, ${c.name} RAL ${c.ral}, ${s.code}`);
+        variants.push({
+          m, c, s,
+          sku: `STD-${m.model}-${profileCode(m)}-${m.width}X${m.height}-${c.ral}-${s.code}`,
+          path: `catalog/${m.cat}/${slug}/`,
+          image: hasPhoto ? photo : m.image,
+          imageOpen: hasPhoto && exists(photoOpen) ? photoOpen : null,
+          available: m.status === 'available',
+        });
+      }
     }
   }
 }
 const byModel = model => variants.filter(v => v.m.model === model);
-const find = (model, colorSlug, schemeSlug) => variants.find(v => v.m.model === model && v.c.slug === colorSlug && v.s.slug === schemeSlug);
-// Схема по умолчанию: default_scheme в products.json, иначе первая
+const find = (model, colorSlug, schemeSlug, width) => variants.find(v => v.m.model === model && v.c.slug === colorSlug && v.s.slug === schemeSlug && (!width || v.m.width === width));
+// Схема по умолчанию: default_scheme в products.json, иначе первая; размер — default_width
 const defScheme = m => m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0];
-const firstOf = m => find(m.model, m.colors[0].slug, defScheme(m).slug);
+const firstOf = m => find(m.model, m.colors[0].slug, defScheme(m).slug, defSize(m).width);
 
 // ---------- схемы (SVG) ----------
 // Мелкая схема в углу фото: без текста. Рисуем створки прямоугольниками:
@@ -160,41 +176,49 @@ const PROD_MIN = (config.services && config.services.production_days_min) || 30;
 const PROD_MAX = (config.services && config.services.production_days_max) || 60;
 const PROD_TEXT = `${PROD_MIN}–${PROD_MAX} дней`;
 const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
-function marketCard(m, rel) {
-  const first = firstOf(m);
+// Карточка модели (как на макете владельца): 3D-превью → «размер · секции» → название → «Проём:» (ширины из таблицы размеров) →
+// «Схема:» → «Цвет:» (квадраты + «любой RAL») → линия → цена «за конструкцию» → кнопка «В корзину» во всю ширину.
+// Проём, схема и цвет переключаются на месте (assets/js/shop.js); без JS это обычные ссылки на страницы вариантов.
+// rel — путь от страницы до корня сайта; base — модель из products.json (все размеры).
+function marketCard(base, rel) {
+  const first = firstOf(base), m = first.m;
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
-  const s0 = defScheme(m), c0 = m.colors[0];
-  const data = byModel(m.model).map(v => ({ sku: v.sku, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
-  const swatches = m.colors.map((c, i) => {
-    const v = find(m.model, c.slug, s0.slug);
-    return `<a class="m-card__swatch${i ? '' : ' is-active'}" href="${href(v)}" data-color="${c.slug}" data-name="${esc(c.name)} RAL ${c.ral}" style="--sw:${c.hex}" title="${esc(c.name)} RAL ${c.ral}" aria-label="Цвет ${esc(c.name)} RAL ${c.ral}"${i ? '' : ' aria-current="true"'}></a>`;
-  }).join('');
-  const chips = m.schemes.length > 1
-    ? `<div class="m-card__chips">${m.schemes.map((s, i) => {
-        const v = find(m.model, c0.slug, s.slug);
-        const on = s === s0;
-        return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(v)}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
-      }).join('')}</div>`
-    : '';
+  const s0 = first.s, c0 = first.c;
+  const data = byModel(m.model).map(v => ({ sku: v.sku, w: v.m.width, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
+  const sizes = Object.fromEntries(sizesOf(base).map(z => [z.width, { t: z.name, m: `${sizeText(z)} · ${sectionsText(z.sections)}`, p: soon ? '' : money(z.price), a: `${z.code} ${z.name}, ${sizeText(z)}` }]));
+  const opt = (label, body) => `<div class="m-card__opt"><span class="m-card__label">${label}:</span>${body}</div>`;
+  const sizeChips = `<div class="m-card__chips">${sizesOf(base).map(z => {
+    const on = z.width === m.width;
+    return `<a class="m-card__chip m-card__chip--num${on ? ' is-active' : ''}" href="${href(find(m.model, c0.slug, s0.slug, z.width))}" data-size="${z.width}" data-name="${metres(z.width)} м"${on ? ' aria-current="true"' : ''}>${metres(z.width)}</a>`;
+  }).join('')}</div>`;
+  const schemeChips = `<div class="m-card__chips">${m.schemes.map(s => {
+    const on = s === s0;
+    return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(find(m.model, c0.slug, s.slug, m.width))}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
+  }).join('')}</div>`;
+  const swatches = `<div class="m-card__swatches">${m.colors.map(c => {
+    const on = c === c0;
+    return `<a class="m-card__swatch${on ? ' is-active' : ''}" href="${href(find(m.model, c.slug, s0.slug, m.width))}" data-color="${c.slug}" data-name="${esc(c.name)} RAL ${c.ral}" style="--sw:${c.hex}" title="${esc(c.name)} RAL ${c.ral}" aria-label="Цвет ${esc(c.name)} RAL ${c.ral}"${on ? ' aria-current="true"' : ''}></a>`;
+  }).join('')}<span class="m-card__ral" title="Любой цвет по каталогу RAL — посчитаем в калькуляторе">любой RAL</span></div>`;
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
-    : `<strong>${money(m.price)}</strong><small>за конструкцию</small>`;
+    : `<strong data-card-price>${money(m.price)}</strong><small>за конструкцию</small>`;
   const action = soon
     ? `<a class="ui-btn m-card__cart" href="${href(first)}#product-contact" data-card-link data-card-hash="#product-contact">Сообщить о старте</a>`
     : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
-  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}" data-3d="${esc(JSON.stringify(model3d(m)))}">
+  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}" data-sizes="${esc(JSON.stringify(sizes))}" data-3d="${esc(JSON.stringify(model3d(m)))}">
         <a class="m-card__media" href="${href(first)}" data-card-link>
-          <img src="${rel}${first.image}" alt="${esc(`${m.code} ${m.name}, ${sizeText(m)}`)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
+          <img src="${rel}${first.image}" alt="${esc(sizes[m.width].a)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
           <img class="m-card__open" src="${rel}${first.imageOpen}" alt="" loading="lazy" decoding="async" data-card-img-open>` : ''}
           ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
         </a>
         <div class="m-card__body">
-          <p class="m-card__meta">${esc(sizeText(m))} · ${sectionsText(m.sections)}</p>
-          <a class="m-card__title" href="${href(first)}" data-card-link>${esc(m.name)}</a>
-          <div class="m-card__opt"><span class="m-card__label">Цвет:</span><div class="m-card__swatches">${swatches}<span class="m-card__ral">+ любой RAL</span></div></div>
-          ${chips ? `<div class="m-card__opt"><span class="m-card__label">${esc(m.scheme_title)}:</span>${chips}</div>` : ''}
-          <div class="m-card__buy">${action}<div class="m-card__price">${price}</div></div>
+          <p class="m-card__meta" data-card-meta>${esc(sizes[m.width].m)}</p>
+          <a class="m-card__title" href="${href(first)}" data-card-link data-card-title>${esc(m.name)}</a>
+          ${opt('Проём', sizeChips)}
+          ${opt(esc(m.scheme_title), schemeChips)}
+          ${opt('Цвет', swatches)}
+          <div class="m-card__buy"><div class="m-card__price">${price}</div>${action}</div>
         </div>
       </article>`;
 }
@@ -202,13 +226,15 @@ function marketCard(m, rel) {
 // Калькулятор HS (assets/js/quick-calc.js) живёт на отдельной странице /raschet/.
 // Цены моделей по числу секций — из products.json; фото — рендеры моделей (светлая рама — если есть белый цвет).
 const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
-const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
-// Готовые двери для калькулятора (data-doors): совпал размер и створки — это товар из каталога (цена, срок PROD_TEXT, «В корзину»),
-// иначе — индивидуальный заказ. Цвета калькулятора white / anthracite → варианты каталога (схема по умолчанию).
-const calcReady = rel => JSON.stringify(hsAvail().map(m => ({
-  n: m.sections, w: m.width, h: m.height, price: m.price, code: m.code, name: m.name,
+// База формулы для нестандартного размера — первый размер модели с тем же числом секций
+const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(b => { const m = sizesOf(b)[0]; return [m.sections, { price: m.price, w: m.width, h: m.height }]; })));
+// Готовые двери для калькулятора (data-doors) — все размеры из таблицы: совпали ширина, створки и одна из стандартных высот (hs) —
+// это товар из каталога (цена, срок PROD_TEXT, «В корзину»), иначе — индивидуальный заказ.
+// Цвета калькулятора white / anthracite → варианты каталога (схема по умолчанию).
+const calcReady = rel => JSON.stringify(hsAvail().flatMap(sizesOf).sort((a, b) => a.width - b.width || a.sections - b.sections).map(m => ({
+  n: m.sections, w: m.width, h: m.height, hs: m.heights, price: m.price, code: m.code, name: m.name, passage: m.passage,
   colors: Object.fromEntries(m.colors.filter(c => colorKeyOf(c) !== 'ral').map(c => {
-    const v = find(m.model, c.slug, defScheme(m).slug);
+    const v = find(m.model, c.slug, defScheme(m).slug, m.width);
     return [colorKeyOf(c), { sku: v.sku, url: rel + v.path }];
   })),
 })));
@@ -243,6 +269,28 @@ function calcTeaser(rel, eyebrow) {
     </div>`;
 }
 
+// Данные конфигуратора «Как открывается дверь» на странице HS (assets/js/hs-opening.js): все размеры из таблицы
+// (створки → ширина → схема), проход, как работает, ссылка и артикул варианта (цвет по умолчанию).
+// key — сторона для рисунка: left — ведущая створка слева и едет вправо, right — наоборот, center — от центра.
+const OPEN_LAYOUT = {
+  A1: { key: 'left', moving: [0], targets: [1] }, B1: { key: 'right', moving: [1], targets: [0] },
+  D1: { key: 'right', moving: [1, 2], targets: [0, 0] }, 'D1-R': { key: 'left', moving: [0, 1], targets: [2, 2] },
+  A7: { key: 'center', moving: [1, 2], targets: [0, 3] },
+};
+const hsxData = rel => JSON.stringify({
+  start: `${hsAvail()[0].model}-${defSize(hsAvail()[0]).width}`,
+  defaults: Object.fromEntries(hsAvail().map(b => [b.sections, `${b.model}-${defSize(b).width}`])),
+  families: Object.fromEntries(hsAvail().flatMap(sizesOf).map(m => [`${m.model}-${m.width}`, {
+    code: m.code, width: m.width, height: m.height, heights: m.heights, sections: m.sections,
+    def: OPEN_LAYOUT[defScheme(m).code].key, use: m.use, note: m.note || '',
+    variants: Object.fromEntries(m.schemes.map(s => {
+      const L = OPEN_LAYOUT[s.code], v = find(m.model, m.colors[0].slug, s.slug, m.width);
+      return [L.key, { label: s.short[0].toUpperCase() + s.short.slice(1), sections: m.sections, moving: L.moving, targets: L.targets,
+        passage: m.passage, ratio: m.passage / m.width, dir: s.how, href: rel + v.path, sku: v.sku, w: m.width, s: s.slug }];
+    })),
+  }])),
+}).replace(/</g, '\\u003c');
+
 // Карточка «Индивидуальный расчёт» — вся карточка ведёт на страницу калькулятора
 function projectCard(calcHref, id) {
   return `<a class="m-card m-card--project m-card--wide" href="${calcHref}"${id ? ` id="${id}"` : ''}>
@@ -266,8 +314,11 @@ function variantPage(v) {
   const size = sizeText(m);
   const soon = !v.available;
   const family = byModel(m.model);
-  const colorOptions = m.colors.map(col => family.find(x => x.c.slug === col.slug && x.s.slug === s.slug));
-  const schemeOptions = m.schemes.map(sch => family.find(x => x.c.slug === c.slug && x.s.slug === sch.slug));
+  const colorOptions = m.colors.map(col => family.find(x => x.m.width === m.width && x.c.slug === col.slug && x.s.slug === s.slug));
+  const schemeOptions = m.schemes.map(sch => family.find(x => x.m.width === m.width && x.c.slug === c.slug && x.s.slug === sch.slug));
+  const sizeOptions = m.base.sizes.map(z => family.find(x => x.m.width === z.width && x.c.slug === c.slug && x.s.slug === s.slug));
+  const how = [s.how, m.note].filter(Boolean).join(' ');
+  const heightsText = `${(m.heights || [m.height]).join(' или ')} мм`;
   const colorName = `${c.name} RAL ${c.ral}`;
   const title = `${m.code} ${m.name} — ${size}, ${colorName} | ${BRAND}`;
   const description = `${m.title} ${size}, ${colorName}, ${s.label[0].toLowerCase() + s.label.slice(1)}. ${soon ? 'Скоро в продаже.' : `Стоимость ${money(m.price)}.`} Изготовление и монтаж в Москве и МО.`;
@@ -289,7 +340,8 @@ function variantPage(v) {
     height: { '@type': 'QuantitativeValue', value: m.height, unitCode: 'MMT' },
     additionalProperty: [
       ['Схема открывания', s.label], ['Конфигурация', m.subtitle], ['Профильная система', m.profile], ['Фурнитура', m.hardware],
-      ['Стеклопакет', m.glass], ['Количество секций', String(m.sections)],
+      ['Стеклопакет', m.glass], ['Количество секций', String(m.sections)], ['Ширина створки', `${m.leaf} мм`],
+      ...(m.passage ? [['Чистый проход', `≈ ${m.passage} мм`]] : []), ['Глубина рамы', m.frame_depth],
     ].map(([name, value]) => ({ '@type': 'PropertyValue', name, value })),
   };
   // «Скоро»: без Offer — цены на странице нет, заказать нельзя
@@ -307,10 +359,13 @@ function variantPage(v) {
   };
 
   const swatches = colorOptions.map(x => `<a class="product-swatch${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}><span class="product-swatch__dot" style="--sw:${x.c.hex}"></span><span><strong>${esc(x.c.name)}</strong><small>RAL ${x.c.ral}</small></span></a>`).join('');
+  const sizesHtml = sizeOptions.map(x => `<a class="product-size${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${metres(x.m.width)}<small>м</small></a>`).join('');
   const schemes = schemeOptions.map(x => `<a class="product-scheme${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${esc(schemeText(x.s))}<span>→</span></a>`).join('');
   const tech = [
-    ['Профильная база', m.profile], ['Механизм', m.hardware], ['Направляющая', m.track], ['Глубина рамы', m.frame_depth],
-    ['Глубина створки', m.sash_depth], ['Заполнение', m.filling], ['Стеклопакет', m.glass], ['Секции', String(m.sections)],
+    ['Ширина проёма', `${fmtN(m.width)} мм`], ['Высота', heightsText], ['Секции', String(m.sections)], ['Створки', m.subtitle],
+    ['Ширина створки', `${fmtN(m.leaf)} мм`], ['Чистый проход', m.passage ? `≈ ${fmtN(m.passage)} мм` : m.opening],
+    ['Глубина рамы', m.frame_depth], ['Глубина створки', m.sash_depth],
+    ['Профильная база', m.profile], ['Механизм', m.hardware], ['Направляющая', m.track], ['Заполнение', m.filling], ['Стеклопакет', m.glass],
   ].map(([a, b]) => `<div><small>${esc(a)}</small><strong>${esc(b)}</strong></div>`).join('');
   const limits = m.limits.map(l => `<li>${esc(l)}</li>`).join('');
 
@@ -367,6 +422,7 @@ ${jsonLd(crumbs)}
         <div><small>Схема</small><strong>${esc(s.code)}</strong></div><div><small>Ширина прохода</small><strong>${esc(m.opening)}</strong></div>
         <div><small>Секции</small><strong>${m.sections}</strong></div><div><small>Сценарий</small><strong>${esc(m.use)}</strong></div>
       </div>
+      <div class="product-variant"><div class="product-variant__head"><span>Проём</span><span>${fmtN(m.width)} мм · проход ≈ ${m.passage ? fmtN(m.passage) : '—'} мм</span></div><div class="product-sizes">${sizesHtml}</div></div>
       <div class="product-variant"><div class="product-variant__head"><span>Цвет</span><span>${esc(c.name)} · RAL ${c.ral}</span></div><div class="product-swatches">${swatches}</div></div>
       <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
       <div class="product-actions">${soon
@@ -380,7 +436,7 @@ ${jsonLd(crumbs)}
 <section class="product-story">
   <div class="p-wrap">
     <div class="product-story__grid"><p class="ui-eyebrow">01 · Конфигурация</p><div class="product-story__main"><h2>${esc(m.story)}</h2><p class="product-story__copy">${esc(m.lead)} Артикул фиксирует размер, цвет и схему; если архитектура требует другого решения, рассчитываем отдельную конфигурацию.</p></div></div>
-    <div class="product-config" data-reveal><div class="product-config__drawing">${largeSvg(m, s)}</div><div class="product-config__facts"><div><small>Размер</small><strong>${esc(size)}</strong></div><div><small>Конфигурация</small><strong>${esc(m.subtitle)}</strong></div><div><small>Схема</small><strong>${esc(s.label)}</strong></div><div><small>Цвет</small><strong>${esc(c.name)} · RAL ${c.ral}</strong></div></div></div>
+    <div class="product-config" data-reveal><div class="product-config__drawing">${largeSvg(m, s)}</div><div class="product-config__facts"><div><small>Размер</small><strong>${esc(size)}</strong></div><div><small>Конфигурация</small><strong>${esc(m.subtitle)}</strong></div><div><small>Схема</small><strong>${esc(s.label)}</strong></div>${how ? `<div><small>Как работает</small><strong>${esc(how)}</strong></div>` : ''}<div><small>Цвет</small><strong>${esc(c.name)} · RAL ${c.ral}</strong></div></div></div>
   </div>
 </section>
 
@@ -458,7 +514,7 @@ function projectsGrid() {
 const models = data.models;
 const hs = models.filter(m => m.system === 'HS');
 const fsModels = models.filter(m => m.system === 'FS');
-const featured = hs.filter(m => m.status === 'available').slice(0, 2);   // HS / 30 и HS / 36 на главной и первом экране HS
+const featured = hs.filter(m => m.status === 'available').slice(0, 2).map(defSize);   // 2 и 3 секции (размер по умолчанию) — плашки в «Системах» на главной
 
 const blocks = {
   'raschet/index.html': {
@@ -471,6 +527,7 @@ const blocks = {
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
+    'hsx-data': `<script type="application/json" data-hsx-json>${hsxData('../../')}</script>`,
   },
   'projects/index.html': {
     'projects-grid': projectsGrid(),
@@ -481,7 +538,7 @@ const blocks = {
   'index.html': {
     'home-cards': [...hs.map(m => marketCard(m, '')), projectCard('raschet/')].join('\n\n      '),
     'home-calc': calcTeaser('', 'Калькулятор'),
-    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
+    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m.base).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },
 };
 
@@ -517,7 +574,7 @@ outputs.set('data/catalog.json', JSON.stringify({
   factory: (({ _comment, ...f }) => f)(config.factory || {}),
   services: (({ _comment, ...s }) => s)(config.services || {}),
   variants: variants.map(v => ({
-    sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m),
+    sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m), width: v.m.width, size_short: `${metres(v.m.width)} м`,
     color: `${v.c.name} RAL ${v.c.ral}`, color_slug: v.c.slug, hex: v.c.hex,
     scheme: v.s.label, scheme_slug: v.s.slug, scheme_short: v.s.short, scheme_title: v.m.scheme_title,
     price: v.m.price, available: v.available, image: v.image, image_open: v.imageOpen, url: v.path,
@@ -547,7 +604,7 @@ if (!CHECK) for (const dir of stale) fs.rmSync(path.join(ROOT, dir), { recursive
 const warnings = [];
 const calc = read('assets/js/hs-system.js').match(/refs=\{([^;]+)\};/);
 if (calc) {
-  for (const m of hs) {
+  for (const m of hs.map(b => sizesOf(b)[0])) {
     const hit = calc[1].match(new RegExp(`${m.sections}:\\{price:(\\d+)`));
     if (hit && +hit[1] !== m.price) warnings.push(`hs-system.js: цена ${m.sections} секций ${hit[1]} ≠ ${m.price} в products.json (${m.code})`);
   }

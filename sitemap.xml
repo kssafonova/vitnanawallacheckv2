@@ -61,12 +61,122 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-antratsit-dve-aktivnye-odna-fiksirovannaya/</loc>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-antratsit-aktivnaya-sleva/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-grafit-dve-aktivnye-odna-fiksirovannaya/</loc>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-antratsit-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-belyi-aktivnaya-sleva/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-3600x2300-belyi-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4000x2300-antratsit-aktivnaya-sleva/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4000x2300-antratsit-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4000x2300-belyi-aktivnaya-sleva/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4000x2300-belyi-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5000x2300-antratsit-aktivnaya-sleva/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5000x2300-antratsit-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5000x2300-belyi-aktivnaya-sleva/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5000x2300-belyi-aktivnaya-sprava/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4500x2300-antratsit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4500x2300-antratsit-pachka-vpravo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4500x2300-grafit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4500x2300-grafit-pachka-vpravo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5400x2300-antratsit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5400x2300-antratsit-pachka-vpravo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5400x2300-grafit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-5400x2300-grafit-pachka-vpravo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-antratsit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-antratsit-pachka-vpravo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-grafit-pachka-vlevo/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-grafit-pachka-vpravo/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -77,6 +187,36 @@
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-4800x2300-chernyi-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-antratsit-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-6000x2300-chernyi-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-7200x2300-antratsit-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-7200x2300-chernyi-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-8000x2300-antratsit-otkryvanie-ot-centra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/alumark-s158-8000x2300-chernyi-otkryvanie-ot-centra/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -60,12 +60,13 @@
   window.addEventListener('ps-cart-change',syncAll);
   window.addEventListener('storage',e=>{if(e.key===KEY)syncAll()});
 
-  // Карточки: цвет и схема переключаются на месте — фото, ссылки, артикул для корзины.
-  // Без JS свотчи остаются обычными ссылками на страницы вариантов.
+  // Карточки: проём, схема и цвет переключаются на месте — фото, ссылки, название, размер, цена, артикул для корзины.
+  // data-sizes — по ширине: название (t), строка размера (m), цена (p), alt фото (a). Без JS это обычные ссылки на страницы вариантов.
   document.querySelectorAll('[data-card]').forEach(card=>{
-    let variants;
-    try{variants=JSON.parse(card.dataset.variants)}catch(e){return}
+    let variants,sizes={};
+    try{variants=JSON.parse(card.dataset.variants);sizes=JSON.parse(card.dataset.sizes||'{}')}catch(e){return}
     const state={
+      w:+(card.querySelector('[data-size].is-active')?.dataset.size||variants[0].w),
       c:card.querySelector('[data-color].is-active')?.dataset.color||variants[0].c,
       s:card.querySelector('[data-scheme].is-active')?.dataset.scheme||variants[0].s
     };
@@ -76,25 +77,32 @@
       else el.removeAttribute('aria-current');
     });
     const apply=()=>{
-      const v=variants.find(x=>x.c===state.c&&x.s===state.s);
+      const v=variants.find(x=>x.w===state.w&&x.c===state.c&&x.s===state.s);
       if(!v)return;
+      const z=sizes[state.w];
+      if(z){
+        const t=card.querySelector('[data-card-title]'),m=card.querySelector('[data-card-meta]'),p=card.querySelector('[data-card-price]');
+        if(t)t.textContent=z.t;if(m)m.textContent=z.m;if(p&&z.p)p.textContent=z.p;
+        const i=card.querySelector('[data-card-img]');if(i&&z.a)i.alt=z.a;
+      }
       card.querySelectorAll('[data-card-link]').forEach(a=>{a.href=v.href+(a.dataset.cardHash||'')});
       const img=card.querySelector('[data-card-img]');
       if(img&&img.getAttribute('src')!==v.img)img.src=v.img;
       const open=card.querySelector('[data-card-img-open]');
       if(open){if(v.open){open.hidden=false;if(open.getAttribute('src')!==v.open)open.src=v.open}else open.hidden=true}
+      mark('[data-size]','size',String(state.w));
       mark('[data-color]','color',state.c,card.querySelector('[data-card-color]'));
       mark('[data-scheme]','scheme',state.s,card.querySelector('[data-card-scheme]'));
       card.querySelectorAll('[data-scheme-svg]').forEach(el=>{el.hidden=el.dataset.schemeSvg!==state.s});
       const btn=card.querySelector('[data-add-to-cart]');
       if(btn){btn.dataset.sku=v.sku;syncButton(btn)}
-      card.dispatchEvent(new CustomEvent('ps-card-variant',{detail:{c:state.c,s:state.s}}));
+      card.dispatchEvent(new CustomEvent('ps-card-variant',{detail:{w:state.w,c:state.c,s:state.s}}));
     };
     card.addEventListener('click',e=>{
-      const opt=e.target.closest('[data-color],[data-scheme]');
+      const opt=e.target.closest('[data-size],[data-color],[data-scheme]');
       if(!opt)return;
       e.preventDefault();
-      if(opt.dataset.color)state.c=opt.dataset.color;else state.s=opt.dataset.scheme;
+      if(opt.dataset.size)state.w=+opt.dataset.size;else if(opt.dataset.color)state.c=opt.dataset.color;else state.s=opt.dataset.scheme;
       apply();
     });
   });

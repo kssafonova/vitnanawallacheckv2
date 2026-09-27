@@ -110,7 +110,8 @@
 /* ---------- Выбор размера (.sz — sizeControl в opening-draw.js): кнопки готовых дверей + «Свой размер» с полями ---------- */
 .sz{display:grid;gap:12px}
 .sz__lbl{margin:0;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
-.sz__seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
+/* 11 готовых размеров из таблицы + «Свой размер» = 12 кнопок: ровно 2, 3 или 4 в ряд */
+.sz__seg{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
 .sz__seg button{
   display:grid;gap:4px;align-content:center;min-height:64px;padding:10px 14px;border:0;border-right:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);
   background:transparent;color:var(--ui-ink);text-align:left;cursor:pointer;transition:background-color .15s,color .15s

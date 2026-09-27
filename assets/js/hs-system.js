@@ -302,7 +302,7 @@
     const widthInput=calc.querySelector('[data-hs-width]'),heightInput=calc.querySelector('[data-hs-height]');
     const layoutButtons=[...calc.querySelectorAll('[data-layout]')],glassButtons=[...calc.querySelectorAll('[data-glass]')],colorButtons=[...calc.querySelectorAll('[data-color]')],addonInputs=[...calc.querySelectorAll('[data-hs-addon]')];
     const out={layout:calc.querySelector('[data-hs-result-layout]'),price:calc.querySelector('[data-hs-result-price]'),size:calc.querySelector('[data-hs-result-size]'),opening:calc.querySelector('[data-hs-result-opening]'),glass:calc.querySelector('[data-hs-result-glass]'),note:calc.querySelector('[data-hs-result-note]'),preview:calc.querySelector('[data-hs-preview]')};
-    const refs={2:{price:375000,w:3000,h:2300,open:.5,label:'2 секции'},3:{price:489000,w:3600,h:2300,open:2/3,label:'3 секции'},4:{price:620000,w:4800,h:2300,open:.5,label:'4 секции · от центра'}};
+    const refs={2:{price:375000,w:3000,h:2300,open:.5,label:'2 секции'},3:{price:612000,w:4500,h:2300,open:2/3,label:'3 секции'},4:{price:620000,w:4800,h:2300,open:.5,label:'4 секции · от центра'}};
     let layout=3,glass='climate',glassFactor=1.26,color='white',colorFactor=1;
 
     const select=(buttons,key,value)=>buttons.forEach(btn=>btn.classList.toggle('is-active',btn.dataset[key]===String(value)));
