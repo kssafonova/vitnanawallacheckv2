@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -19,6 +20,8 @@ const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const exists = f => fs.existsSync(path.join(ROOT, f));
 
 const data = JSON.parse(read('data/products.json'));
+// Правила калькулятора по ТЗ (цена за м², коэффициенты, чистый проход, стекло) — тот же файл, что в браузере
+const PORTAL = (() => { const ctx = { Intl }; vm.runInNewContext(read('assets/js/portal-calc.js'), ctx); return ctx.PSPortal; })();
 const config = JSON.parse(read('data/site-config.json'));
 const SITE = (config.site_url || 'https://www.portal-systems.ru').replace(/\/$/, '') + '/';
 const BRAND = config.brand || 'PORTAL SYSTEMS';
@@ -35,20 +38,30 @@ const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');   
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
 const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
 const mirrored = s => /(^B\d|-R)$/.test(s.code);
-// HS/36 (D1) рисуем зеркально: подвижная пара справа, движение влево — так попросила владелец
+// HS/3 секции (D-L) рисуем зеркально: подвижная пара справа, движение влево — так попросила владелец
 const flipModel = m => m.model === 'HS3';
 const isMirror = (m, s) => mirrored(s) !== flipModel(m);                                        // зеркальные схемы
 const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порталы');
 
 // ---------- варианты ----------
-// Размер модели (sizes в products.json) → «модель этого размера»: ширина, цена, проход, код HS2/36, название «… 3,6 м».
-// Остальной код работает с ней как с обычной моделью (m.width, m.price, m.code, m.name).
+// Размер модели (sizes в products.json) → «модель этого размера»: ширина, код HS2/36, название «… 3,6 м»;
+// цена и чистый проход — по ТЗ калькулятора (assets/js/portal-calc.js) для стандартной комплектации: стеклопакет 40 мм
+// (или триплекс, если створка больше 5 м²), однотонный RAL, стандартная ручка. Остальной код работает с ней как с обычной моделью.
+const portalOf = (m, z) => {
+  const scheme = (m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0]).code;
+  const o = { type: m.system, w: z.width, h: m.height, n: m.sections, scheme, glass: 'standard', color: 'mono', handle: 'standard', extraSections: [m.sections] };
+  const price = PORTAL.price(o);
+  if (!price) throw new Error(`${m.model} ${z.width} мм: калькулятор не считает этот размер (portal-calc.js)`);
+  return { price, passage: PORTAL.passage(m.system, z.width, m.sections, scheme), triplex: PORTAL.triplexForced(z.width, m.height, m.sections) };
+};
 const sized = (m, z) => ({
-  ...m, ...z, base: m,
+  ...m, ...z, ...portalOf(m, z), base: m,
   code: `${m.code_prefix}/${z.width / 100}`,
   name: `${m.name_base} ${metres(z.width)} м`,
   leaf: Math.round(z.width / m.sections),
-  opening: z.passage ? `≈ ${fmtN(z.passage)} мм · ${Math.round(z.passage / z.width * 100)}% проёма` : m.opening_text,
+  glass: PORTAL.triplexForced(z.width, m.height, m.sections) ? 'Триплекс закалённый — обязателен: створка больше 5 м²' : m.glass,
+  frame_depth: `${PORTAL.frameDepth(m.system, m.sections, (m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0]).code)} мм`,
+  opening: (p => `≈ ${fmtN(p)} мм · ${Math.round(p / z.width * 100)}% проёма`)(portalOf(m, z).passage),
 });
 const sizesOf = m => m.sizes.map(z => sized(m, z));
 const defSize = m => sizesOf(m).find(x => x.width === m.default_width) || sizesOf(m)[0];
@@ -226,25 +239,20 @@ function marketCard(base, rel) {
 // Калькулятор HS (assets/js/quick-calc.js) живёт на отдельной странице /raschet/.
 // Цены моделей по числу секций — из products.json; фото — рендеры моделей (светлая рама — если есть белый цвет).
 const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
-// База формулы для нестандартного размера — первый размер модели с тем же числом секций
-const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(b => { const m = sizesOf(b)[0]; return [m.sections, { price: m.price, w: m.width, h: m.height }]; })));
-// Готовые двери для калькулятора (data-doors) — все размеры из таблицы: совпали ширина, створки и одна из стандартных высот (hs) —
-// это товар из каталога (цена, срок PROD_TEXT, «В корзину»), иначе — индивидуальный заказ.
-// Цвета калькулятора white / anthracite → варианты каталога (схема по умолчанию).
+// Готовые двери для калькулятора (data-doors) — все размеры из таблицы. Совпали тип HS, ширина, створки, одна из стандартных
+// высот (hs), схема есть у модели, стандартная комплектация (стекло по умолчанию, однотонный RAL, стандартная ручка) —
+// это товар из каталога (цена каталога, срок PROD_TEXT, «В корзину»), иначе — индивидуальный заказ по формуле ТЗ.
 const calcReady = rel => JSON.stringify(hsAvail().flatMap(sizesOf).sort((a, b) => a.width - b.width || a.sections - b.sections).map(m => ({
   n: m.sections, w: m.width, h: m.height, hs: m.heights, price: m.price, code: m.code, name: m.name, passage: m.passage,
-  colors: Object.fromEntries(m.colors.filter(c => colorKeyOf(c) !== 'ral').map(c => {
-    const v = find(m.model, c.slug, defScheme(m).slug, m.width);
-    return [colorKeyOf(c), { sku: v.sku, url: rel + v.path }];
-  })),
+  schemes: Object.fromEntries(m.schemes.map(s => { const v = find(m.model, m.colors[0].slug, s.slug, m.width); return [s.code, { sku: v.sku, url: rel + v.path }]; })),
+  def: defScheme(m).code,
 })));
 const calcBox = (rel, attrs = {}) => {
-  const all = { refs: calcRefs(), doors: calcReady(rel), term: PROD_TEXT, base: rel, ...attrs };
+  const all = { doors: calcReady(rel), term: PROD_TEXT, base: rel, ...attrs };
   return `<div class="qc-root" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
 };
-const colorKeyOf = c => ({ belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral');
-// Ссылка на калькулятор с параметрами товара (размер, створки, цвет, стекло как в каталоге)
-const raschetHref = (rel, m, c) => `${rel}raschet/?w=${m.width}&amp;h=${m.height}&amp;n=${m.sections}&amp;glass=standard&amp;color=${colorKeyOf(c)}&amp;from=${encodeURIComponent(`${m.code} · ${c.name} RAL ${c.ral}`)}`;
+// Ссылка на калькулятор с параметрами товара (тип, размер, створки, схема)
+const raschetHref = (rel, m, s) => `${rel}raschet/?type=${m.system}&amp;w=${m.width}&amp;h=${m.height}&amp;n=${m.sections}&amp;scheme=${encodeURIComponent(s.code)}&amp;from=${encodeURIComponent(`${m.code} · ${s.code}`)}`;
 
 const ICO = {
   price: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3.2"/></svg>',
@@ -258,12 +266,12 @@ const ICO = {
 // Блок «Цена по размерам проёма» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
-  return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
+  return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
       <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2><p>Выберите ширину проёма — покажем готовую дверь и цену. Другой размер введите сами: посчитаем индивидуальный заказ.</p></header>
       <div class="qc-draw__size" data-open-size></div>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
-        <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
+        <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стеклопакет 40 мм, любой однотонный RAL · без доставки и монтажа</small></p>
         <a class="qc-draw__go" href="${rel}raschet/" data-od-link>Подробный расчёт <span aria-hidden="true">→</span></a>
       </div>
     </div>`;
@@ -273,9 +281,9 @@ function calcTeaser(rel, eyebrow) {
 // (створки → ширина → схема), проход, как работает, ссылка и артикул варианта (цвет по умолчанию).
 // key — сторона для рисунка: left — ведущая створка слева и едет вправо, right — наоборот, center — от центра.
 const OPEN_LAYOUT = {
-  A1: { key: 'left', moving: [0], targets: [1] }, B1: { key: 'right', moving: [1], targets: [0] },
-  D1: { key: 'right', moving: [1, 2], targets: [0, 0] }, 'D1-R': { key: 'left', moving: [0, 1], targets: [2, 2] },
-  A7: { key: 'center', moving: [1, 2], targets: [0, 3] },
+  'A-L': { key: 'left', moving: [0], targets: [1] }, 'A-R': { key: 'right', moving: [1], targets: [0] },
+  'D-L': { key: 'right', moving: [1, 2], targets: [0, 0] }, 'D-R': { key: 'left', moving: [0, 1], targets: [2, 2] },
+  'F-Center': { key: 'center', moving: [1, 2], targets: [0, 3] },
 };
 const hsxData = rel => JSON.stringify({
   start: `${hsAvail()[0].model}-${defSize(hsAvail()[0]).width}`,
@@ -375,7 +383,7 @@ function variantPage(v) {
       <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;
-  const customLink = hasCalc ? raschetHref(base, m, c) : '#product-contact';
+  const customLink = hasCalc ? raschetHref(base, m, s) : '#product-contact';
 
   return `<!doctype html>
 <html lang="ru">
@@ -518,7 +526,7 @@ const featured = hs.filter(m => m.status === 'available').slice(0, 2).map(defSiz
 
 const blocks = {
   'raschet/index.html': {
-    'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS-порталы', context: 'страница калькулятора' }),
+    'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS и FS порталы', context: 'страница калькулятора' }),
   },
   'catalog/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/', 'project')].join('\n\n      '),
