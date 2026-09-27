@@ -155,8 +155,10 @@ const model3d = m => ({
   colors: Object.fromEntries(m.colors.map(c => [c.slug, c.hex])),
   mirror: Object.fromEntries(m.schemes.map(s => [s.slug, isMirror(m, s)])),
 });
-// Срок изготовления — data/site-config.json → services.production_days (он же в корзине через data/catalog.json)
-const PROD_DAYS = (config.services && config.services.production_days) || 14;
+// Срок изготовления — data/site-config.json → services.production_days_min / _max (они же в корзине через data/catalog.json)
+const PROD_MIN = (config.services && config.services.production_days_min) || 30;
+const PROD_MAX = (config.services && config.services.production_days_max) || 60;
+const PROD_TEXT = `${PROD_MIN}–${PROD_MAX} дней`;
 const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
 function marketCard(m, rel) {
   const first = firstOf(m);
@@ -304,7 +306,7 @@ function variantPage(v) {
 
   const priceBlock = soon
     ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_DAYS} дней</b>изготовление после подтверждения заказа</div></div>
+    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_TEXT}</b>изготовление после подтверждения заказа</div></div>
       <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
   const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
   const hasCalc = m.system === 'HS' && !soon;

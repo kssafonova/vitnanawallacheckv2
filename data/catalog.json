@@ -12,7 +12,8 @@
     "install_delivery_pct": 12,
     "install_delivery_min": 45000,
     "install_delivery_zone": "Москва и МО до 50 км от МКАД",
-    "production_days": 14
+    "production_days_min": 30,
+    "production_days_max": 60
   },
   "variants": [
     {
