@@ -1,6 +1,7 @@
 /* Чертёж проёма HS — инженерная схема тонкими линиями: рама, створки, стрелки движения, размерные линии.
-   Ширину и высоту вводят прямо на размерных линиях. Используют блок «Цена по размерам проёма» (главная, HS) и калькулятор /raschet/.
-   window.PSOpening.mount(el, { w, h, n, onChange }) → { set({w,h,n}), get() }.
+   Чертёж только показывает: размеры подписаны на размерных линиях; вводят их в блоке выбора размера (sizeControl):
+   кнопки готовых дверей из каталога и «Свой размер» с полями «Ширина, мм» / «Высота, мм». Используют блок «Цена по размерам проёма» (главная, HS) и калькулятор /raschet/.
+   window.PSOpening.mount(el, { w, h, n }) → { set({w,h,n}), get() }; sizeControl(el, { doors, w, h, n, onChange }).
    Раскладка створок — как на мини-схемах каталога: 2 — подвижная + глухая, 3 — две подвижные + глухая, 4 — от центра. */
 (() => {
   const VB_W = 1000, VB_H = 620;
@@ -47,9 +48,9 @@
     el.classList.add('od');
     el.innerHTML = `
       <svg class="od__svg" viewBox="0 0 ${VB_W} ${VB_H}" role="img" aria-label="Чертёж проёма"></svg>
-      <label class="od__in od__in--w"><span class="od__cap">Ширина</span><input inputmode="numeric" maxlength="5" autocomplete="off" aria-label="Ширина проёма, мм"><span>мм</span></label>
-      <label class="od__in od__in--h"><span class="od__cap">Высота</span><input inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Высота проёма, мм"><span>мм</span></label>`;
-    const svgEl = el.querySelector('svg'), inW = el.querySelector('.od__in--w input'), inH = el.querySelector('.od__in--h input');
+      <span class="od__in od__in--w" aria-hidden="true"><span class="od__cap">Ширина</span><b></b><span>мм</span></span>
+      <span class="od__in od__in--h" aria-hidden="true"><span class="od__cap">Высота</span><b></b><span>мм</span></span>`;
+    const svgEl = el.querySelector('svg'), inW = el.querySelector('.od__in--w b'), inH = el.querySelector('.od__in--h b');
     const boxW = el.querySelector('.od__in--w'), boxH = el.querySelector('.od__in--h');
 
     const draw = () => {
@@ -66,18 +67,8 @@
         if (pos.hx > maxLeft) boxH.style.left = maxLeft + '%';
       });
     };
-    const sync = () => { inW.value = st.w; inH.value = st.h; };
-    const emit = () => opts.onChange && opts.onChange({ ...st });
-    const read = (input, key, auto) => {
-      const v = parseInt(input.value.replace(/\D+/g, ''), 10);
-      if (!Number.isFinite(v)) return;
-      st[key] = v;
-      if (auto) st.n = recommend(st.w);
-      draw(); emit();
-    };
-    inW.addEventListener('input', () => read(inW, 'w', !opts.keepLeaves));
-    inH.addEventListener('input', () => read(inH, 'h'));
-    [inW, inH].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } }));
+    // Чертёж — только показ: размеры подписаны на размерных линиях, вводят их в блоке выбора размера (sizeControl)
+    const sync = () => { inW.textContent = fmt(st.w); inH.textContent = fmt(st.h); };
     sync(); draw();
     return {
       set(next) { Object.assign(st, next); sync(); draw(); },
@@ -98,7 +89,57 @@
   // Готовая дверь из каталога: ширина, высота и число створок совпадают с моделью (data-doors из build.mjs); иначе — индивидуальный заказ
   const matchReady = (ready, st) => (ready || []).find(r => r.w === st.w && r.h === st.h && r.n === st.n) || null;
 
-  window.PSOpening = { mount, price, recommend, fmt, matchReady, LEAF_MIN, LEAF_MAX, W_MIN, H_MIN, H_MAX };
+  // Выбор размера: кнопки готовых дверей (ширина, «HS/30 · готовая») + «Свой размер» с явными полями ввода
+  function sizeControl(el, { doors = [], w, h, n, onChange }) {
+    const cur = { w, h, n };
+    const isDoor = d => d.w === cur.w && d.h === cur.h && d.n === cur.n;
+    const m = v => (v / 1000).toFixed(1).replace('.', ',');
+    el.classList.add('sz');
+    el.innerHTML = `
+      <p class="sz__lbl">Ширина проёма</p>
+      <div class="sz__seg" role="group" aria-label="Размер проёма">${doors.map((d, i) =>
+        `<button type="button" data-sz="${i}"><b>${m(d.w)} м</b><small>${d.code} · готовая</small></button>`).join('')}<button type="button" data-sz="custom"><b>Свой размер</b><small>ширина и высота</small></button></div>
+      <div class="sz__fields" hidden>
+        <label class="sz__f"><span>Ширина, мм</span><input inputmode="numeric" maxlength="5" autocomplete="off" placeholder="например, 3900" data-sz-w></label>
+        <span class="sz__x" aria-hidden="true">×</span>
+        <label class="sz__f"><span>Высота, мм</span><input inputmode="numeric" maxlength="4" autocomplete="off" placeholder="например, 2400" data-sz-h></label>
+        <p class="sz__hint">Ширина от ${fmt(W_MIN)} мм, высота ${fmt(H_MIN)}–${fmt(H_MAX)} мм. Размер не как у готовой двери — индивидуальный заказ.</p>
+      </div>`;
+    const fields = el.querySelector('.sz__fields'), inW = el.querySelector('[data-sz-w]'), inH = el.querySelector('[data-sz-h]');
+    const btns = [...el.querySelectorAll('[data-sz]')];
+    let custom = !doors.some(isDoor);
+    const paint = () => {
+      btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.sz === 'custom' ? custom : !custom && isDoor(doors[+b.dataset.sz]))));
+      fields.hidden = !custom;
+    };
+    const emit = () => onChange && onChange({ ...cur });
+    el.addEventListener('click', e => {
+      const b = e.target.closest('[data-sz]');
+      if (!b) return;
+      if (b.dataset.sz === 'custom') {
+        custom = true; inW.value = cur.w; inH.value = cur.h; paint();
+        inW.focus(); inW.select();
+      } else {
+        const d = doors[+b.dataset.sz];
+        custom = false; Object.assign(cur, { w: d.w, h: d.h, n: d.n }); paint(); emit();
+      }
+    });
+    const read = () => {
+      const vw = parseInt(inW.value.replace(/\D+/g, ''), 10), vh = parseInt(inH.value.replace(/\D+/g, ''), 10);
+      if (Number.isFinite(vw)) { cur.w = vw; cur.n = recommend(vw); }
+      if (Number.isFinite(vh)) cur.h = vh;
+      emit();
+    };
+    [inW, inH].forEach(i => {
+      i.addEventListener('input', read);
+      i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); i.blur(); } });
+    });
+    if (custom) { inW.value = cur.w; inH.value = cur.h; }
+    paint();
+    return { set(next) { Object.assign(cur, next); if (custom) { inW.value = cur.w; inH.value = cur.h; } paint(); } };
+  }
+
+  window.PSOpening = { mount, sizeControl, price, recommend, fmt, matchReady, LEAF_MIN, LEAF_MAX, W_MIN, H_MIN, H_MAX };
 
   // Блок «Цена по размерам проёма» ([data-open-teaser], главная и HS): чертёж; размер готовой двери — цена каталога и ссылка на товар,
   // нестандартный — индивидуальный заказ: цена ориентировочная, срок дольше, ссылка в калькулятор с этими размерами
@@ -124,7 +165,9 @@
         link.href = `${box.dataset.href}?w=${st.w}&h=${st.h}&n=${st.n}`; link.firstChild.textContent = 'Индивидуальный расчёт ';
       }
     };
-    const api = mount(box.querySelector('[data-open-draw]'), { w: 3600, h: 2300, onChange: show });
+    const start = ready.find(r => r.w === 3600) || ready[0] || { w: 3600, h: 2300, n: 3 };
+    const api = mount(box.querySelector('[data-open-draw]'), { w: start.w, h: start.h, n: start.n });
+    sizeControl(box.querySelector('[data-open-size]'), { doors: ready, w: start.w, h: start.h, n: start.n, onChange: st => { api.set(st); show(st); } });
     show(api.get());
   });
 })();
