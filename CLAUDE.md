@@ -83,7 +83,10 @@ data/site-config.json       домен, телефон, производство
 assets/css/components.css   токены, шрифты, общие компоненты (подключается во все CSS через @import)
 assets/css/site.css         главная и общие секции; catalog.css, product.css, cart.css, pages.css (о компании, контакты), hs-system.css, fs-system.css, calculator.css
 assets/css/hs-blocks.css    HS: блоки «Характеристики и устройство» и «Как открывается дверь» (классы .hsx-*)
-assets/js/components/       <site-menu> и <site-footer> — веб-компоненты шапки и подвала (Shadow DOM, атрибут data-base)
+assets/js/components/       <site-menu> и <site-footer> — веб-компоненты шапки и подвала (Shadow DOM, атрибут data-base).
+                            Меню как у vitrocsa.com (без языков): Системы ⌄ · Каталог · Проекты · Компания ⌄ · Покупателям ⌄ · Контакты;
+                            с 1100 px — строка с выпадающими списками, уже — бургер: чёрный экран, логотип в рамке из линий,
+                            белая квадратная «×», поиск по сайту (MENU + SEARCH_EXTRA), крупные КАПС-пункты с раскрытием
 assets/js/                  calculator*.js, hs-system.js, product.js, site.js
 assets/js/hs-opening.js     HS: конфигуратор «Как открывается дверь» (ширина × сторона → схема на canvas без фото, размерная линия прохода) и итог под ним: карточка выбранного готового решения (фото и цена из карточек #stock) + строка «Проём другого размера? Рассчитаем бесплатно (/raschet/ с этой конфигурацией) или вызовите замерщика (#project-form, комментарий заполняется)»
 assets/js/hs-interior3d.js  HS: вкладка «В интерьере» — 3D-гостиная (three.js): портал из параметров конфигурации, ползунок открывает, солнце через стекло, вид за окном — assets/images/systems/hs-interior-view.webp. Грузится только при открытии вкладки; без WebGL — рисованный интерьер на canvas
@@ -104,6 +107,10 @@ tools/build.mjs             генератор каталога и sitemap из 
 tools/check-site.mjs        проверка сайта в браузере
 tools/recolor-photos.mjs    фото вариантов в цветах RAL из студийных рендеров
 ```
+
+Хлебные крошки — на всех страницах, кроме главной: `<nav class="crumbs"><div class="ui-wrap crumbs__in">…</div></nav>`
+(стили в конце components.css, разделитель «—», текущая страница — `<span aria-current="page">`). Поверх фото первого экрана
+(о компании, HS, FS) — `.crumbs--over`. На странице товара крошки собирает генератор. Новая страница — сразу с крошками.
 
 Пути в HTML относительные (`../../`), чтобы сайт работал и на GitHub Pages в подпапке, и на своём домене.
 Шапка и подвал получают корень сайта через `data-base`, например `<site-menu data-base="../../"></site-menu>`.
