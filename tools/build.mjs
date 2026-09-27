@@ -439,6 +439,7 @@ const blocks = {
     'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
   },
   'index.html': {
+    'home-cards': [...hs.map(m => marketCard(m, '')), projectCard('raschet/')].join('\n\n      '),
     'home-calc': calcTeaser('', 'Калькулятор'),
     'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },

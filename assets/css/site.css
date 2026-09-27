@@ -577,3 +577,14 @@
   .sx__visual{align-self:start}
   .sx__stage{max-height:none;aspect-ratio:16/10}
 }
+
+/* ---------- Главная: готовые двери (карточки каталога), процесс — линия времени ---------- */
+.home-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-bottom:var(--space-head)}
+.home-head .ui-eyebrow{margin:0 0 14px}
+.home-head h2{margin:0;font:300 var(--fs-h2)/.95 var(--font);letter-spacing:-.06em;text-transform:none}
+.home-head__link{display:inline-flex;align-items:center;gap:10px;min-height:44px;border-bottom:1px solid var(--ui-ink);color:var(--ui-ink);text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.home-stock{padding:var(--space-section) 0;background:var(--ui-bg)}
+.home-stock__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(14px,1.8vw,28px)}
+@media(min-width:640px){.home-stock__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1100px){.home-stock__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.home-process{padding:var(--space-section) 0;background:var(--ui-bg);border-top:1px solid var(--ui-line-soft)}
