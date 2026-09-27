@@ -1,0 +1,27 @@
+{
+  "_comment": "Проекты для страницы /projects/ (собирает tools/build.mjs, блок build:projects-grid). status: real — реализованный объект (реальное фото), render — визуализация решения (на карточке пометка «Визуализация»). Добавляйте реальные объекты сюда: фото — assets/images/projects/. Места и названия — только реальные.",
+  "systems": { "hs": "HS · подъёмно-раздвижная", "fs": "FS · складная", "pano": "Панорамное остекление" },
+  "types": { "house": "Частный дом", "terrace": "Терраса", "interior": "Интерьер" },
+  "projects": [
+    { "title": "Дом с панорамным фасадом", "image": "assets/images/projects/house.webp", "status": "real", "systems": ["pano", "hs"], "type": "house", "place": "Московская область",
+      "text": "Единый контур остекления с крупными светопрозрачными плоскостями и выходом на участок." },
+    { "title": "Свет во всю высоту", "image": "assets/images/projects/interior.webp", "status": "real", "systems": ["pano"], "type": "interior", "place": "Московская область",
+      "text": "Окна в пол с минимальным визуальным шумом и акцентом на вид из интерьера." },
+    { "title": "Выход на террасу", "image": "assets/images/projects/terrace.webp", "status": "real", "systems": ["hs"], "type": "terrace", "place": "Московская область",
+      "text": "Тёплый подъёмно-раздвижной портал для ежедневного прохода из гостиной на террасу." },
+    { "title": "Терраса с видом на город", "image": "assets/images/hero/hero-house.webp", "status": "render", "systems": ["hs", "pano"], "type": "terrace",
+      "text": "Остекление по всей длине террасы: раздвижные створки HS и глухие панорамные поля." },
+    { "title": "Гостиная с выходом в сад", "image": "assets/images/systems/hs.webp", "status": "render", "systems": ["hs"], "type": "house",
+      "text": "Две створки HS: одна сдвигается, проход на террасу — половина ширины проёма." },
+    { "title": "Открытый угол гостиной", "image": "assets/images/systems/fs.webp", "status": "render", "systems": ["fs"], "type": "house",
+      "text": "Складные створки FS собираются пакетом у края — проём открывается почти полностью." },
+    { "title": "Веранда со складной стеной", "image": "assets/images/systems/fs-view.webp", "status": "render", "systems": ["fs"], "type": "terrace",
+      "text": "Складная стена FS между столовой и верандой: летом — одно пространство." },
+    { "title": "Панорама над долиной", "image": "assets/images/systems/panorama.webp", "status": "render", "systems": ["pano"], "type": "interior",
+      "text": "Глухое панорамное остекление в пол: минимум профиля, максимум вида." },
+    { "title": "Гостиная с видом на лес", "image": "assets/images/systems/panorama_view.webp", "status": "render", "systems": ["pano"], "type": "interior",
+      "text": "Угловое панорамное остекление с узкими импостами." },
+    { "title": "Выход на террасу у озера", "image": "assets/images/systems/hs-overview.jpg", "status": "render", "systems": ["hs"], "type": "terrace",
+      "text": "HS с активной створкой справа: створка уходит за глухую, не занимая места в комнате." }
+  ]
+}

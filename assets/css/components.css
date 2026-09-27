@@ -539,3 +539,6 @@ lead-form{display:block}
 .cta-rows small{display:block;margin-top:8px;color:var(--ui-muted);font:400 var(--fs-small)/1.4 var(--font)}
 .cta-rows i{font-style:normal;font:300 var(--fs-h3)/1 var(--font);transition:transform .25s var(--ease-ui)}
 @media(hover:hover){.cta-rows a:hover i{transform:translateX(8px)}.cta-rows a:hover b{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}}
+/* Ссылка «Все проекты» под блоком проектов (главная, HS) → /projects/ */
+.projects-all{max-width:var(--ui-max);margin:calc(var(--space-section) * -.6) auto 0;padding:0 var(--ui-pad) var(--space-section);background:var(--ui-bg)}
+.projects-all a{display:inline-flex;align-items:center;gap:10px;min-height:44px;border-bottom:1px solid var(--ui-ink);color:var(--ui-ink);text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
