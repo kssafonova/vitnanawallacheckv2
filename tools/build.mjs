@@ -203,8 +203,17 @@ function marketCard(m, rel) {
 // Цены моделей по числу секций — из products.json; фото — рендеры моделей (светлая рама — если есть белый цвет).
 const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
 const calcRefs = () => JSON.stringify(Object.fromEntries(hsAvail().map(m => [m.sections, { price: m.price, w: m.width, h: m.height }])));
+// Готовые двери для калькулятора (data-doors): совпал размер и створки — это товар из каталога (цена, срок PROD_TEXT, «В корзину»),
+// иначе — индивидуальный заказ. Цвета калькулятора white / anthracite → варианты каталога (схема по умолчанию).
+const calcReady = rel => JSON.stringify(hsAvail().map(m => ({
+  n: m.sections, w: m.width, h: m.height, price: m.price, code: m.code, name: m.name,
+  colors: Object.fromEntries(m.colors.filter(c => colorKeyOf(c) !== 'ral').map(c => {
+    const v = find(m.model, c.slug, defScheme(m).slug);
+    return [colorKeyOf(c), { sku: v.sku, url: rel + v.path }];
+  })),
+})));
 const calcBox = (rel, attrs = {}) => {
-  const all = { refs: calcRefs(), base: rel, ...attrs };
+  const all = { refs: calcRefs(), doors: calcReady(rel), term: PROD_TEXT, base: rel, ...attrs };
   return `<div class="qc-root" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
 };
 const colorKeyOf = c => ({ belyi: 'white', antratsit: 'anthracite' }[c.slug] || 'ral');
@@ -223,11 +232,11 @@ const ICO = {
 // Блок «Сколько стоит» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
-  return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-href="${rel}raschet/">
+  return `<div class="qc-draw" data-open-teaser data-refs="${esc(calcRefs())}" data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
       <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Сколько стоит раздвижная дверь под ваш размер</h2></header>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
-        <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
+        <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стандартный стеклопакет, белый или антрацит · без доставки и монтажа</small></p>
         <a class="qc-draw__go" href="${rel}raschet/" data-od-link>Подробный расчёт <span aria-hidden="true">→</span></a>
       </div>
     </div>`;

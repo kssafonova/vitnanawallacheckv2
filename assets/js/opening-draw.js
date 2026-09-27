@@ -95,19 +95,34 @@
     return Math.ceil(ref.price * (st.w * st.h) / (ref.w * ref.h) * glassF * colorF / 1000) * 1000;
   }
 
-  window.PSOpening = { mount, price, recommend, fmt, LEAF_MIN, LEAF_MAX, W_MIN, H_MIN, H_MAX };
+  // Готовая дверь из каталога: ширина, высота и число створок совпадают с моделью (data-doors из build.mjs); иначе — индивидуальный заказ
+  const matchReady = (ready, st) => (ready || []).find(r => r.w === st.w && r.h === st.h && r.n === st.n) || null;
 
-  // Блок «Сколько стоит» ([data-open-teaser], главная и HS): чертёж + цена со стандартным стеклопакетом и ссылка в калькулятор
+  window.PSOpening = { mount, price, recommend, fmt, matchReady, LEAF_MIN, LEAF_MAX, W_MIN, H_MIN, H_MAX };
+
+  // Блок «Сколько стоит» ([data-open-teaser], главная и HS): чертёж; размер готовой двери — цена каталога и ссылка на товар,
+  // нестандартный — индивидуальный заказ: цена ориентировочная, срок дольше, ссылка в калькулятор с этими размерами
   const word = n => (n < 5 ? 'створки' : 'створок');
   document.querySelectorAll('[data-open-teaser]').forEach(box => {
-    let refs = {};
-    try { refs = JSON.parse(box.dataset.refs || '{}'); } catch (_) { refs = {}; }
-    const out = box.querySelector('[data-od-price]'), leaves = box.querySelector('[data-od-leaves]'), link = box.querySelector('[data-od-link]');
+    let refs = {}, ready = [];
+    try { refs = JSON.parse(box.dataset.refs || '{}'); ready = JSON.parse(box.dataset.doors || '[]'); } catch (_) { /* пусто */ }
+    const term = box.dataset.term || '30–60 дней';
+    const out = box.querySelector('[data-od-price]'), leaves = box.querySelector('[data-od-leaves]'), link = box.querySelector('[data-od-link]'), note = box.querySelector('[data-od-note]');
     const show = st => {
-      const p = price(refs, st);
-      out.textContent = p ? `≈ ${fmt(p)} ₽` : 'по расчёту';
-      leaves.textContent = `${fmt(st.w)} × ${fmt(st.h)} мм · ${st.n} ${word(st.n)}`;
-      link.href = `${box.dataset.href}?w=${st.w}&h=${st.h}&n=${st.n}`;
+      const r = matchReady(ready, st), size = `${fmt(st.w)} × ${fmt(st.h)} мм · ${st.n} ${word(st.n)}`;
+      if (r) {
+        const v = r.colors.anthracite || Object.values(r.colors)[0];
+        out.textContent = `${fmt(r.price)} ₽`;
+        leaves.textContent = `Готовая дверь ${r.code} · ${size}`;
+        note.textContent = `срок — ${term} · без доставки и монтажа`;
+        link.href = v.url; link.firstChild.textContent = 'Открыть дверь ';
+      } else {
+        const p = price(refs, st);
+        out.textContent = p ? `≈ ${fmt(p)} ₽` : 'по расчёту';
+        leaves.textContent = `Индивидуальный заказ · ${size}`;
+        note.textContent = `нестандартный размер — срок дольше ${term}, точный назовём после замера`;
+        link.href = `${box.dataset.href}?w=${st.w}&h=${st.h}&n=${st.n}`; link.firstChild.textContent = 'Индивидуальный расчёт ';
+      }
     };
     const api = mount(box.querySelector('[data-open-draw]'), { w: 3600, h: 2300, onChange: show });
     show(api.get());
