@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link rel="preload" href="../assets/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Остекление загородного дома под ключ — персональная карта остекления | PORTAL SYSTEMS</title>
+<meta name="description" content="Интерактивная карта остекления дома: выберите зоны — выход в сад, панорамные окна, терраса, зимний сад, входная группа, второй свет — и передайте предварительный проект инженеру. Москва и Московская область.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.portal-systems.ru/osteklenie-pod-klyuch/">
+<meta name="theme-color" content="#050505">
+<link rel="stylesheet" href="../assets/css/glazing-map.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/images/glazing-map-house-fallback.webp" as="image" type="image/webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли получить точную цену через карту?","acceptedAnswer":{"@type":"Answer","text":"Нет. Карта собирает задачу: какие части дома остеклить и какого эффекта вы ждёте. Цена зависит от размеров проёмов, стеклопакетов, порогов и монтажных узлов — её считает инженер после изучения плана или фото и замера. Ориентир бюджета он назовёт после первой проработки."}},{"@type":"Question","name":"Что делать, если нет плана дома?","acceptedAnswer":{"@type":"Answer","text":"Достаточно фото фасадов и проёмов с примерными размерами. Если дом строится, подойдут эскиз архитектора или фото стройки. Остальное уточним на бесплатном замере."}},{"@type":"Question","name":"Можно ли выбрать несколько зон одновременно?","acceptedAnswer":{"@type":"Answer","text":"Да. Добавьте в проект сколько угодно зон — например, выход в сад, панорамные окна второго этажа и террасу. Инженер посмотрит на них как на одну систему: профили, цвет и стекло согласуются по всему фасаду."}},{"@type":"Question","name":"Чем карта отличается от инженерного проекта?","acceptedAnswer":{"@type":"Answer","text":"Карта — предварительная концепция по вашим ответам: зоны и подходящие типы решений. Инженерный проект — это размеры, разбивка на секции, стеклопакеты, нагрузки, пороги, монтажные узлы и смета. Его готовят после изучения материалов и замера."}},{"@type":"Question","name":"Можно ли использовать карту, если дом уже построен?","acceptedAnswer":{"@type":"Answer","text":"Да. Отметьте стадию «Готовый дом» — инженер будет исходить из существующих проёмов и проверит, что можно расширить или заменить без переделки несущих конструкций."}}]}</script>
+</head>
+<body class="pg">
+<site-menu data-base="../"></site-menu>
+
+<main class="gm" data-gm>
+<nav class="crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="../">Главная</a><span aria-hidden="true">—</span><span aria-current="page">Остекление под ключ</span></div></nav>
+
+<section class="gm-hero" id="map" aria-label="Персональная карта остекления">
+  <div class="ui-wrap gm-hero__grid">
+    <div class="gm-side">
+      <div class="gm-intro" data-gm-intro>
+        <p class="ui-eyebrow">Интерактивный подбор</p>
+        <h1 class="gm-h1">Персональная карта остекления</h1>
+        <p class="gm-lead">Выберите части дома, которые хотите изменить. Карта покажет сценарии для террасы, панорамных окон, второго света, входной группы или зимнего сада — а затем соберёт их в один предварительный проект.</p>
+        <button type="button" class="ui-btn ui-btn--dark gm-start" data-gm-start>Создать карту дома <span aria-hidden="true">→</span></button>
+        <p class="gm-how">Выберите зону → посмотрите варианты → сохраните проект.</p>
+        <p class="gm-status" data-gm-status role="status" hidden></p>
+      </div>
+      <div class="gm-panel" data-gm-panel hidden role="region" aria-label="Сценарий зоны">
+        <div class="gm-panel__body" data-gm-panel-body></div>
+      </div>
+    </div>
+
+    <div class="gm-map">
+      <div class="gm-stage" data-gm-stage>
+        <img class="gm-stage__poster" src="../assets/images/glazing-map-house-fallback.webp" width="1600" height="1200" alt="Условный загородный дом: веранда, входная группа, выход из гостиной в сад, панорамные окна второго этажа, второй свет и зимний сад" fetchpriority="high">
+        <div class="gm-stage__canvas" data-gm-canvas></div>
+        <svg class="gm-stage__outlines" data-gm-outlines viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="gm-stage__hots" data-gm-hots></div>
+      </div>
+      <div class="gm-zones">
+        <p class="gm-zones__title" id="gm-zones-title">Зоны дома</p>
+        <div class="gm-zones__list" data-gm-chips role="group" aria-labelledby="gm-zones-title"></div>
+      </div>
+      <p class="gm-stage__note">Дом на схеме — условный макет, а не ваш проект. Размеры и решения подтверждает инженер.</p>
+    </div>
+  </div>
+  <div class="gm-backdrop" data-gm-backdrop hidden></div>
+</section>
+
+<section class="gm-summary" id="project" data-gm-summary hidden>
+  <div class="ui-wrap">
+    <header class="gm-summary__head">
+      <p class="ui-eyebrow">Персональная карта остекления</p>
+      <h2 class="pg-h2" id="gm-summary-title" tabindex="-1">Ваш проект остекления</h2>
+      <p class="pg-lead">Вы выбрали зоны, которые станут основой для архитектурно-инженерной проработки. Добавьте план или фото — мы уточним конструкцию, стеклопакеты, узлы и ориентир бюджета.</p>
+    </header>
+    <div class="gm-summary__grid">
+      <div class="gm-mini" data-gm-mini>
+        <img src="../assets/images/glazing-map-house-fallback.webp" width="1600" height="1200" alt="" loading="lazy">
+        <svg viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+      <div>
+        <ol class="gm-list" data-gm-list></ol>
+        <div class="gm-summary__acts">
+          <button type="button" class="ui-btn ui-btn--dark" data-gm-engineer>Получить инженерную проработку <span aria-hidden="true">→</span></button>
+          <button type="button" class="ui-btn" data-gm-add-more>Добавить ещё зону <span aria-hidden="true">+</span></button>
+          <button type="button" class="ui-btn" data-gm-save>Сохранить проект <span aria-hidden="true">↓</span></button>
+        </div>
+        <p class="gm-disclaimer">Это предварительная концепция, составленная по вашим ответам. Возможность изготовления, точные размеры, стеклопакеты, пороги, нагрузки, монтажные узлы и стоимость подтверждаются после изучения проекта и инженерного замера.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gm-lead-sec" id="engineer" data-gm-lead hidden>
+  <div class="ui-wrap gm-lead-sec__grid">
+    <div>
+      <p class="ui-eyebrow">Инженерная проработка</p>
+      <h2 class="pg-h2" id="gm-lead-title" tabindex="-1">Передайте проект инженеру</h2>
+      <p class="pg-lead">Выбранные зоны и ответы уже приложены. Добавьте контакты и материалы, если они есть.</p>
+    </div>
+    <div>
+      <div data-gm-lead-form>
+        <lead-form data-base="../" data-source="glazing-map" data-mode="engineering" data-theme="dark" data-cta="Отправить проект инженеру"></lead-form>
+      </div>
+      <div class="gm-done" data-gm-done hidden>
+        <h3 id="gm-done-title" tabindex="-1">Карта отправлена</h3>
+        <p>Мы получили ваш сценарий остекления. Инженер изучит выбранные зоны и материалы, после чего свяжется с вами для уточнения объекта.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pg-section gm-scope" data-gm-reveal>
+  <div class="ui-wrap gm-cols">
+    <header><p class="ui-eyebrow">Под ключ</p><h2 class="pg-h2">Что входит в проект остекления</h2></header>
+    <ol class="gm-rows">
+      <li><span>01</span>Архитектурная логика фасада.</li>
+      <li><span>02</span>Подбор порталов, панорамных окон и фасадных систем.</li>
+      <li><span>03</span>Проверка стеклопакетов, теплотехники, безопасности и солнцезащиты.</li>
+      <li><span>04</span>Монтажные узлы, пороги, примыкания и водоотведение.</li>
+      <li><span>05</span>Инженерный замер, производство и монтаж.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="pg-section pg-section--paper gm-links" data-gm-reveal>
+  <div class="ui-wrap gm-cols">
+    <header><p class="ui-eyebrow">Зоны</p><h2 class="pg-h2">Какие зоны можно собрать</h2></header>
+    <ul class="gm-rows gm-rows--links">
+      <li><a href="../systems/hs/">HS-порталы <span aria-hidden="true">→</span></a></li>
+      <li><a href="../systems/fs/">FS-складные системы <span aria-hidden="true">→</span></a></li>
+      <li><a href="#map" data-gm-open="window">Панорамные окна <span aria-hidden="true">→</span></a></li>
+      <li><a href="#map" data-gm-open="terrace">Остекление террас и веранд <span aria-hidden="true">→</span></a></li>
+      <li><a href="#map" data-gm-open="garden">Зимние сады <span aria-hidden="true">→</span></a></li>
+      <li><a href="#map" data-gm-open="entry">Входные группы <span aria-hidden="true">→</span></a></li>
+      <li><a href="#map">Остекление загородного дома под ключ <span aria-hidden="true">→</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="page-faq" id="faq">
+  <div class="ui-wrap page-faq__grid">
+    <header class="page-faq__head"><p class="ui-eyebrow">Вопросы и ответы</p><h2>О карте остекления</h2></header>
+    <div class="faq-list">
+      <details class="faq-list__item"><summary>Можно ли получить точную цену через карту?<i aria-hidden="true"></i></summary><p>Нет. Карта собирает задачу: какие части дома остеклить и какого эффекта вы ждёте. Цена зависит от размеров проёмов, стеклопакетов, порогов и монтажных узлов — её считает инженер после изучения плана или фото и замера. Ориентир бюджета он назовёт после первой проработки.</p></details>
+      <details class="faq-list__item"><summary>Что делать, если нет плана дома?<i aria-hidden="true"></i></summary><p>Достаточно фото фасадов и проёмов с примерными размерами. Если дом строится, подойдут эскиз архитектора или фото стройки. Остальное уточним на бесплатном замере.</p></details>
+      <details class="faq-list__item"><summary>Можно ли выбрать несколько зон одновременно?<i aria-hidden="true"></i></summary><p>Да. Добавьте в проект сколько угодно зон — например, выход в сад, панорамные окна второго этажа и террасу. Инженер посмотрит на них как на одну систему: профили, цвет и стекло согласуются по всему фасаду.</p></details>
+      <details class="faq-list__item"><summary>Чем карта отличается от инженерного проекта?<i aria-hidden="true"></i></summary><p>Карта — предварительная концепция по вашим ответам: зоны и подходящие типы решений. Инженерный проект — это размеры, разбивка на секции, стеклопакеты, нагрузки, пороги, монтажные узлы и смета. Его готовят после изучения материалов и замера.</p></details>
+      <details class="faq-list__item"><summary>Можно ли использовать карту, если дом уже построен?<i aria-hidden="true"></i></summary><p>Да. Отметьте стадию «Готовый дом» — инженер будет исходить из существующих проёмов и проверит, что можно расширить или заменить без переделки несущих конструкций.</p></details>
+    </div>
+  </div>
+</section>
+<p class="gm-toast" data-gm-toast role="status" aria-live="polite" hidden></p>
+</main>
+
+<site-footer data-base="../"></site-footer>
+<!-- build:glazing-config -->
+      <script type="application/json" id="gm-config">{"splineScene":"","splineRuntime":"../assets/vendor/spline/runtime.js","metrika":""}</script>
+      <!-- /build:glazing-config -->
+<script src="../assets/js/components/site-menu.js"></script>
+<script src="../assets/js/components/site-footer.js"></script>
+<script src="../assets/js/components/lead-form.js"></script>
+<script type="module" src="../assets/js/glazing-map/app.js"></script>
+</body>
+</html>

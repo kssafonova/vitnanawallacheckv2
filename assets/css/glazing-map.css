@@ -1,0 +1,194 @@
+@import url('./pages.css');
+
+/* ============================================================
+   «Персональная карта остекления» (/osteklenie-pod-klyuch/).
+   Плоско, как инженерный чертёж: тонкие линии, углы без скругления, выбранное — чёрная заливка,
+   песочный акцент (--ui-accent) — только подсветка активной зоны. Фон — нейтральный серый (решение владельца).
+   ============================================================ */
+.gm{--gm-line:var(--ui-line-soft)}
+
+/* ---------- первый экран: текст / панель зоны + сцена ---------- */
+.gm-hero{position:relative;padding:clamp(24px, 16px + 2vw, 48px) 0 var(--space-section)}
+.gm-hero__grid{display:grid;gap:28px}
+.gm-side{min-width:0}
+.gm-h1{margin:0;font:300 var(--fs-h2s)/.95 var(--font);letter-spacing:-.06em}
+.gm-lead{max-width:560px;margin:20px 0 0;color:var(--ui-muted);font:300 var(--fs-lead)/1.5 var(--font)}
+.gm-start{margin-top:28px;width:100%;max-width:360px}
+.gm-how{margin:14px 0 0;color:var(--ui-muted);font:500 var(--fs-label)/1.5 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.gm-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:26px 0 0;padding-top:16px;border-top:1px solid var(--ui-line);font:400 var(--fs-body)/1.3 var(--font)}
+.gm-status a{font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.gm-status a i{font-style:normal}
+
+/* сцена: кадр 4:3 — постер, canvas 3D, контуры зон и HTML-метки поверх */
+.gm-map{min-width:0}
+.gm-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#fbfbfa;border:1px solid var(--gm-line)}
+.gm-stage__poster,.gm-stage__canvas,.gm-stage__canvas canvas,.gm-stage__outlines{position:absolute;inset:0;width:100%;height:100%}
+.gm-stage__poster{display:block;object-fit:cover;transition:opacity .5s var(--ease-ui)}
+.gm-stage__canvas canvas{display:block;opacity:0;transition:opacity .6s var(--ease-ui)}
+.gm-stage.is-3d .gm-stage__canvas canvas{opacity:1}
+.gm-stage.is-3d .gm-stage__poster{opacity:0}
+.gm-stage.is-3d .gm-stage__outlines{display:none}
+.gm-stage__outlines polygon,.gm-mini svg polygon{fill:transparent;stroke:var(--ui-accent);stroke-width:0;transition:stroke-width .2s,fill .2s}
+.gm-stage__outlines polygon.is-selected,.gm-mini svg polygon.is-selected{stroke-width:1.5;stroke-opacity:.7}
+.gm-stage__outlines polygon.is-active,.gm-mini svg polygon.is-active{stroke-width:3;stroke-opacity:1;fill:rgba(177,162,122,.16)}
+.gm-stage__hots{position:absolute;inset:0;pointer-events:none}
+.gm-stage__note{margin:12px 0 0;color:var(--ui-muted);font:300 var(--fs-caption)/1.45 var(--font)}
+
+/* метка зоны: касание 44 × 44, квадрат с «+» или номером в проекте */
+.gm-hot{
+  position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;
+  display:grid;place-items:center;color:var(--ui-ink);font-family:var(--font)
+}
+.gm-hot[hidden]{display:none}
+.gm-hot__dot{
+  display:grid;place-items:center;min-width:28px;height:28px;padding:0 4px;background:#fff;border:1px solid var(--ui-ink);
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em;transition:background .2s,color .2s,transform .2s var(--ease-ui),outline-color .2s;
+  outline:2px solid rgba(255,255,255,.9);outline-offset:0
+}
+.gm-hot.is-selected .gm-hot__dot{background:var(--ui-ink);color:#fff;animation:gm-pop .35s var(--ease-ui)}
+.gm-hot.is-active .gm-hot__dot{background:var(--ui-accent);border-color:var(--ui-ink);color:var(--ui-ink);transform:scale(1.15);outline:2px solid var(--ui-ink);outline-offset:3px}
+.gm-hot:focus-visible{outline:none}
+.gm-hot:focus-visible .gm-hot__dot{outline:2px solid var(--ui-accent);outline-offset:3px}
+.gm-hot__tip{
+  position:absolute;left:50%;bottom:calc(100% - 2px);transform:translate(-50%,4px);width:max-content;max-width:220px;padding:9px 11px;
+  background:#fff;border:1px solid var(--ui-line);color:var(--ui-muted);text-align:left;opacity:0;pointer-events:none;
+  font:300 var(--fs-caption)/1.35 var(--font);transition:opacity .15s,transform .15s var(--ease-ui);z-index:2
+}
+.gm-hot__tip b{display:block;margin-bottom:2px;color:var(--ui-ink);font-weight:500;font-size:var(--fs-small)}
+@media(hover:hover){
+  .gm-hot:hover .gm-hot__dot{background:var(--ui-ink);color:#fff}
+  .gm-hot.is-active:hover .gm-hot__dot{background:var(--ui-accent);color:var(--ui-ink)}
+  .gm-hot:hover .gm-hot__tip,.gm-hot:focus-visible .gm-hot__tip{opacity:1;transform:translate(-50%,0)}
+}
+.gm-stage.is-hinting .gm-hot:not(.is-selected) .gm-hot__dot{animation:gm-hint 1.2s var(--ease-ui) 2}
+@keyframes gm-pop{from{transform:scale(.4)}to{transform:scale(1)}}
+@keyframes gm-hint{50%{background:var(--ui-accent);transform:scale(1.18)}}
+
+/* список зон — альтернатива меткам (обязательна на телефоне) */
+.gm-zones{margin-top:16px}
+.gm-zones__title{margin:0 0 10px;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-zones__list{display:flex;gap:6px;overflow-x:auto;margin:0 calc(var(--ui-pad) * -1);padding:0 var(--ui-pad) 4px;scroll-padding:0 var(--ui-pad);scrollbar-width:none}
+.gm-zones__list::-webkit-scrollbar{display:none}
+.gm-chip{
+  flex:none;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 14px 0 8px;border:1px solid var(--ui-line);background:transparent;
+  color:var(--ui-ink);cursor:pointer;white-space:nowrap;font:400 var(--fs-small)/1 var(--font);transition:background .2s,color .2s,border-color .2s
+}
+.gm-chip__n{display:grid;place-items:center;min-width:24px;height:24px;border:1px solid currentColor;font:600 var(--fs-label)/1 var(--font)}
+.gm-chip.is-selected .gm-chip__n{background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
+.gm-chip.is-active{background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
+.gm-chip.is-active .gm-chip__n{border-color:#fff;background:transparent;color:#fff}
+@media(hover:hover){.gm-chip:hover{border-color:var(--ui-ink)}}
+
+/* ---------- панель сценария зоны ---------- */
+.gm-panel__head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--ui-line)}
+.gm-panel__n{display:grid;place-items:center;min-width:34px;height:34px;background:var(--ui-ink);color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em}
+.gm-panel__zone{margin:0;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-panel__x{width:44px;height:44px;border:1px solid var(--ui-line);background:transparent;color:var(--ui-ink);cursor:pointer;font:300 var(--fs-h4)/1 var(--font)}
+.gm-panel__x:hover{border-color:var(--ui-ink)}
+.gm-panel__step{margin:22px 0 0;color:var(--ui-muted);font:500 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-panel__q{margin:12px 0 0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em;outline:none}
+.gm-panel__lead{margin:14px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
+.gm-opts{display:grid;margin-top:22px;border-top:1px solid var(--ui-line)}
+.gm-opt{
+  display:grid;gap:5px;width:100%;min-height:60px;padding:16px 14px;border:0;border-bottom:1px solid var(--ui-line);background:transparent;color:var(--ui-ink);
+  text-align:left;cursor:pointer;font-family:var(--font);transition:background .2s,color .2s
+}
+.gm-opt b{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.gm-opt span{color:var(--ui-muted);font:300 var(--fs-small)/1.4 var(--font)}
+.gm-opt.is-on{background:var(--ui-ink);color:#fff}
+.gm-opt.is-on span{color:#c9c7c1}
+.gm-opt:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+@media(hover:hover){.gm-opt:not(.is-on):hover{background:#fff}}
+.gm-panel__acts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;margin-top:24px}
+.gm-panel__acts .ui-btn:first-child{justify-content:flex-start;gap:12px}
+.gm-panel__acts--stack{grid-template-columns:minmax(0,1fr)}
+.gm-panel__acts--stack .ui-btn:first-child{justify-content:space-between}
+.gm-panel__acts .ui-btn[disabled]{opacity:.35;cursor:not-allowed}
+.gm-panel__checks{margin-top:20px;padding-top:14px;border-top:1px solid var(--ui-line)}
+.gm-panel__checks p{margin:0 0 8px;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-panel__checks ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.gm-panel__checks li{position:relative;padding-left:18px;font:300 var(--fs-small)/1.45 var(--font)}
+.gm-panel__checks li::before{content:"";position:absolute;left:0;top:.68em;width:9px;height:1px;background:currentColor}
+.gm-panel__note{margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-small)/1.5 var(--font)}
+.gm-backdrop{position:fixed;inset:0;z-index:140;background:rgba(5,5,5,.42)}
+
+/* телефон и планшет: панель — шторка снизу, кнопки прилипают к низу */
+@media(max-width:999.98px){
+  .gm-panel{position:fixed;left:0;right:0;bottom:0;z-index:141;max-height:88dvh;overflow:auto;overscroll-behavior:contain;background:var(--ui-bg);border-top:1px solid var(--ui-ink)}
+  .gm-panel__body{padding:18px var(--ui-pad) 0}
+  .gm-panel__acts{position:sticky;bottom:0;margin:24px calc(var(--ui-pad) * -1) 0;padding:12px var(--ui-pad) max(12px, env(safe-area-inset-bottom));background:var(--ui-bg);border-top:1px solid var(--ui-line)}
+  html.gm-lock{overflow:hidden}
+}
+@media(min-width:1000px){
+  .gm-hero__grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px, 4vw, 80px);align-items:start}
+  .gm-side{position:sticky;top:calc(var(--header-h) + 20px)}
+  .gm-zones__list{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+  .gm-backdrop{display:none}
+}
+
+/* ---------- итог «Ваш проект остекления» ---------- */
+.gm-summary{padding:var(--space-section) 0;background:var(--ui-paper)}
+.gm-summary__head{margin-bottom:var(--space-head)}
+.gm-summary__head h2{outline:none}
+.gm-summary__grid{display:grid;gap:28px}
+.gm-mini{position:relative;aspect-ratio:4/3;background:#fbfbfa;border:1px solid var(--gm-line);align-self:start}
+.gm-mini img,.gm-mini svg{position:absolute;inset:0;width:100%;height:100%}
+.gm-mini img{object-fit:cover}
+.gm-mini__mark{
+  position:absolute;display:grid;place-items:center;min-width:28px;height:28px;margin:-14px 0 0 -14px;padding:0 4px;background:var(--ui-ink);color:#fff;
+  font:600 var(--fs-label)/1 var(--font);transition:background .2s,color .2s,transform .2s var(--ease-ui);animation:gm-pop .35s var(--ease-ui)
+}
+.gm-mini__mark.is-active{background:var(--ui-accent);color:var(--ui-ink);transform:scale(1.15)}
+.gm-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.gm-item{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:20px 0;border-bottom:1px solid var(--ui-line)}
+.gm-item__n{font:300 var(--fs-h4)/1.1 var(--font);letter-spacing:-.02em}
+.gm-item__zone{margin:0;color:var(--ui-muted);font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-item h3{margin:8px 0 0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em}
+.gm-item__desc{margin:10px 0 0;font:300 var(--fs-body)/1.5 var(--font)}
+.gm-item__check{margin:8px 0 0;color:var(--ui-muted);font:300 var(--fs-small)/1.5 var(--font)}
+.gm-item__check span{color:var(--ui-ink);font-weight:500}
+.gm-item__answers{margin:8px 0 0;color:var(--ui-muted);font:300 var(--fs-caption)/1.5 var(--font)}
+.gm-item__acts{display:flex;gap:18px;margin-top:10px}
+.gm-item__acts button{min-height:44px;padding:0;border:0;background:none;color:var(--ui-ink);cursor:pointer;font:500 var(--fs-small)/1 var(--font);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.gm-item__acts button:hover{color:var(--ui-muted)}
+.gm-summary__acts{display:grid;gap:8px;margin-top:26px;max-width:460px}
+.gm-summary__acts .ui-btn{width:100%}
+.gm-disclaimer{max-width:640px;margin:22px 0 0;color:var(--ui-muted);font:300 var(--fs-caption)/1.55 var(--font)}
+@media(min-width:1000px){
+  .gm-summary__grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px, 4vw, 80px)}
+  .gm-mini{position:sticky;top:calc(var(--header-h) + 20px)}
+}
+
+/* ---------- форма инженеру (тёмная) ---------- */
+.gm-lead-sec{padding:var(--space-section) 0;background:#0a0a09;color:#f0f0ef}
+.gm-lead-sec .ui-eyebrow{color:#8c887f}
+.gm-lead-sec .pg-lead{color:#aaa79f}
+.gm-lead-sec h2{outline:none}
+.gm-lead-sec__grid{display:grid;gap:var(--space-head)}
+.gm-done{padding-top:18px;border-top:1px solid #343430}
+.gm-done h3{margin:0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em;outline:none}
+.gm-done p{max-width:520px;margin:14px 0 0;color:#aaa79f;font:300 var(--fs-body)/1.6 var(--font)}
+@media(min-width:1000px){.gm-lead-sec__grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px, 4vw, 80px)}}
+
+/* ---------- SEO-блоки: списки на линиях ---------- */
+.gm-cols{display:grid;gap:var(--space-head)}
+.gm-rows{margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.gm-rows li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:18px 0;border-bottom:1px solid var(--ui-line);font:300 var(--fs-h4)/1.35 var(--font);letter-spacing:-.01em}
+.gm-rows li span{color:var(--ui-muted);font:500 var(--fs-label)/1.9 var(--font);letter-spacing:.1em}
+.gm-rows--links li{display:block;padding:0}
+.gm-rows--links a{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:60px;padding:14px 0;transition:color .15s}
+.gm-rows--links a:hover{color:var(--ui-muted)}
+@media(min-width:900px){.gm-cols{grid-template-columns:.8fr 1.2fr;gap:60px;align-items:start}}
+
+/* ---------- сообщение «Проект сохранён» ---------- */
+.gm-toast{
+  position:fixed;left:50%;bottom:max(16px, env(safe-area-inset-bottom));z-index:150;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);
+  margin:0;padding:14px 18px;background:var(--ui-ink);color:#fff;font:400 var(--fs-small)/1.45 var(--font)
+}
+
+/* мягкий сдвиг при прокрутке — текст виден всегда (только без prefers-reduced-motion — класс ставит JS) */
+.gm-reveal{transform:translateY(18px);transition:transform .8s var(--ease-ui)}
+.gm-reveal.is-in{transform:none}
+@media(prefers-reduced-motion:reduce){
+  .gm-stage__poster,.gm-stage__canvas canvas,.gm-hot__dot,.gm-mini__mark{transition:none;animation:none!important}
+}

@@ -29,5 +29,11 @@
     "install_delivery_zone": "Москва и МО до 50 км от МКАД",
     "production_days_min": 30,
     "production_days_max": 60
+  },
+  "glazing_map": {
+    "_comment": "«Персональная карта остекления» (/osteklenie-pod-klyuch/). spline_scene — адрес сцены .splinecode (https://prod.spline.design/…/scene.splinecode); пусто — 3D-дом на three.js. spline_runtime — локальная копия @splinetool/runtime (CDN не подключаем). metrika_id — номер счётчика Яндекс Метрики для целей карты. После правки — node tools/build.mjs.",
+    "spline_scene": "",
+    "spline_runtime": "assets/vendor/spline/runtime.js",
+    "metrika_id": ""
   }
 }
