@@ -1,6 +1,6 @@
-/* 3D-сцена «Персональной карты остекления»: светлый архитектурный чертёж (three.js локально, без CDN).
-   Редакционная инженерия, а не рендер коттеджа: тёплый молочно-серый фон, дом графитовыми линиями, дымчатые плоскости стекла.
-   Песочный — сдержанно: активная и выбранная зона — тонкий песочный контур и лёгкая полупрозрачная подложка. Без деревьев, неба и теней.
+/* 3D-сцена «Персональной карты остекления»: Architectural Sketch / Warm Technical Drawing (three.js локально, без CDN).
+   Эскиз архитектора, а не рендер коттеджа: фон как у страницы HS (#f5f5f4), тонкий серо-графитовый контур, стекло чуть холоднее фона.
+   Акцент #B19A6B — сдержанно: активная и выбранная зона — тонкий контур, стекло чуть темнее, очень лёгкая подложка. Без деревьев, неба и теней.
    Контроллер — тот же интерфейс, что у адаптера Spline (spline.js): focusZone, reset, setSelectedZones, setReducedMotion,
    setHover, setAnswers(zoneId, answers, commit) — ответы меняют саму сцену:
      гостиная → сад: ежедневно — три стеклянные плоскости HS, створка идёт по песочной направляющей, проход светится;
@@ -14,7 +14,7 @@
    Кадр рисуется только во время анимации. Нет WebGL — createScene бросает ошибку, страница остаётся на постере. */
 import * as THREE from '../../vendor/three/three.module.min.js';
 
-const C = { bg: '#f3f1ea', line: '#242421', line2: '#4a4944', glass: '#8fa3a8', accent: '#b7a276', warm: '#d9b98a' };
+const C = { bg: '#f5f5f4', line: '#8b8c86', line2: '#b7b5ad', glass: '#b2c3c3', glassOn: '#8b9fa0', accent: '#b19a6b', warm: '#d9b98a' };
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp01 = v => Math.max(0, Math.min(1, v));
@@ -23,9 +23,9 @@ const POSTER_ASPECT = { land: 16 / 9, port: 9 / 16 };
 
 // ---------- материалы ----------
 const lineMat = (opacity, color = C.line) => new THREE.LineBasicMaterial({ color, transparent: true, opacity, fog: true, depthWrite: false });
-const L = { main: lineMat(0.8), second: lineMat(0.42, C.line2), faint: lineMat(0.1, C.line2) };
-const WALL = new THREE.MeshBasicMaterial({ color: '#f1efe8', transparent: true, opacity: 0.9, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
-const glassMat = (op = 0.16) => new THREE.MeshBasicMaterial({ color: C.glass, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false, fog: true });
+const L = { main: lineMat(1), second: lineMat(1, C.line2), faint: lineMat(0.35, C.line2) };
+const WALL = new THREE.MeshBasicMaterial({ color: '#f5f5f4', transparent: true, opacity: 0.92, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+const glassMat = (op = 0.24) => new THREE.MeshBasicMaterial({ color: C.glass, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false, fog: true });
 function gradTex(stops) {
   const c = document.createElement('canvas'); c.width = 4; c.height = 256;
   const g = c.getContext('2d'), gr = g.createLinearGradient(0, 256, 0, 0);
@@ -68,16 +68,16 @@ function accordion(panels, x0, z0, w, t) {
 }
 // Материалы зоны: линии остаются графитовыми (активная — чуть плотнее), стекло получает лёгкую песочную подложку
 function zoneMats() {
-  const line = lineMat(0.8), dim = lineMat(0.42, C.line2), gm = glassMat(0.16);
-  const cGlass = new THREE.Color(C.glass), cAcc = new THREE.Color(C.accent);
+  const line = lineMat(1), dim = lineMat(1, C.line2), gm = glassMat(0.24);
+  const cGlass = new THREE.Color(C.glass), cOn = new THREE.Color(C.glassOn), cLine = new THREE.Color(C.line), cDark = new THREE.Color('#5d5e59');
   let tint = 0;
   return {
     line, dim, gm,
     paint(s, k) {
       const want = s.focus ? 1 : s.selected || s.hover ? 0.6 : 0;
       tint = lerp(tint, want, k);
-      line.opacity = 0.8 + 0.2 * tint;
-      gm.color.copy(cGlass).lerp(cAcc, 0.35 * tint);
+      line.color.copy(cLine).lerp(cDark, 0.5 * tint);                  // активная зона — контур чуть темнее
+      gm.color.copy(cGlass).lerp(cOn, tint); gm.opacity = 0.24 + 0.14 * tint; // стекло 0.24 → 0.38
       return Math.abs(tint - want) > 0.005;
     },
   };
@@ -132,7 +132,7 @@ function buildHouse() {
   // цоколь, терраса с настилом из параллельных линий, ступени, дорожка
   root.add(solid(11.2, LIFT + 0.15, 6.4, -0.75, (LIFT + 0.15) / 2, -0.1, L.second));
   root.add(solid(9.4, LIFT + 0.15, 3.4, -0.05, (LIFT + 0.15) / 2, 4.8, L.second));
-  { const pts = []; for (let z = 3.26; z < 6.5; z += 0.16) pts.push([-4.75, LIFT + 0.152, z], [4.65, LIFT + 0.152, z]); root.add(segs(pts, lineMat(0.2, C.line2))); }
+  { const pts = []; for (let z = 3.26; z < 6.5; z += 0.16) pts.push([-4.75, LIFT + 0.152, z], [4.65, LIFT + 0.152, z]); root.add(segs(pts, lineMat(0.55, C.line2))); }
   [0, 1, 2].forEach(i => root.add(solid(3.2, (LIFT + 0.15) * (3 - i) / 3, 0.36, -1.9, (LIFT + 0.15) * (3 - i) / 6, 6.68 + i * 0.36, L.second)));
   { const pts = []; for (let i = 0; i < 7; i++) { const x = -1.9 + Math.sin(i * 0.5) * 0.25, z = 7.9 + i * 1.05; pts.push(...rectPts(1.3, 0.8).map(([a, b]) => [x - 0.65 + a, 0.01, z - 0.4 + b])); } root.add(segs(pts, L.faint)); }
 
@@ -190,7 +190,7 @@ function buildHouse() {
       const show = s.focus || s.selected || s.hover ? 1 : 0.55;
       for (const [key, v] of Object.entries(vars)) {
         op[key] = lerp(op[key], key === want ? show : 0, k);
-        v.visible = op[key] > 0.01; v.userData.line.opacity = 0.85 * op[key]; v.userData.gm.opacity = 0.22 * op[key];
+        v.visible = op[key] > 0.01; v.userData.line.opacity = op[key]; v.userData.gm.opacity = zm.gm.opacity * op[key]; v.userData.gm.color.copy(zm.gm.color);
         v.userData.line.color.copy(zm.line.color);
       }
       const t = s.open;
@@ -444,7 +444,7 @@ export function createScene(host, opts = {}) {
       if (Math.abs(d) > 0.002) { s.open += d * Math.min(1, k * 0.8); busy = true; } else s.open = s.openTo;
       if (zones[id].userData.update?.({ ...s, open: ease(clamp01(s.open)) }, k)) busy = true;
       const m = marks[id], want = s.focus ? 1 : s.selected ? 0.75 : s.hover ? 0.55 : 0;
-      m.v = lerp(m.v, want, k); m.line.opacity = m.v; m.fill.opacity = 0.1 * m.v;
+      m.v = lerp(m.v, want, k); m.line.opacity = m.v; m.fill.opacity = 0.07 * m.v;
       if (Math.abs(m.v - want) > 0.005) busy = true;
     }
     return busy;

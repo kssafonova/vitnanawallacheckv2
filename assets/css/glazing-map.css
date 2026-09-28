@@ -1,16 +1,14 @@
 @import url('./pages.css');
 
 /* ============================================================
-   «Персональная карта остекления» (/osteklenie-pod-klyuch/).
-   Первый экран — полноэкранная сцена дома (100svh, на компьютере не ниже 860 px): дом и есть интерфейс.
-   Поверх сцены — прозрачная шапка (<site-menu data-over>), крошки, счётчик «В проекте», короткий текст внизу слева
-   (до 430 px) и компактная панель вопроса справа (на телефоне — шторка снизу). Ниже — итог, форма и SEO-блоки.
-   Ниже первого экрана — плоско, как инженерный чертёж: тонкие линии, углы без скругления, выбранное — чёрная заливка.
+   «Персональная карта остекления» (/osteklenie-pod-klyuch/). Стиль — Architectural Sketch / Warm Technical Drawing:
+   эскиз архитектора и инженерная интерактивность. Фон — как у страницы HS (#f5f5f4 / #ededeb).
+   Первый экран — сцена дома на всю высоту под шапкой: дом и есть интерфейс. Вопрос — на том же светлом фоне:
+   на компьютере колонка ~30 % справа за тонкой вертикальной линией (дом ~70 %), на телефоне — шторка снизу ~38 %,
+   дом всё время виден сверху. Акцент #B19A6B — сдержанно: тонкий контур, лёгкая подложка.
    ============================================================ */
-.gm{--gm-line:var(--ui-line-soft)}
-
-/* ---------- первый экран: светлый архитектурный чертёж (редакционная инженерия) ---------- */
-:root{--gm-bg:#f3f1ea;--gm-bg2:#ece9e1;--gm-surface:#fff;--gm-line:#cfccc3;--gm-ink:#171715;--gm-graph:#242421;--gm-muted:#6f6a5f;--gm-acc:#b7a276;--gm-acc-soft:rgba(183,162,118,.12)}
+:root{--gm-bg:#f5f5f4;--gm-bg2:#ededeb;--gm-surface:#f5f5f4;--gm-line:#d2d1cc;--gm-ink:#151513;--gm-graph:#5d5e59;--gm-muted:#6f6c64;--gm-acc:#b19a6b;--gm-acc-soft:rgba(177,154,107,.1)}
+.gm-hero{--gm-panel-w:min(30vw, 460px)}
 .gm-hero{position:relative;height:calc(100svh - var(--header-h));min-height:560px;overflow:hidden;background:var(--gm-bg);color:var(--gm-ink);isolation:isolate}
 @media(min-width:1000px){.gm-hero{min-height:780px}}
 .gm-scene{position:absolute;inset:0}
@@ -39,9 +37,9 @@
 }
 .gm-hot[hidden]{display:none}
 .gm-hot__dot{
-  position:relative;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--gm-graph);background:rgba(243,241,234,.9);
+  position:relative;display:grid;place-items:center;width:26px;height:26px;border:1px solid #8b8c86;background:rgba(245,245,244,.92);color:var(--gm-ink);
   font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em;transition:background .25s,color .25s,border-color .25s,outline-color .3s,outline-offset .3s;
-  outline:1px solid rgba(183,162,118,0);outline-offset:0
+  outline:1px solid rgba(177,154,107,0);outline-offset:0
 }
 .gm-hot__label{
   position:absolute;left:calc(50% + 14px);top:50%;display:flex;align-items:center;gap:8px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(-50%);
@@ -54,13 +52,13 @@
   font:300 var(--fs-caption)/1.35 var(--font);transition:opacity .15s,transform .15s var(--ease-ui);z-index:2
 }
 .gm-hot__tip b{display:block;margin-bottom:2px;color:var(--gm-ink);font-weight:500;font-size:var(--fs-small)}
-.gm-hot:hover .gm-hot__dot,.gm-hot:focus-visible .gm-hot__dot{outline-color:rgba(183,162,118,.7);outline-offset:6px}
+.gm-hot:hover .gm-hot__dot,.gm-hot:focus-visible .gm-hot__dot{border-color:var(--gm-acc);outline-color:rgba(177,154,107,.55);outline-offset:5px}
 .gm-hot:hover .gm-hot__tip,.gm-hot:focus-visible .gm-hot__tip{opacity:1;transform:translate(-50%,0)}
 .gm-hot:focus-visible{outline:none}
-.gm-hot.is-selected .gm-hot__dot{border-color:var(--gm-acc);background:#f6f1e5;animation:gm-pop .4s var(--ease-ui)}
+.gm-hot.is-selected .gm-hot__dot{border-color:var(--gm-acc);background:#f3efe6;animation:gm-pop .4s var(--ease-ui)}
 .gm-hot.is-selected .gm-hot__label{opacity:1;color:var(--gm-muted)}
 .gm-hot.is-selected:hover .gm-hot__label,.gm-hot.is-selected:focus-visible .gm-hot__label{opacity:0}
-.gm-hot.is-active .gm-hot__dot{background:var(--gm-graph);border-color:var(--gm-graph);color:#fff;outline-color:rgba(183,162,118,.6);outline-offset:5px}
+.gm-hot.is-active .gm-hot__dot{background:#efe9dc;border:1.5px solid var(--gm-acc);color:var(--gm-ink);outline-color:rgba(177,154,107,.45);outline-offset:5px}
 .gm-hot.is-active .gm-hot__label{opacity:1;color:var(--gm-ink)}
 .gm-hot.is-active .gm-hot__tip{opacity:0}
 .gm-hot.is-dim{opacity:.28}
@@ -95,10 +93,10 @@
 .gm-hero.is-focus .gm-intro{opacity:0;transform:translateY(12px);pointer-events:none}
 .gm-hero.is-focus .gm-intro *{pointer-events:none}
 
-/* ---------- панель вопроса: белый лист с тонкой рамкой, без скруглений; выбранный ответ — чёрная заливка ---------- */
-.gm-panel{position:absolute;z-index:4;color:var(--gm-ink);background:var(--gm-surface);border:1px solid var(--gm-line)}
+/* ---------- панель вопроса: тот же светлый фон, отделена тонкой линией; активный ответ — лёгкая бежевая подложка ---------- */
+.gm-panel{position:absolute;z-index:4;color:var(--gm-ink);background:var(--gm-surface)}
 .gm-panel__head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--gm-line)}
-.gm-panel__n{display:grid;place-items:center;width:30px;height:30px;background:var(--gm-graph);color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em}
+.gm-panel__n{display:grid;place-items:center;width:30px;height:30px;border:1.5px solid var(--gm-acc);background:#efe9dc;color:var(--gm-ink);font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em}
 .gm-panel__zone{margin:0;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.14em;text-transform:uppercase}
 .gm-panel__x{width:44px;height:44px;border:1px solid var(--gm-line);background:transparent;color:var(--gm-ink);cursor:pointer;font:300 var(--fs-h4)/1 var(--font)}
 .gm-panel__x:hover{border-color:var(--gm-ink)}
@@ -111,10 +109,10 @@
 }
 .gm-opt b{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
 .gm-opt span{color:var(--gm-muted);font:300 var(--fs-small)/1.4 var(--font)}
-.gm-opt.is-on{background:var(--gm-ink);border-color:var(--gm-ink);color:#fff}
-.gm-opt.is-on span{color:#c9c6bd}
+.gm-opt.is-on{background:#efe9dc;border-color:var(--gm-acc);color:var(--gm-ink)}
+.gm-opt.is-on span{color:var(--gm-muted)}
 .gm-opt:focus-visible{outline:2px solid var(--gm-acc);outline-offset:2px}
-@media(hover:hover){.gm-opt:not(.is-on):hover{border-color:var(--gm-graph)}}
+@media(hover:hover){.gm-opt:not(.is-on):hover{border-color:#8b8c86;background:#fff}}
 .gm-panel__caption{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--gm-line);color:var(--gm-muted);font:300 var(--fs-small)/1.45 var(--font)}
 .gm-panel__caption b{display:block;margin-bottom:4px;color:var(--gm-ink);font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.12em;text-transform:uppercase}
 .gm-panel__caption[hidden]{display:none}
@@ -123,13 +121,24 @@
 .gm-panel__acts .ui-btn[disabled]{opacity:.3;cursor:not-allowed}
 .gm-btn-ghost{justify-content:flex-start!important;gap:12px!important}
 @media(min-width:1000px){
-  .gm-panel{top:62px;right:max(var(--ui-pad), calc((100vw - var(--ui-max)) / 2 + var(--ui-pad)));width:min(400px, 34vw);
-    max-height:calc(100% - 90px);overflow:auto;padding:18px 20px 20px}
+  .gm-panel{top:0;right:0;bottom:0;width:var(--gm-panel-w);overflow:auto;border-left:1px solid var(--gm-line);
+    padding:clamp(56px, 8vh, 88px) max(var(--ui-pad), calc((100vw - var(--ui-max)) / 2 + var(--ui-pad))) 28px clamp(24px, 2.4vw, 40px)}
   .gm-hero.is-focus .gm-count{opacity:0;pointer-events:none}
 }
 @media(max-width:999.98px){
-  .gm-panel{left:0;right:0;bottom:0;max-height:62%;overflow:auto;overscroll-behavior:contain;padding:14px var(--ui-pad) 0;border-width:1px 0 0}
-  .gm-panel__acts{position:sticky;bottom:0;margin:16px calc(var(--ui-pad) * -1) 0;padding:10px var(--ui-pad) max(10px, env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--gm-line);grid-template-columns:minmax(0,1fr) auto}
+  /* шторка ~38 %: сверху всё время виден дом */
+  .gm-panel{left:0;right:0;bottom:0;max-height:44%;overflow:auto;overscroll-behavior:contain;padding:8px var(--ui-pad) 0;border-top:1px solid var(--gm-line)}
+  .gm-panel__head{padding-bottom:6px;border-bottom:0}
+  .gm-panel__n{width:26px;height:26px}
+  .gm-panel__x{width:40px;height:40px}
+  .gm-panel__step{display:none}
+  .gm-panel__q{margin-top:2px;font-size:var(--fs-h4);letter-spacing:-.02em}
+  .gm-opts{margin-top:10px;gap:4px}
+  .gm-opt{min-height:44px;padding:9px 12px;align-content:center}
+  .gm-opt b{font-size:var(--fs-body)}
+  .gm-opt span{display:none}
+  .gm-panel__caption{display:none}
+  .gm-panel__acts{position:sticky;bottom:0;margin:10px calc(var(--ui-pad) * -1) 0;padding:8px var(--ui-pad) max(8px, env(safe-area-inset-bottom));background:var(--gm-surface);border-top:1px solid var(--gm-line);grid-template-columns:minmax(0,1fr) auto}
   .gm-panel__acts .ui-btn{width:auto}
   .gm-btn-ghost{order:-1}
   .gm-hero.is-focus .gm-count{display:none}

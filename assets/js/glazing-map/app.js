@@ -158,8 +158,8 @@ function init() {
   // ---------- панель сценария: один вопрос, ответ меняет сцену ----------
   function insets() {
     if (!active) return scene?.setInset(0, 0);
-    if (mqDesk.matches) scene?.setInset(panel.offsetWidth + 40, 0);
-    else scene?.setInset(0, Math.min(panel.offsetHeight, stage.clientHeight * 0.62));
+    if (mqDesk.matches) scene?.setInset(panel.offsetWidth, 0);
+    else scene?.setInset(0, panel.offsetHeight);
   }
   function openZone(id, from, source) {
     const z = zoneById(id); if (!z) return;
