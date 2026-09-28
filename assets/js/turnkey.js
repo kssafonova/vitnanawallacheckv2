@@ -19,6 +19,9 @@
   try { C = JSON.parse(document.querySelector('[data-tk-json]').textContent); } catch (e) { return; }
   if (!root || !P) return;
   const SELF = (document.currentScript && document.currentScript.src) || location.href;
+  // Страница сценария задаёт стартовые задачи (data-preset="garden,windows") и путь до корня сайта (data-base)
+  const BASE = root.dataset.base || '../';
+  const PRESET = (root.dataset.preset || '').split(',').map(x => x.trim()).filter(Boolean);
   const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n));
   const mm2 = mm => (mm / 1000).toFixed(1).replace('.', ',');
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -39,7 +42,7 @@
     { k: 'upper', t: 'Окна в пол на втором этаже', d: 'Панорамные окна в спальнях и холле', minFloors: 2 },
     { k: 'windows', t: 'Остальные окна', d: 'Алюминиевые окна с подоконником на фасаде и торцах' },
     { k: 'garden', t: 'Зимний сад', d: 'Стеклянная пристройка со стеклянной кровлей', ext: true },
-    { k: 'veranda', t: 'Остеклённая веранда', d: 'Стены из HS-порталов, непрозрачная кровля', ext: true },
+    { k: 'veranda', t: 'Остеклённая веранда', d: 'Витражи с открывающимися секциями, кровля; HS или FS — на выбор', ext: true },
   ];
   const STAGES = [
     { k: 'project', t: 'Есть проект', d: 'Дом ещё не строится', cta: 'Получить расчёт по проекту', next: 'Приложите проект или планировки — инженер посчитает по чертежам и предложит решения по проёмам.' },
@@ -55,9 +58,9 @@
   let uid = 1;
   const st = {
     L: SIZES[1].L, B: SIZES[1].B, fh: Array(H.floors.def).fill(H.floor_h.def), roof: 'gable', size: 'm',
-    needs: new Set(['terrace', 'living', 'upper', 'windows']), stage: '', step: 1,
+    needs: new Set(PRESET.length ? PRESET : ['terrace', 'living', 'upper', 'windows']), stage: '', step: 1,
     facade: 'back', floor: 0, sel: null, items: [], wall: 'masonry',
-    ext: 'none', extW: 0, extD: C.ext.d.def, extH: C.ext.h.def, extWall: 'hs', evening: false,
+    ext: 'none', extW: 6000, extD: C.ext.d.def, extH: C.ext.h.def, extWall: 'hs', evening: false,
   };
   const floors = () => st.fh.length;
   const faceLen = f => (f === 'front' || f === 'back' ? st.L : st.B);
@@ -175,7 +178,7 @@
       }
     });
     st.ext = N.has('garden') ? 'garden' : N.has('veranda') ? 'veranda' : 'none';
-    if (st.ext === 'veranda') st.extWall = 'hs';
+    if (st.ext === 'veranda' && !st.extWallSet) st.extWall = 'pano';
   }
 
   // Раскладка на фасаде: изделия по порядку, по центру фасада, между ними простенки по материалу стен (у стыков — нет); x — центр, мм от центра фасада; y — низ проёма от земли
@@ -258,7 +261,7 @@
   const seg = (name, items, cur, cls = '') => `<div class="tk-seg${cls}" role="group">${items.map(x =>
     `<button type="button" data-${name}="${x.k}" aria-pressed="${String(x.k) === String(cur)}"${x.dis ? ' disabled' : ''}><b>${x.t}</b>${x.d ? `<small>${esc(x.d)}</small>` : ''}</button>`).join('')}</div>`;
   const field = (name, label, val, min, max, step = 10) => `<label class="tk-f"><span>${label}</span><input type="number" inputmode="numeric" min="${min}" max="${max}" step="${step}" value="${val}" data-${name}></label>`;
-  const STEPS = ['Дом', 'Остекление', 'Стадия', 'Проект'];
+  const STEPS = ['Дом', 'Задачи', 'Стадия', 'Проект'];
   root.innerHTML = `
   <div class="tk__viewer">
     <div class="tk__bar">
@@ -418,7 +421,7 @@
   const money = v => (v >= 1e6 ? `${(v / 1e6).toFixed(1).replace('.', ',')}` : `${Math.round(v / 1000)}`);
   const range = t => {
     if (!t) return '—';
-    const lo = t * 0.92, hi = t * 1.12, big = hi >= 1e6;
+    const lo = t * 0.9, hi = t * 1.1, big = hi >= 1e6;
     return `≈ ${money(lo)}–${money(hi)} ${big ? 'млн' : 'тыс.'} ₽`;
   };
   // Состав проекта понятным языком: группы изделий
@@ -432,7 +435,7 @@
     if (pano.length) rows.push([`Панорамные окна в пол × ${pano.length}`, `${[...new Set(pano.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
     const win = by('win');
     if (win.length) rows.push([`Окна с подоконником × ${win.length}`, `${[...new Set(win.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
-    if (E.ext) rows.push([E.ext.t, st.ext === 'garden' ? 'стеклянная кровля, витражные стены' : 'стены из HS-порталов, кровля']);
+    if (E.ext) rows.push([E.ext.t, st.ext === 'garden' ? 'стеклянная кровля, витражные стены' : `стены — ${EXT_WALLS.find(w => w.k === st.extWall).t.toLowerCase()}, кровля`]);
     return rows;
   }
 
@@ -514,7 +517,7 @@
     if (st.step === 4 && formStage !== st.stage) {
       formStage = st.stage;
       slot.innerHTML = `<h3 class="tk-form__t">${esc(stage ? stage.cta : 'Получить проект и точную смету')}</h3>
-        <lead-form data-base="../" data-source="turnkey" data-cta="${esc(stage ? stage.cta : 'Получить проект и смету')}" data-context="остекление под ключ${stage ? `, стадия: ${stage.t.toLowerCase()}` : ''}"></lead-form>`;
+        <lead-form data-base="${esc(BASE)}" data-source="turnkey" data-cta="${esc(stage ? stage.cta : 'Получить проект и смету')}" data-context="остекление под ключ${stage ? `, стадия: ${stage.t.toLowerCase()}` : ''}"></lead-form>`;
     }
     const form = slot.querySelector('lead-form');
     if (form && form.setProject) form.setProject(summary(E));
@@ -573,7 +576,7 @@
     else if (d.add) { const n = make(d.add, st.facade, st.floor, d.add === 'fs' ? { w: 3600 } : {}); st.items.push(n); st.sel = n.id; }
     else if ('tkReset' in d) preset();
     else if (d.ext) st.ext = d.ext;
-    else if (d.extwall) st.extWall = d.extwall;
+    else if (d.extwall) { st.extWall = d.extwall; st.extWallSet = true; }
     else if (it && d.eN) { it.n = +d.eN; normalize(it); }
     else if (it && d.eScheme) it.scheme = d.eScheme;
     else if (it && 'eDoor' in d) it.door = !it.door;
