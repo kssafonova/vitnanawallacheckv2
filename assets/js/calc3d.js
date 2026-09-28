@@ -1,9 +1,77 @@
 /* 3D-вид в калькуляторе /raschet/ (вкладка «3D»): портал из параметров расчёта — ширина, высота, раскладка створок
    по схеме (PSPortal.layout: FIX / ACTIVE со стороной движения, складные FOLD, рабочая дверь DOOR). Крутить — мышью или пальцем,
    «Открыть / Закрыть» и ползунок открывают створки по схеме: HS — сдвиг к ближайшей глухой створке (каскад — на разные треки),
-   FS — пакет складывается к стене, рабочая дверь распахивается. Рендерер, материалы и створка — из card3d.js (как в карточках).
+   FS — пакет складывается к стене, рабочая дверь распахивается. Свет, материалы и створка — как в карточках (card3d.js),
+   но модуль самостоятельный: не зависит от card3d.js (иначе старая версия card3d.js из кэша браузера ломала загрузку).
    Грузится только при первом открытии вкладки (quick-calc.js). Нет WebGL — createCalc3d вернёт null, остаётся чертёж. */
-import { THREE, renderer, leaf, box, lerp, clamp, reduced, YAW0, PITCH0 } from './card3d.js';
+import * as THREE from '../vendor/three/three.module.min.js';
+import { RoomEnvironment } from '../vendor/three/RoomEnvironment.js';
+
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const YAW0 = -0.5, PITCH0 = 0.1;
+
+// Проверка WebGL до создания рендерера — чтобы отличать «нет WebGL» от ошибки загрузки
+export const hasWebGL = () => {
+  try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; }
+};
+
+let R = null;
+function renderer() {
+  if (R !== null) return R;
+  if (!hasWebGL()) return (R = false);
+  try {
+    const gl = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
+    gl.outputColorSpace = THREE.SRGBColorSpace;
+    gl.toneMapping = THREE.ACESFilmicToneMapping;
+    gl.toneMappingExposure = 1.05;
+    gl.shadowMap.enabled = true;
+    gl.shadowMap.type = THREE.PCFSoftShadowMap;
+    gl.setClearColor(0x000000, 0);
+    const scene = new THREE.Scene();
+    const pmrem = new THREE.PMREMGenerator(gl);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.85;
+    scene.add(new THREE.HemisphereLight('#ffffff', '#b9b7b2', 0.6));
+    const sun = new THREE.DirectionalLight('#fffaf2', 2.2);
+    sun.position.set(-2, 9, 3.5);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -11, right: 11, top: 6, bottom: -6, near: 1, far: 30 });
+    sun.shadow.radius = 4; sun.shadow.bias = -0.0005;
+    scene.add(sun, sun.target);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.16 }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+    scene.add(floor);
+    R = { gl, scene, camera: new THREE.PerspectiveCamera(28, 1, 0.1, 120) };
+  } catch (e) { R = false; }
+  return R;
+}
+
+const M_GLASS = new THREE.MeshStandardMaterial({
+  color: '#d4e3e8', roughness: 0.04, metalness: 0.1, transparent: true, opacity: 0.2,
+  envMapIntensity: 2.4, depthWrite: false, side: THREE.DoubleSide
+});
+const M_HANDLE = new THREE.MeshStandardMaterial({ color: '#cfcdc8', roughness: 0.25, metalness: 0.9 });
+function box(w, h, d, mat) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+// Створка: рамка из профиля + стекло; ручка на замковой стороне ('l' / 'r')
+function leaf(w, h, mat, handle) {
+  const g = new THREE.Group(), p = 0.075, d = 0.06;
+  const t = box(w, p, d, mat), b = box(w, p, d, mat), l = box(p, h, d, mat), r = box(p, h, d, mat);
+  t.position.y = h / 2 - p / 2; b.position.y = -h / 2 + p / 2;
+  l.position.x = -w / 2 + p / 2; r.position.x = w / 2 - p / 2;
+  g.add(t, b, l, r, new THREE.Mesh(new THREE.BoxGeometry(w - p * 2, h - p * 2, 0.024), M_GLASS));
+  if (handle) {
+    const x = (handle === 'l' ? -1 : 1) * (w / 2 - p - 0.05);
+    [1, -1].forEach(side => { const hd = box(0.022, 0.34, 0.03, M_HANDLE); hd.position.set(x, -h * 0.04, side * (d / 2 + 0.03)); g.add(hd); });
+  }
+  return g;
+}
 
 const FRAME = '#383b3a';            // антрацит RAL 7016 — цвет по умолчанию
 
