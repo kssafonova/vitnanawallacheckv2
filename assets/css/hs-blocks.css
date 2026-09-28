@@ -518,3 +518,40 @@
   .hs-intro__cta{grid-template-columns:max-content auto;align-items:center;gap:20px;margin-top:32px}
   .hs-intro__cta a{min-width:300px;gap:24px}
 }
+
+/* Вводный блок: подзаголовок над особенностями */
+.hs-intro__sub{margin:32px 0 0;font:500 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase;color:var(--ui-muted)}
+@media(min-width:900px){.hs-intro__sub{margin-top:48px}}
+
+/* 02 · Производство: материал, цвета RAL, объекты — плоско, три колонки на тонких линиях.
+   Квадратная иконка материала и квадраты RAL при наведении чуть увеличиваются. */
+.hs-make{padding:0 0 62px;background:var(--hs-bg, #f5f5f4)}
+.hs-make__grid{display:grid;margin-top:28px;border-top:1px solid var(--ui-line)}
+.hs-make__item{display:grid;align-content:start;gap:12px;padding:22px 0;border-bottom:1px solid var(--ui-line)}
+.hs-make__label{margin:0;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.hs-make__item h3{margin:4px 0 0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em}
+.hs-make__item p:not(.hs-make__label){max-width:36ch;margin:0;color:var(--ui-muted);font:300 var(--fs-small)/1.5 var(--font)}
+.hs-make__icon{width:88px;height:88px;display:grid;place-items:center;border:1px solid var(--ui-ink);background:#fff;transition:transform .35s var(--ease-ui)}
+.hs-make__icon svg{width:58px;height:58px;fill:none;stroke:var(--ui-ink);stroke-width:1.1}
+.hs-make__item:hover .hs-make__icon,.hs-make__icon:hover{transform:scale(1.08)}
+.hs-ral{display:grid;grid-template-columns:repeat(5,44px);gap:8px;margin:0;padding:0;list-style:none}
+.hs-ral li{position:relative;width:44px;height:44px;background:var(--c);border:1px solid rgba(17,17,15,.22);transition:transform .25s var(--ease-ui);cursor:default}
+.hs-ral li:hover,.hs-ral li:focus-visible{transform:scale(1.14);z-index:2}
+.hs-ral span{
+  position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:max-content;padding:6px 8px;background:var(--ui-ink);color:#fff;
+  opacity:0;pointer-events:none;transition:opacity .15s;font:500 var(--fs-caption)/1.3 var(--font);text-align:center
+}
+.hs-ral li:hover span{opacity:1}
+.hs-make__list{display:grid;margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line-soft)}
+.hs-make__list li{padding:12px 0;border-bottom:1px solid var(--ui-line-soft);font:300 var(--fs-h4)/1.25 var(--font);letter-spacing:-.02em}
+@media(min-width:900px){
+  .hs-make{padding-bottom:98px}
+  .hs-make__grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:44px}
+  .hs-make__item{padding:28px 28px 28px 0;border-bottom:0}
+  .hs-make__item+.hs-make__item{padding-left:28px;border-left:1px solid var(--ui-line)}
+}
+.hs-make .hs-section-head h2{max-width:22ch}
+@media(min-width:900px){.hs-make .hs-section-head{grid-template-columns:1fr}.hs-make .hs-section-head h2{max-width:26ch}}
+.hs-page .hs-intro .hs-intro__sub{margin:32px 0 0;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+@media(min-width:900px){.hs-page .hs-intro .hs-intro__sub{margin-top:48px}}
+.hs-make__item:last-child{border-bottom:0}
