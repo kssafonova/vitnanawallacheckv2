@@ -284,6 +284,3 @@ if (cards.length) {
     cards.forEach(c => io.observe(c));
   } else cards.forEach(start);
 }
-
-// Для 3D-вида калькулятора (assets/js/calc3d.js): тот же рендерер, материалы и створка
-export { THREE, renderer, leaf, box, lerp, clamp, reduced, YAW0, PITCH0 };

@@ -195,3 +195,4 @@
 .qcx__rec-p span{color:var(--ui-muted);font:400 var(--fs-caption)/1.35 var(--font)}
 .qcx__rec .qcx__res{margin-top:4px}
 @media(max-width:520px){.qcx__rec{grid-template-columns:minmax(0,1fr)}.qcx__rec-img{max-width:220px}}
+.qc3d__retry{margin-left:6px;padding:0;border:0;border-bottom:1px solid currentColor;background:none;color:var(--ui-ink);cursor:pointer;font:inherit}

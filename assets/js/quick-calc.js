@@ -120,12 +120,19 @@
     function open3d() {
       if (state3d !== 'idle') return;
       state3d = 'loading';
-      import(new URL('calc3d.js', SELF).href).then(m => {
+      // ?v= — версия модуля, чтобы после обновления сайта браузер не взял старый файл из кэша
+      import(new URL('calc3d.js?v=2', SELF).href).then(m => {
         view3d = m.createCalc3d(box3d);
-        if (!view3d) throw new Error('no webgl');
+        if (!view3d) { state3d = 'failed'; box3d.innerHTML = '<p class="qc3d__load">Браузер не поддерживает WebGL — 3D-модель недоступна, смотрите чертёж.</p>'; return; }
         state3d = 'ready'; view3d.set({ ...st });
-      }).catch(() => { state3d = 'failed'; box3d.innerHTML = '<p class="qc3d__load">3D-модель недоступна в этом браузере — смотрите чертёж.</p>'; });
+      }).catch(err => {
+        // ошибка загрузки (сеть, кэш) — не «не поддерживается»: даём повторить
+        console.error('3D-модель калькулятора:', err);
+        state3d = 'idle';
+        box3d.innerHTML = '<p class="qc3d__load">Не удалось загрузить 3D-модель. <button type="button" class="qc3d__retry" data-qc3d-retry>Повторить</button></p>';
+      });
     }
+    box3d.addEventListener('click', e => { if (e.target.closest('[data-qc3d-retry]')) { box3d.innerHTML = '<p class="qc3d__load">Загружаем 3D-модель…</p>'; open3d(); } });
     $$('[data-qcx-view]').forEach(t => t.addEventListener('click', () => {
       view = t.dataset.qcxView;
       $$('[data-qcx-view]').forEach(x => x.setAttribute('aria-selected', String(x === t)));
