@@ -1,19 +1,16 @@
-/* «Остекление под ключ» (/osteklenie-pod-klyuch/, [data-turnkey]) — конструктор остекления дома.
-   01 Дом: длина × ширина, 1–5 этажей со своей высотой (пол–пол), материал стен (простенки и отступ от угла), кровля → «голый» 3D-макет.
+/* «Остекление под ключ» (/osteklenie-pod-klyuch/, [data-turnkey]) — пошаговый конструктор, который ведёт к заявке.
+   Клиент отвечает на 3 простых вопроса, инженерия — под капотом:
+   1 «Какой у вас дом»: этажи, размер плиткой S / M / L (или свои размеры, высоты этажей, материал стен), кровля → 3D-макет.
+   2 «Что хотите остеклить»: задачи (выход на террасу HS, витраж гостиной от угла до угла, складной выход FS, окна в пол наверху,
+     остальные окна, зимний сад / веранда) — каждая ставит реальные изделия по инженерным правилам.
+   3 «На какой стадии дом»: проект / строится / коробка готова / жилой — меняет кнопку и следующий шаг (расчёт по проекту или замер).
+   4 Результат: вилка цены под ключ, м² стекла, состав проекта понятным языком, что входит, срок, «что дальше» и форма здесь же.
+     «Настроить каждый проём» (свёрнуто) — детальный редактор: фасад × этаж, изделия и их параметры, пристройка.
+   На телефоне снизу — плашка с вилкой и кнопкой «Смета».
    Инженерные правила: проём «в пол до потолка» = высота этажа − перекрытие с полом (floor_build); простенки и отступ от угла —
    по материалу стен; витраж — сетка секций (модуль ~1,4 м, секция 0,6–2,5 м), выше glass_max_h — ригель с фрамугой;
-   открывающаяся секция не больше open_max_w × open_max_h (поворотно-откидная), больше — только глухая или HS;
-   изделия можно состыковать без простенка — единая витражная система (витраж + HS + витраж от угла до угла).
-   02 Сценарий: «Классика» / «Панорама» / «Максимум стекла» — стартовая расстановка реальных изделий по фасадам и этажам.
-   03 Проёмы: фасад × этаж, список изделий; каждое — отдельное изделие со своими параметрами:
-      • HS-портал — ширина × высота, секции и «Рекомендуем» по ТЗ, схема (A-L … C-Double), цена по формуле ТЗ;
-      • FS-портал — ширина × высота, секции по ТЗ, в одну / две стороны, рабочая дверь, цена по ТЗ;
-      • панорамный витраж — от пола до потолка, ширина (или «На всю стену»), секции, сколько открывается;
-      • окно — с подоконником (0,85 м), ширина × высота, секции.
-      Проём выбирают нажатием в списке, на макете 3D или на чертеже фасада; проверяются ширина фасада и высота этажа.
-   04 Пристройка со двора: веранда (стены — HS / FS / витражи, делятся на модули до 6 м) или зимний сад; ширина, глубина, высота.
-   Итог: м² стекла, изделия с ценами, монтаж и доставка (services), «≈ итого», что входит, ссылка (#c=…), форма.
-   Правила и цены HS / FS — assets/js/portal-calc.js; цены витражей, веранды, зимнего сада — data/turnkey.json (заглушки).
+   открывающаяся секция не больше open_max_w × open_max_h; витраж + HS + витраж — единая система без простенков;
+   HS / FS — секции, схемы, лимиты и цена по ТЗ (portal-calc.js). Цены витражей, окон, пристроек — data/turnkey.json (заглушки).
    3D — assets/js/turnkey3d.js (без WebGL остаётся чертёж фасада). */
 (() => {
   const root = document.querySelector('[data-turnkey]');
@@ -32,10 +29,23 @@
     { k: 'left', t: 'Левый', d: 'торец' },
     { k: 'right', t: 'Правый', d: 'торец' },
   ];
-  const SCEN = [
-    { k: 'classic', t: 'Классика', d: 'Окна с подоконником и витражи в гостиной' },
-    { k: 'panorama', t: 'Панорама', d: 'Окна в пол, HS-портал во двор' },
-    { k: 'max', t: 'Максимум стекла', d: 'Стеклянный фасад во двор, порталы на первом этаже' },
+  // Размер дома плиткой: пятно дома (длина × ширина); площадь зависит от этажей
+  const SIZES = [{ k: 's', L: 10000, B: 8000, t: 'Компактный' }, { k: 'm', L: 12000, B: 9000, t: 'Средний' }, { k: 'l', L: 15000, B: 11000, t: 'Большой' }];
+  // Задачи клиента — каждая ставит реальные изделия (preset)
+  const NEEDS = [
+    { k: 'terrace', t: 'Выход на террасу', d: 'Раздвижной HS-портал из гостиной во двор' },
+    { k: 'living', t: 'Гостиная: стеклянная стена', d: 'Витраж от угла до угла, от пола до потолка' },
+    { k: 'fold', t: 'Складной выход в сад', d: 'FS-гармошка открывает проём почти целиком' },
+    { k: 'upper', t: 'Окна в пол на втором этаже', d: 'Панорамные окна в спальнях и холле', minFloors: 2 },
+    { k: 'windows', t: 'Остальные окна', d: 'Алюминиевые окна с подоконником на фасаде и торцах' },
+    { k: 'garden', t: 'Зимний сад', d: 'Стеклянная пристройка со стеклянной кровлей', ext: true },
+    { k: 'veranda', t: 'Остеклённая веранда', d: 'Стены из HS-порталов, непрозрачная кровля', ext: true },
+  ];
+  const STAGES = [
+    { k: 'project', t: 'Есть проект', d: 'Дом ещё не строится', cta: 'Получить расчёт по проекту', next: 'Приложите проект или планировки — инженер посчитает по чертежам и предложит решения по проёмам.' },
+    { k: 'building', t: 'Дом строится', d: 'Проёмы ещё можно поменять', cta: 'Согласовать проёмы с инженером', next: 'Инженер подскажет размеры проёмов под выбранные системы, пока их ещё можно поменять.' },
+    { k: 'box', t: 'Коробка готова', d: 'Проёмы уже есть', cta: 'Вызвать замерщика — бесплатно', next: 'Замерщик приедет, снимет точные размеры и согласует узлы примыкания.' },
+    { k: 'living', t: 'Дом жилой', d: 'Меняю или добавляю остекление', cta: 'Вызвать замерщика — бесплатно', next: 'Замерщик приедет, снимет размеры и оценит демонтаж старых окон.' },
   ];
   const ROOFS = [{ k: 'gable', t: 'Двускатная' }, { k: 'shed', t: 'Односкатная' }, { k: 'flat', t: 'Плоская' }];
   const EXT_WALLS = [{ k: 'hs', t: 'HS-порталы' }, { k: 'fs', t: 'FS-гармошки' }, { k: 'pano', t: 'Витражи' }];
@@ -44,7 +54,8 @@
 
   let uid = 1;
   const st = {
-    L: H.L.def, B: H.B.def, fh: Array(H.floors.def).fill(H.floor_h.def), roof: 'gable', scenario: 'panorama',
+    L: SIZES[1].L, B: SIZES[1].B, fh: Array(H.floors.def).fill(H.floor_h.def), roof: 'gable', size: 'm',
+    needs: new Set(['terrace', 'living', 'upper', 'windows']), stage: '', step: 1,
     facade: 'back', floor: 0, sel: null, items: [], wall: 'masonry',
     ext: 'none', extW: 0, extD: C.ext.d.def, extH: C.ext.h.def, extWall: 'hs', evening: false,
   };
@@ -141,26 +152,31 @@
     const k = Math.max(min, Math.min(Math.floor((len + pier) / (w + pier)), Math.floor((len * share + pier) / (w + pier))));
     for (let j = 0; j < k; j++) st.items.push(make(type, f, i, { ...o }));
   }
-  function presetFloor(f, i) {
-    st.items = st.items.filter(it => !(it.f === f && it.fl === i));
-    const long = f === 'front' || f === 'back', last = i === floors() - 1;
-    if (st.scenario === 'classic') {
-      if (i === 0 && f === 'back') { st.items.push(make('pano', f, i, { w: Math.min(3600, usable(f)) })); row(f, i, 'win', { w: 1200 }, 0.3); }
-      else row(f, i, 'win', { w: 1200 }, long ? 0.4 : 0.25, long ? 1 : 0);
-    } else if (st.scenario === 'panorama') {
-      if (i === 0 && f === 'back') glassWall(f, i, 'hs');
-      else if (i === 0 && f === 'front') row(f, i, 'pano', { w: 1800 }, 0.45, 1);
-      else if (long) row(f, i, 'pano', { w: 1600 }, 0.45, 1);
-      else if (i === 0) row(f, i, 'pano', { w: 1400 }, 0.3, 1);
-      else row(f, i, 'win', { w: 900, h: 1500 }, 0.2);
-    } else {
-      if (f === 'back') glassWall(f, i, i === 0 ? 'hs' : null);
-      else if (i === 0 && !long) glassWall(f, i, usable(f) >= 5000 ? 'fs' : null);
-      else if (long) row(f, i, 'pano', { w: 2400 }, 0.6, 1);
-      else if (!last) row(f, i, 'pano', { w: 1400 }, 0.3, 1);
+  // Расстановка по задачам клиента: реальные изделия по инженерным правилам
+  function preset() {
+    st.items = []; st.sel = null;
+    const N = st.needs, top = floors() - 1, fsInWall = N.has('fold') && N.has('living') && !N.has('terrace');
+    // двор, 1-й этаж: витраж от угла до угла (с HS или FS по центру) или отдельный портал
+    if (N.has('living')) glassWall('back', 0, N.has('terrace') ? 'hs' : fsInWall ? 'fs' : null);
+    else if (N.has('terrace')) st.items.push(make('hs', 'back', 0, { w: Math.max(3000, Math.min(5400, Math.floor(usable('back') * 0.5 / 100) * 100)) }));
+    // складной выход — в торце 1-го этажа (если не встроен в витраж гостиной)
+    if (N.has('fold') && !fsInWall) {
+      const fw = Math.min(5000, Math.floor(usable('right') / 100) * 100);
+      if (fw >= 2000) st.items.push(make('fs', 'right', 0, { w: fw, scheme: 'FS-L' }));
     }
+    // окна в пол наверху — по осям на фасаде и со двора
+    if (N.has('upper')) for (let i = 1; i <= top; i++) { row('back', i, 'pano', { w: 1600 }, 0.5, 1); row('front', i, 'pano', { w: 1600 }, 0.35, 1); }
+    // остальные окна — там, где пусто: окна с подоконником, в торцах — меньше
+    if (N.has('windows')) FACADES.forEach(({ k: f }) => {
+      for (let i = 0; i <= top; i++) {
+        if (at(f, i).length) continue;
+        const long = f === 'front' || f === 'back';
+        row(f, i, 'win', { w: long ? 1200 : 900 }, long ? 0.4 : 0.25, long ? 1 : 0);
+      }
+    });
+    st.ext = N.has('garden') ? 'garden' : N.has('veranda') ? 'veranda' : 'none';
+    if (st.ext === 'veranda') st.extWall = 'hs';
   }
-  function preset() { st.items = []; st.sel = null; FACADES.forEach(({ k }) => { for (let i = 0; i < floors(); i++) presetFloor(k, i); }); }
 
   // Раскладка на фасаде: изделия по порядку, по центру фасада, между ними простенки по материалу стен (у стыков — нет); x — центр, мм от центра фасада; y — низ проёма от земли
   function layout() {
@@ -215,7 +231,7 @@
 
   // ---------- ссылка на проект ----------
   const save = () => {
-    const c = { L: st.L, B: st.B, fh: st.fh, m: st.wall, r: st.roof, s: st.scenario, e: [st.ext, st.extW, st.extD, st.extH, st.extWall],
+    const c = { L: st.L, B: st.B, fh: st.fh, m: st.wall, r: st.roof, n: [...st.needs], z: st.size, g: st.stage, e: [st.ext, st.extW, st.extD, st.extH, st.extWall],
       i: st.items.map(it => [it.type, it.f[0], it.fl, it.w, it.h, it.n, it.scheme, it.door ? 1 : 0, it.sill, it.open, it.join ? 1 : 0, it.fan ? 1 : 0]) };
     try { history.replaceState(null, '', '#c=' + btoa(unescape(encodeURIComponent(JSON.stringify(c))))); } catch (e) { /* без ссылки */ }
   };
@@ -228,7 +244,9 @@
       st.L = cl(c.L, H.L); st.B = cl(c.B, H.B);
       st.fh = (Array.isArray(c.fh) ? c.fh : [H.floor_h.def]).slice(0, H.floors.max).map(v => cl(v, H.floor_h));
       st.wall = C.walls[c.m] ? c.m : 'masonry';
-      st.roof = ROOFS.some(r => r.k === c.r) ? c.r : 'gable'; st.scenario = SCEN.some(s => s.k === c.s) ? c.s : 'panorama';
+      st.roof = ROOFS.some(r => r.k === c.r) ? c.r : 'gable';
+      st.needs = new Set((c.n || []).filter(k => NEEDS.some(x => x.k === k))); st.size = c.z || 'custom';
+      st.stage = STAGES.some(x => x.k === c.g) ? c.g : ''; st.step = 4;
       [st.ext, st.extW, st.extD, st.extH, st.extWall] = c.e || ['none', 0, C.ext.d.def, C.ext.h.def, 'hs'];
       const TY = { pano: 'pano', win: 'win', hs: 'hs', fs: 'fs' }, FA = { f: 'front', b: 'back', l: 'left', r: 'right' };
       st.items = (c.i || []).filter(a => TY[a[0]] && FA[a[1]] && a[2] < floors()).map(a => normalize({ id: uid++, type: TY[a[0]], f: FA[a[1]], fl: a[2], w: a[3], h: a[4], n: a[5], scheme: a[6], door: !!a[7], sill: a[8] || 0, open: a[9] || 0, join: !!a[10], fan: !!a[11] }));
@@ -240,6 +258,7 @@
   const seg = (name, items, cur, cls = '') => `<div class="tk-seg${cls}" role="group">${items.map(x =>
     `<button type="button" data-${name}="${x.k}" aria-pressed="${String(x.k) === String(cur)}"${x.dis ? ' disabled' : ''}><b>${x.t}</b>${x.d ? `<small>${esc(x.d)}</small>` : ''}</button>`).join('')}</div>`;
   const field = (name, label, val, min, max, step = 10) => `<label class="tk-f"><span>${label}</span><input type="number" inputmode="numeric" min="${min}" max="${max}" step="${step}" value="${val}" data-${name}></label>`;
+  const STEPS = ['Дом', 'Остекление', 'Стадия', 'Проект'];
   root.innerHTML = `
   <div class="tk__viewer">
     <div class="tk__bar">
@@ -252,32 +271,61 @@
     </div>
     <p class="tk__caption" data-tk-caption></p>
   </div>
-  <div class="tk__steps">
-    <section class="tk-step"><h2 class="tk-step__t"><i>01</i>Дом</h2>
-      <div class="tk-fields">${field('tk-len', 'Длина дома, мм', st.L, H.L.min, H.L.max, 100)}${field('tk-wid', 'Ширина дома, мм', st.B, H.B.min, H.B.max, 100)}</div>
+  <div class="tk__flow">
+    <ol class="tk-prog">${STEPS.map((t, i) => `<li><button type="button" data-go="${i + 1}"><i>${i + 1}</i>${t}</button></li>`).join('')}</ol>
+
+    <section class="tk-q" data-step="1">
+      <h2 class="tk-q__t">Какой у вас дом?</h2>
       <div class="tk-row"><span class="tk-lbl">Этажей</span><div data-tk-floors></div></div>
-      <div class="tk-row"><span class="tk-lbl">Высота этажей (от пола до пола), мм</span><div class="tk-fields tk-fields--fh" data-tk-fh></div></div>
-      <div class="tk-row"><span class="tk-lbl">Стены</span>${seg('wall', WALLS, st.wall, ' tk-seg--stack')}</div>
+      <div class="tk-row"><span class="tk-lbl">Размер</span><div data-tk-sizes></div></div>
       <div class="tk-row"><span class="tk-lbl">Кровля</span>${seg('roof', ROOFS, st.roof, ' tk-seg--cols')}</div>
+      <details class="tk-more" data-tk-more-house><summary>Указать точные размеры, высоту этажей и материал стен</summary>
+        <div class="tk-more__in">
+          <div class="tk-fields">${field('tk-len', 'Длина дома, мм', st.L, H.L.min, H.L.max, 100)}${field('tk-wid', 'Ширина дома, мм', st.B, H.B.min, H.B.max, 100)}</div>
+          <div class="tk-row"><span class="tk-lbl">Высота этажей (от пола до пола), мм</span><div class="tk-fields tk-fields--fh" data-tk-fh></div></div>
+          <div class="tk-row"><span class="tk-lbl">Стены</span>${seg('wall', WALLS, st.wall, ' tk-seg--stack')}</div>
+        </div>
+      </details>
       <p class="tk-note" data-tk-dims></p>
     </section>
-    <section class="tk-step"><h2 class="tk-step__t"><i>02</i>Сценарий — с чего начать</h2>${seg('scenario', SCEN, st.scenario, ' tk-seg--stack')}
-      <p class="tk-note">Сценарий расставляет изделия на все фасады. Дальше любое из них можно изменить, сдвинуть или удалить.</p></section>
-    <section class="tk-step"><h2 class="tk-step__t"><i>03</i>Проёмы</h2>
-      <div data-tk-facades></div>
-      <div class="tk-row"><span class="tk-lbl">Этаж</span><div data-tk-floor-seg></div></div>
-      <div class="tk-meter"><span data-tk-meter-t></span><i><b data-tk-meter></b></i></div>
-      <ul class="tk-items" data-tk-items></ul>
-      <div class="tk-add"><span class="tk-lbl">Добавить на этот этаж</span><div class="tk-seg tk-seg--cols4" role="group"><button type="button" data-add="pano"><b>+ Витраж в пол</b></button><button type="button" data-add="win"><b>+ Окно</b></button><button type="button" data-add="hs"><b>+ HS-портал</b></button><button type="button" data-add="fs"><b>+ FS-портал</b></button></div></div>
-      <div class="tk-edit" data-tk-edit hidden></div>
-      <div class="tk-links"><button type="button" data-tk-reset-floor>Этот этаж — заново по сценарию</button><button type="button" data-tk-reset>Весь дом — заново по сценарию</button></div>
+
+    <section class="tk-q" data-step="2" hidden>
+      <h2 class="tk-q__t">Что хотите остеклить?</h2>
+      <p class="tk-q__sub">Можно выбрать несколько — проект соберётся по инженерным правилам: окна в пол до потолка, простенки, стекло под нагрузку.</p>
+      <div data-tk-needs></div>
     </section>
-    <section class="tk-step"><h2 class="tk-step__t"><i>04</i>Пристройка со стороны двора</h2>
-      ${seg('ext', ['none', 'veranda', 'garden'].map(k => ({ k, t: C.extensions[k].t, d: C.extensions[k].d })), st.ext, ' tk-seg--stack')}
-      <div data-tk-ext-opts></div>
+
+    <section class="tk-q" data-step="3" hidden>
+      <h2 class="tk-q__t">На какой стадии дом?</h2>
+      <p class="tk-q__sub">От этого зависит следующий шаг: расчёт по проекту или бесплатный замер.</p>
+      <div data-tk-stages></div>
     </section>
-    <section class="tk-res" data-tk-res></section>
-  </div>`;
+
+    <section class="tk-q tk-q--res" data-step="4" hidden>
+      <div data-tk-res></div>
+      <div class="tk-form" data-tk-form></div>
+      <div data-tk-res2></div>
+      <details class="tk-more tk-adv" data-tk-adv><summary>Настроить каждый проём</summary>
+        <div class="tk-more__in">
+          <div data-tk-facades></div>
+          <div class="tk-row"><span class="tk-lbl">Этаж</span><div data-tk-floor-seg></div></div>
+          <div class="tk-meter"><span data-tk-meter-t></span><i><b data-tk-meter></b></i></div>
+          <ul class="tk-items" data-tk-items></ul>
+          <div class="tk-add"><span class="tk-lbl">Добавить на этот этаж</span><div class="tk-seg tk-seg--cols4" role="group"><button type="button" data-add="pano"><b>+ Витраж в пол</b></button><button type="button" data-add="win"><b>+ Окно</b></button><button type="button" data-add="hs"><b>+ HS-портал</b></button><button type="button" data-add="fs"><b>+ FS-портал</b></button></div></div>
+          <div class="tk-edit" data-tk-edit hidden></div>
+          <div class="tk-row"><span class="tk-lbl">Пристройка со стороны двора</span>${seg('ext', ['none', 'veranda', 'garden'].map(k => ({ k, t: C.extensions[k].t, d: C.extensions[k].d })), st.ext, ' tk-seg--stack')}</div>
+          <div data-tk-ext-opts></div>
+          <div class="tk-links"><button type="button" data-tk-reset>Собрать заново по выбранным задачам</button></div>
+        </div>
+      </details>
+    </section>
+
+    <div class="tk-nav" data-tk-nav>
+      <p class="tk-nav__sum" data-tk-live></p>
+      <div class="tk-nav__btns"><button type="button" class="tk-back" data-back>Назад</button><button type="button" class="tk-btn" data-next>Далее <span aria-hidden="true">→</span></button></div>
+    </div>
+  </div>
+  <div class="tk-sticky" data-tk-sticky hidden><span><small>Под ключ</small><b data-tk-sticky-p></b></span><button type="button" class="tk-btn" data-go="4">Смета <span aria-hidden="true">→</span></button></div>`;
   const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 
   // ---------- чертёж фасада (и запасной вид без WebGL); проёмы кликабельны ----------
@@ -334,7 +382,8 @@
   function select(id) {
     const it = st.items.find(x => x.id === id);
     if (!it) return;
-    st.sel = id; st.facade = it.f; st.floor = it.fl;
+    st.sel = id; st.facade = it.f; st.floor = it.fl; st.step = 4;
+    const adv = $('[data-tk-adv]'); if (adv) adv.open = true;
     update();
     const ed = $('[data-tk-edit]');
     if (ed && innerWidth < 1100) ed.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -365,19 +414,59 @@
       <div class="tk-edit__act"><button type="button" data-e-move="-1" aria-label="Сдвинуть влево">← Левее</button><button type="button" data-e-move="1" aria-label="Сдвинуть вправо">Правее →</button><button type="button" data-e-del>Удалить</button><button type="button" data-e-close>Готово</button></div>`;
   }
 
+  // ---------- вилка цены: точные размеры, стекло и узлы уточняются на замере ----------
+  const money = v => (v >= 1e6 ? `${(v / 1e6).toFixed(1).replace('.', ',')}` : `${Math.round(v / 1000)}`);
+  const range = t => {
+    if (!t) return '—';
+    const lo = t * 0.92, hi = t * 1.12, big = hi >= 1e6;
+    return `≈ ${money(lo)}–${money(hi)} ${big ? 'млн' : 'тыс.'} ₽`;
+  };
+  // Состав проекта понятным языком: группы изделий
+  function composition(E) {
+    const rows = [], by = (type, pred = () => true) => st.items.filter(it => it.type === type && pred(it));
+    by('hs').forEach(it => rows.push([`Раздвижной HS-портал ${mm2(it.w)} м`, `${FACADES.find(f => f.k === it.f).t.toLowerCase()}, ${it.fl + 1}-й этаж · ${it.n} ${plural(it.n, 'створка', 'створки', 'створок')} · проход ≈ ${mm2(P.passage('HS', it.w, it.n, it.scheme))} м`]));
+    by('fs').forEach(it => rows.push([`Складной FS-портал ${mm2(it.w)} м`, `${FACADES.find(f => f.k === it.f).t.toLowerCase()}, ${it.fl + 1}-й этаж · ${it.n} ${plural(it.n, 'створка', 'створки', 'створок')}`]));
+    const wall = by('pano', it => it.join || at(it.f, it.fl).some(x => x.join));
+    if (wall.length) rows.push([`Витраж гостиной от угла до угла`, `${mm2(wall.reduce((a, x) => a + x.w, 0) + st.items.filter(x => isPortal(x) && x.join).reduce((a, x) => a + x.w, 0))} м по фасаду · в пол до потолка ${mm2(clearH(0))} м`]);
+    const pano = by('pano', it => !wall.includes(it));
+    if (pano.length) rows.push([`Панорамные окна в пол × ${pano.length}`, `${[...new Set(pano.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
+    const win = by('win');
+    if (win.length) rows.push([`Окна с подоконником × ${win.length}`, `${[...new Set(win.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
+    if (E.ext) rows.push([E.ext.t, st.ext === 'garden' ? 'стеклянная кровля, витражные стены' : 'стены из HS-порталов, кровля']);
+    return rows;
+  }
+
   // ---------- обновление ----------
+  let formStage = null;
   function update(opts = {}) {
-    const E = estimate();
-    // 01 дом
+    const E = estimate(), stage = STAGES.find(x => x.k === st.stage);
+    // шаг 1 — дом
     $('[data-tk-floors]').innerHTML = seg('floors', Array.from({ length: H.floors.max }, (_, j) => ({ k: j + 1, t: String(j + 1) })), floors(), ' tk-seg--cols');
+    $('[data-tk-sizes]').innerHTML = seg('size', SIZES.map(z => ({ k: z.k, t: z.t, d: `${mm2(z.L)} × ${mm2(z.B)} м · ≈ ${fmt(z.L * z.B / 1e6 * floors())} м²` })), st.size, ' tk-seg--cols3 tk-seg--tiles');
     $('[data-tk-fh]').innerHTML = st.fh.map((h, i) => field('tk-fh', `${i + 1}-й`, h, H.floor_h.min, H.floor_h.max, 50).replace('data-tk-fh', `data-tk-fh="${i}"`)).join('');
+    $('[data-tk-len]').value = st.L; $('[data-tk-wid]').value = st.B;
     $$('[data-roof]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.roof === st.roof)));
     $$('[data-wall]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.wall === st.wall)));
-    $('[data-tk-dims]').textContent = `Площадь ≈ ${fmt(st.L * st.B / 1e6 * floors())} м² · высота стен ${mm2(totalH())} м · проём в пол до потолка: ${st.fh.map(h => fmt(h - C.floor_build)).join(' / ')} мм`;
-    $$('[data-scenario]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scenario === st.scenario)));
-    $$('[data-ext]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ext === st.ext)));
-    // 03 фасады и этажи
+    $('[data-tk-dims]').textContent = `${mm2(st.L)} × ${mm2(st.B)} м · ≈ ${fmt(st.L * st.B / 1e6 * floors())} м² · окна в пол до потолка ${st.fh.map(h => mm2(h - C.floor_build)).join(' / ')} м`;
+    // шаг 2 — задачи
+    $('[data-tk-needs]').innerHTML = `<div class="tk-seg tk-seg--need" role="group">${NEEDS.map(n => {
+      const on = st.needs.has(n.k), dis = n.minFloors && floors() < n.minFloors;
+      return `<button type="button" data-need="${n.k}" aria-pressed="${on && !dis}"${dis ? ' disabled' : ''}><i aria-hidden="true">${on && !dis ? '✓' : '+'}</i><b>${n.t}</b><small>${dis ? 'для домов от 2 этажей' : n.d}</small></button>`;
+    }).join('')}</div>`;
+    // шаг 3 — стадия
+    $('[data-tk-stages]').innerHTML = seg('stage', STAGES.map(x => ({ k: x.k, t: x.t, d: x.d })), st.stage, ' tk-seg--cols2 tk-seg--tiles');
+    // мастер: видимый шаг, прогресс, кнопки
+    $$('[data-step]').forEach(sec => { sec.hidden = +sec.dataset.step !== st.step; });
+    $$('.tk-prog button').forEach(b => { const n = +b.dataset.go; b.setAttribute('aria-current', n === st.step ? 'step' : 'false'); b.classList.toggle('is-done', n < st.step); });
+    $('[data-back]').hidden = st.step === 1;
+    $('[data-next]').hidden = st.step === 4;
+    $('[data-next]').innerHTML = st.step === 3 ? 'Показать мой проект <span aria-hidden="true">→</span>' : 'Далее <span aria-hidden="true">→</span>';
+    $('[data-tk-live]').innerHTML = st.step >= 2 && st.step < 4 && E.total ? `Сейчас: <b>${range(E.total)}</b> под ключ · стекла ${fmt(E.area)} м²` : '';
+    $('[data-tk-sticky]').hidden = !(st.step >= 2 && st.step < 4 && E.total);
+    $('[data-tk-sticky-p]').textContent = range(E.total);
+    // шаг 4 — детальная настройка (свёрнута)
     if (st.floor >= floors()) st.floor = floors() - 1;
+    $$('[data-ext]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ext === st.ext)));
     $('[data-tk-facades]').innerHTML = `<div class="tk-seg tk-seg--cols4" role="group">${FACADES.map(F => {
       const n = st.items.filter(it => it.f === F.k).length, over = Array.from({ length: floors() }, (_, i) => usedW(at(F.k, i)) > usable(F.k)).some(Boolean);
       return `<button type="button" data-facade="${F.k}" aria-pressed="${F.k === st.facade}"${over ? ' class="is-bad"' : ''}><b>${F.t}</b><small>${mm2(faceLen(F.k))} м · ${n} ${plural(n, 'проём', 'проёма', 'проёмов')}</small></button>`;
@@ -394,48 +483,56 @@
     const sel = st.items.find(x => x.id === st.sel && x.f === st.facade && x.fl === st.floor);
     const ed = $('[data-tk-edit]');
     ed.hidden = !sel; ed.innerHTML = sel ? editor(sel) : '';
-    // 04 пристройка
     const ext = E.ext;
     $('[data-tk-ext-opts]').innerHTML = st.ext === 'none' ? '' : `
       ${st.ext === 'veranda' ? `<div class="tk-row"><span class="tk-lbl">Стены</span>${seg('extwall', EXT_WALLS, st.extWall, ' tk-seg--cols')}</div>` : ''}
       <div class="tk-fields">${field('tk-ext-w', 'Ширина, мм', extWidth(), 2000, st.L, 100)}${field('tk-ext-d', 'Глубина, мм', st.extD, C.ext.d.min, C.ext.d.max, 100)}${field('tk-ext-h', 'Высота, мм', st.extH, C.ext.h.min, C.ext.h.max, 50)}</div>
-      <p class="tk-note">Стены: ${ext.mods.map((m, j) => `${['фронт', 'левая', 'правая'][j]} — ${m.length} × ${mm2(m[0])} м`).join(', ')}${st.ext === 'veranda' && st.extWall !== 'pano' ? ` (${st.extWall === 'hs' ? 'HS' : 'FS'}-порталы по ТЗ)` : ''}.${ext.bad ? ' Часть модулей вне лимитов системы — посчитаем по заявке.' : ''}</p>`;
+      <p class="tk-note">Стены: ${ext.mods.map((m, j) => `${['фронт', 'левая', 'правая'][j]} — ${m.length} × ${mm2(m[0])} м`).join(', ')}.${ext.bad ? ' Часть модулей вне лимитов системы — посчитаем по заявке.' : ''}</p>`;
     // вид и подпись
     const F = FACADES.find(x => x.k === st.facade);
-    $('[data-tk-caption]').textContent = `${F.t} (${F.d}) · ${mm2(faceLen(st.facade))} м · ${st.floor + 1}-й этаж · нажмите на проём, чтобы изменить его`;
+    $('[data-tk-caption]').textContent = st.step === 4 ? `${F.t} (${F.d}) · ${st.floor + 1}-й этаж · нажмите на проём, чтобы изменить его` : 'Потяните макет, чтобы осмотреть дом со всех сторон';
     $('[data-tk-face]').innerHTML = faceSvg();
-    // итог
-    const counts = { pano: 0, hs: 0, fs: 0 };
-    st.items.forEach(it => { counts[it.type]++; });
+    // шаг 4 — результат
+    const rows = composition(E);
     $('[data-tk-res]').innerHTML = `
-      <h2 class="tk-step__t"><i>✓</i>Ваш проект</h2>
-      <div class="tk-res__big"><div><small>Площадь стекла</small><strong>${fmt(E.area)} м²</strong></div><div><small>Ориентировочно, под ключ</small><strong>${E.total ? `≈ ${fmt(E.total)} ₽` : '—'}</strong></div></div>
-      <ul class="tk-res__lines">
-        ${counts.pano ? `<li><span>Окна и витражи × ${counts.pano}</span><b>${fmt(E.lines.filter(l => l.it.type === 'pano').reduce((a, l) => a + (l.p || 0), 0))} ₽</b></li>` : ''}
-        ${counts.hs ? `<li><span>HS-порталы × ${counts.hs}</span><b>${fmt(E.lines.filter(l => l.it.type === 'hs').reduce((a, l) => a + (l.p || 0), 0))} ₽</b></li>` : ''}
-        ${counts.fs ? `<li><span>FS-порталы × ${counts.fs}</span><b>${fmt(E.lines.filter(l => l.it.type === 'fs').reduce((a, l) => a + (l.p || 0), 0))} ₽</b></li>` : ''}
-        ${ext ? `<li><span>${esc(ext.t)}</span><b>${fmt(ext.sum)} ₽</b></li>` : ''}
-        ${E.install ? `<li><span>Доставка и монтаж ≈ ${C.services.install_delivery_pct} %</span><b>≈ ${fmt(E.install)} ₽</b></li>` : ''}
-        ${E.goods ? '' : '<li><span>Добавьте проёмы или пристройку</span><b>—</b></li>'}
-      </ul>
-      ${E.overflow.length || E.bad ? `<p class="tk-err">${E.overflow.length ? `Не помещаются проёмы: ${E.overflow.join('; ')}. ` : ''}${E.bad ? `Проверьте размеры у ${E.bad} ${plural(E.bad, 'изделия', 'изделий', 'изделий')} — они отмечены.` : ''}</p>` : ''}
+      <p class="ui-eyebrow">Ваш проект остекления</p>
+      <div class="tk-res__big"><strong>${range(E.total)}</strong><span>под ключ · стекла ${fmt(E.area)} м² · ${st.items.length} ${plural(st.items.length, 'изделие', 'изделия', 'изделий')}${E.ext ? ' + пристройка' : ''}</span></div>
+      <p class="tk-note">Вилка — потому что точные размеры проёмов, стекло и узлы примыкания уточняются на замере или по чертежам. Включены доставка и монтаж.</p>
+      <ul class="tk-comp">${rows.map(([a, b]) => `<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`).join('') || '<li><b>Ничего не выбрано</b><span>Вернитесь к шагу 2 и отметьте, что остеклить</span></li>'}</ul>
+      ${E.overflow.length || E.bad ? `<p class="tk-err">${E.overflow.length ? `Не помещаются проёмы: ${E.overflow.join('; ')}. ` : ''}${E.bad ? 'Часть изделий требует проверки размеров — инженер предложит решение.' : ''}</p>` : ''}
+`;
+    $('[data-tk-res2]').innerHTML = `
       <div class="tk-res__inc"><small>Под ключ — это</small><ul>${C.included.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
-      <p class="tk-note">Срок изготовления — ${esc(C.term)}, монтаж — по графику объекта. Цена ориентировочная: точную смету инженер подготовит после замера или по чертежам дома.</p>
-      <div class="tk-res__act"><a class="tk-btn" href="#turnkey-form">Получить проект остекления <span aria-hidden="true">↓</span></a><button type="button" class="tk-link" data-tk-copy>Скопировать ссылку на проект</button></div>`;
-    const form = document.querySelector('#turnkey-form lead-form');
+      <ol class="tk-next">
+        <li><b>Заявка</b><span>Инженер позвонит в рабочее время и уточнит детали</span></li>
+        <li><b>${st.stage === 'project' ? 'Расчёт по проекту' : st.stage === 'building' ? 'Согласование проёмов' : 'Бесплатный замер'}</b><span>${esc(stage ? stage.next : 'Уточним размеры проёмов — по чертежам или на объекте.')}</span></li>
+        <li><b>Смета и договор</b><span>Точная цена по вашему проекту, изготовление — ${esc(C.term)}, затем монтаж</span></li>
+      </ol>
+      <p class="tk-res__links"><button type="button" class="tk-link" data-tk-copy>Скопировать ссылку на проект</button><button type="button" class="tk-link" data-go="2">Изменить задачи</button></p>`;
+    // форма — создаётся один раз под стадию (чтобы не терять введённое при пересчёте)
+    const slot = $('[data-tk-form]');
+    if (st.step === 4 && formStage !== st.stage) {
+      formStage = st.stage;
+      slot.innerHTML = `<h3 class="tk-form__t">${esc(stage ? stage.cta : 'Получить проект и точную смету')}</h3>
+        <lead-form data-base="../" data-source="turnkey" data-cta="${esc(stage ? stage.cta : 'Получить проект и смету')}" data-context="остекление под ключ${stage ? `, стадия: ${stage.t.toLowerCase()}` : ''}"></lead-form>`;
+    }
+    const form = slot.querySelector('lead-form');
     if (form && form.setProject) form.setProject(summary(E));
+    else if (form) customElements.whenDefined('lead-form').then(() => requestAnimationFrame(() => form.setProject && form.setProject(summary(E))));
     if (!opts.keepHash) save();
     render3d();
   }
 
   function summary(E) {
+    const stage = STAGES.find(x => x.k === st.stage);
     const rows = FACADES.map(F => Array.from({ length: floors() }, (_, i) => at(F.k, i).map(it => `  ${F.t}, ${i + 1}-й этаж: ${itemName(it)} ${itemSpec(it)}${itemPrice(it) ? ` — ${fmt(itemPrice(it))} ₽` : ''}`).join('\n')).filter(Boolean).join('\n')).filter(Boolean).join('\n');
     return [
-      'ОСТЕКЛЕНИЕ ПОД КЛЮЧ — конфигурация из конструктора',
-      `Дом: ${mm2(st.L)} × ${mm2(st.B)} м, этажей ${floors()} (высоты ${st.fh.join(' / ')} мм), кровля ${ROOFS.find(r => r.k === st.roof).t.toLowerCase()}`,
-      `Сценарий: ${SCEN.find(s => s.k === st.scenario).t}`, 'Изделия:', rows || '  нет',
-      E.ext ? `Пристройка: ${E.ext.t}, высота ${mm2(st.extH)} м${st.ext === 'veranda' ? `, стены — ${EXT_WALLS.find(w => w.k === st.extWall).t}` : ''} — ${fmt(E.ext.sum)} ₽` : 'Пристройка: нет',
-      `Площадь стекла: ${fmt(E.area)} м²`, `Ориентировочно: ≈ ${fmt(E.total)} ₽ (с доставкой и монтажом)`,
+      'ОСТЕКЛЕНИЕ ПОД КЛЮЧ — заявка из конструктора',
+      `Стадия: ${stage ? `${stage.t} (${stage.d})` : 'не указана'}`,
+      `Дом: ${mm2(st.L)} × ${mm2(st.B)} м, этажей ${floors()} (высоты ${st.fh.join(' / ')} мм), стены — ${C.walls[st.wall].t.toLowerCase()}, кровля ${ROOFS.find(r => r.k === st.roof).t.toLowerCase()}`,
+      `Задачи: ${NEEDS.filter(n => st.needs.has(n.k)).map(n => n.t).join(', ') || 'не выбраны'}`, 'Изделия:', rows || '  нет',
+      E.ext ? `Пристройка: ${E.ext.t}, высота ${mm2(st.extH)} м — ${fmt(E.ext.sum)} ₽` : 'Пристройка: нет',
+      `Площадь стекла: ${fmt(E.area)} м²`, `Ориентировочно под ключ: ${range(E.total)} (расчёт ${fmt(E.total)} ₽ с доставкой и монтажом)`,
       `Ссылка: ${location.href}`,
     ].join('\n');
   }
@@ -455,19 +552,26 @@
       if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(done, done); else done();
       return;
     }
+    if (d.go) { st.step = +d.go; update(); root.querySelector('.tk__flow').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if ('next' in d) { st.step = Math.min(4, st.step + 1); update(); if (innerWidth < 1100) root.querySelector('.tk__flow').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if ('back' in d) { st.step = Math.max(1, st.step - 1); update(); return; }
     if (d.floors) {
-      const n = +d.floors, was = floors();
+      const n = +d.floors;
       st.fh = Array.from({ length: n }, (_, i) => st.fh[i] || H.floor_h.def);
-      st.items = st.items.filter(x => x.fl < n);
-      for (let i = was; i < n; i++) FACADES.forEach(({ k }) => presetFloor(k, i));
-    } else if (d.roof) st.roof = d.roof;
-    else if (d.wall) st.wall = d.wall;
-    else if (d.scenario) { st.scenario = d.scenario; preset(); }
+      preset();
+    } else if (d.size) { const z = SIZES.find(x => x.k === d.size); st.size = z.k; st.L = z.L; st.B = z.B; preset(); }
+    else if (d.roof) st.roof = d.roof;
+    else if (d.wall) { st.wall = d.wall; preset(); }
+    else if (d.need) {
+      const n = NEEDS.find(x => x.k === d.need);
+      if (st.needs.has(n.k)) st.needs.delete(n.k);
+      else { st.needs.add(n.k); if (n.ext) NEEDS.filter(x => x.ext && x.k !== n.k).forEach(x => st.needs.delete(x.k)); }
+      preset();
+    } else if (d.stage) st.stage = d.stage;
     else if (d.facade) { st.facade = d.facade; st.sel = null; }
     else if (d.floor) { st.floor = +d.floor; st.sel = null; }
     else if (d.add) { const n = make(d.add, st.facade, st.floor, d.add === 'fs' ? { w: 3600 } : {}); st.items.push(n); st.sel = n.id; }
     else if ('tkReset' in d) preset();
-    else if ('tkResetFloor' in d) { presetFloor(st.facade, st.floor); st.sel = null; }
     else if (d.ext) st.ext = d.ext;
     else if (d.extwall) st.extWall = d.extwall;
     else if (it && d.eN) { it.n = +d.eN; normalize(it); }
@@ -493,9 +597,9 @@
     const t = e.target, v = parseInt(t.value, 10), it = cur();
     if (!Number.isFinite(v)) return;
     const cl = (x, r) => Math.min(r.max, Math.max(r.min, x));
-    if ('tkLen' in t.dataset) st.L = cl(v, H.L);
-    else if ('tkWid' in t.dataset) st.B = cl(v, H.B);
-    else if ('tkFh' in t.dataset) st.fh[+t.dataset.tkFh] = cl(v, H.floor_h);
+    if ('tkLen' in t.dataset) { st.L = cl(v, H.L); st.size = 'custom'; preset(); }
+    else if ('tkWid' in t.dataset) { st.B = cl(v, H.B); st.size = 'custom'; preset(); }
+    else if ('tkFh' in t.dataset) { st.fh[+t.dataset.tkFh] = cl(v, H.floor_h); preset(); }
     else if ('tkExtW' in t.dataset) st.extW = Math.min(st.L, Math.max(2000, v));
     else if ('tkExtD' in t.dataset) st.extD = cl(v, C.ext.d);
     else if ('tkExtH' in t.dataset) st.extH = cl(v, C.ext.h);
@@ -507,7 +611,6 @@
   });
   root.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) e.target.blur(); });
 
-  customElements.whenDefined('lead-form').then(() => requestAnimationFrame(() => update({ keepHash: true })));
   if (!load()) preset();
   update({ keepHash: true });
 })();
