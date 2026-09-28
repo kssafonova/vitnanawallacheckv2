@@ -41,8 +41,9 @@
     { k: 'fold', t: 'Складной выход в сад', d: 'FS-гармошка открывает проём почти целиком' },
     { k: 'upper', t: 'Окна в пол на втором этаже', d: 'Панорамные окна в спальнях и холле', minFloors: 2 },
     { k: 'windows', t: 'Остальные окна', d: 'Алюминиевые окна с подоконником на фасаде и торцах' },
-    { k: 'garden', t: 'Зимний сад', d: 'Стеклянная пристройка со стеклянной кровлей', ext: true },
-    { k: 'veranda', t: 'Остеклённая веранда', d: 'Витражи с открывающимися секциями, кровля; HS или FS — на выбор', ext: true },
+    { k: 'garden', t: 'Зимний сад', d: 'Тёплая стеклянная пристройка со стеклянной кровлей', ext: true },
+    { k: 'veranda', t: 'Тёплая веранда', d: 'Витражи, HS или FS со стеклопакетом — пользоваться круглый год', ext: true },
+    { k: 'coldveranda', t: 'Летняя веранда', d: 'Холодное раздвижное или безрамное остекление — от ветра и дождя', ext: true },
   ];
   const STAGES = [
     { k: 'project', t: 'Есть проект', d: 'Дом ещё не строится', cta: 'Получить расчёт по проекту', next: 'Приложите проект или планировки — инженер посчитает по чертежам и предложит решения по проёмам.' },
@@ -51,7 +52,11 @@
     { k: 'living', t: 'Дом жилой', d: 'Меняю или добавляю остекление', cta: 'Вызвать замерщика — бесплатно', next: 'Замерщик приедет, снимет размеры и оценит демонтаж старых окон.' },
   ];
   const ROOFS = [{ k: 'gable', t: 'Двускатная' }, { k: 'shed', t: 'Односкатная' }, { k: 'flat', t: 'Плоская' }];
-  const EXT_WALLS = [{ k: 'hs', t: 'HS-порталы' }, { k: 'fs', t: 'FS-гармошки' }, { k: 'pano', t: 'Витражи' }];
+  // Стены пристройки: тёплые (терморазрыв, стеклопакет 40 мм) или холодные (без терморазрыва, одинарное закалённое стекло)
+  const WALLS_WARM = [{ k: 'pano', t: 'Витражи' }, { k: 'hs', t: 'HS-порталы' }, { k: 'fs', t: 'FS-гармошки' }];
+  const WALLS_COLD = [{ k: 'slide', t: 'Раздвижное', d: C.cold.slide.d }, { k: 'frameless', t: 'Безрамное', d: C.cold.frameless.d }];
+  const THERMAL = [{ k: 'warm', t: 'Тёплое', d: 'терморазрыв, стеклопакет 40 мм — круглый год' }, { k: 'cold', t: 'Холодное', d: 'одинарное закалённое стекло — от ветра и дождя' }];
+  const extWalls = () => (st.extTh === 'cold' ? WALLS_COLD : WALLS_WARM);
   const H = C.house, T = { pano: C.pano, win: C.win, hs: C.hs, fs: C.fs };
   const WALLS = Object.entries(C.walls).map(([k, v]) => ({ k, t: v.t, d: v.d }));
 
@@ -60,7 +65,7 @@
     L: SIZES[1].L, B: SIZES[1].B, fh: Array(H.floors.def).fill(H.floor_h.def), roof: 'gable', size: 'm',
     needs: new Set(PRESET.length ? PRESET : ['terrace', 'living', 'upper', 'windows']), stage: '', step: 1,
     facade: 'back', floor: 0, sel: null, items: [], wall: 'masonry',
-    ext: 'none', extW: 6000, extD: C.ext.d.def, extH: C.ext.h.def, extWall: 'hs', evening: false,
+    ext: 'none', extW: 6000, extD: C.ext.d.def, extH: C.ext.h.def, extWall: 'hs', extTh: 'warm', evening: false,
   };
   const floors = () => st.fh.length;
   const faceLen = f => (f === 'front' || f === 'back' ? st.L : st.B);
@@ -177,8 +182,9 @@
         row(f, i, 'win', { w: long ? 1200 : 900 }, long ? 0.4 : 0.25, long ? 1 : 0);
       }
     });
-    st.ext = N.has('garden') ? 'garden' : N.has('veranda') ? 'veranda' : 'none';
-    if (st.ext === 'veranda' && !st.extWallSet) st.extWall = 'pano';
+    st.ext = N.has('garden') ? 'garden' : N.has('veranda') || N.has('coldveranda') ? 'veranda' : 'none';
+    if (st.ext !== 'none') st.extTh = N.has('coldveranda') ? 'cold' : 'warm';
+    if (st.ext === 'veranda' && !extWalls().some(w => w.k === st.extWall)) st.extWall = extWalls()[0].k;
   }
 
   // Раскладка на фасаде: изделия по порядку, по центру фасада, между ними простенки по материалу стен (у стыков — нет); x — центр, мм от центра фасада; y — низ проёма от земли
@@ -204,11 +210,13 @@
   function extEstimate() {
     if (st.ext === 'none') return null;
     const W = extWidth(), D = st.extD, h = st.extH, walls = [W, D, D];
-    const E = C.extensions[st.ext], wallType = st.ext === 'garden' ? 'pano' : st.extWall;
+    const E = C.extensions[st.ext], cold = st.extTh === 'cold';
+    const wallType = st.ext === 'garden' ? (cold ? 'slide' : 'pano') : st.extWall;
     let sum = 0, area = 0, bad = false;
     walls.forEach(len => extModules(len).forEach(w => {
       area += w * h / 1e6;
-      if (wallType === 'pano') sum += w * h / 1e6 * C.pano.rate_fix + Math.floor(w / 1500) * C.pano.sash_add * 0.5;
+      if (C.cold[wallType]) sum += w * h / 1e6 * C.cold[wallType].rate;
+      else if (wallType === 'pano') sum += w * h / 1e6 * C.pano.rate_fix + Math.floor(w / 1500) * C.pano.sash_add * 0.5;
       else {
         const type = wallType === 'hs' ? 'HS' : 'FS', n = P.sectionsFor(type, w).rec;
         const p = P.price({ type, w, h, n, scheme: P.schemesFor(type, n)[0].code, glass: 'standard', color: 'mono', handle: 'standard' });
@@ -216,9 +224,9 @@
       }
     }));
     const roof = W * D / 1e6 * (st.ext === 'garden' ? 1.08 : 1);
-    sum += roof * E.roof_rate;
+    sum += roof * (st.ext === 'garden' && cold ? C.cold.roof_rate : E.roof_rate);
     if (st.ext === 'garden') area += roof;
-    return { t: `${E.t} ${mm2(W)} × ${mm2(D)} м`, sum, area, bad, mods: walls.map(extModules) };
+    return { t: `${st.ext === 'garden' ? (cold ? 'Холодный зимний сад' : 'Зимний сад') : cold ? 'Летняя веранда (холодное)' : 'Тёплая веранда'} ${mm2(W)} × ${mm2(D)} м`, sum, area, bad, mods: walls.map(extModules) };
   }
 
   function estimate() {
@@ -234,7 +242,7 @@
 
   // ---------- ссылка на проект ----------
   const save = () => {
-    const c = { L: st.L, B: st.B, fh: st.fh, m: st.wall, r: st.roof, n: [...st.needs], z: st.size, g: st.stage, e: [st.ext, st.extW, st.extD, st.extH, st.extWall],
+    const c = { L: st.L, B: st.B, fh: st.fh, m: st.wall, r: st.roof, n: [...st.needs], z: st.size, g: st.stage, e: [st.ext, st.extW, st.extD, st.extH, st.extWall, st.extTh],
       i: st.items.map(it => [it.type, it.f[0], it.fl, it.w, it.h, it.n, it.scheme, it.door ? 1 : 0, it.sill, it.open, it.join ? 1 : 0, it.fan ? 1 : 0]) };
     try { history.replaceState(null, '', '#c=' + btoa(unescape(encodeURIComponent(JSON.stringify(c))))); } catch (e) { /* без ссылки */ }
   };
@@ -250,7 +258,8 @@
       st.roof = ROOFS.some(r => r.k === c.r) ? c.r : 'gable';
       st.needs = new Set((c.n || []).filter(k => NEEDS.some(x => x.k === k))); st.size = c.z || 'custom';
       st.stage = STAGES.some(x => x.k === c.g) ? c.g : ''; st.step = 4;
-      [st.ext, st.extW, st.extD, st.extH, st.extWall] = c.e || ['none', 0, C.ext.d.def, C.ext.h.def, 'hs'];
+      [st.ext, st.extW, st.extD, st.extH, st.extWall, st.extTh] = c.e || ['none', 6000, C.ext.d.def, C.ext.h.def, 'pano', 'warm'];
+      st.extTh = st.extTh === 'cold' ? 'cold' : 'warm';
       const TY = { pano: 'pano', win: 'win', hs: 'hs', fs: 'fs' }, FA = { f: 'front', b: 'back', l: 'left', r: 'right' };
       st.items = (c.i || []).filter(a => TY[a[0]] && FA[a[1]] && a[2] < floors()).map(a => normalize({ id: uid++, type: TY[a[0]], f: FA[a[1]], fl: a[2], w: a[3], h: a[4], n: a[5], scheme: a[6], door: !!a[7], sill: a[8] || 0, open: a[9] || 0, join: !!a[10], fan: !!a[11] }));
       return true;
@@ -366,7 +375,7 @@
   // ---------- 3D ----------
   let house = null, view = '3d';
   const box3d = $('[data-tk-3d]');
-  import(new URL('turnkey3d.js?v=3', SELF).href).then(m => {
+  import(new URL('turnkey3d.js?v=4', SELF).href).then(m => {
     house = m.createHouse(box3d, { onPick: id => select(id) });
     if (!house) throw new Error('no webgl');
     render3d();
@@ -376,7 +385,7 @@
     setView('face');
   });
   const render3d = () => { if (house) house.set({ L: st.L, B: st.B, fh: st.fh, roof: st.roof, openings: layout(), sel: st.sel, facade: st.facade,
-    ext: st.ext, extW: extWidth(), extD: st.extD, extH: st.extH, extWall: st.extWall, mods: (extEstimate() || {}).mods, evening: st.evening }); };
+    ext: st.ext, extW: extWidth(), extD: st.extD, extH: st.extH, extWall: st.ext === 'garden' && st.extTh === 'cold' ? 'slide' : st.extWall, extTh: st.extTh, mods: (extEstimate() || {}).mods, evening: st.evening }); };
   function setView(v) {
     view = v;
     $$('[data-tk-view]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tkView === v)));
@@ -435,7 +444,7 @@
     if (pano.length) rows.push([`Панорамные окна в пол × ${pano.length}`, `${[...new Set(pano.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
     const win = by('win');
     if (win.length) rows.push([`Окна с подоконником × ${win.length}`, `${[...new Set(win.map(x => `${mm2(x.w)} × ${mm2(x.h)} м`))].join(', ')}`]);
-    if (E.ext) rows.push([E.ext.t, st.ext === 'garden' ? 'стеклянная кровля, витражные стены' : `стены — ${EXT_WALLS.find(w => w.k === st.extWall).t.toLowerCase()}, кровля`]);
+    if (E.ext) rows.push([E.ext.t, st.ext === 'garden' ? `стеклянная кровля, ${st.extTh === 'cold' ? 'холодные раздвижные стены' : 'тёплые витражные стены'}` : `${st.extTh === 'cold' ? 'холодное' : 'тёплое'} остекление: ${(extWalls().find(w => w.k === st.extWall) || extWalls()[0]).t.toLowerCase()}, кровля`]);
     return rows;
   }
 
@@ -488,7 +497,8 @@
     ed.hidden = !sel; ed.innerHTML = sel ? editor(sel) : '';
     const ext = E.ext;
     $('[data-tk-ext-opts]').innerHTML = st.ext === 'none' ? '' : `
-      ${st.ext === 'veranda' ? `<div class="tk-row"><span class="tk-lbl">Стены</span>${seg('extwall', EXT_WALLS, st.extWall, ' tk-seg--cols')}</div>` : ''}
+      <div class="tk-row"><span class="tk-lbl">Остекление</span>${seg('extth', THERMAL, st.extTh, ' tk-seg--cols2')}</div>
+      ${st.ext === 'veranda' ? `<div class="tk-row"><span class="tk-lbl">Стены</span>${seg('extwall', extWalls(), st.extWall, ' tk-seg--cols')}</div>` : ''}
       <div class="tk-fields">${field('tk-ext-w', 'Ширина, мм', extWidth(), 2000, st.L, 100)}${field('tk-ext-d', 'Глубина, мм', st.extD, C.ext.d.min, C.ext.d.max, 100)}${field('tk-ext-h', 'Высота, мм', st.extH, C.ext.h.min, C.ext.h.max, 50)}</div>
       <p class="tk-note">Стены: ${ext.mods.map((m, j) => `${['фронт', 'левая', 'правая'][j]} — ${m.length} × ${mm2(m[0])} м`).join(', ')}.${ext.bad ? ' Часть модулей вне лимитов системы — посчитаем по заявке.' : ''}</p>`;
     // вид и подпись
@@ -499,7 +509,7 @@
     const rows = composition(E);
     $('[data-tk-res]').innerHTML = `
       <p class="ui-eyebrow">Ваш проект остекления</p>
-      <div class="tk-res__big"><strong>${range(E.total)}</strong><span>под ключ · стекла ${fmt(E.area)} м² · ${st.items.length} ${plural(st.items.length, 'изделие', 'изделия', 'изделий')}${E.ext ? ' + пристройка' : ''}</span></div>
+      <div class="tk-res__big"><strong>${range(E.total)}</strong><span>под ключ · стекла ${fmt(E.area)} м²${st.items.length ? ` · ${st.items.length} ${plural(st.items.length, 'изделие', 'изделия', 'изделий')}` : ''}${E.ext ? (st.items.length ? ' + пристройка' : ' · пристройка') : ''}</span></div>
       <p class="tk-note">Вилка — потому что точные размеры проёмов, стекло и узлы примыкания уточняются на замере или по чертежам. Включены доставка и монтаж.</p>
       <ul class="tk-comp">${rows.map(([a, b]) => `<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`).join('') || '<li><b>Ничего не выбрано</b><span>Вернитесь к шагу 2 и отметьте, что остеклить</span></li>'}</ul>
       ${E.overflow.length || E.bad ? `<p class="tk-err">${E.overflow.length ? `Не помещаются проёмы: ${E.overflow.join('; ')}. ` : ''}${E.bad ? 'Часть изделий требует проверки размеров — инженер предложит решение.' : ''}</p>` : ''}
@@ -576,7 +586,8 @@
     else if (d.add) { const n = make(d.add, st.facade, st.floor, d.add === 'fs' ? { w: 3600 } : {}); st.items.push(n); st.sel = n.id; }
     else if ('tkReset' in d) preset();
     else if (d.ext) st.ext = d.ext;
-    else if (d.extwall) { st.extWall = d.extwall; st.extWallSet = true; }
+    else if (d.extwall) st.extWall = d.extwall;
+    else if (d.extth) { st.extTh = d.extth; if (!extWalls().some(w => w.k === st.extWall)) st.extWall = extWalls()[0].k; }
     else if (it && d.eN) { it.n = +d.eN; normalize(it); }
     else if (it && d.eScheme) it.scheme = d.eScheme;
     else if (it && 'eDoor' in d) it.door = !it.door;

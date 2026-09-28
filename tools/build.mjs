@@ -564,13 +564,14 @@ function tkItem(it) {
 }
 // Пристройка — как в конструкторе: стены модулями до module_max, HS / FS по ТЗ, витражи по ставке; кровля по ставке пристройки
 function tkExt(e) {
-  const wallType = e.type === 'garden' ? 'pano' : e.wall;
+  const cold = e.th === 'cold', wallType = e.type === 'garden' ? (cold ? 'slide' : 'pano') : e.wall;
   let sum = 0;
   [e.w, e.d, e.d].forEach(len => { const k = Math.max(1, Math.ceil(len / TK.ext.module_max)), w = Math.round(len / k); for (let j = 0; j < k; j++) {
-    if (wallType === 'pano') sum += w * e.h / 1e6 * TK.pano.rate_fix + Math.floor(w / 1500) * TK.pano.sash_add * 0.5;
+    if (TK.cold[wallType]) sum += w * e.h / 1e6 * TK.cold[wallType].rate;
+    else if (wallType === 'pano') sum += w * e.h / 1e6 * TK.pano.rate_fix + Math.floor(w / 1500) * TK.pano.sash_add * 0.5;
     else { const type = wallType === 'hs' ? 'HS' : 'FS', n = PORTAL.sectionsFor(type, w).rec; sum += tkItem({ type: wallType, w, h: e.h, n, scheme: PORTAL.schemesFor(type, n)[0].code }); }
   } });
-  return sum + e.w * e.d / 1e6 * (e.type === 'garden' ? 1.08 : 1) * TK.extensions[e.type].roof_rate;
+  return sum + e.w * e.d / 1e6 * (e.type === 'garden' ? 1.08 : 1) * (e.type === 'garden' && cold ? TK.cold.roof_rate : TK.extensions[e.type].roof_rate);
 }
 function tkTotal(ex) {
   const goods = (ex.items || []).reduce((a, it) => a + tkItem(it) * (it.q || 1), 0) + (ex.ext ? tkExt(ex.ext) : 0);
@@ -586,6 +587,7 @@ const TK_ICON = Object.fromEntries(Object.entries({
   'panoramnoe-osteklenie': '<path d="M30 130V60l90-40 90 40v70z"/><path d="M44 130V78h152v52M82 78v52M120 78v52M158 78v52"/><path d="M60 60h30v14H60zM150 60h30v14h-30z"/>',
   'vyhod-na-terrasu': '<path d="M30 130V30h180v100"/><path d="M60 128V50h120v78M100 50v78M140 50v78"/><path d="M112 92h-24m6-5-6 5 6 5M152 92h-24m6-5-6 5 6 5"/><path d="M20 130h200M150 138h70"/>',
   'zimniy-sad': '<path d="M20 130V50l60-26 60 26v80"/><path d="M140 70l80 18v42"/><path d="M140 70v60M167 76v54M194 82v48M220 88"/><path d="M150 72l10 58M177 78l6 52M204 84l4 46" opacity=".4"/><path d="M40 130V88h40v42"/>',
+  'holodnoe-osteklenie': '<path d="M20 130V50l60-26 60 26v80"/><path d="M128 66h94v6h-94"/><path d="M140 72v58M220 72v58"/><path d="M150 78h30v48h-30zM176 82h30v44h-30z" opacity=".55"/><path d="M40 130V88h40v42"/><path d="M130 136h96" stroke-dasharray="4 4"/>',
   'veranda': '<path d="M20 130V50l60-26 60 26v80"/><path d="M130 64h92v8h-92"/><path d="M140 72v58M167 72v58M194 72v58M220 72v58"/><path d="M146 84l16 20-16 20M173 84l16 20-16 20" opacity=".5"/><path d="M40 130V88h40v42"/>',
 }).map(([k, d]) => [k, `<svg viewBox="0 0 240 150" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">${d}</g></svg>`]));
 
@@ -599,6 +601,18 @@ function tkPage(pg) {
   const scen = pg.scenarios ? sec('tk-sec--scen', 'Сценарии', 'С чего начинают остекление дома', `<div class="tk-cards">${TKP.slice(1).map(sp => card(sp)).join('')}</div>`) : '';
   const examples = sec('tk-sec--ex', 'Цены', pg.examples_title, `<ul class="tk-ex">${pg.examples.map(ex => `<li><span><b>${esc(ex.t)}</b><small>${esc(ex.d)}</small></span><strong>${tkRange(tkTotal(ex))}</strong></li>`).join('')}</ul>
       <p class="tk-sec__note">Цены ориентировочные: изделия, доставка и монтаж по Москве и МО. Точную смету инженер делает после замера или по чертежам.</p>`, pg.examples_lead);
+  // Тёплое или холодное: сравнение, пример — веранда 6 × 3 м (цены той же формулой)
+  const exW = { ext: { type: 'veranda', w: 6000, d: 3000, h: 2600, wall: 'pano' } }, exC = { ext: { type: 'veranda', w: 6000, d: 3000, h: 2600, wall: 'slide', th: 'cold' } };
+  const cmpRows = [
+    ['Профиль', 'Алюминий с терморазрывом', 'Алюминий без терморазрыва'],
+    ['Стекло', 'Двухкамерный стеклопакет 40 мм, закалённые стёкла', 'Одинарное закалённое 5–10 мм'],
+    ['Зимой', 'Тепло при отоплении — можно жить круглый год', 'Без отопления: защита от ветра, дождя и снега'],
+    ['Для чего', 'Дом, гостиная, зимний сад, круглогодичная веранда', 'Летняя веранда, терраса, беседка'],
+    ['Основание', 'Жёсткое: фундамент или утеплённый пол', 'Лёгкое: можно на существующую веранду'],
+    ['Пример: веранда 6 × 3 м', tkRange(tkTotal(exW)), tkRange(tkTotal(exC))],
+  ];
+  const compare = pg.compare ? sec('tk-sec--cmp', 'Тёплое или холодное', 'Тёплое или холодное остекление', `<div class="tk-cmp" role="table"><div class="tk-cmp__r tk-cmp__h" role="row"><span role="columnheader"></span><b role="columnheader">Тёплое</b><b role="columnheader">Холодное</b></div>${cmpRows.map(([a, w, c]) => `<div class="tk-cmp__r" role="row"><span role="rowheader">${esc(a)}</span><b role="cell">${esc(w)}</b><b role="cell">${esc(c)}</b></div>`).join('')}</div>
+      <p class="tk-sec__note">Окна и витражи самого дома делаем только тёплыми: холодное остекление жилых комнат промерзает и собирает конденсат.</p>`, 'Холодное остекление в 2–3 раза дешевле, но это защита от погоды, а не тёплая комната. Выбирайте по тому, как будете пользоваться пристройкой зимой.') : '';
   const includes = sec('', 'Под ключ', (pg.includes_title || hub.includes_title), rows(pg.includes || hub.includes));
   const solutions = pg.solutions ? sec('', 'Решения', pg.solutions_title, rows(pg.solutions)) : '';
   const eng = sec('tk-sec--eng', 'Инженерия', pg.eng_title, rows(pg.eng));
@@ -654,6 +668,7 @@ ${jsonLd({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemList
 </section>
 ${scen}
 ${examples}
+${compare}
 ${solutions}
 ${includes}
 ${eng}
@@ -690,7 +705,7 @@ ${related}
 <script src="${base}assets/js/components/site-footer.js"></script>
 <script src="${base}assets/js/portal-calc.js?v=2"></script>
 <script src="${base}assets/js/components/lead-form.js"></script>
-<script src="${base}assets/js/turnkey.js?v=6"></script>
+<script src="${base}assets/js/turnkey.js?v=7"></script>
 </body>
 </html>
 `;
