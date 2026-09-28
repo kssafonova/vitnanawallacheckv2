@@ -185,13 +185,19 @@
   </div>
 </section>
 <section class="ba-section" aria-label="До и после остекления">
-  <div class="ui-wrap">
-    <div class="ba" data-ba>
-      <img class="ba__img" src="assets/images/before-after/after.webp" width="1440" height="810" alt="После: отделка завершена, угловое остекление в пол с дверями в сад" loading="lazy" decoding="async">
-      <div class="ba__before"><img class="ba__img" src="assets/images/before-after/before.webp" width="1440" height="810" alt="До: тот же угол дома во время стройки, системы остекления уже смонтированы" loading="lazy" decoding="async"></div>
-      <div class="ba__line" aria-hidden="true"><span class="ba__knob"></span></div>
-      <input class="ba__range" type="range" min="0" max="100" step="0.1" value="50" aria-label="Сравнить: до и после остекления" data-ba-range>
+  <div class="ba" data-ba>
+    <picture>
+      <source media="(max-width: 639px)" srcset="assets/images/before-after/after-m.webp" width="900" height="1125">
+      <img class="ba__img" src="assets/images/before-after/after-wide.webp" width="1920" height="900" alt="После: отделка завершена, угловое остекление в пол с дверями в сад" loading="lazy" decoding="async">
+    </picture>
+    <div class="ba__before">
+      <picture>
+        <source media="(max-width: 639px)" srcset="assets/images/before-after/before-m.webp" width="900" height="1125">
+        <img class="ba__img" src="assets/images/before-after/before-wide.webp" width="1920" height="900" alt="До: тот же угол дома во время стройки, системы остекления уже смонтированы" loading="lazy" decoding="async">
+      </picture>
     </div>
+    <div class="ba__line" aria-hidden="true"><span class="ba__knob"></span></div>
+    <input class="ba__range" type="range" min="0" max="100" step="0.1" value="50" aria-label="Сравнить: до и после остекления" data-ba-range>
   </div>
 </section>
 <section class="home-process" id="process">
