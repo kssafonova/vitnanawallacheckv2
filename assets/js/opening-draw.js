@@ -1,8 +1,8 @@
 /* Чертёж проёма — инженерная схема тонкими линиями: рама, створки, стрелки движения, размерные линии.
    Раскладка створок и правила — assets/js/portal-calc.js (window.PSPortal, по ТЗ калькулятора): HS — FIX / ACTIVE и стрелки,
    FS — складные створки (зигзаг сложения) и рабочая дверь. Чертёж только показывает: размеры подписаны на размерных линиях;
-   вводят их в блоке выбора размера (sizeControl): кнопки готовых дверей из каталога и «Свой размер» с полями.
-   window.PSOpening.mount(el, { type, w, h, n, scheme, door }) → { set(), get() }; sizeControl(el, { doors, type, w, h, n, onChange }).
+   вводят их в полях «Ширина» / «Высота» (sizeControl).
+   window.PSOpening.mount(el, { type, w, h, n, scheme, door }) → { set(), get() }; sizeControl(el, { type, w, h, n, onChange }).
    Используют блок «Цена по размерам проёма» (главная, HS) и калькулятор /raschet/. */
 (() => {
   const P = window.PSPortal;
@@ -93,36 +93,26 @@
   const fits = (d, st) => (st.type || 'HS') === 'HS' && d.w === st.w && d.n === st.n && (d.hs || [d.h]).includes(st.h);
   const matchReady = (ready, st) => (ready || []).find(r => fits(r, st)) || null;
 
-  // Выбор размера: кнопки готовых дверей HS по возрастанию ширины («3,6 м · 2 створки») + «Свой размер» с полями.
-  // Проверка размера — при выходе из поля (ТЗ 1.2): ошибки и предупреждения под полями (onChange получает их в validation).
-  function sizeControl(el, { doors = [], type = 'HS', w, h, n, onChange }) {
+  // Размер проёма — только поля «Ширина, мм» / «Высота, мм» (решение владельца: без кнопок готовых размеров).
+  // Готовую дверь калькулятор рекомендует сам, если размер и конфигурация совпали с товаром каталога.
+  // Проверка — при выходе из поля (ТЗ 1.2): ошибки и предупреждения под полями.
+  function sizeControl(el, { type = 'HS', w, h, n, onChange }) {
     const cur = { type, w, h, n };
-    const isDoor = d => fits(d, cur);
-    const m = v => (v / 1000).toFixed(1).replace('.', ',');
     el.classList.add('sz');
     const render = () => {
-      const Lm = P.LIMITS[cur.type], list = cur.type === 'HS' ? doors : [];
+      const Lm = P.LIMITS[cur.type];
       el.innerHTML = `
       <p class="sz__lbl">Размер проёма</p>
-      <div class="sz__seg" role="group" aria-label="Размер проёма">${list.map((d, i) =>
-        `<button type="button" data-sz="${i}"><b>${m(d.w)} м</b><small>${d.n} ${word(d.n)} · готовая</small></button>`).join('')}<button type="button" data-sz="custom"><b>Свой размер</b><small>ширина и высота</small></button></div>
-      <div class="sz__fields" hidden>
-        <label class="sz__f"><span>Ширина, мм</span><input inputmode="numeric" maxlength="5" autocomplete="off" placeholder="например, 3900" data-sz-w></label>
+      <div class="sz__fields">
+        <label class="sz__f"><span>Ширина, мм</span><input inputmode="numeric" maxlength="5" autocomplete="off" placeholder="например, 3600" data-sz-w value="${cur.w}"></label>
         <span class="sz__x" aria-hidden="true">×</span>
-        <label class="sz__f"><span>Высота, мм</span><input inputmode="numeric" maxlength="4" autocomplete="off" placeholder="например, 2400" data-sz-h></label>
-        <p class="sz__hint">Ширина ${fmt(Lm.wMin)}–${fmt(Lm.wMax)} мм, высота ${fmt(Lm.hMin)}–${fmt(Lm.hMax)} мм.${cur.type === 'HS' ? ' Размер не как у готовой двери — индивидуальный заказ.' : ''}</p>
+        <label class="sz__f"><span>Высота, мм</span><input inputmode="numeric" maxlength="4" autocomplete="off" placeholder="например, 2300" data-sz-h value="${cur.h}"></label>
+        <p class="sz__hint">Ширина ${fmt(Lm.wMin)}–${fmt(Lm.wMax)} мм, высота ${fmt(Lm.hMin)}–${fmt(Lm.hMax)} мм.</p>
       </div>
       <div class="sz__msg" data-sz-msg></div>`;
     };
     render();
     const $ = q => el.querySelector(q);
-    let custom = !doors.some(isDoor) || cur.type !== 'HS';
-    const paint = () => {
-      const list = cur.type === 'HS' ? doors : [];
-      el.querySelectorAll('[data-sz]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.sz === 'custom' ? custom : !custom && isDoor(list[+b.dataset.sz]))));
-      $('.sz__fields').hidden = !custom;
-      if (custom) { $('[data-sz-w]').value = cur.w; $('[data-sz-h]').value = cur.h; }
-    };
     // сообщения проверки: ошибки — красным, предупреждения — плашкой
     const showMsg = () => {
       const v = P.validate(cur.type, cur.w, cur.h);
@@ -130,17 +120,6 @@
       return v;
     };
     const emit = () => onChange && onChange({ ...cur });
-    el.addEventListener('click', e => {
-      const b = e.target.closest('[data-sz]');
-      if (!b) return;
-      if (b.dataset.sz === 'custom') {
-        custom = true; paint();
-        $('[data-sz-w]').focus(); $('[data-sz-w]').select();
-      } else {
-        const d = doors[+b.dataset.sz];
-        custom = false; Object.assign(cur, { w: d.w, h: (d.hs || [d.h]).includes(cur.h) ? cur.h : d.h, n: d.n }); paint(); showMsg(); emit();
-      }
-    });
     const read = () => {
       const vw = parseInt(($('[data-sz-w]').value || '').replace(/\D+/g, ''), 10), vh = parseInt(($('[data-sz-h]').value || '').replace(/\D+/g, ''), 10);
       if (Number.isFinite(vw)) cur.w = vw;
@@ -151,13 +130,13 @@
     el.addEventListener('input', e => { if (e.target.matches('[data-sz-w],[data-sz-h]')) { read(); $('[data-sz-msg]').innerHTML = ''; emit(); } });
     el.addEventListener('focusout', e => { if (e.target.matches('[data-sz-w],[data-sz-h]')) { read(); showMsg(); emit(); } });
     el.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); e.target.blur(); } });
-    paint(); showMsg();
+    showMsg();
     return {
       set(next) {
         const retype = next.type && next.type !== cur.type;
         Object.assign(cur, next);
-        if (retype) { render(); custom = cur.type !== 'HS' || !doors.some(isDoor); }
-        paint(); showMsg();
+        if (retype) render();
+        showMsg();
       },
       validate: () => P.validate(cur.type, cur.w, cur.h),
     };
@@ -193,7 +172,7 @@
     };
     const start = ready.find(r => r.w === 3600) || ready[0] || { w: 3600, h: 2300, n: 2 };
     const api = mount(box.querySelector('[data-open-draw]'), { type: 'HS', w: start.w, h: start.h, n: start.n, scheme: start.def });
-    sizeControl(box.querySelector('[data-open-size]'), { doors: ready, w: start.w, h: start.h, n: start.n, onChange: st => {
+    sizeControl(box.querySelector('[data-open-size]'), { w: start.w, h: start.h, n: start.n, onChange: st => {
       const r = matchReady(ready, st);
       api.set({ ...st, scheme: r ? r.def : defScheme('HS', st.n) }); show(st);
     } });

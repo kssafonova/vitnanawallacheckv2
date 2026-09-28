@@ -3,10 +3,13 @@
    (эскизы со стрелками; у FS — «Активная рабочая дверь» для 3, 5, 7 секций) → стеклопакет, цвет профиля, ручка → итог:
    чертёж, техническое резюме, цена крупно, дисклеймер и форма «Получить точную смету проекта в PDF».
    Правила и цена — assets/js/portal-calc.js (PSPortal), чертёж и выбор размера — assets/js/opening-draw.js (PSOpening).
-   Готовая дверь каталога (data-doors: HS, размер из таблицы, схема модели, стандартная комплектация) — цена каталога, срок data-term,
-   «В корзину»; всё остальное — индивидуальный заказ, цена ориентировочная.
+   Размер вводят только полями ширины и высоты (без кнопок готовых размеров — решение владельца). Если размер и выбранная
+   конфигурация совпали с готовой дверью каталога (data-doors: HS, размер из таблицы, схема модели, стандартная комплектация),
+   под ценой появляется рекомендация этого товара: фото, цена каталога, срок data-term, «В корзину» и «Страница товара».
+   Вид проёма — вкладки «Чертёж» (opening-draw.js) и «3D» (calc3d.js, грузится при первом открытии): крутить, открыть / закрыть.
    Адрес принимает ?type=HS&w=3600&h=2300&n=2&scheme=A-R&glass=standard&color=mono&handle=standard&door=1&from=… */
 (() => {
+  const SELF = (document.currentScript && document.currentScript.src) || location.href;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const TYPES = [
     { k: 'HS', t: 'Раздвижная', d: 'HS · подъёмно-раздвижная дверь, усиленный термопрофиль' },
@@ -75,7 +78,14 @@
   </header>
   <div class="qcx__grid">
     <div class="qcx__left">
-      <div class="qcx__draw" data-qcx-draw></div>
+      <div class="qcx__tabs" role="tablist" aria-label="Вид проёма">
+        <button type="button" role="tab" aria-selected="true" data-qcx-view="draw">Чертёж</button>
+        <button type="button" role="tab" aria-selected="false" data-qcx-view="3d">3D-модель</button>
+      </div>
+      <div class="qcx__view">
+        <div class="qcx__draw" data-qcx-draw></div>
+        <div class="qc3d" data-qcx-3d hidden><p class="qc3d__load">Загружаем 3D-модель…</p></div>
+      </div>
       <ul class="qcx__sum" data-qcx-sum></ul>
     </div>
     <div class="qcx__side">
@@ -88,7 +98,7 @@
       <div class="qcx__row"><span class="qcx__lbl">Цвет профиля</span>${seg('color', P.COLORS, st.color, ' qcx__seg--stack')}</div>
       <div class="qcx__row"><span class="qcx__lbl">Ручка</span>${seg('handle', P.HANDLES, st.handle, ' qcx__seg--stack')}</div>
       <div class="qcx__price"><small data-qcx-kind></small><strong data-qcx-price></strong><span data-qcx-sub></span></div>
-      <div class="qcx__res" data-qcx-res></div>
+      <div class="qcx__rec" data-qcx-rec hidden></div>
       <p class="qcx__note" data-qcx-note></p>
       <p class="qcx__disc">Внимание! Стоимость является предварительной за базовое изделие. Доставка спецтехникой, монтажные работы и интеграция скрытого плоского порога с дренажной системой рассчитываются индивидуально инженером после точного замера на объекте.</p>
     </div>
@@ -101,8 +111,28 @@
 
     const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
     const draw = O.mount($('[data-qcx-draw]'), st);
-    const size = O.sizeControl($('[data-qcx-size]'), { doors: ready, type: st.type, w: st.w, h: st.h, n: st.n, onChange: v => { Object.assign(st, { w: v.w, h: v.h, n: v.n }); fixState(); update(); } });
+    const size = O.sizeControl($('[data-qcx-size]'), { type: st.type, w: st.w, h: st.h, n: st.n, onChange: v => { Object.assign(st, { w: v.w, h: v.h, n: v.n }); fixState(); update(); } });
     const form = $('lead-form');
+
+    // Вкладка «3D»: модуль и three.js грузятся при первом открытии; без WebGL — сообщение, чертёж остаётся
+    let view3d = null, state3d = 'idle', view = 'draw';
+    const box3d = $('[data-qcx-3d]');
+    function open3d() {
+      if (state3d !== 'idle') return;
+      state3d = 'loading';
+      import(new URL('calc3d.js', SELF).href).then(m => {
+        view3d = m.createCalc3d(box3d);
+        if (!view3d) throw new Error('no webgl');
+        state3d = 'ready'; view3d.set({ ...st });
+      }).catch(() => { state3d = 'failed'; box3d.innerHTML = '<p class="qc3d__load">3D-модель недоступна в этом браузере — смотрите чертёж.</p>'; });
+    }
+    $$('[data-qcx-view]').forEach(t => t.addEventListener('click', () => {
+      view = t.dataset.qcxView;
+      $$('[data-qcx-view]').forEach(x => x.setAttribute('aria-selected', String(x === t)));
+      $('[data-qcx-draw]').hidden = view !== 'draw';
+      box3d.hidden = view !== '3d';
+      if (view === '3d') { open3d(); if (view3d) view3d.set({ ...st }); }
+    }));
 
     // Готовая дверь каталога: HS, размер из таблицы, схема есть у модели, стандартная комплектация
     function readyDoor() {
@@ -149,32 +179,35 @@
       $$('[data-color]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.color === st.color)));
       $$('[data-handle]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.handle === st.handle)));
       draw.set({ ...st });
+      if (view3d) view3d.set({ ...st });
 
       const pass = P.passage(st.type, st.w, st.n, st.scheme);
       const { r, v: rv, why } = readyDoor();
-      const price = r ? r.price : P.price({ ...st, extraSections: S.extra });
+      const price = P.price({ ...st, extraSections: S.extra });
       $('[data-qcx-sum]').innerHTML = [
         ['Материал', 'Премиальный тёплый алюминиевый термопрофиль'],
         ['Механизм', 'Надёжная немецкая механическая фурнитура'],
         ['Безопасность', 'Все стёкла проходят обязательную промышленную закалку'],
         ['Ширина чистого светового прохода для человека', v.ok ? `${P.fmt(pass)} мм` : '—'],
       ].map(([a, b]) => `<li><span>${a}</span><b>${b}</b></li>`).join('');
-      const res = $('[data-qcx-res]');
+      $('[data-qcx-kind]').textContent = 'Ориентировочная стоимость';
+      $('[data-qcx-price]').textContent = price ? `${P.fmt(price)} ₽` : 'По расчёту';
+      $('[data-qcx-sub]').textContent = r ? `такая дверь есть в каталоге — готовое решение ниже` : `индивидуальный заказ — срок дольше ${term}, точный назовём после замера`;
+      // Рекомендация готового товара: размер и конфигурация совпали с дверью каталога
+      const rec = $('[data-qcx-rec]');
       root.classList.toggle('is-ready', !!r);
+      rec.hidden = !r;
       if (r) {
         const inCart = window.PSCart && window.PSCart.has(rv.sku);
-        $('[data-qcx-kind]').textContent = `Готовая дверь из каталога · ${r.code}`;
-        $('[data-qcx-price]').textContent = `${P.fmt(price)} ₽`;
-        $('[data-qcx-sub]').textContent = `срок — ${term} · без доставки и монтажа`;
-        res.innerHTML = `<button class="qcx__buy" type="button" data-add-to-cart data-sku="${esc(rv.sku)}" data-cart-href="${esc((d.base || '../') + 'cart/')}">${inCart ? 'В корзине <span>→</span>' : 'В корзину <span>+</span>'}</button><a class="qcx__link" href="${esc(rv.url)}">Страница товара <span aria-hidden="true">→</span></a>`;
-        $('[data-qcx-send-title]').textContent = 'Нужна консультация или замер?';
-      } else {
-        $('[data-qcx-kind]').textContent = 'Ориентировочная стоимость';
-        $('[data-qcx-price]').textContent = price ? `${P.fmt(price)} ₽` : 'По расчёту';
-        $('[data-qcx-sub]').textContent = `индивидуальный заказ — срок дольше ${term}, точный назовём после замера`;
-        res.innerHTML = '';
-        $('[data-qcx-send-title]').textContent = 'Точная смета и бесплатный замер';
-      }
+        rec.innerHTML = `<a class="qcx__rec-img" href="${esc(rv.url)}"><img src="${esc(rv.img)}" alt="${esc(`${r.code} ${r.name}`)}" decoding="async"></a>
+          <div class="qcx__rec-body">
+            <p class="qcx__rec-k">Рекомендуем готовую дверь</p>
+            <a class="qcx__rec-t" href="${esc(rv.url)}">${esc(r.name)} · ${esc(r.code)}</a>
+            <p class="qcx__rec-p"><b>${P.fmt(r.price)} ₽</b><span>цена каталога · срок ${term} · без доставки и монтажа</span></p>
+            <div class="qcx__res"><button class="qcx__buy" type="button" data-add-to-cart data-sku="${esc(rv.sku)}" data-cart-href="${esc((d.base || '../') + 'cart/')}">${inCart ? 'В корзине <span>→</span>' : 'В корзину <span>+</span>'}</button><a class="qcx__link" href="${esc(rv.url)}">Страница товара <span aria-hidden="true">→</span></a></div>
+          </div>`;
+      } else rec.innerHTML = '';
+      $('[data-qcx-send-title]').textContent = r ? 'Нужна консультация или замер?' : 'Точная смета и бесплатный замер';
       $('[data-qcx-note]').textContent = v.ok ? why : v.errors.join('. ');
       if (form && form.setProject) form.setProject(summary(price, r ? `Готовая дверь из каталога: ${r.code} (${rv.sku})` : 'ИНДИВИДУАЛЬНЫЙ ЗАКАЗ — расчёт по калькулятору', P.fmt(pass), v.errors[0]));
     }

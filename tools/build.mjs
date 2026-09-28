@@ -244,7 +244,7 @@ const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 
 // это товар из каталога (цена каталога, срок PROD_TEXT, «В корзину»), иначе — индивидуальный заказ по формуле ТЗ.
 const calcReady = rel => JSON.stringify(hsAvail().flatMap(sizesOf).sort((a, b) => a.width - b.width || a.sections - b.sections).map(m => ({
   n: m.sections, w: m.width, h: m.height, hs: m.heights, price: m.price, code: m.code, name: m.name, passage: m.passage,
-  schemes: Object.fromEntries(m.schemes.map(s => { const v = find(m.model, m.colors[0].slug, s.slug, m.width); return [s.code, { sku: v.sku, url: rel + v.path }]; })),
+  schemes: Object.fromEntries(m.schemes.map(s => { const v = find(m.model, m.colors[0].slug, s.slug, m.width); return [s.code, { sku: v.sku, url: rel + v.path, img: rel + v.image }]; })),
   def: defScheme(m).code,
 })));
 const calcBox = (rel, attrs = {}) => {
@@ -267,7 +267,7 @@ const ICO = {
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
 function calcTeaser(rel, eyebrow) {
   return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
-      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2><p>Выберите ширину проёма — покажем готовую дверь и цену. Другой размер введите сами: посчитаем индивидуальный заказ.</p></header>
+      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2><p>Введите ширину и высоту проёма — сразу покажем цену. Если размер совпадёт с готовой дверью из каталога, предложим её.</p></header>
       <div class="qc-draw__size" data-open-size></div>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
