@@ -1,0 +1,120 @@
+@import url('./components.css');
+
+/* ============================================================
+   «Остекление под ключ» (/osteklenie-pod-klyuch/, assets/js/turnkey.js + turnkey3d.js).
+   Слева — макет дома (3D или фасад в 2D), справа — шаги 01–04 и итог. Стиль — инженерный чертёж:
+   тонкие линии, плоские кнопки, выбранное — чёрное. Режим «Вечер» — тёмная сцена только у макета.
+   ============================================================ */
+.tk-page{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+.tk-page a{color:inherit}
+.tk-head{padding:clamp(28px,4vw,56px) 0 clamp(20px,2.6vw,36px)}
+.tk-head .ui-eyebrow{margin:0 0 14px}
+.tk-head h1{max-width:14ch;margin:0;font:300 var(--fs-h2)/.95 var(--font);letter-spacing:-.06em}
+.tk-head__lead{max-width:62ch;margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
+.tk-app-wrap{padding-bottom:var(--space-section)}
+.tk-noscript{padding:16px;border:1px solid var(--ui-line-soft);font-size:var(--fs-body)}
+
+.tk{display:grid;gap:clamp(24px,3vw,44px);align-items:start}
+@media(min-width:1100px){
+  .tk{grid-template-columns:minmax(0,1.3fr) minmax(360px,.7fr)}
+  .tk__viewer{position:sticky;top:calc(var(--header-h) + 20px)}
+}
+
+/* ---------- макет ---------- */
+.tk__viewer{display:grid;gap:12px}
+.tk__bar{display:flex;align-items:end;justify-content:space-between;gap:16px;border-bottom:1px solid var(--ui-line)}
+.tk-tabs{display:flex;gap:28px}
+.tk-tabs button{min-height:40px;padding:0;margin-bottom:-1px;border:0;border-bottom:2px solid transparent;background:none;color:var(--ui-muted);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.tk-tabs button[aria-selected="true"]{border-bottom-color:var(--ui-ink);color:var(--ui-ink)}
+.tk-mode{min-height:32px;margin-bottom:6px;padding:0 12px;border:1px solid var(--ui-ink);background:transparent;color:var(--ui-ink);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.tk-mode[aria-pressed="true"]{background:var(--ui-ink);color:#fff}
+.tk__stage{position:relative;background:#fff;border:1px solid var(--ui-line-soft);transition:background-color .4s}
+.tk__stage [hidden]{display:none}
+.tk.is-evening .tk__stage{background:#1d1e20;border-color:#1d1e20}
+.tk3d{position:relative;aspect-ratio:16/10}
+.tk3d__canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+.tk3d.is-rotating .tk3d__canvas{cursor:grabbing}
+.tk3d__msg{display:grid;place-items:center;height:100%;margin:0;padding:20px;color:var(--ui-muted);font:400 var(--fs-small)/1.4 var(--font);text-align:center}
+.tk3d__hint{position:absolute;left:12px;bottom:10px;padding:6px 8px;background:rgba(255,255,255,.86);color:var(--ui-muted);font:500 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+.tk-face{aspect-ratio:16/10;display:grid;place-items:center;padding:12px}
+.tk-face svg{width:100%;height:100%;display:block}
+.tf-wall{fill:#f5f5f4;stroke:var(--ui-ink);stroke-width:1.2}
+.tf-roof{fill:#e4e3e0;stroke:var(--ui-ink);stroke-width:1}
+.tf-slab{stroke:var(--ui-line);stroke-width:1;stroke-dasharray:4 4}
+.tf-o rect{fill:#dbe5e8;stroke:#383b3a;stroke-width:2}
+.tf-o line{stroke:#383b3a;stroke-width:1.2}
+.tf-arrow{fill:none;stroke:var(--ui-ink);stroke-width:1.4}
+.tf-fold{fill:none;stroke:#6f6c64;stroke-width:.9;stroke-dasharray:3 3}
+.tf-cur{fill:none;stroke:var(--ui-accent);stroke-width:1.5;stroke-dasharray:6 4}
+.tf-ground{stroke:var(--ui-ink);stroke-width:1}
+.tf-dim{fill:none;stroke:var(--ui-muted);stroke-width:1}
+.tk.is-evening .tf-wall{fill:#2a2b2d;stroke:#8a8883}
+.tk.is-evening .tf-roof{fill:#3a3b3d;stroke:#8a8883}
+.tk.is-evening .tf-o rect{fill:#f6c784}
+.tk__caption{margin:0;color:var(--ui-muted);font:400 var(--fs-caption)/1.4 var(--font)}
+
+/* ---------- шаги ---------- */
+.tk__steps{display:grid;gap:0;border-top:1px solid var(--ui-line)}
+.tk-step{display:grid;gap:14px;padding:22px 0;border-bottom:1px solid var(--ui-line)}
+.tk-step__t{display:flex;align-items:baseline;gap:12px;margin:0;font:300 var(--fs-h4)/1.15 var(--font);letter-spacing:-.02em}
+.tk-step__t i{color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);font-style:normal;letter-spacing:.08em}
+.tk-row{display:grid;gap:8px}
+.tk-lbl{display:flex;justify-content:space-between;gap:12px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.tk-lbl b{color:var(--ui-ink);font-weight:600}
+.tk-note{margin:0;color:var(--ui-muted);font:400 var(--fs-caption)/1.45 var(--font)}
+.tk-range{width:100%;accent-color:var(--ui-ink)}
+
+.tk-seg{display:grid;border-top:1px solid var(--ui-line);border-left:1px solid var(--ui-line)}
+.tk-seg--cols{grid-template-columns:repeat(auto-fit,minmax(70px,1fr))}
+.tk-seg--cols4{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:520px){.tk-seg--cols4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tk-seg button{
+  display:grid;gap:3px;align-content:center;min-height:46px;padding:8px 12px;border:0;border-right:1px solid var(--ui-line);border-bottom:1px solid var(--ui-line);
+  background:transparent;color:var(--ui-ink);text-align:left;cursor:pointer;transition:background-color .15s,color .15s
+}
+.tk-seg--cols button{text-align:center;justify-items:center}
+.tk-seg button b{font:400 var(--fs-small)/1.2 var(--font)}
+.tk-seg button small{color:var(--ui-muted);font:400 var(--fs-caption)/1.3 var(--font)}
+.tk-seg button[aria-pressed="true"]{background:var(--ui-ink);color:#fff}
+.tk-seg button[aria-pressed="true"] small{color:rgba(255,255,255,.72)}
+@media(hover:hover){.tk-seg button:not([aria-pressed="true"]):hover{background:#fff}}
+
+.tk-counters{display:grid;border-top:1px solid var(--ui-line-soft)}
+.tk-cnt{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--ui-line-soft)}
+.tk-cnt span{display:grid;gap:3px;min-width:0}
+.tk-cnt b{font:400 var(--fs-small)/1.2 var(--font)}
+.tk-cnt small{color:var(--ui-muted);font:400 var(--fs-caption)/1.3 var(--font)}
+.tk-cnt__ctl{display:grid;grid-template-columns:40px 36px 40px;border:1px solid var(--ui-line)}
+.tk-cnt__ctl button{min-height:40px;border:0;background:transparent;color:var(--ui-ink);cursor:pointer;font:300 var(--fs-h4)/1 var(--font)}
+.tk-cnt__ctl button:disabled{color:var(--ui-line-soft);cursor:not-allowed}
+.tk-cnt__ctl output{display:grid;place-items:center;border-left:1px solid var(--ui-line);border-right:1px solid var(--ui-line);font:400 var(--fs-small)/1 var(--font)}
+.tk-meter{display:grid;gap:6px;color:var(--ui-muted);font:400 var(--fs-caption)/1.3 var(--font)}
+.tk-meter i{display:block;height:3px;background:var(--ui-line-soft)}
+.tk-meter b{display:block;height:100%;background:var(--ui-ink);transition:width .25s}
+.tk-links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.tk-links button,.tk-link{padding:0;border:0;border-bottom:1px solid currentColor;background:none;color:var(--ui-ink);cursor:pointer;font:400 var(--fs-caption)/1.5 var(--font)}
+
+/* ---------- итог ---------- */
+.tk-res{display:grid;gap:16px;padding:22px 0}
+.tk-res__big{display:grid;gap:14px}
+.tk-res__big small{display:block;margin-bottom:6px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.tk-res__big strong{font:300 var(--fs-num)/1 var(--font);letter-spacing:-.04em;white-space:nowrap}
+.tk-res__big div:first-child strong{font-size:var(--fs-h3)}
+.tk-res__big strong{white-space:normal}
+.tk-res__lines{display:grid;margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line)}
+.tk-res__lines li{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--ui-line-soft);font:400 var(--fs-small)/1.35 var(--font)}
+.tk-res__lines b{font-weight:400;white-space:nowrap}
+.tk-res__inc small{display:block;margin-bottom:8px;color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.tk-res__inc ul{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.tk-res__inc li{padding:6px 10px;border:1px solid var(--ui-line-soft);background:#fff;font:400 var(--fs-caption)/1.2 var(--font)}
+.tk-res__act{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}
+.tk-btn{display:inline-flex;align-items:center;justify-content:space-between;gap:24px;min-height:var(--btn-h);padding:0 22px;background:var(--ui-ink);color:#fff!important;text-decoration:none;font:600 var(--fs-label)/1 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.tk-btn:hover{background:#000}
+
+/* ---------- форма ---------- */
+.tk-send{padding:var(--space-section) 0;border-top:1px solid var(--ui-line);scroll-margin-top:var(--header-h)}
+.tk-send__grid{display:grid;gap:var(--space-head)}
+.tk-send h2{margin:0;font:300 var(--fs-h2)/.98 var(--font);letter-spacing:-.05em}
+.tk-send .ui-eyebrow{margin:0 0 14px}
+.tk-send__lead{max-width:52ch;margin:16px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
+@media(min-width:1100px){.tk-send__grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:clamp(40px,5vw,90px)}}

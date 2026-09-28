@@ -537,6 +537,11 @@ const blocks = {
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
     'hsx-data': `<script type="application/json" data-hsx-json>${hsxData('../../')}</script>`,
   },
+  // «Остекление под ключ»: цены-заглушки из data/turnkey.json, цены HS / FS считает portal-calc.js на странице, монтаж — services
+  'osteklenie-pod-klyuch/index.html': {
+    'turnkey-data': `<script type="application/json" data-tk-json>${JSON.stringify({ ...(({ _comment, ...t }) => t)(JSON.parse(read('data/turnkey.json'))),
+      services: (({ _comment, ...x }) => x)(config.services || {}), term: PROD_TEXT }).replace(/</g, '\\u003c')}</script>`,
+  },
   'projects/index.html': {
     'projects-grid': projectsGrid(),
   },
@@ -553,7 +558,7 @@ const blocks = {
 // ---------- sitemap ----------
 const sitemapUrls = [
   ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
-  ['raschet/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
+  ['raschet/', 'monthly', '0.8'], ['osteklenie-pod-klyuch/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
 ];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
