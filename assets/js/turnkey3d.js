@@ -66,6 +66,16 @@ export function createHouse(el, opts = {}) {
     const glass = mesh(new THREE.BoxGeometry(w - p, h - p, 0.03), M.glass, false);
     g.add(t, b, l, r, glass);
     for (let j = 1; j < o.n; j++) { const m = box(0.05, h - p, d * 0.9, fm); m.position.x = -w / 2 + w * j / o.n; g.add(m); }
+    // ригель над фрамугой (витраж выше допустимого стекла) и отлив у окна с подоконником
+    if (o.transom) { const tr = box(w - p, 0.06, d * 0.9, fm); tr.position.y = -h / 2 + o.transom / 1000; g.add(tr); }
+    if (o.fanH) {
+      // глухая фрамуга над порталом: рама и стекло до потолка
+      const fh = o.fanH / 1000, fy = h / 2 + fh / 2;
+      const ft = box(w, p, d, fm); ft.position.y = fy + fh / 2 - p / 2; const fg = mesh(new THREE.BoxGeometry(w - p, fh - p / 2, 0.03), M.glass, false); fg.position.y = fy;
+      const fl = box(p, fh, d, fm); fl.position.set(-w / 2 + p / 2, fy, 0); const fr = box(p, fh, d, fm); fr.position.set(w / 2 - p / 2, fy, 0);
+      g.add(ft, fg, fl, fr);
+    }
+    if (o.type === 'win') { const sl = box(w + 0.1, 0.03, 0.18, M.slab); sl.position.set(0, -h / 2 - 0.015, 0.06); g.add(sl); }
     g.traverse(x => { x.userData.pick = o.id; });
     pickables.push(g);
     return g;
@@ -96,7 +106,7 @@ export function createHouse(el, opts = {}) {
     const face = { front: [0, D / 2, 0], back: [0, -D / 2, Math.PI], left: [-W / 2, 0, -Math.PI / 2], right: [W / 2, 0, Math.PI / 2] };
     const now = performance.now(), keys = new Set();
     s.openings.forEach(o => {
-      const [fx, fz, ry] = face[o.facade], g = opening(o, o.id === s.sel), x = o.x / 1000, y = o.y / 1000 + o.h / 2000, out = 0.05;
+      const [fx, fz, ry] = face[o.facade], g = opening(o, o.id === s.sel), x = o.x / 1000, y = o.y / 1000 + (o.floor === 0 ? 0.12 : 0.04) + o.h / 2000, out = 0.05;
       const holder = new THREE.Group();
       holder.position.set(fx + Math.cos(ry) * x + Math.sin(ry) * out, y, fz - Math.sin(ry) * x + Math.cos(ry) * out);
       holder.rotation.y = ry; holder.add(g); house.add(holder);
@@ -192,7 +202,7 @@ export function createHouse(el, opts = {}) {
 
   return {
     set(s) {
-      const geo = JSON.stringify([s.L, s.B, s.fh, s.roof, s.openings.map(o => [o.key, o.w, o.h, o.n, o.x, o.y]), s.sel, s.ext, s.extW, s.extD, s.extH, s.extWall, s.facade]);
+      const geo = JSON.stringify([s.L, s.B, s.fh, s.roof, s.openings.map(o => [o.key, o.w, o.h, o.n, o.x, o.y, o.transom, o.fanH]), s.sel, s.ext, s.extW, s.extD, s.extH, s.extWall, s.facade]);
       if (!model || geo !== model.geo) build(s);
       if (!model || s.facade !== model.facade) yawT = nearest(YAW[s.facade]);
       const ev = !!s.evening;

@@ -160,3 +160,5 @@
 .tf-o.is-sel rect{stroke:var(--ui-accent);stroke-width:4}
 .tf-o.is-bad rect{stroke:#a33a2a}
 @media(hover:hover){.tf-o:hover rect{fill:#c9d8dc}}
+.tk-inline{padding:0;border:0;border-bottom:1px solid currentColor;background:none;color:var(--ui-ink);cursor:pointer;font:inherit}
+.tf-sill{stroke:var(--ui-ink);stroke-width:2}
