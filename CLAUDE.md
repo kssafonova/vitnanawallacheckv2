@@ -74,6 +74,18 @@ catalog/hs-portaly/<slug>/  страницы вариантов HS (модель
 catalog/fs-portaly/<slug>/  страницы вариантов FS (пока «скоро»)
 cart/, cart/done/           корзина с оформлением и страница «Заказ принят»
 raschet/                    калькулятор HS — одна страница на весь сайт (адрес принимает ?w=&h=&n=&glass=&color=&from=)
+osteklenie-pod-klyuch/      «Персональная карта остекления» (остекление под ключ, ТЗ владельца): не квиз, а карта дома — 6 зон
+                            (portal «Гостиная → сад», window, terrace, garden, entry, second «Второй свет / фронтон»); зона → 2–3 вопроса
+                            (один на экран, ≤ 4 варианта) → предварительная рекомендация (HS / FS / витраж / холодное / тёплое / зимний сад /
+                            входная группа) + «Инженер проверит» → итог «Ваш проект остекления» → <lead-form data-mode="engineering">.
+                            Без цен и сроков: только предварительная концепция + дисклеймер. Страница — ручная вёрстка, блок build:glazing-config
+                            (настройки из site-config.json → glazing_map). JS — assets/js/glazing-map/ (ES-модули): data.js (зоны, вопросы,
+                            движок recommend), store.js (localStorage ps-glazing-map), analytics.js (track() → dataLayer / ym), app.js (интерфейс),
+                            scene3d.js (3D-дом на three.js), spline.js (адаптер Spline — включается, если задан glazing_map.spline_scene и runtime
+                            лежит локально в assets/vendor/spline/; CDN не подключаем), fallback-geometry.js (собирает tools/glazing-fallback.mjs).
+                            Сцена: сначала постер assets/images/glazing-map-house-fallback.webp + HTML-метки (кнопки 44 px) + контуры SVG;
+                            3D — на компьютере при появлении в кадре, на телефоне после первого действия; reduced-motion / нет WebGL / 2g — схема.
+                            Под сценой — кнопки зон (альтернатива меткам), на телефоне сценарий — шторка снизу. Стили — assets/css/glazing-map.css
 projects/                   «Проекты» (как vitrocsa.com/projects): заголовок и абзац, линия, фильтры в строку, подсказка «Наведите…», сетка 3 в ряд — под фото название, подробности плашкой при наведении; на телефоне вкладки систем — список «Все проекты ⌄», без счётчика
 data/projects.json          проекты для /projects/ (status: real — реальный объект, render — визуализация с пометкой); карточки собирает build.mjs
 about/                      «О компании»: цифры, «Почему мы» (#why), производство, реквизиты (#requisites)
@@ -107,6 +119,7 @@ canvas/                     черновые интерактивные схем
 tools/build.mjs             генератор каталога и sitemap из data/products.json
 tools/check-site.mjs        проверка сайта в браузере
 tools/recolor-photos.mjs    фото вариантов в цветах RAL из студийных рендеров
+tools/glazing-fallback.mjs  постер и координаты меток «Карты остекления» из scene3d.js — запускать после правки дома или камеры
 ```
 
 Хлебные крошки — на всех страницах, кроме главной: `<nav class="crumbs"><div class="ui-wrap crumbs__in">…</div></nav>`
@@ -191,6 +204,10 @@ HS4 (4 секции, 2 активные / 2 глухие, рама 158) — 4,8 
 - Форма заявки одна — `<lead-form>`, минимальная и плоская: имя, телефон, кнопка; поля — линия снизу, без панели и теней;
   «+ Добавить размер или файл проекта» открывает комментарий и файл.
   Стоит на главной, HS (`data-theme="dark"`), товаре, «Контактах». Новые формы не верстать — ставить `<lead-form>`.
+  Режим `data-mode="engineering"` — только для «Карты остекления»: телефон или WhatsApp, способ связи, город / район, стадия,
+  файл (JPG, PNG, PDF), комментарий, обязательное согласие; `setPayload(obj, text)` — проект полем `glazing_map` (JSON),
+  событие `lead-form:sent`. `send.php` (source=glazing-map) шлёт письмо и, если в `forms/config.php` задан `crm_webhook`,
+  JSON в CRM через `forms/crm.php`.
 
 Главная, порядок: первый экран → «Раздвижные двери с ценой» (`#stock`, карточки `.m-card`, блок `build:home-cards`) →
 «Системы» → «Цена по размерам проёма» (чертёж) → «Как мы работаем» (`.tl`) → «Вопросы и ответы» (`.page-faq`, JSON-LD `FAQPage`) →
@@ -294,6 +311,8 @@ node tools/check-site.mjs --shots .check  # плюс скриншоты во в�
 
 ## Известные проблемы
 
+- «Карта остекления»: Spline-сцены пока нет (3D — свой дом на three.js); runtime Spline весит ~36 МБ — локальную копию
+  класть в `assets/vendor/spline/`, только когда владелец даст сцену. Счётчик Метрики и вебхук CRM не заданы.
 - FS в каталоге (схемы 330 и 431 «3 + 1») не совпадают со схемами FS из ТЗ калькулятора — пересобрать, когда FS пойдёт в продажу.
 - PDF политики конфиденциальности (`content/privacy-policy-portal-systems.pdf`) отсутствует — ссылка в формах битая.
 - `index.html` и `systems/*` помечены `index,follow`, остальные — `noindex`; до запуска всё закрыто `robots.txt`.

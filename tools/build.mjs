@@ -540,6 +540,13 @@ const blocks = {
   'projects/index.html': {
     'projects-grid': projectsGrid(),
   },
+  // Карта остекления: настройки из data/site-config.json → glazing_map (сцена Spline, runtime, счётчик Метрики)
+  'osteklenie-pod-klyuch/index.html': {
+    'glazing-config': `<script type="application/json" id="gm-config">${JSON.stringify({
+      splineScene: config.glazing_map?.spline_scene || '', splineRuntime: '../' + (config.glazing_map?.spline_runtime || 'assets/vendor/spline/runtime.js'),
+      metrika: config.glazing_map?.metrika_id || '',
+    })}</script>`,
+  },
   'cart/index.html': {
     'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
   },
@@ -554,6 +561,7 @@ const blocks = {
 const sitemapUrls = [
   ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
   ['raschet/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
+  ['osteklenie-pod-klyuch/', 'monthly', '0.7'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
 ];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

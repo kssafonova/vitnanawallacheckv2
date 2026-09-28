@@ -43,6 +43,7 @@ $source = trim((string)($_POST['source'] ?? 'site'));
 $city = trim((string)($_POST['city'] ?? ''));
 $orderId = strtoupper(trim((string)($_POST['order_id'] ?? '')));
 $isOrder = $source === 'cart';
+$isMap = $source === 'glazing-map'; // «Персональная карта остекления»: зоны и ответы — полем glazing_map (JSON)
 $pickup = $isOrder && (($_POST['delivery'] ?? '') === 'pickup');
 
 $digits = preg_replace('/\D+/', '', $phone);
@@ -63,6 +64,21 @@ if ($isOrder) {
     }
     if (!preg_match('/^PS-\d{6}-[A-Z0-9]{4}$/', $orderId)) {
         $orderId = 'PS-' . date('ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 4));
+    }
+}
+
+// Карта остекления: согласие обязательно, проект — JSON не больше 60 КБ
+$glazingMap = null;
+if ($isMap) {
+    if (empty($_POST['privacy_consent'] ?? '')) {
+        http_response_code(422);
+        echo json_encode(['ok'=>false,'message'=>'Подтвердите согласие на обработку данных.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    $raw = (string)($_POST['glazing_map'] ?? '');
+    if ($raw !== '' && strlen($raw) <= 60000) {
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded)) $glazingMap = $decoded;
     }
 }
 
@@ -88,6 +104,14 @@ $comment = $clean($comment, 3000);
 $project = $clean($project, 12000);
 $source = $clean($source, 40);
 $city = $clean($city, 120);
+$prefs = ['phone'=>'телефон', 'whatsapp'=>'WhatsApp', 'telegram'=>'Telegram'];
+$stages = ['project'=>'есть проект', 'construction'=>'стройка', 'ready'=>'готовый дом'];
+$contactPref = array_key_exists($_POST['contact_pref'] ?? '', $prefs) ? (string)$_POST['contact_pref'] : '';
+$stage = array_key_exists($_POST['stage'] ?? '', $stages) ? (string)$_POST['stage'] : '';
+$pageUrl = $clean(trim((string)($_POST['page_url'] ?? '')), 500);
+$referrer = $clean(trim((string)($_POST['referrer'] ?? '')), 500);
+$utm = json_decode((string)($_POST['utm'] ?? ''), true);
+$utm = is_array($utm) ? array_map(static fn($v) => $clean((string)$v, 200), array_slice($utm, 0, 10, true)) : [];
 
 // Файл проекта (калькулятор, форма на странице HS): PDF, DWG, DXF, JPG, PNG, WEBP, HEIC, ZIP — до 15 МБ
 $attachment = null;
@@ -112,15 +136,18 @@ if (is_array($file) && ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_
 
 $subject = $isOrder
     ? "Заказ {$orderId}" . ($pickup ? ' (самовывоз)' : '') . " — PORTAL SYSTEMS"
-    : 'Новая заявка PORTAL SYSTEMS — ' . ($source === 'calculator' ? 'калькулятор' : ($source === 'contacts' ? 'контакты' : 'сайт')) . ($attachment ? ' + файл проекта' : '');
+    : 'Новая заявка PORTAL SYSTEMS — ' . ($isMap ? 'карта остекления' : ($source === 'calculator' ? 'калькулятор' : ($source === 'contacts' ? 'контакты' : 'сайт'))) . ($attachment ? ' + файл проекта' : '');
 $body = $isOrder ? "Новый заказ с сайта PORTAL SYSTEMS № {$orderId}\n\n" : "Новая заявка с сайта PORTAL SYSTEMS\n\n";
 $body .= "Источник: {$source}\n";
 $body .= "Имя: {$name}\n";
 $body .= "Телефон: {$phone}\n";
 if ($isOrder) $body .= 'Получение: ' . ($pickup ? 'самовывоз с производства' : 'доставка и монтаж') . "\n";
-if ($city !== '') $body .= "Город / посёлок: {$city}\n";
+if ($contactPref !== '') $body .= "Удобный способ связи: {$prefs[$contactPref]}\n";
+if ($city !== '') $body .= ($isMap ? 'Город / район объекта: ' : 'Город / посёлок: ') . "{$city}\n";
+if ($stage !== '') $body .= "Стадия: {$stages[$stage]}\n";
 if ($comment !== '') $body .= "\nКомментарий:\n{$comment}\n";
-if ($project !== '') $body .= ($isOrder ? "\nСостав заказа:\n" : "\nПараметры проекта:\n") . "{$project}\n";
+if ($project !== '') $body .= ($isOrder ? "\nСостав заказа:\n" : ($isMap ? "\nКарта остекления (предварительно, по ответам клиента):\n" : "\nПараметры проекта:\n")) . "{$project}\n";
+if ($utm) $body .= "\nUTM: " . http_build_query($utm, '', ', ') . "\n";
 if ($attachment) {
     $kb = $attachment['size'] / 1024;
     $body .= "\nПриложен файл: {$attachment['name']} (" . ($kb < 1024 ? max(1, (int)round($kb)) . ' КБ' : round($kb / 1024, 1) . ' МБ') . ")\n";
@@ -149,8 +176,20 @@ if ($attachment) {
         . "--{$boundary}--";
 }
 
+// CRM — отдельным адаптером (forms/crm.php): вебхук из config.php, пустой — выключено. Ошибка CRM не мешает заявке.
+$crmOk = false;
+if ($isMap) {
+    require_once __DIR__ . '/crm.php';
+    $crmOk = crm_send([
+        'name' => $name, 'contact' => $phone, 'preferredContact' => $contactPref ?: null, 'location' => $city ?: null,
+        'stage' => $stage ?: null, 'comment' => $comment ?: null,
+        'files' => $attachment ? [['name'=>$attachment['name'], 'type'=>$attachment['type'], 'size'=>$attachment['size']]] : [],
+        'glazingMap' => $glazingMap, 'pageUrl' => $pageUrl ?: ($_SERVER['HTTP_REFERER'] ?? ''), 'referrer' => $referrer ?: null, 'utm' => $utm ?: null,
+    ], $config);
+}
+
 $sent = @mail((string)$config['recipient'], $encodedSubject, $body, implode("\r\n", $headers));
-if (!$sent) {
+if (!$sent && !$crmOk) { // заявка карты дошла в CRM — не теряем её из-за почты
     http_response_code(500);
     echo json_encode(['ok'=>false,'message'=>'Сервер не смог отправить письмо. Проверьте почту/SMTP в панели REG.RU.'], JSON_UNESCAPED_UNICODE);
     exit;

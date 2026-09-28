@@ -589,3 +589,23 @@ lead-form{display:block}
   .m-card .m-card__buy .m-card__cart.ui-btn{min-height:44px;padding:0 12px}
 }
 .m-card--project .m-card__buy .m-card__price{order:-1}
+
+/* ---------- <lead-form data-mode="engineering"> (карта остекления): переключатели и согласие ----------
+   Переключатели — плоские кнопки на линиях, выбранный — чёрная заливка (без радиокнопок). */
+.lead-form__seg{display:grid;gap:8px;min-width:0}
+.lead-form__seg>span{color:var(--lf-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.lead-form__seg>div{display:flex;flex-wrap:wrap;gap:6px}
+.lead-form__seg button{
+  min-height:44px;padding:0 14px;border:1px solid var(--lf-line);border-radius:0;background:transparent;color:var(--lf-ink);cursor:pointer;
+  font:400 var(--fs-small)/1 var(--font);transition:background .2s,color .2s,border-color .2s
+}
+.lead-form__seg button:hover{border-color:var(--lf-ink)}
+.lead-form__seg button[aria-pressed="true"]{background:var(--lf-ink);border-color:var(--lf-ink);color:var(--lf-btn-ink)}
+.lead-form--dark .lead-form__seg button[aria-pressed="true"]{color:#0b0b0a}
+.lead-form__seg button:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
+.lead-form__consent{position:relative;display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:start;cursor:pointer;color:var(--lf-muted);font:300 var(--fs-small)/1.45 var(--font)}
+.lead-form__consent input{position:absolute;width:22px;height:22px;margin:0;opacity:0;cursor:pointer}
+.lead-form__consent i{width:22px;height:22px;border:1px solid var(--lf-line);display:grid;place-items:center;font-style:normal;color:var(--lf-btn-ink)}
+.lead-form__consent input:checked+i{background:var(--lf-ink);border-color:var(--lf-ink)}
+.lead-form__consent input:checked+i::after{content:"✓";font:500 var(--fs-caption)/1 var(--font)}
+.lead-form__consent input:focus-visible+i{outline:2px solid var(--ui-accent);outline-offset:2px}
