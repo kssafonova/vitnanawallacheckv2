@@ -118,3 +118,45 @@
 .tk-send .ui-eyebrow{margin:0 0 14px}
 .tk-send__lead{max-width:52ch;margin:16px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
 @media(min-width:1100px){.tk-send__grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:clamp(40px,5vw,90px)}}
+
+/* ---------- поля, список изделий, редактор выбранного проёма ---------- */
+.tk-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.tk-fields--fh{grid-template-columns:repeat(auto-fit,minmax(86px,1fr))}
+.tk-f{display:grid;gap:6px}
+.tk-f span{color:var(--ui-muted);font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.tk-f input{width:100%;min-height:46px;padding:6px 12px;border:1px solid var(--ui-ink);border-radius:0;background:#fff;color:var(--ui-ink);outline:0;font:300 var(--fs-h4)/1 var(--font);letter-spacing:-.02em;-moz-appearance:textfield}
+.tk-f input::-webkit-inner-spin-button,.tk-f input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.tk-f input:focus{box-shadow:inset 0 0 0 1px var(--ui-ink)}
+.tk-seg--cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tk-seg--cols3 button{justify-items:center;text-align:center}
+.tk-seg button em{display:inline-block;margin-left:6px;padding:2px 5px;border:1px solid currentColor;font:600 var(--fs-label)/1 var(--font);font-style:normal;letter-spacing:.05em;text-transform:uppercase;vertical-align:1px}
+.tk-seg button:disabled{color:var(--ui-line);cursor:not-allowed}
+.tk-seg--multi{grid-template-columns:1fr}
+.tk-seg button.is-bad,.tk-items button.is-bad{box-shadow:inset 3px 0 0 #a33a2a}
+.tk-add{display:grid;gap:8px}
+.tk-items{display:grid;margin:0;padding:0;list-style:none;border-top:1px solid var(--ui-line-soft)}
+.tk-items li{border-bottom:1px solid var(--ui-line-soft)}
+.tk-items button{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:10px 10px;border:0;background:transparent;color:var(--ui-ink);text-align:left;cursor:pointer}
+.tk-items button span{display:grid;gap:3px;min-width:0}
+.tk-items b{font:400 var(--fs-small)/1.2 var(--font)}
+.tk-items small{color:var(--ui-muted);font:400 var(--fs-caption)/1.35 var(--font)}
+.tk-items em{font:400 var(--fs-small)/1 var(--font);font-style:normal;white-space:nowrap}
+.tk-items button[aria-pressed="true"]{background:var(--ui-ink);color:#fff}
+.tk-items button[aria-pressed="true"] small{color:rgba(255,255,255,.72)}
+@media(hover:hover){.tk-items button:not([aria-pressed="true"]):hover{background:#fff}}
+.tk-items__empty{padding:12px 0;color:var(--ui-muted);font:400 var(--fs-caption)/1.4 var(--font)}
+.tk-edit{display:grid;gap:14px;padding:16px;border:1px solid var(--ui-ink);background:#fff}
+.tk-edit[hidden]{display:none}
+.tk-edit__head{display:flex;justify-content:space-between;gap:12px;font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
+.tk-edit__head b{font-weight:400}
+.tk-edit__act{display:flex;flex-wrap:wrap;gap:8px}
+.tk-edit__act button{min-height:40px;padding:0 14px;border:1px solid var(--ui-line);background:transparent;color:var(--ui-ink);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.tk-edit__act [data-e-close]{margin-left:auto;background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
+.tk-edit__act [data-e-del]{color:#8a2f22}
+.tk-err{margin:0;padding:10px 12px;border-left:2px solid #a33a2a;background:#fbeeeb;color:#8a2f22;font:400 var(--fs-caption)/1.45 var(--font)}
+.tk-meter.is-bad{color:#8a2f22}
+.tk-meter.is-bad b{background:#a33a2a}
+.tf-o{cursor:pointer}
+.tf-o.is-sel rect{stroke:var(--ui-accent);stroke-width:4}
+.tf-o.is-bad rect{stroke:#a33a2a}
+@media(hover:hover){.tf-o:hover rect{fill:#c9d8dc}}
