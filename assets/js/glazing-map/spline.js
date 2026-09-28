@@ -56,6 +56,17 @@ export async function createSplineScene(host, { sceneUrl, runtimeUrl, timeout = 
         try { const o = app.findObjectByName(n.group); if (o && 'selected' in vars) app.setVariable('selected_' + id, ids.includes(id)); } catch (e) { warn('selected', e.message); }
       }
     },
+    // ответы зоны → переменная сцены (например, portal_usage = daily / open / light), если такая есть в Spline
+    setAnswers(id, answers) {
+      for (const [k, v] of Object.entries(answers || {})) {
+        const name = `${id}_${k}`;
+        if (name in vars) { try { app.setVariable(name, String(v)); } catch (e) { warn(name, e.message); } }
+      }
+    },
+    setInset() {},
+    setHover() {},
+    setScroll() {},
+    debug() { return { renderer: 'spline', scene: sceneUrl, variables: Object.keys(vars), objects: Object.values(SPLINE_NAMES).flatMap(n => [n.group, n.hotspot]).filter(n => { try { return !!app.findObjectByName(n); } catch (e) { return false; } }) }; },
     setReducedMotion(on) { if ('reducedMotion' in vars) { try { app.setVariable('reducedMotion', !!on); } catch (e) { warn('reducedMotion', e.message); } } },
     anchors: null, // метки остаются в позициях статичной схемы: камера общего вида в Spline должна совпадать с ней
     destroy() { try { app.dispose?.(); } catch (e) { /* */ } canvas.remove(); },

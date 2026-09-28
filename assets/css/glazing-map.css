@@ -2,136 +2,162 @@
 
 /* ============================================================
    «Персональная карта остекления» (/osteklenie-pod-klyuch/).
-   Плоско, как инженерный чертёж: тонкие линии, углы без скругления, выбранное — чёрная заливка,
-   песочный акцент (--ui-accent) — только подсветка активной зоны. Фон — нейтральный серый (решение владельца).
+   Первый экран — полноэкранная сцена дома (100svh, на компьютере не ниже 860 px): дом и есть интерфейс.
+   Поверх сцены — прозрачная шапка (<site-menu data-over>), крошки, счётчик «В проекте», короткий текст внизу слева
+   (до 430 px) и компактная панель вопроса справа (на телефоне — шторка снизу). Ниже — итог, форма и SEO-блоки.
+   Ниже первого экрана — плоско, как инженерный чертёж: тонкие линии, углы без скругления, выбранное — чёрная заливка.
    ============================================================ */
 .gm{--gm-line:var(--ui-line-soft)}
 
-/* ---------- первый экран: текст / панель зоны + сцена ---------- */
-.gm-hero{position:relative;padding:clamp(24px, 16px + 2vw, 48px) 0 var(--space-section)}
-.gm-hero__grid{display:grid;gap:28px}
-.gm-side{min-width:0}
-.gm-h1{margin:0;font:300 var(--fs-h2s)/.95 var(--font);letter-spacing:-.06em}
-.gm-lead{max-width:560px;margin:20px 0 0;color:var(--ui-muted);font:300 var(--fs-lead)/1.5 var(--font)}
-.gm-start{margin-top:28px;width:100%;max-width:360px}
-.gm-how{margin:14px 0 0;color:var(--ui-muted);font:500 var(--fs-label)/1.5 var(--font);letter-spacing:.1em;text-transform:uppercase}
-.gm-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:26px 0 0;padding-top:16px;border-top:1px solid var(--ui-line);font:400 var(--fs-body)/1.3 var(--font)}
-.gm-status a{font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
-.gm-status a i{font-style:normal}
+/* ---------- первый экран: светлый архитектурный чертёж (редакционная инженерия) ---------- */
+:root{--gm-bg:#f3f1ea;--gm-bg2:#ece9e1;--gm-surface:#fff;--gm-line:#cfccc3;--gm-ink:#171715;--gm-graph:#242421;--gm-muted:#6f6a5f;--gm-acc:#b7a276;--gm-acc-soft:rgba(183,162,118,.12)}
+.gm-hero{position:relative;height:calc(100svh - var(--header-h));min-height:560px;overflow:hidden;background:var(--gm-bg);color:var(--gm-ink);isolation:isolate}
+@media(min-width:1000px){.gm-hero{min-height:780px}}
+.gm-scene{position:absolute;inset:0}
+.gm-scene picture{display:contents}
+.gm-scene__poster,.gm-scene__canvas,.gm-scene__canvas canvas,.gm-scene__outlines,.gm-scene__shade,.gm-scene__hots{position:absolute;inset:0;width:100%;height:100%}
+.gm-scene__poster{display:block;object-fit:cover;transition:opacity .6s var(--ease-ui)}
+.gm-scene__canvas canvas{display:block;opacity:0;transition:opacity .8s var(--ease-ui)}
+.gm-scene.is-3d .gm-scene__canvas canvas{opacity:1}
+.gm-scene.is-3d .gm-scene__poster{opacity:0}
+.gm-scene.is-3d .gm-scene__outlines{display:none}
+.gm-scene__outlines polygon{fill:transparent;stroke:var(--gm-acc);stroke-width:0;transition:stroke-width .25s,fill .25s,stroke .25s}
+.gm-scene__outlines polygon.is-selected{stroke:var(--gm-acc);stroke-width:1;fill:var(--gm-acc-soft)}
+.gm-scene__outlines polygon.is-active{stroke:var(--gm-acc);stroke-width:1.5;fill:var(--gm-acc-soft)}
+/* лёгкая подложка под текстом; при выборе зоны остальной дом растворяется в фоне */
+.gm-scene__shade{pointer-events:none;background:linear-gradient(to top,rgba(243,241,234,.92),rgba(243,241,234,0) 36%)}
+.gm-scene__shade::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .9s var(--ease-ui);
+  background:radial-gradient(ellipse 58% 68% at 38% 48%,rgba(243,241,234,0) 40%,rgba(243,241,234,.8) 100%)}
+.gm-hero.is-focus .gm-scene__shade::after{opacity:1}
+.gm-scene__hots{pointer-events:none}
+.gm-crumbs{position:absolute;inset:0 0 auto;z-index:3;background:transparent;border-bottom-color:var(--gm-line)}
 
-/* сцена: кадр 4:3 — постер, canvas 3D, контуры зон и HTML-метки поверх */
-.gm-map{min-width:0}
-.gm-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#fbfbfa;border:1px solid var(--gm-line)}
-.gm-stage__poster,.gm-stage__canvas,.gm-stage__canvas canvas,.gm-stage__outlines{position:absolute;inset:0;width:100%;height:100%}
-.gm-stage__poster{display:block;object-fit:cover;transition:opacity .5s var(--ease-ui)}
-.gm-stage__canvas canvas{display:block;opacity:0;transition:opacity .6s var(--ease-ui)}
-.gm-stage.is-3d .gm-stage__canvas canvas{opacity:1}
-.gm-stage.is-3d .gm-stage__poster{opacity:0}
-.gm-stage.is-3d .gm-stage__outlines{display:none}
-.gm-stage__outlines polygon,.gm-mini svg polygon{fill:transparent;stroke:var(--ui-accent);stroke-width:0;transition:stroke-width .2s,fill .2s}
-.gm-stage__outlines polygon.is-selected,.gm-mini svg polygon.is-selected{stroke-width:1.5;stroke-opacity:.7}
-.gm-stage__outlines polygon.is-active,.gm-mini svg polygon.is-active{stroke-width:3;stroke-opacity:1;fill:rgba(177,162,122,.16)}
-.gm-stage__hots{position:absolute;inset:0;pointer-events:none}
-.gm-stage__note{margin:12px 0 0;color:var(--ui-muted);font:300 var(--fs-caption)/1.45 var(--font)}
-
-/* метка зоны: касание 44 × 44, квадрат с «+» или номером в проекте */
+/* метка-аннотация: номер в квадрате тонкой графитовой линии; выбранная — песочный контур, подложка, выноска и подпись */
 .gm-hot{
-  position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;
-  display:grid;place-items:center;color:var(--ui-ink);font-family:var(--font)
+  position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;
+  display:grid;place-items:center;color:var(--gm-ink);font-family:var(--font);transition:opacity .35s var(--ease-ui)
 }
 .gm-hot[hidden]{display:none}
 .gm-hot__dot{
-  display:grid;place-items:center;min-width:28px;height:28px;padding:0 4px;background:#fff;border:1px solid var(--ui-ink);
-  font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em;transition:background .2s,color .2s,transform .2s var(--ease-ui),outline-color .2s;
-  outline:2px solid rgba(255,255,255,.9);outline-offset:0
+  position:relative;display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--gm-graph);background:rgba(243,241,234,.9);
+  font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em;transition:background .25s,color .25s,border-color .25s,outline-color .3s,outline-offset .3s;
+  outline:1px solid rgba(183,162,118,0);outline-offset:0
 }
-.gm-hot.is-selected .gm-hot__dot{background:var(--ui-ink);color:#fff;animation:gm-pop .35s var(--ease-ui)}
-.gm-hot.is-active .gm-hot__dot{background:var(--ui-accent);border-color:var(--ui-ink);color:var(--ui-ink);transform:scale(1.15);outline:2px solid var(--ui-ink);outline-offset:3px}
-.gm-hot:focus-visible{outline:none}
-.gm-hot:focus-visible .gm-hot__dot{outline:2px solid var(--ui-accent);outline-offset:3px}
+.gm-hot__label{
+  position:absolute;left:calc(50% + 14px);top:50%;display:flex;align-items:center;gap:8px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(-50%);
+  color:var(--gm-ink);font:500 var(--fs-caption)/1 var(--font);letter-spacing:.02em;transition:opacity .3s
+}
+.gm-hot__label::before{content:"";width:34px;height:1px;background:currentColor;opacity:.6}
 .gm-hot__tip{
-  position:absolute;left:50%;bottom:calc(100% - 2px);transform:translate(-50%,4px);width:max-content;max-width:220px;padding:9px 11px;
-  background:#fff;border:1px solid var(--ui-line);color:var(--ui-muted);text-align:left;opacity:0;pointer-events:none;
+  position:absolute;left:50%;bottom:calc(100% + 4px);transform:translate(-50%,4px);width:max-content;max-width:220px;padding:9px 11px;
+  background:#fff;border:1px solid var(--gm-line);color:var(--gm-muted);text-align:left;opacity:0;pointer-events:none;
   font:300 var(--fs-caption)/1.35 var(--font);transition:opacity .15s,transform .15s var(--ease-ui);z-index:2
 }
-.gm-hot__tip b{display:block;margin-bottom:2px;color:var(--ui-ink);font-weight:500;font-size:var(--fs-small)}
-@media(hover:hover){
-  .gm-hot:hover .gm-hot__dot{background:var(--ui-ink);color:#fff}
-  .gm-hot.is-active:hover .gm-hot__dot{background:var(--ui-accent);color:var(--ui-ink)}
-  .gm-hot:hover .gm-hot__tip,.gm-hot:focus-visible .gm-hot__tip{opacity:1;transform:translate(-50%,0)}
-}
-.gm-stage.is-hinting .gm-hot:not(.is-selected) .gm-hot__dot{animation:gm-hint 1.2s var(--ease-ui) 2}
-@keyframes gm-pop{from{transform:scale(.4)}to{transform:scale(1)}}
-@keyframes gm-hint{50%{background:var(--ui-accent);transform:scale(1.18)}}
+.gm-hot__tip b{display:block;margin-bottom:2px;color:var(--gm-ink);font-weight:500;font-size:var(--fs-small)}
+.gm-hot:hover .gm-hot__dot,.gm-hot:focus-visible .gm-hot__dot{outline-color:rgba(183,162,118,.7);outline-offset:6px}
+.gm-hot:hover .gm-hot__tip,.gm-hot:focus-visible .gm-hot__tip{opacity:1;transform:translate(-50%,0)}
+.gm-hot:focus-visible{outline:none}
+.gm-hot.is-selected .gm-hot__dot{border-color:var(--gm-acc);background:#f6f1e5;animation:gm-pop .4s var(--ease-ui)}
+.gm-hot.is-selected .gm-hot__label{opacity:1;color:var(--gm-muted)}
+.gm-hot.is-selected:hover .gm-hot__label,.gm-hot.is-selected:focus-visible .gm-hot__label{opacity:0}
+.gm-hot.is-active .gm-hot__dot{background:var(--gm-graph);border-color:var(--gm-graph);color:#fff;outline-color:rgba(183,162,118,.6);outline-offset:5px}
+.gm-hot.is-active .gm-hot__label{opacity:1;color:var(--gm-ink)}
+.gm-hot.is-active .gm-hot__tip{opacity:0}
+.gm-hot.is-dim{opacity:.28}
+.gm-hot.is-dim .gm-hot__label{opacity:0}
+@keyframes gm-pop{from{transform:scale(.5)}to{transform:scale(1)}}
+@media(max-width:999.98px){.gm-hot__label{display:none}}
 
-/* список зон — альтернатива меткам (обязательна на телефоне) */
-.gm-zones{margin-top:16px}
-.gm-zones__title{margin:0 0 10px;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
-.gm-zones__list{display:flex;gap:6px;overflow-x:auto;margin:0 calc(var(--ui-pad) * -1);padding:0 var(--ui-pad) 4px;scroll-padding:0 var(--ui-pad);scrollbar-width:none}
-.gm-zones__list::-webkit-scrollbar{display:none}
-.gm-chip{
-  flex:none;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 14px 0 8px;border:1px solid var(--ui-line);background:transparent;
-  color:var(--ui-ink);cursor:pointer;white-space:nowrap;font:400 var(--fs-small)/1 var(--font);transition:background .2s,color .2s,border-color .2s
+/* счётчик «В проекте» — справа сверху */
+.gm-count{
+  position:absolute;z-index:3;top:62px;right:max(var(--ui-pad), calc((100vw - var(--ui-max)) / 2 + var(--ui-pad)));
+  display:grid;justify-items:end;gap:6px;max-width:min(320px, 60vw);text-align:right;color:var(--gm-muted);font:300 var(--fs-small)/1.35 var(--font);transition:opacity .3s
 }
-.gm-chip__n{display:grid;place-items:center;min-width:24px;height:24px;border:1px solid currentColor;font:600 var(--fs-label)/1 var(--font)}
-.gm-chip.is-selected .gm-chip__n{background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
-.gm-chip.is-active{background:var(--ui-ink);border-color:var(--ui-ink);color:#fff}
-.gm-chip.is-active .gm-chip__n{border-color:#fff;background:transparent;color:#fff}
-@media(hover:hover){.gm-chip:hover{border-color:var(--ui-ink)}}
+.gm-count__n{color:var(--gm-ink);font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.gm-count__list{display:grid;gap:3px}
+.gm-count__list b{color:var(--gm-ink);font-weight:600}
+.gm-count a{min-height:32px;display:inline-flex;align-items:center;gap:6px;color:var(--gm-ink);font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.gm-count a i{font-style:normal}
 
-/* ---------- панель сценария зоны ---------- */
-.gm-panel__head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--ui-line)}
-.gm-panel__n{display:grid;place-items:center;min-width:34px;height:34px;background:var(--ui-ink);color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em}
-.gm-panel__zone{margin:0;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.12em;text-transform:uppercase}
-.gm-panel__x{width:44px;height:44px;border:1px solid var(--ui-line);background:transparent;color:var(--ui-ink);cursor:pointer;font:300 var(--fs-h4)/1 var(--font)}
-.gm-panel__x:hover{border-color:var(--ui-ink)}
-.gm-panel__step{margin:22px 0 0;color:var(--ui-muted);font:500 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
-.gm-panel__q{margin:12px 0 0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em;outline:none}
-.gm-panel__lead{margin:14px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
-.gm-opts{display:grid;margin-top:22px;border-top:1px solid var(--ui-line)}
+/* текст внизу слева — не больше 430 px */
+.gm-intro{
+  position:absolute;z-index:3;left:0;right:0;bottom:clamp(24px, 5vh, 56px);
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+  width:min(100%, var(--ui-max));margin-inline:auto;padding-inline:var(--ui-pad);pointer-events:none;transition:opacity .45s var(--ease-ui),transform .45s var(--ease-ui)
+}
+.gm-intro__box{max-width:430px;pointer-events:auto}
+.gm-eyebrow{margin:0 0 14px;color:var(--gm-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.16em;text-transform:uppercase}
+.gm-h1{margin:0;font:300 var(--fs-h2s)/.98 var(--font);letter-spacing:-.055em}
+.gm-lead{margin:14px 0 0;color:var(--gm-muted);font:300 var(--fs-body)/1.5 var(--font)}
+.gm-start{margin-top:22px;width:100%;max-width:360px}
+.gm-scroll{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--gm-muted);pointer-events:auto;font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.gm-scroll:hover{color:var(--gm-ink)}
+.gm-hero.is-focus .gm-intro{opacity:0;transform:translateY(12px);pointer-events:none}
+.gm-hero.is-focus .gm-intro *{pointer-events:none}
+
+/* ---------- панель вопроса: белый лист с тонкой рамкой, без скруглений; выбранный ответ — чёрная заливка ---------- */
+.gm-panel{position:absolute;z-index:4;color:var(--gm-ink);background:var(--gm-surface);border:1px solid var(--gm-line)}
+.gm-panel__head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--gm-line)}
+.gm-panel__n{display:grid;place-items:center;width:30px;height:30px;background:var(--gm-graph);color:#fff;font:600 var(--fs-label)/1 var(--font);letter-spacing:.04em}
+.gm-panel__zone{margin:0;font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.gm-panel__x{width:44px;height:44px;border:1px solid var(--gm-line);background:transparent;color:var(--gm-ink);cursor:pointer;font:300 var(--fs-h4)/1 var(--font)}
+.gm-panel__x:hover{border-color:var(--gm-ink)}
+.gm-panel__step{margin:18px 0 0;color:var(--gm-muted);font:500 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
+.gm-panel__q{margin:10px 0 0;font:300 var(--fs-h3)/1.05 var(--font);letter-spacing:-.04em;outline:none}
+.gm-opts{display:grid;gap:6px;margin-top:18px}
 .gm-opt{
-  display:grid;gap:5px;width:100%;min-height:60px;padding:16px 14px;border:0;border-bottom:1px solid var(--ui-line);background:transparent;color:var(--ui-ink);
-  text-align:left;cursor:pointer;font-family:var(--font);transition:background .2s,color .2s
+  display:grid;gap:4px;width:100%;min-height:52px;padding:12px 14px;border:1px solid var(--gm-line);background:transparent;color:var(--gm-ink);
+  text-align:left;cursor:pointer;font-family:var(--font);transition:background .2s,color .2s,border-color .2s
 }
 .gm-opt b{font:400 var(--fs-h4)/1.2 var(--font);letter-spacing:-.02em}
-.gm-opt span{color:var(--ui-muted);font:300 var(--fs-small)/1.4 var(--font)}
-.gm-opt.is-on{background:var(--ui-ink);color:#fff}
-.gm-opt.is-on span{color:#c9c7c1}
-.gm-opt:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
-@media(hover:hover){.gm-opt:not(.is-on):hover{background:#fff}}
-.gm-panel__acts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;margin-top:24px}
-.gm-panel__acts .ui-btn:first-child{justify-content:flex-start;gap:12px}
-.gm-panel__acts--stack{grid-template-columns:minmax(0,1fr)}
-.gm-panel__acts--stack .ui-btn:first-child{justify-content:space-between}
-.gm-panel__acts .ui-btn[disabled]{opacity:.35;cursor:not-allowed}
-.gm-panel__checks{margin-top:20px;padding-top:14px;border-top:1px solid var(--ui-line)}
-.gm-panel__checks p{margin:0 0 8px;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
-.gm-panel__checks ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
-.gm-panel__checks li{position:relative;padding-left:18px;font:300 var(--fs-small)/1.45 var(--font)}
-.gm-panel__checks li::before{content:"";position:absolute;left:0;top:.68em;width:9px;height:1px;background:currentColor}
-.gm-panel__note{margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-small)/1.5 var(--font)}
-.gm-backdrop{position:fixed;inset:0;z-index:140;background:rgba(5,5,5,.42)}
-
-/* телефон и планшет: панель — шторка снизу, кнопки прилипают к низу */
-@media(max-width:999.98px){
-  .gm-panel{position:fixed;left:0;right:0;bottom:0;z-index:141;max-height:88dvh;overflow:auto;overscroll-behavior:contain;background:var(--ui-bg);border-top:1px solid var(--ui-ink)}
-  .gm-panel__body{padding:18px var(--ui-pad) 0}
-  .gm-panel__acts{position:sticky;bottom:0;margin:24px calc(var(--ui-pad) * -1) 0;padding:12px var(--ui-pad) max(12px, env(safe-area-inset-bottom));background:var(--ui-bg);border-top:1px solid var(--ui-line)}
-  html.gm-lock{overflow:hidden}
-}
+.gm-opt span{color:var(--gm-muted);font:300 var(--fs-small)/1.4 var(--font)}
+.gm-opt.is-on{background:var(--gm-ink);border-color:var(--gm-ink);color:#fff}
+.gm-opt.is-on span{color:#c9c6bd}
+.gm-opt:focus-visible{outline:2px solid var(--gm-acc);outline-offset:2px}
+@media(hover:hover){.gm-opt:not(.is-on):hover{border-color:var(--gm-graph)}}
+.gm-panel__caption{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--gm-line);color:var(--gm-muted);font:300 var(--fs-small)/1.45 var(--font)}
+.gm-panel__caption b{display:block;margin-bottom:4px;color:var(--gm-ink);font:600 var(--fs-label)/1.3 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.gm-panel__caption[hidden]{display:none}
+.gm-panel__acts{display:grid;gap:8px;margin-top:18px}
+.gm-panel__acts .ui-btn{width:100%}
+.gm-panel__acts .ui-btn[disabled]{opacity:.3;cursor:not-allowed}
+.gm-btn-ghost{justify-content:flex-start!important;gap:12px!important}
 @media(min-width:1000px){
-  .gm-hero__grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px, 4vw, 80px);align-items:start}
-  .gm-side{position:sticky;top:calc(var(--header-h) + 20px)}
-  .gm-zones__list{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
-  .gm-backdrop{display:none}
+  .gm-panel{top:62px;right:max(var(--ui-pad), calc((100vw - var(--ui-max)) / 2 + var(--ui-pad)));width:min(400px, 34vw);
+    max-height:calc(100% - 90px);overflow:auto;padding:18px 20px 20px}
+  .gm-hero.is-focus .gm-count{opacity:0;pointer-events:none}
 }
+@media(max-width:999.98px){
+  .gm-panel{left:0;right:0;bottom:0;max-height:62%;overflow:auto;overscroll-behavior:contain;padding:14px var(--ui-pad) 0;border-width:1px 0 0}
+  .gm-panel__acts{position:sticky;bottom:0;margin:16px calc(var(--ui-pad) * -1) 0;padding:10px var(--ui-pad) max(10px, env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--gm-line);grid-template-columns:minmax(0,1fr) auto}
+  .gm-panel__acts .ui-btn{width:auto}
+  .gm-btn-ghost{order:-1}
+  .gm-hero.is-focus .gm-count{display:none}
+  .gm-count{top:58px}
+  .gm-count__list{display:none}
+}
+/* мягкий переход от чертежа к следующему блоку */
+.gm-fade{height:clamp(40px, 6vw, 90px);background:linear-gradient(to bottom,var(--gm-bg),var(--gm-bg2))}
+
+/* отладка (?debug=1) */
+.gm-debug{position:absolute;z-index:6;left:var(--ui-pad);top:62px;max-width:min(420px, 80vw);max-height:60%;overflow:auto;margin:0;padding:10px 12px;
+  background:rgba(0,0,0,.72);color:#cfe7d5;pointer-events:none;white-space:pre-wrap;font:400 var(--fs-label)/1.4 ui-monospace,Menlo,Consolas,monospace}
 
 /* ---------- итог «Ваш проект остекления» ---------- */
-.gm-summary{padding:var(--space-section) 0;background:var(--ui-paper)}
+.gm-mini svg polygon{fill:transparent;stroke:var(--ui-accent);stroke-width:0;transition:stroke-width .2s,fill .2s}
+.gm-mini svg polygon.is-selected{stroke-width:1.5;stroke-opacity:.8}
+.gm-mini svg polygon.is-active{stroke-width:3;fill:rgba(201,178,124,.2)}
+
+.gm-summary{padding:var(--space-section) 0;background:var(--gm-bg2)}
+/* вся страница карты — в тёплом молочно-сером (решение владельца для этой страницы); тёмная — только форма инженеру */
+body.gm-page{background:var(--gm-bg)}
+.gm-page .pg-section,.gm-page .page-faq{background:var(--gm-bg)}
+.gm-page .pg-section--paper{background:var(--gm-bg2)}
+.gm-page .gm-lead{color:var(--gm-muted)}
 .gm-summary__head{margin-bottom:var(--space-head)}
 .gm-summary__head h2{outline:none}
 .gm-summary__grid{display:grid;gap:28px}
-.gm-mini{position:relative;aspect-ratio:4/3;background:#fbfbfa;border:1px solid var(--gm-line);align-self:start}
+.gm-mini{position:relative;aspect-ratio:16/9;background:#fbfbfa;border:1px solid var(--gm-line);align-self:start}
 .gm-mini img,.gm-mini svg{position:absolute;inset:0;width:100%;height:100%}
 .gm-mini img{object-fit:cover}
 .gm-mini__mark{
@@ -182,7 +208,7 @@
 
 /* ---------- сообщение «Проект сохранён» ---------- */
 .gm-toast{
-  position:fixed;left:50%;bottom:max(16px, env(safe-area-inset-bottom));z-index:150;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);
+  position:fixed;left:50%;top:calc(var(--header-h) + 14px);z-index:150;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);
   margin:0;padding:14px 18px;background:var(--ui-ink);color:#fff;font:400 var(--fs-small)/1.45 var(--font)
 }
 
@@ -190,5 +216,5 @@
 .gm-reveal{transform:translateY(18px);transition:transform .8s var(--ease-ui)}
 .gm-reveal.is-in{transform:none}
 @media(prefers-reduced-motion:reduce){
-  .gm-stage__poster,.gm-stage__canvas canvas,.gm-hot__dot,.gm-mini__mark{transition:none;animation:none!important}
+  .gm-scene__poster,.gm-scene__canvas canvas,.gm-hot__dot,.gm-mini__mark,.gm-intro,.gm-scene__shade::after{transition:none;animation:none!important}
 }

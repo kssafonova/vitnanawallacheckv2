@@ -12,47 +12,40 @@
 <meta name="theme-color" content="#050505">
 <link rel="stylesheet" href="../assets/css/glazing-map.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="../assets/images/glazing-map-house-fallback.webp" as="image" type="image/webp">
+<link rel="preload" href="../assets/images/glazing-map-house.webp" as="image" type="image/webp" media="(min-aspect-ratio: 23/20)">
+<link rel="preload" href="../assets/images/glazing-map-house-m.webp" as="image" type="image/webp" media="(max-aspect-ratio: 23/20)">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Можно ли получить точную цену через карту?","acceptedAnswer":{"@type":"Answer","text":"Нет. Карта собирает задачу: какие части дома остеклить и какого эффекта вы ждёте. Цена зависит от размеров проёмов, стеклопакетов, порогов и монтажных узлов — её считает инженер после изучения плана или фото и замера. Ориентир бюджета он назовёт после первой проработки."}},{"@type":"Question","name":"Что делать, если нет плана дома?","acceptedAnswer":{"@type":"Answer","text":"Достаточно фото фасадов и проёмов с примерными размерами. Если дом строится, подойдут эскиз архитектора или фото стройки. Остальное уточним на бесплатном замере."}},{"@type":"Question","name":"Можно ли выбрать несколько зон одновременно?","acceptedAnswer":{"@type":"Answer","text":"Да. Добавьте в проект сколько угодно зон — например, выход в сад, панорамные окна второго этажа и террасу. Инженер посмотрит на них как на одну систему: профили, цвет и стекло согласуются по всему фасаду."}},{"@type":"Question","name":"Чем карта отличается от инженерного проекта?","acceptedAnswer":{"@type":"Answer","text":"Карта — предварительная концепция по вашим ответам: зоны и подходящие типы решений. Инженерный проект — это размеры, разбивка на секции, стеклопакеты, нагрузки, пороги, монтажные узлы и смета. Его готовят после изучения материалов и замера."}},{"@type":"Question","name":"Можно ли использовать карту, если дом уже построен?","acceptedAnswer":{"@type":"Answer","text":"Да. Отметьте стадию «Готовый дом» — инженер будет исходить из существующих проёмов и проверит, что можно расширить или заменить без переделки несущих конструкций."}}]}</script>
 </head>
-<body class="pg">
+<body class="pg gm-page">
 <site-menu data-base="../"></site-menu>
 
 <main class="gm" data-gm>
-<nav class="crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="../">Главная</a><span aria-hidden="true">—</span><span aria-current="page">Остекление под ключ</span></div></nav>
-
-<section class="gm-hero" id="map" aria-label="Персональная карта остекления">
-  <div class="ui-wrap gm-hero__grid">
-    <div class="gm-side">
-      <div class="gm-intro" data-gm-intro>
-        <p class="ui-eyebrow">Интерактивный подбор</p>
-        <h1 class="gm-h1">Персональная карта остекления</h1>
-        <p class="gm-lead">Выберите части дома, которые хотите изменить. Карта покажет сценарии для террасы, панорамных окон, второго света, входной группы или зимнего сада — а затем соберёт их в один предварительный проект.</p>
-        <button type="button" class="ui-btn ui-btn--dark gm-start" data-gm-start>Создать карту дома <span aria-hidden="true">→</span></button>
-        <p class="gm-how">Выберите зону → посмотрите варианты → сохраните проект.</p>
-        <p class="gm-status" data-gm-status role="status" hidden></p>
-      </div>
-      <div class="gm-panel" data-gm-panel hidden role="region" aria-label="Сценарий зоны">
-        <div class="gm-panel__body" data-gm-panel-body></div>
-      </div>
-    </div>
-
-    <div class="gm-map">
-      <div class="gm-stage" data-gm-stage>
-        <img class="gm-stage__poster" src="../assets/images/glazing-map-house-fallback.webp" width="1600" height="1200" alt="Условный загородный дом: веранда, входная группа, выход из гостиной в сад, панорамные окна второго этажа, второй свет и зимний сад" fetchpriority="high">
-        <div class="gm-stage__canvas" data-gm-canvas></div>
-        <svg class="gm-stage__outlines" data-gm-outlines viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"></svg>
-        <div class="gm-stage__hots" data-gm-hots></div>
-      </div>
-      <div class="gm-zones">
-        <p class="gm-zones__title" id="gm-zones-title">Зоны дома</p>
-        <div class="gm-zones__list" data-gm-chips role="group" aria-labelledby="gm-zones-title"></div>
-      </div>
-      <p class="gm-stage__note">Дом на схеме — условный макет, а не ваш проект. Размеры и решения подтверждает инженер.</p>
-    </div>
+<section class="gm-hero" id="map" aria-label="Персональная карта остекления" data-gm-hero>
+  <div class="gm-scene" data-gm-stage>
+    <picture>
+      <source media="(max-aspect-ratio: 23/20)" srcset="../assets/images/glazing-map-house-m.webp" width="900" height="1600">
+      <img class="gm-scene__poster" src="../assets/images/glazing-map-house.webp" width="1920" height="1080" alt="Архитектурная схема загородного дома графитовыми линиями: веранда, входная группа, выход из гостиной на террасу, панорамные окна второго этажа, второй свет и зимний сад" fetchpriority="high">
+    </picture>
+    <div class="gm-scene__canvas" data-gm-canvas></div>
+    <svg class="gm-scene__outlines" data-gm-outlines aria-hidden="true"></svg>
+    <div class="gm-scene__shade" aria-hidden="true"></div>
+    <div class="gm-scene__hots" data-gm-hots></div>
   </div>
-  <div class="gm-backdrop" data-gm-backdrop hidden></div>
+  <nav class="crumbs gm-crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="../">Главная</a><span aria-hidden="true">—</span><span aria-current="page">Остекление под ключ</span></div></nav>
+  <div class="gm-count" data-gm-status role="status" aria-live="polite"></div>
+  <div class="gm-intro" data-gm-intro>
+    <div class="gm-intro__box">
+      <p class="gm-eyebrow">Архитектурная схема дома</p>
+      <h1 class="gm-h1">Персональная карта остекления</h1>
+      <p class="gm-lead" data-gm-hint>Выберите зону, с которой хотите начать: нажмите на номер на фасаде.</p>
+      <button type="button" class="ui-btn ui-btn--dark gm-start" data-gm-start>Открыть дом участку <span aria-hidden="true">→</span></button>
+    </div>
+    <a class="gm-scroll" href="#after-map" data-gm-scroll>Листайте <span aria-hidden="true">↓</span></a>
+  </div>
+  <aside class="gm-panel" data-gm-panel hidden aria-label="Сценарий зоны"><div class="gm-panel__body" data-gm-panel-body></div></aside>
+  <pre class="gm-debug" data-gm-debug hidden></pre>
 </section>
+<div class="gm-fade" aria-hidden="true"></div>
 
 <section class="gm-summary" id="project" data-gm-summary hidden>
   <div class="ui-wrap">
@@ -63,8 +56,8 @@
     </header>
     <div class="gm-summary__grid">
       <div class="gm-mini" data-gm-mini>
-        <img src="../assets/images/glazing-map-house-fallback.webp" width="1600" height="1200" alt="" loading="lazy">
-        <svg viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <img src="../assets/images/glazing-map-house.webp" width="1920" height="1080" alt="" loading="lazy">
+        <svg preserveAspectRatio="none" aria-hidden="true"></svg>
       </div>
       <div>
         <ol class="gm-list" data-gm-list></ol>
@@ -98,7 +91,7 @@
   </div>
 </section>
 
-<section class="pg-section gm-scope" data-gm-reveal>
+<section class="pg-section gm-scope" id="after-map" data-gm-reveal>
   <div class="ui-wrap gm-cols">
     <header><p class="ui-eyebrow">Под ключ</p><h2 class="pg-h2">Что входит в проект остекления</h2></header>
     <ol class="gm-rows">
