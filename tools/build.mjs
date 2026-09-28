@@ -534,7 +534,7 @@ const blocks = {
   },
   'systems/hs/index.html': {
     'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
-    'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
+    'hs-calc': calcTeaser('../../', '05 · Подбор по размеру'),
     'hsx-data': `<script type="application/json" data-hsx-json>${hsxData('../../')}</script>`,
   },
   'projects/index.html': {
