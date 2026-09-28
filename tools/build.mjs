@@ -533,7 +533,8 @@ const blocks = {
     'fs-cards': fsModels.map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'systems/hs/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
+    // на странице HS баннера «Индивидуальный расчёт» нет (решение владельца): только готовые двери
+    'hs-cards': hs.map(m => marketCard(m, '../../')).join('\n\n      '),
     'hs-calc': calcTeaser('../../', '04 · Калькулятор'),
     'hsx-data': `<script type="application/json" data-hsx-json>${hsxData('../../')}</script>`,
   },
