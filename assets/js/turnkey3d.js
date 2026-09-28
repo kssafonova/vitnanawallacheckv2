@@ -128,7 +128,7 @@ export function createHouse(el, opts = {}) {
       pane(w, 0, -D / 2 - d, 0); pane(d, -w / 2, z0, Math.PI / 2); pane(d, w / 2, z0, Math.PI / 2);
       const post = (x, z, t = 0.08) => { const m = box(t, eh, t, M.frame); m.position.set(x, eh / 2, z); house.add(m); };
       // стойки по модулям, внутри модуля — импосты по створкам (HS ~1,8 м, FS ~0,9 м, витраж ~1,5 м)
-      const mods = s.mods || [[s.extW], [s.extD], [s.extD]], leaf = s.ext === 'garden' ? 1.5 : s.extWall === 'fs' ? 0.9 : s.extWall === 'hs' ? 1.8 : 1.5;
+      const mods = s.mods || [[s.extW], [s.extD], [s.extD]], leaf = { fs: 0.9, hs: 1.8, slide: 1.2, frameless: 99 }[s.extWall] || 1.5; // безрамное — только угловые стойки
       const run = (list, fn) => { let a = 0; const len = list.reduce((x, y) => x + y, 0) / 1000; list.forEach(m => { const mw = m / 1000, k = Math.max(1, Math.round(mw / leaf)); for (let j = 0; j <= k; j++) fn(a + mw * j / k, j === 0 || j === k, len); a += mw; }); };
       run(mods[0], (t, main) => post(-w / 2 + t, -D / 2 - d, main ? 0.09 : 0.05));
       run(mods[1], (t, main) => post(-w / 2, -D / 2 - t, main ? 0.09 : 0.05));
@@ -202,7 +202,7 @@ export function createHouse(el, opts = {}) {
 
   return {
     set(s) {
-      const geo = JSON.stringify([s.L, s.B, s.fh, s.roof, s.openings.map(o => [o.key, o.w, o.h, o.n, o.x, o.y, o.transom, o.fanH]), s.sel, s.ext, s.extW, s.extD, s.extH, s.extWall, s.facade]);
+      const geo = JSON.stringify([s.L, s.B, s.fh, s.roof, s.openings.map(o => [o.key, o.w, o.h, o.n, o.x, o.y, o.transom, o.fanH]), s.sel, s.ext, s.extW, s.extD, s.extH, s.extWall, s.extTh, s.facade]);
       if (!model || geo !== model.geo) build(s);
       if (!model || s.facade !== model.facade) yawT = nearest(YAW[s.facade]);
       const ev = !!s.evening;
