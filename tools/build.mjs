@@ -34,6 +34,8 @@ const fmtN = n => new Intl.NumberFormat('ru-RU').format(n).replace(/\s/g, nbsp);
 const metres = w => (w / 1000).toFixed(1).replace('.', ',');                          // 3600 → 3,6
 // Высоты стандартной двери (heights) — одна цена, точную уточняем на замере: «3600 × 2300/2400 мм»
 const sizeText = m => `${m.width} × ${(m.heights || [m.height]).join('/')} мм`;
+// В карточке — только основная высота (правка владельца в каталоге): «3600 × 2300 мм»
+const cardSizeText = m => `${m.width} × ${m.height} мм`;
 const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');           // ALUMARK S158 → alumark-s158
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
 const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
@@ -199,7 +201,7 @@ function marketCard(base, rel) {
   const soon = m.status !== 'available';
   const s0 = first.s, c0 = first.c;
   const data = byModel(m.model).map(v => ({ sku: v.sku, w: v.m.width, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
-  const sizes = Object.fromEntries(sizesOf(base).map(z => [z.width, { t: z.name, m: `${sizeText(z)} · ${sectionsText(z.sections)}`, p: soon ? '' : money(z.price), a: `${z.code} ${z.name}, ${sizeText(z)}` }]));
+  const sizes = Object.fromEntries(sizesOf(base).map(z => [z.width, { t: z.name, m: `${cardSizeText(z)} · ${sectionsText(z.sections)}`, p: soon ? '' : money(z.price), a: `${z.code} ${z.name}, ${cardSizeText(z)}` }]));
   const opt = (label, body) => `<div class="m-card__opt"><span class="m-card__label">${label}:</span>${body}</div>`;
   const sizeChips = `<div class="m-card__chips">${sizesOf(base).map(z => {
     const on = z.width === m.width;
@@ -308,7 +310,7 @@ function projectCard(calcHref, id) {
         <span class="m-card__body">
           <span class="m-card__meta">Любой размер и комплектация</span>
           <span class="m-card__title">Индивидуальный расчёт</span>
-          <span class="m-card__note">Другой размер, RAL, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
+          <span class="m-card__note">Другой размер, стекло или порог — посчитаем в калькуляторе за пару минут.</span>
           <span class="m-card__buy"><span class="ui-btn ui-btn--light m-card__cart">Рассчитать <span>→</span></span><span class="m-card__price"><strong>По расчёту</strong><small>под ваш проём</small></span></span>
         </span>
       </a>`;
@@ -550,16 +552,19 @@ const blocks = {
   'cart/index.html': {
     'cart-recs': [...hs.map(m => marketCard(m, '../')), projectCard('../raschet/')].join('\n\n      '),
   },
+  // «Системы» (блок «Открыть пространство») — отдельная страница /systems/, плашки готовых HS
+  'systems/index.html': {
+    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="../${firstOf(m.base).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
+  },
   'index.html': {
     'home-cards': [...hs.map(m => marketCard(m, '')), projectCard('raschet/')].join('\n\n      '),
     'home-calc': calcTeaser('', 'Калькулятор'),
-    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="${firstOf(m.base).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
   },
 };
 
 // ---------- sitemap ----------
 const sitemapUrls = [
-  ['', 'weekly', '1.0'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
+  ['', 'weekly', '1.0'], ['systems/', 'monthly', '0.8'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
   ['raschet/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ['osteklenie-pod-klyuch/', 'monthly', '0.7'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),

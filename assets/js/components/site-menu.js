@@ -5,7 +5,7 @@
 (() => {
   const normBase = value => { const base = (value || './').trim(); return base.endsWith('/') ? base : base + '/'; };
   const MENU = [
-    { t: 'Системы', sub: [['HS · подъёмно-раздвижные', 'systems/hs/'], ['FS · складные', 'systems/fs/'], ['Панорамное остекление', 'index.html#systems'], ['Остекление под ключ · карта дома', 'osteklenie-pod-klyuch/'], ['Калькулятор стоимости', 'raschet/']] },
+    { t: 'Системы', sub: [['Все системы', 'systems/'], ['HS · подъёмно-раздвижные', 'systems/hs/'], ['FS · складные', 'systems/fs/'], ['Панорамное остекление', 'systems/#systems'], ['Остекление под ключ · карта дома', 'osteklenie-pod-klyuch/'], ['Калькулятор стоимости', 'raschet/']] },
     { t: 'Каталог', href: 'catalog/' },
     { t: 'Проекты', href: 'projects/' },
     { t: 'Компания', sub: [['О компании', 'about/'], ['Почему мы', 'about/#why'], ['Реквизиты', 'about/#requisites']] },
