@@ -355,6 +355,8 @@ node tools/check-site.mjs --shots .check  # плюс скриншоты во в�
   фото FS3 в антраците и чёрном нет — стоит общее фото модели.
 - PDF политики конфиденциальности (`content/privacy-policy-portal-systems.pdf`) отсутствует — ссылка в формах битая.
 - `index.html` и `systems/*` помечены `index,follow`, остальные — `noindex`; до запуска всё закрыто `robots.txt`.
+- GitHub Pages иногда не запускает публикацию после слияния (так было с PR #55): если сайт не обновился, проверить
+  Actions → «pages build and deployment» для последнего коммита `main`; нет запуска — публикацию запускает следующий коммит в `main`.
 - Почта в `forms/config.php` не заполнена.
 - `forms/send.php` принимает файл проекта (`project_file`: PDF, DWG, DXF, JPG, PNG, WEBP, HEIC, ZIP до 15 МБ) и шлёт его вложением.
   На REG.RU проверить `upload_max_filesize` ≥ 16M и `post_max_size` ≥ 20M, иначе большие файлы не дойдут.
