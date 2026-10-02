@@ -1,11 +1,13 @@
 // Страница корзины /cart/: список товаров, количество, итог и оформление заказа.
-// Цены и названия — из data/catalog.json (собирает tools/build.mjs), в корзине только артикулы.
+// Названия и базовые цены — из data/catalog.json (собирает tools/build.mjs). Позиция может нести стекло (glass),
+// «любой RAL» (color) и свой размер (custom + config) — тогда цену и срок корзина пересчитывает по assets/js/portal-calc.js
+// (window.PSPortal), цене из localStorage не доверяем. Срок изготовления — у каждой позиции свой («до N дней»).
 // Заказ уходит в forms/send.php (source=cart), после успеха — /cart/done/?order=НОМЕР.
 // Получение: доставка и монтаж (оценка — процент от стоимости, не меньше минимума; из site-config.json через catalog.json)
 // или самовывоз с производства.
 (() => {
   const root=document.querySelector('[data-cart-root]');
-  const cart=window.PSCart;
+  const cart=window.PSCart,P=window.PSPortal;
   if(!root||!cart)return;
   const base='../';
   const list=root.querySelector('[data-cart-list]');
@@ -19,34 +21,50 @@
   let services={install_delivery_pct:12,install_delivery_min:45000},factory={};
   const mode=()=>form.elements.delivery.value==='pickup'?'pickup':'delivery';
   // Оценка доставки и монтажа, округлённая до тысячи; при самовывозе — 0
-  // Окно получения: сегодня + срок изготовления от production_days_min до production_days_max. Точную дату подтверждает менеджер.
-  const dmin=()=>services.production_days_min||30,dmax=()=>services.production_days_max||60;
+  // Окно получения: сегодня + самый долгий срок среди позиций. Точную дату подтверждает менеджер.
   const etaDate=days=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+days);return d};
-  const termText=()=>`${dmin()}–${dmax()} дней`;
   const fmtDay=d=>d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
-  const etaText=()=>`${fmtDay(etaDate(dmin()))} — ${fmtDay(etaDate(dmax()))}`;
+  const maxDays=items=>Math.max(...items.map(i=>i.days));
+  const termText=items=>`до ${maxDays(items)} дней`;
+  const etaText=items=>`до ${fmtDay(etaDate(maxDays(items)))}`;
+  const GLASS={base:'Базовый',standard:'Стандарт',triplex:'Триплекс',solar:'Solar'};
   const serviceCost=goods=>mode()==='pickup'?0:Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
 
-  const lines=()=>cart.items().map(i=>({...i,v:catalog.get(i.sku)})).filter(i=>i.v);
+  // Позиция корзины → готовая строка: базовый вариант каталога + стекло, цвет и размер позиции, цена и срок по формулам
+  const line=i=>{
+    const v=catalog.get(i.sourceSku||i.sku);if(!v)return null;
+    const c=i.custom&&i.config?i.config:null;
+    const w=c?+c.width:v.width,h=c?+c.height:v.height,n=c?+c.sections:v.sections,scheme=c?c.schemeCode:v.scheme_code;
+    const forced=P?P.triplexForced(w,h,n):v.triplex;
+    const glass=forced?'triplex':(GLASS[i.glass]?i.glass:v.default_glass||'base');
+    const customWidth=!!c&&![...catalog.values()].some(x=>x.system===v.system&&x.width===w&&x.sections===n),customHeight=h!==v.height;
+    const std=!c&&glass===(v.default_glass||'base');
+    const price=std||!P?v.price:P.price({type:v.system,w,h,n,scheme,glass,color:'mono',handle:'standard',customHeight});
+    const days=P?P.days(v.system,glass,customWidth,customHeight):30;
+    const title=c?`${v.system==='FS'?'Складная дверь-гармошка':'Раздвижная портальная дверь'} ${(w/1000).toFixed(1).replace('.',',')} м`:v.name;
+    return {...i,v,custom:!!c,w,h,n,glass,price,days,title,size:`${w} × ${h} мм`,color:i.color||v.color,scheme:c?`${c.scheme||scheme}`:v.scheme};
+  };
+  const lines=()=>cart.items().map(line).filter(i=>i&&i.price);
   // Варианты той же модели: другой проём / цвет / схема при остальных тех же (проём — ширина из таблицы размеров)
   const siblings=(v,key)=>[...catalog.values()].filter(x=>x.model===v.model
     &&(key==='width'||x.width===v.width)&&(key==='color'||x.color_slug===v.color_slug)&&(key==='scheme'||x.scheme_slug===v.scheme_slug));
 
-  const itemHtml=({sku,qty,v})=>{
-    const colors=siblings(v,'color'),schemes=siblings(v,'scheme'),widths=siblings(v,'width');
+  const itemHtml=i=>{
+    const {sku,qty,v}=i;
+    const colors=i.custom?[]:siblings(v,'color'),schemes=i.custom?[]:siblings(v,'scheme'),widths=i.custom?[]:siblings(v,'width');
     const sizeChips=widths.length>1?`<div class="m-card__chips">${widths.map(x=>`<button type="button" class="m-card__chip${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" aria-pressed="${x.sku===sku}">${esc(x.size_short)}</button>`).join('')}</div>`:'';
-    const swatches=colors.map(x=>`<button type="button" class="m-card__swatch${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" style="--sw:${esc(x.hex)}" title="${esc(x.color)}" aria-label="Цвет ${esc(x.color)}" aria-pressed="${x.sku===sku}"></button>`).join('');
+    const swatches=colors.map(x=>`<button type="button" class="m-card__swatch${x.sku===sku&&!i.color?' is-active':''}" data-to="${esc(x.sku)}" style="--sw:${esc(x.hex)}" title="${esc(x.color)}" aria-label="Цвет ${esc(x.color)}" aria-pressed="${x.sku===sku}"></button>`).join('');
     const chips=schemes.length>1?`<div class="m-card__chips">${schemes.map(x=>`<button type="button" class="m-card__chip${x.sku===sku?' is-active':''}" data-to="${esc(x.sku)}" aria-pressed="${x.sku===sku}">${esc(x.scheme_short)}</button>`).join('')}</div>`:'';
     return `
       <li class="cart-item" data-sku="${esc(sku)}">
         <a class="cart-item__img" href="${base+esc(v.url)}"><img src="${base+esc(v.image)}" alt="${esc(v.code)} · ${esc(v.name)}" loading="lazy"></a>
         <div class="cart-item__body">
-          <div class="m-card__price"><strong>${money(v.price*qty)}</strong><small>${qty>1?`${money(v.price)} × ${qty}`:'за конструкцию'}</small></div>
-          <a class="cart-item__title" href="${base+esc(v.url)}">${esc(v.code)} · ${esc(v.name)}</a>
-          <p class="cart-item__meta">${esc(v.size)} · срок ${termText()} · арт. ${esc(sku)}</p>
-          <div class="m-card__opt"><span class="m-card__label">Проём: <b>${esc(v.size_short)}</b></span>${sizeChips}</div>
-          <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(v.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
-          <div class="m-card__opt"><span class="m-card__label">${esc(v.scheme_title)}: <b>${esc(v.scheme_short)}</b></span>${chips}</div>
+          <div class="m-card__price"><strong>${money(i.price*qty)}</strong><small>${qty>1?`${money(i.price)} × ${qty}`:'за конструкцию'}</small></div>
+          <a class="cart-item__title" href="${base+esc(v.url)}">${i.custom?'':`${esc(v.code)} · `}${esc(i.title)}</a>
+          <p class="cart-item__meta">${esc(i.size)} · стеклопакет «${esc(GLASS[i.glass])}» · срок до ${i.days} дней${i.custom?' · индивидуальный размер':` · арт. ${esc(v.sku)}`}</p>
+          <div class="m-card__opt"><span class="m-card__label">Проём: <b>${i.custom?esc(i.size):esc(v.size_short)}</b></span>${sizeChips}</div>
+          <div class="m-card__opt"><span class="m-card__label">Цвет: <b>${esc(i.color)}</b></span><div class="m-card__swatches">${swatches}</div></div>
+          <div class="m-card__opt"><span class="m-card__label">${esc(v.scheme_title)}: <b>${esc(i.custom?i.scheme:v.scheme_short)}</b></span>${chips}</div>
           <div class="cart-item__foot">
             <div class="cart-item__qty" role="group" aria-label="Количество">
               <button type="button" data-qty="-1" aria-label="Уменьшить количество">−</button><output>${qty}</output><button type="button" data-qty="1" aria-label="Увеличить количество"${qty>=99?' disabled':''}>+</button>
@@ -69,16 +87,16 @@
     const count=items.reduce((n,i)=>n+i.qty,0);
     root.querySelector('[data-cart-count]').textContent=count;
     const hc=document.querySelector('[data-cart-head-count]');if(hc)hc.textContent=count;
-    const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),pickup=mode()==='pickup';
+    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods),pickup=mode()==='pickup';
     root.querySelector('[data-cart-goods]').textContent=money(goods);
     root.querySelector('[data-cart-service-label]').textContent=pickup?'Самовывоз':`Доставка и монтаж, ≈${services.install_delivery_pct}%`;
     root.querySelector('[data-cart-service]').textContent=pickup?'0 ₽':'≈ '+money(service);
     root.querySelector('[data-cart-total]').textContent=money(goods+service);
     root.querySelector('[data-cart-note-delivery]').hidden=pickup;
     root.querySelector('[data-cart-note-pickup]').hidden=!pickup;
-    root.querySelector('[data-cart-days]').textContent=termText();
+    root.querySelector('[data-cart-days]').textContent=termText(items);
     root.querySelector('[data-cart-eta-label]').textContent=pickup?'Самовывоз ориентировочно':'Доставка и монтаж ориентировочно';
-    root.querySelector('[data-cart-eta-date]').textContent=etaText();
+    root.querySelector('[data-cart-eta-date]').textContent=etaText(items);
   };
 
   list.addEventListener('click',e=>{
@@ -89,7 +107,7 @@
     if(q){const it=cart.items().find(i=>i.sku===sku);cart.set(sku,(it?it.qty:0)+Number(q.dataset.qty))}
     if(e.target.closest('[data-remove]'))cart.remove(sku);
     const to=e.target.closest('[data-to]');
-    if(to)cart.replace(sku,to.dataset.to);
+    if(to){if(cart.items().find(i=>i.sku===sku)?.color)cart.setColor(sku,'');cart.replace(sku,to.dataset.to)}
   });
   window.addEventListener('ps-cart-change',render);
   window.addEventListener('storage',e=>{if(e.key==='ps-cart')render()});
@@ -115,13 +133,13 @@
     const items=lines();
     if(!items.length){render();return}
     const id=orderId();
-    const goods=items.reduce((n,i)=>n+i.v.price*i.qty,0),service=serviceCost(goods),total=goods+service,pickup=mode()==='pickup';
+    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods),total=goods+service,pickup=mode()==='pickup';
     const deliveryLine=pickup
       ?`Получение: САМОВЫВОЗ с производства (${factory.address||'квартал № 205'})`
       :`Получение: доставка и монтаж — оценка ≈ ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
-    const project=items.map((i,n)=>`${n+1}. ${i.v.code} ${i.v.name} — ${i.v.size}, ${i.v.color}, ${i.v.scheme}\n   Артикул ${i.sku} × ${i.qty} = ${money(i.v.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
+    const project=items.map((i,n)=>`${n+1}. ${i.custom?`ИНДИВИДУАЛЬНЫЙ РАЗМЕР (на основе ${i.v.code})`:i.v.code} ${i.title} — ${i.size}, ${i.n} секц., ${i.color}, ${i.scheme}, стеклопакет «${GLASS[i.glass]}», срок до ${i.days} дней\n   ${i.custom?'База':'Артикул'} ${i.v.sku} × ${i.qty} = ${money(i.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
       +`\n\nКонструкции: ${money(goods)}\n${deliveryLine}\nИтого: ${money(total)}`
-      +`\nСрок изготовления: ${termText()}. Ориентировочно ${pickup?'самовывоз':'доставка и монтаж'}: ${etaText()} — дату нужно подтвердить клиенту.`;
+      +`\nСрок изготовления: ${termText(items)}. Ориентировочно ${pickup?'самовывоз':'доставка и монтаж'}: ${etaText(items)} — дату нужно подтвердить клиенту.`;
     const data=new FormData(form);
     data.set('source','cart');data.set('order_id',id);data.set('project',project);data.set('delivery',mode());
     if(pickup)data.delete('city');
@@ -132,7 +150,7 @@
       const json=await res.json().catch(()=>({}));
       if(!res.ok||!json.ok)throw new Error(json.message||'HTTP '+res.status);
       const number=json.order_id||id;
-      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,eta:etaText(),days:termText(),items:items.map(i=>({title:`${i.v.code} · ${i.v.name}`,meta:`${i.v.size} · ${i.v.color}`,qty:i.qty,sum:i.v.price*i.qty}))}))}catch(e){}
+      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,eta:etaText(items),days:termText(items),items:items.map(i=>({title:`${i.custom?'':i.v.code+' · '}${i.title}`,meta:`${i.size} · ${i.color} · ${GLASS[i.glass]}`,qty:i.qty,sum:i.price*i.qty}))}))}catch(e){}
       cart.clear();
       location.href='done/?order='+encodeURIComponent(number);
     }catch(err){
@@ -150,7 +168,7 @@
       const hint=form.querySelector('[data-delivery-hint]');
       if(hint&&services.install_delivery_zone)hint.textContent=`${services.install_delivery_zone}. Оценка ≈${services.install_delivery_pct}% от стоимости, минимум ${money(services.install_delivery_min)}. Замер бесплатно.`;
       // Артикулы, которых больше нет в продаже, убираем и сообщаем об этом
-      const gone=cart.items().filter(i=>!catalog.has(i.sku));
+      const gone=cart.items().filter(i=>!catalog.has(i.sourceSku||i.sku));
       if(gone.length){gone.forEach(i=>cart.remove(i.sku));note.hidden=false;note.textContent='Часть товаров больше недоступна к заказу и убрана из корзины.'}
       render();
     })

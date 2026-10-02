@@ -385,7 +385,7 @@
       });
     }
     // цена — из карточки, уже переключённой на этот проём
-    const price = m ? ((m.card.querySelector('.m-card__price strong') || {}).textContent || '').trim() : '';
+    const price = m ? ((m.card.querySelector('[data-card-price]') || {}).textContent || '').trim() : '';
     $('[data-next-price]').textContent = price ? ` · ${price}` : '';
     const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, from: `HS, подбор: ${f.code}, ${sideText()}` });
     $('[data-next-calc]').href = `../../raschet/?${q}`;

@@ -5,7 +5,7 @@
    Правила и цена — assets/js/portal-calc.js (PSPortal), чертёж и выбор размера — assets/js/opening-draw.js (PSOpening).
    Размер вводят только полями ширины и высоты (без кнопок готовых размеров — решение владельца). Если размер и выбранная
    конфигурация совпали с готовой дверью каталога (data-doors: HS, размер из таблицы, схема модели, стандартная комплектация),
-   под ценой появляется рекомендация этого товара: фото, цена каталога, срок data-term, «В корзину» и «Страница товара».
+   под ценой появляется рекомендация этого товара: фото, цена и срок по формулам PSPortal (стекло, нестандартный размер), «В корзину» и «Страница товара».
    Вид проёма — вкладки «Чертёж» (opening-draw.js) и «3D» (calc3d.js, грузится при первом открытии): крутить, открыть / закрыть.
    Адрес принимает ?type=HS&w=3600&h=2300&n=2&scheme=A-R&glass=standard&color=mono&handle=standard&door=1&from=… */
 (() => {
@@ -39,14 +39,13 @@
     const d = root.dataset;
     let ready = [];
     try { ready = JSON.parse(d.doors || '[]'); } catch (_) { ready = []; }
-    const term = d.term || '30–60 дней';
     const q = d.url ? new URLSearchParams(location.search) : new URLSearchParams();
     const qn = k => { const v = parseInt(q.get(k), 10); return Number.isFinite(v) && v > 0 ? v : 0; };
     const oneOf = (v, list, def) => (list.some(x => x.k === v) ? v : def);
     const from = (q.get('from') || '').slice(0, 160);
     const st = {
       type: q.get('type') === 'FS' ? 'FS' : 'HS', w: qn('w') || 3600, h: qn('h') || 2300, n: qn('n'), scheme: q.get('scheme') || '',
-      glass: oneOf(q.get('glass'), P.GLASS, 'standard'), color: oneOf(q.get('color'), P.COLORS, 'mono'),
+      glass: oneOf(q.get('glass'), P.GLASS, 'base'), color: oneOf(q.get('color'), P.COLORS, 'mono'),
       handle: oneOf(q.get('handle'), P.HANDLES, 'standard'), door: q.get('door') === '1',
     };
 
@@ -146,7 +145,7 @@
       const r = O.matchReady(ready, st);
       if (!r) return { r: null, why: '' };
       const v = r.schemes[st.scheme];
-      const std = st.glass === P.glassFor(st.w, st.h, st.n, 'standard') && st.color === 'mono' && st.handle === 'standard';
+      const std = st.color === 'mono' && st.handle === 'standard';
       if (!v || !std) return { r: null, why: `Размер как у готовой двери ${r.code}, но ${!v ? 'с этой схемой' : 'с такой комплектацией'} это индивидуальный заказ.` };
       return { r, v };
     }
@@ -190,7 +189,10 @@
 
       const pass = P.passage(st.type, st.w, st.n, st.scheme);
       const { r, v: rv, why } = readyDoor();
-      const price = P.price({ ...st, extraSections: S.extra });
+      // Срок и цена: нестандартная ширина (нет в таблице размеров) — +5 дней, высота не 2300 — +10 дней и +2 % к цене
+      const customWidth = !ready.some(x => x.w === st.w && x.n === st.n), customHeight = st.h !== 2300;
+      const price = P.price({ ...st, extraSections: S.extra, customHeight });
+      const days = P.days(st.type, glass, customWidth, customHeight);
       $('[data-qcx-sum]').innerHTML = [
         ['Материал', 'Премиальный тёплый алюминиевый термопрофиль'],
         ['Механизм', 'Надёжная немецкая механическая фурнитура'],
@@ -199,19 +201,20 @@
       ].map(([a, b]) => `<li><span>${a}</span><b>${b}</b></li>`).join('');
       $('[data-qcx-kind]').textContent = 'Ориентировочная стоимость';
       $('[data-qcx-price]').textContent = price ? `${P.fmt(price)} ₽` : 'По расчёту';
-      $('[data-qcx-sub]').textContent = r ? `такая дверь есть в каталоге — готовое решение ниже` : `индивидуальный заказ — срок дольше ${term}, точный назовём после замера`;
+      $('[data-qcx-sub]').textContent = r ? `готовая конфигурация · изготовление до ${days} дней` : `индивидуальный заказ · изготовление до ${days} дней${days > 45 ? ' · обсудим с инженером' : ''}`;
       // Рекомендация готового товара: размер и конфигурация совпали с дверью каталога
       const rec = $('[data-qcx-rec]');
       root.classList.toggle('is-ready', !!r);
       rec.hidden = !r;
       if (r) {
-        const inCart = window.PSCart && window.PSCart.has(rv.sku);
+        const defaultGlass = P.triplexForced(st.w, st.h, st.n) ? 'triplex' : 'base', cartSku = glass === defaultGlass ? rv.sku : `${rv.sku}:GLASS:${glass}`;
+        const inCart = window.PSCart && window.PSCart.has(cartSku);
         rec.innerHTML = `<a class="qcx__rec-img" href="${esc(rv.url)}"><img src="${esc(rv.img)}" alt="${esc(`${r.code} ${r.name}`)}" decoding="async"></a>
           <div class="qcx__rec-body">
             <p class="qcx__rec-k">Рекомендуем готовую дверь</p>
             <a class="qcx__rec-t" href="${esc(rv.url)}">${esc(r.name)} · ${esc(r.code)}</a>
-            <p class="qcx__rec-p"><b>${P.fmt(r.price)} ₽</b><span>цена каталога · срок ${term} · без доставки и монтажа</span></p>
-            <div class="qcx__res"><button class="qcx__buy" type="button" data-add-to-cart data-sku="${esc(rv.sku)}" data-cart-href="${esc((d.base || '../') + 'cart/')}">${inCart ? 'В корзине <span>→</span>' : 'В корзину <span>+</span>'}</button><a class="qcx__link" href="${esc(rv.url)}">Страница товара <span aria-hidden="true">→</span></a></div>
+            <p class="qcx__rec-p"><b>${P.fmt(price)} ₽</b><span>готовая конфигурация · срок до ${days} дней · без доставки и монтажа</span></p>
+            <div class="qcx__res"><button class="qcx__buy" type="button" data-add-to-cart data-sku="${esc(cartSku)}" data-cart-source-sku="${esc(rv.sku)}" data-cart-glass="${esc(glass)}" data-cart-href="${esc((d.base || '../') + 'cart/')}">${inCart ? 'В корзине <span>→</span>' : 'В корзину <span>+</span>'}</button><a class="qcx__link" href="${esc(rv.url)}">Страница товара <span aria-hidden="true">→</span></a></div>
           </div>`;
       } else rec.innerHTML = '';
       $('[data-qcx-send-title]').textContent = r ? 'Нужна консультация или замер?' : 'Точная смета и бесплатный замер';
