@@ -3,7 +3,7 @@
    и tools/build.mjs (цены и проходы готовых дверей каталога считает этим же файлом — через node:vm).
    window.PSPortal: limits, validate, sectionsFor, schemesFor, passage, layout, glassFor, price, frameDepth. Без DOM. */
 (function (root) {
-  const BASE = { HS: 55000, FS: 40000 };                     // ₽ за м² (ТЗ 4.1)
+  const BASE = { HS: 35000, FS: 55000 };                     // ₽ за м²: базовое стекло и стандартные размеры
   const LIMITS = {                                           // ТЗ 1.2
     HS: { wMin: 1500, wMax: 19800, hMin: 1800, hMax: 3700 },
     FS: { wMin: 1500, wMax: 12000, hMin: 1800, hMax: 2800 },
@@ -108,37 +108,39 @@
 
   // 3.1. Стекло: триплекс включается сам и не снимается, если любая створка больше 5 м²
   const GLASS = [
-    { k: 'standard', code: 'SP-Standart', t: 'Стандарт', d: 'Двухкамерный энергосберегающий закалённый 40 мм', f: 1 },
-    { k: 'solar', code: 'SP-Solar', t: 'Солнцезащитный', d: 'Мультифункциональный солнцезащитный закалённый · +12 % к стеклу', f: 1.06 },
-    { k: 'triplex', code: 'SP-Triplex', t: 'Триплекс', d: 'Ударопрочный закалённый триплекс · +25 % к стеклу', f: 1.125 },
+    { k: 'base', code: 'SP-Base', t: 'Базовый', d: 'Базовая комплектация для стандартного проёма', f: 1 },
+    { k: 'standard', code: 'SP-Standart', t: 'Стандарт', d: 'Двухкамерный энергосберегающий закалённый 40 мм · +5 %', f: 1.05 },
+    { k: 'triplex', code: 'SP-Triplex', t: 'Триплекс', d: 'Ударопрочный закалённый триплекс · +10 %', f: 1.10 },
+    { k: 'solar', code: 'SP-Solar', t: 'Solar', d: 'Мультифункциональный солнцезащитный закалённый стеклопакет · +10 %', f: 1.10 },
   ];
   const triplexForced = (w, h, n) => (w / n) * h > TRIPLEX_LEAF;
-  const glassFor = (w, h, n, k) => (triplexForced(w, h, n) ? 'triplex' : k || 'standard');
+  const glassFor = (w, h, n, k) => (triplexForced(w, h, n) ? 'triplex' : k || 'base');
+  const days = (type, glass, customWidth = false, customHeight = false) => (type === 'FS' ? 40 : 30) + ({ base: 0, standard: 5, triplex: 10, solar: 10 }[glass] || 0) + (customWidth ? 5 : 0) + (customHeight ? 10 : 0);
+  const rate = (type, glass, customHeight = false) => Math.round(BASE[type] * ((GLASS.find(g => g.k === glass) || GLASS[0]).f || 1) * (customHeight ? 1.02 : 1));
   const COLORS = [
     { k: 'mono', code: 'Color-Mono', t: 'Однотонный RAL', d: 'Любой цвет RAL: антрацит, белый, чёрный и нестандартные оттенки', f: 1 },
-    { k: 'bi', code: 'Color-Bi', t: 'Двухсторонний', d: 'Разный цвет снаружи и внутри · +5 %', f: 1.05 },
+    { k: 'bi', code: 'Color-Bi', t: 'Двухсторонний', d: 'Разный цвет снаружи и внутри · без доплаты', f: 1 },
   ];
   const HANDLES = [
     { k: 'standard', code: 'Control-Standard', t: 'Стандарт', d: 'Ручка изнутри + скрытая ручка-ракушка снаружи', add: 0 },
     { k: 'lock', code: 'Control-Lock', t: 'С замком', d: 'Двухсторонняя нажимная ручка с замком на ключ · +18 000 ₽', add: LOCK_PRICE },
   ];
 
-  // 4.2. Цена: S × база → ×1,4 за трёхполозную раму (HS: 3 секции каскадом или 6) → ×1,05 двухсторонняя покраска →
-  // стекло (солнцезащитное ×1,06, триплекс ×1,125) → +18 000 ₽ замок. Округление до рубля.
+  // 4.2. Цена: S × базу системы → стекло +0/5/10 % → нестандартная высота +2 % → для HS каскад ×1,4.
+  // Нестандартная ширина меняет срок, но не цену. Затем +18 000 ₽ за замок.
   function price(o) {
     const type = o.type || 'HS', w = o.w, h = o.h, n = o.n;
     if (!validate(type, w, h).ok || !sectionsFor(type, w).list.concat(o.extraSections || []).includes(n)) return null;
-    let cost = (w / 1000) * (h / 1000) * BASE[type];
+    const glass = GLASS.find(g => g.k === glassFor(w, h, n, o.glass)) || GLASS.find(g => g.k === 'standard');
+    let cost = (w / 1000) * (h / 1000) * BASE[type] * glass.f * (o.customHeight ? 1.02 : 1);
     const s = schemeOf(type, n, o.scheme);
     if (type === 'HS' && s && (s.cascade)) cost *= 1.4;
-    if (o.color === 'bi') cost *= 1.05;
-    cost *= GLASS.find(g => g.k === glassFor(w, h, n, o.glass)).f;
     if (o.handle === 'lock') cost += LOCK_PRICE;
     return Math.round(cost);
   }
 
   root.PSPortal = {
     BASE, LIMITS, LOCK_PRICE, TRIPLEX_LEAF, GLASS, COLORS, HANDLES, fmt,
-    validate, sectionsFor, schemesFor, schemeOf, doorAllowed, passage, frameDepth, layout, triplexForced, glassFor, price,
+    validate, sectionsFor, schemesFor, schemeOf, doorAllowed, passage, frameDepth, layout, triplexForced, glassFor, days, rate, price,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

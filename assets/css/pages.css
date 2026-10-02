@@ -52,7 +52,7 @@
 .pg-split{display:grid;gap:30px;align-items:center}
 .pg-split__media{aspect-ratio:4/3;overflow:hidden;background:#e1e0df}
 .pg-split__media img{width:100%;height:100%;object-fit:cover}
-.pg-split__text p{max-width:560px;margin:18px 0 0;color:var(--ui-muted);font-size:var(--fs-body);line-height:1.6}
+.pg-split__text p:not(.ui-eyebrow){max-width:560px;margin:18px 0 0;color:var(--ui-muted);font-size:var(--fs-body);line-height:1.6}
 .pg-section--dark .pg-split__text p{color:#aaa79f}
 
 /* Шаги */
@@ -125,6 +125,13 @@
 /* «О компании»: заголовок подсекции с тонкой линией сверху; паспорт производства; секции подряд без двойных отступов */
 .pg-head-line{margin-bottom:var(--space-head);padding-top:clamp(20px,2.5vw,32px);border-top:1px solid var(--ui-line-soft)}
 .pg-head-line .ui-eyebrow{margin:0 0 14px}
+.pg-head-line__lead{max-width:60ch;margin:18px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.6 var(--font)}
+.split-list__head p+p{margin-top:12px}
+.pg-hero h1.pg-hero__h1--long{max-width:16ch;font-size:var(--fs-h2)}
+#project+.pg-section{padding-top:var(--space-section)}
+.pg-split--form{align-items:start}
+.pg-split__text a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.pg-section--paper{padding-top:var(--space-section)!important;padding-bottom:var(--space-section)}
 .pg-passport{margin-top:22px}
 .pg-passport>div{grid-template-columns:minmax(0,120px) minmax(0,1fr)!important;gap:16px!important}
 .pg-passport dd{font-size:var(--fs-small)}

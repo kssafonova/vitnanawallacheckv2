@@ -21,6 +21,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.portal-systems.ru/catalog/hs-portaly/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.portal-systems.ru/catalog/fs-portaly/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.portal-systems.ru/systems/fs/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -233,41 +243,41 @@
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vlevo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-2700x2300-antratsit-skladyvanie-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vlevo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-2700x2300-chernyi-skladyvanie-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-3600x2300-antratsit-tri-vlevo-odna-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-3600x2300-antratsit-odna-vlevo-tri-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-3600x2300-chernyi-tri-vlevo-odna-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.portal-systems.ru/catalog/fs-portaly/alumark-s70-3600x2300-chernyi-odna-vlevo-tri-vpravo/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>

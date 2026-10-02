@@ -38,7 +38,6 @@ const sizeText = m => `${m.width} × ${(m.heights || [m.height]).join('/')} мм
 const cardSizeText = m => `${m.width} × ${m.height} мм`;
 const profileSlug = m => m.profile.toLowerCase().replace(/[^a-z0-9]+/g, '-');           // ALUMARK S158 → alumark-s158
 const profileCode = m => m.profile.split(' ').pop();                                    // S158
-const schemeText = s => s.label.replace(/^Схема\s+[A-Z0-9-]+\s*·\s*/i, '');             // без «Схема A1 · »
 const mirrored = s => /(^B\d|-R)$/.test(s.code);
 // HS/3 секции (D-L) рисуем зеркально: подвижная пара справа, движение влево — так попросила владелец
 const flipModel = m => m.model === 'HS3';
@@ -47,11 +46,11 @@ const systemName = m => (m.system === 'HS' ? 'HS-порталы' : 'FS-порт�
 
 // ---------- варианты ----------
 // Размер модели (sizes в products.json) → «модель этого размера»: ширина, код HS2/36, название «… 3,6 м»;
-// цена и чистый проход — по ТЗ калькулятора (assets/js/portal-calc.js) для стандартной комплектации: стеклопакет 40 мм
+// цена и чистый проход — по единым формулам (assets/js/portal-calc.js): базовое стекло HS 35 000 ₽/м², FS 55 000 ₽/м²,
 // (или триплекс, если створка больше 5 м²), однотонный RAL, стандартная ручка. Остальной код работает с ней как с обычной моделью.
 const portalOf = (m, z) => {
   const scheme = (m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0]).code;
-  const o = { type: m.system, w: z.width, h: m.height, n: m.sections, scheme, glass: 'standard', color: 'mono', handle: 'standard', extraSections: [m.sections] };
+  const o = { type: m.system, w: z.width, h: m.height, n: m.sections, scheme, glass: 'base', color: 'mono', handle: 'standard', extraSections: [m.sections] };
   const price = PORTAL.price(o);
   if (!price) throw new Error(`${m.model} ${z.width} мм: калькулятор не считает этот размер (portal-calc.js)`);
   return { price, passage: PORTAL.passage(m.system, z.width, m.sections, scheme), triplex: PORTAL.triplexForced(z.width, m.height, m.sections) };
@@ -86,6 +85,7 @@ for (const base of data.models) {
           path: `catalog/${m.cat}/${slug}/`,
           image: hasPhoto ? photo : m.image,
           imageOpen: hasPhoto && exists(photoOpen) ? photoOpen : null,
+          hasPhoto,
           available: m.status === 'available',
         });
       }
@@ -98,82 +98,18 @@ const find = (model, colorSlug, schemeSlug, width) => variants.find(v => v.m.mod
 const defScheme = m => m.schemes.find(s => s.code === m.default_scheme) || m.schemes[0];
 const firstOf = m => find(m.model, m.colors[0].slug, defScheme(m).slug, defSize(m).width);
 
-// ---------- схемы (SVG) ----------
-// Мелкая схема в углу фото: без текста. Рисуем створки прямоугольниками:
-// подвижные светлее, стрелка движения — акцентным цветом. Стили — .scheme-mini в components.css.
-function smallSvg(m, s) {
-  const W = 100, X0 = 5, X1 = 95, Y0 = 5, Y1 = 51, GAP = 1.6;
-  const kinds = { HS2: ['move', 'fix'], HS3: ['move', 'move', 'fix'], HS4: ['fix', 'move', 'move', 'fix'],
-                  FS3: ['fold', 'fold', 'fold'], FS4: ['fold', 'fold', 'fold', 'move'] }[m.model];
-  const n = kinds.length, pw = (X1 - X0 - GAP * (n - 1)) / n;
-  const px = i => X0 + i * (pw + GAP);
-  const r = v => Math.round(v * 10) / 10;
-  let panes = kinds.map((k, i) => `<rect class="sm-pane${k === 'fix' ? '' : ' is-move'}" x="${r(px(i))}" y="${Y0}" width="${r(pw)}" height="${Y1 - Y0}"/>`).join('');
-  // ручки — на замковой стойке: у внешнего края ведущей створки или в центре при открывании от центра
-  const handles = { HS2: [[0, 'l']], HS3: [[0, 'l']], HS4: [[1, 'r'], [2, 'l']], FS3: [], FS4: [[3, 'l']] }[m.model];
-  panes += handles.map(([i, side]) => { const x = r(side === 'l' ? px(i) + 4 : px(i) + pw - 4); return `<line class="sm-handle" x1="${x}" y1="24" x2="${x}" y2="32"/>`; }).join('');
-  const arrow = (x1, x2, y = 42) => {
-    const d = x2 > x1 ? -4 : 4;
-    return `<path class="sm-arrow" d="M${r(x1)} ${y}H${r(x2)}M${r(x2 + d)} ${y - 3.5}L${r(x2)} ${y}L${r(x2 + d)} ${y + 3.5}"/>`;
-  };
-  let marks = '';
-  if (m.model === 'HS2') marks = arrow(px(0) + 8, px(1) + pw * 0.55);
-  else if (m.model === 'HS3') marks = arrow(px(0) + 8, px(2) + pw * 0.55);
-  else if (m.model === 'HS4') marks = arrow(px(1) + pw * 0.8, px(0) + pw * 0.35) + arrow(px(2) + pw * 0.2, px(3) + pw * 0.65);
-  else {
-    // складные: зигзаг сложения и стрелка к краю
-    const z = [0, 1, 2].map(i => `${r(px(i))} ${i % 2 ? Y1 - 6 : Y0 + 6}L${r(px(i) + pw)} ${i % 2 ? Y0 + 6 : Y1 - 6}`).join('L');
-    marks = `<path class="sm-fold" d="M${z}"/>` + arrow(px(2) + pw * 0.7, px(0) + pw * 0.3, Y1 - 4);
-  }
-  let body = panes + marks;
-  if (isMirror(m, s)) body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
-  return `<svg class="scheme-mini" viewBox="0 0 100 56"><rect class="sm-frame" x="2.5" y="2.5" width="95" height="51"/>${body}</svg>`;
-}
-
-// Большой чертёж. Подписи — font-size="24" в единицах viewBox:
-// при самой узкой ширине чертежа (≈320 px из 680) это ≈11.3 px на экране.
-function largeSvg(m, s) {
-  const W = 680, L = 38, R = 642;
-  const frame = `<rect x="${L}" y="44" width="${R - L}" height="232"/>`;
-  const cols = n => Array.from({ length: n - 1 }, (_, i) => L + ((R - L) / n) * (i + 1));
-  const mid = (n, i) => L + ((R - L) / n) * (i + 0.5);
-  let body = '', labels = [];
-  if (m.system === 'HS') {
-    const n = m.sections;
-    body = cols(n).map(x => `<line x1="${x}" y1="44" x2="${x}" y2="276"/>`).join('');
-    const kinds = { HS2: ['ACTIVE', 'FIX'], HS3: ['ACTIVE', 'ACTIVE', 'FIX'], HS4: ['FIX', 'ACTIVE', 'ACTIVE', 'FIX'] }[m.model];
-    labels = kinds.map((t, i) => ({ x: mid(n, i), t }));
-    if (m.model === 'HS2') body += '<path d="M120 190H270m-22-18 22 18-22 18"/>';
-    if (m.model === 'HS3') body += '<path d="M110 190H410m-22-18 22 18-22 18"/>';
-    if (m.model === 'HS4') body += '<path d="M320 190H210m22-18-22 18 22 18M360 190h110m-22-18 22 18-22 18"/>';
-  } else if (m.model === 'FS3') {
-    body = '<path d="M130 72l95 88-95 88M225 72l95 88-95 88M320 72l95 88-95 88"/>';
-  } else {
-    body = '<path d="M105 72l85 88-85 88M190 72l85 88-85 88M275 72l85 88-85 88"/><line x1="500" y1="44" x2="500" y2="276"/>';
-  }
-  if (isMirror(m, s)) {
-    body = `<g transform="translate(${W} 0) scale(-1 1)">${body}</g>`;
-    labels = labels.map(l => ({ ...l, x: W - l.x })).reverse();
-  }
-  const text = labels.map(l => `<text x="${l.x}" y="132" font-size="24" text-anchor="middle">${l.t}</text>`).join('');
-  const dim = `<path d="M${L} 298H${R}M${L} 290v16M${R} 290v16"/><text x="${W / 2}" y="332" font-size="24" text-anchor="middle">${m.width} мм</text>`;
-  return `<svg viewBox="0 0 ${W} 340" role="img" aria-label="Схема: ${esc(s.label)}">${frame}${body}${text}${dim}</svg>`;
-}
-
 // ---------- общие куски HTML ----------
 const fontPreload = base =>
   `<link rel="preload" href="${base}assets/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>\n` +
   `<link rel="preload" href="${base}assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>`;
 const GENERATED = '<!-- Сгенерировано tools/build.mjs из data/products.json. Не редактировать вручную: правьте данные и пересобирайте. -->';
 const jsonLd = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
-const systemHref = (m, base) => (m.system === 'HS' ? `${base}systems/hs/` : `${base}systems/fs/`);
-const customHref = (m, base) => (m.system === 'HS' ? `${base}raschet/` : `${base}index.html#contact`);
 
 // Карточка модели «как на маркетплейсе»: фото, цена, цвет и схема переключаются прямо в карточке
 // (assets/js/shop.js), кнопка «В корзину». Без JS цвета и схемы — обычные ссылки на страницы вариантов.
 // rel — путь от страницы до корня сайта.
 // Параметры 3D-превью карточки (assets/js/card3d.js): размер, створки, куда едут, ручки, цвета RAL, зеркальность схем.
-// Раскладка — как у мини-схемы smallSvg (незеркальный вид), isMirror отражает её для схемы.
+// Раскладка в незеркальном виде, isMirror отражает её для схемы.
 const LAYOUT_3D = {
   HS2: { kinds: ['move', 'fix'], to: { 0: 1 }, handles: [[0, 'l']] },
   HS3: { kinds: ['move', 'move', 'fix'], to: { 0: 2, 1: 2 }, handles: [[0, 'l']] },
@@ -186,10 +122,8 @@ const model3d = m => ({
   colors: Object.fromEntries(m.colors.map(c => [c.slug, c.hex])),
   mirror: Object.fromEntries(m.schemes.map(s => [s.slug, isMirror(m, s)])),
 });
-// Срок изготовления — data/site-config.json → services.production_days_min / _max (они же в корзине через data/catalog.json)
-const PROD_MIN = (config.services && config.services.production_days_min) || 30;
-const PROD_MAX = (config.services && config.services.production_days_max) || 60;
-const PROD_TEXT = `${PROD_MIN}–${PROD_MAX} дней`;
+// Любую конфигурацию со сроком до 45 дней можно заказать; более долгие решения становятся проектом.
+const READY_HS_TERM = 'до 30 дней';
 const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секций'}`;
 // Карточка модели (как на макете владельца): 3D-превью → «размер · секции» → название → «Проём:» (ширины из таблицы размеров) →
 // «Схема:» → «Цвет:» (квадраты + «любой RAL») → линия → цена «за конструкцию» → кнопка «В корзину» во всю ширину.
@@ -197,16 +131,38 @@ const sectionsText = n => `${n} ${n >= 2 && n <= 4 ? 'секции' : 'секц�
 // rel — путь от страницы до корня сайта; base — модель из products.json (все размеры).
 function marketCard(base, rel) {
   const first = firstOf(base), m = first.m;
+  // Готовые варианты всегда ссылаются на собственный индексируемый SKU-URL.
+  // Состояние конфигуратора не должно создавать внутренние ссылки с GET-параметрами.
   const href = v => rel + v.path;
   const soon = m.status !== 'available';
   const s0 = first.s, c0 = first.c;
-  const data = byModel(m.model).map(v => ({ sku: v.sku, w: v.m.width, c: v.c.slug, s: v.s.slug, href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '' }));
-  const sizes = Object.fromEntries(sizesOf(base).map(z => [z.width, { t: z.name, m: `${cardSizeText(z)} · ${sectionsText(z.sections)}`, p: soon ? '' : money(z.price), a: `${z.code} ${z.name}, ${cardSizeText(z)}` }]));
+  const defaultGlass = m.triplex ? 'triplex' : 'base';
+  const defaultGlassLabel = m.triplex ? 'Триплекс' : 'Базовый';
+  const defaultDays = PORTAL.days(m.system, defaultGlass, false, false);
+  const defaultTerm = `до ${defaultDays} дней`;
+  const data = byModel(m.model).map(v => ({
+    sku: v.sku, w: v.m.width, h: v.m.height, n: v.m.sections, type: v.m.system,
+    code: v.m.code, name: v.m.name, price: v.m.price, passage: v.m.passage,
+    passageRatio: Math.round(v.m.passage / v.m.width * 100), triplex: v.m.triplex,
+    c: v.c.slug, color: `${v.c.name} RAL ${v.c.ral}`,
+    s: v.s.slug, scheme: v.s.code, schemeName: v.s.short,
+    href: href(v), img: rel + v.image, open: v.imageOpen ? rel + v.imageOpen : '',
+  }));
+  const sizes = Object.fromEntries(sizesOf(base).map(z => [z.width, {
+    t: z.name, m: `${cardSizeText(z)} · ${sectionsText(z.sections)}`, p: soon ? '' : money(z.price),
+    a: `${z.code} ${z.name}, ${cardSizeText(z)}`, passage: `Открытый проход ≈ ${Math.round(z.passage / z.width * 100)}%`
+  }]));
+  const cardConfig = {
+    type: m.system, model: m.model, n: m.sections, h: m.height,
+    readyWidths: sizesOf(base).map(z => z.width),
+    cartHref: `${rel}cart/`, calculatorHref: `${rel}raschet/`,
+  };
   const opt = (label, body) => `<div class="m-card__opt"><span class="m-card__label">${label}:</span>${body}</div>`;
   const sizeChips = `<div class="m-card__chips">${sizesOf(base).map(z => {
     const on = z.width === m.width;
     return `<a class="m-card__chip m-card__chip--num${on ? ' is-active' : ''}" href="${href(find(m.model, c0.slug, s0.slug, z.width))}" data-size="${z.width}" data-name="${metres(z.width)} м"${on ? ' aria-current="true"' : ''}>${metres(z.width)}</a>`;
   }).join('')}</div>`;
+  const heightChip = `<div class="m-card__chips"><span class="m-card__chip m-card__chip--num is-active" aria-label="Высота проёма 2,3 метра">2,3 <small>м</small></span></div>`;
   const schemeChips = `<div class="m-card__chips">${m.schemes.map(s => {
     const on = s === s0;
     return `<a class="m-card__chip${on ? ' is-active' : ''}" href="${href(find(m.model, c0.slug, s.slug, m.width))}" data-scheme="${s.slug}" data-name="${esc(s.short)}"${on ? ' aria-current="true"' : ''}>${esc(s.short)}</a>`;
@@ -214,26 +170,48 @@ function marketCard(base, rel) {
   const swatches = `<div class="m-card__swatches">${m.colors.map(c => {
     const on = c === c0;
     return `<a class="m-card__swatch${on ? ' is-active' : ''}" href="${href(find(m.model, c.slug, s0.slug, m.width))}" data-color="${c.slug}" data-name="${esc(c.name)} RAL ${c.ral}" style="--sw:${c.hex}" title="${esc(c.name)} RAL ${c.ral}" aria-label="Цвет ${esc(c.name)} RAL ${c.ral}"${on ? ' aria-current="true"' : ''}></a>`;
-  }).join('')}<span class="m-card__ral" title="Любой цвет по каталогу RAL — посчитаем в калькуляторе">любой RAL</span></div>`;
+  }).join('')}<button class="m-card__ral" type="button" data-custom-ral aria-pressed="false" title="Любой однотонный цвет RAL входит в стоимость" aria-label="Выбрать любой однотонный цвет RAL">любой RAL</button></div>`;
   const price = soon
     ? '<strong>Скоро</strong><small>цена — к старту продаж</small>'
-    : `<strong data-card-price>${money(m.price)}</strong><small>за конструкцию</small>`;
+    : `<strong data-card-price>${money(m.price)}</strong><small data-card-price-note>${defaultGlassLabel} · ${defaultTerm}</small>`;
   const action = soon
     ? `<a class="ui-btn m-card__cart" href="${href(first)}#product-contact" data-card-link data-card-hash="#product-contact">Сообщить о старте</a>`
-    : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-add-to-cart data-sku="${first.sku}" data-cart-href="${rel}cart/">В корзину</button>`;
-  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-variants="${esc(JSON.stringify(data))}" data-sizes="${esc(JSON.stringify(sizes))}" data-3d="${esc(JSON.stringify(model3d(m)))}">
-        <a class="m-card__media" href="${href(first)}" data-card-link>
-          <img src="${rel}${first.image}" alt="${esc(sizes[m.width].a)}" loading="lazy" decoding="async" data-card-img>${first.imageOpen ? `
-          <img class="m-card__open" src="${rel}${first.imageOpen}" alt="" loading="lazy" decoding="async" data-card-img-open>` : ''}
+    : defaultDays <= 45
+      ? `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-card-action data-card-action-price="${m.price}" data-add-to-cart data-sku="${first.sku}" data-cart-glass="${defaultGlass}" data-cart-glass-label="${defaultGlassLabel}" data-cart-price="${m.price}" data-cart-term="${defaultTerm}" data-cart-href="${rel}cart/">В корзину <strong>${money(m.price)}</strong></button>`
+      : `<button class="ui-btn ui-btn--dark m-card__cart" type="button" data-card-action data-card-action-price="${m.price}" data-card-project="${href(first)}">Обсудить проект <strong>${money(m.price)}</strong></button>`;
+  const configure = soon ? '' : `<a class="m-card__configure" href="${href(first)}" data-card-link>Другой размер <span>Настроить&nbsp;→</span></a>`;
+  const architecture = rel + (m.architecture || 'assets/images/projects/interior.webp');
+  const photoSlides = [
+    `<a class="m-card__slide" href="${href(first)}" data-card-link aria-label="Открыть карточку конструкции"><img src="${rel}${first.image}" alt="${esc(sizes[m.width].a)}" loading="lazy" decoding="async" data-card-img><span class="m-card__state-label">Закрыто</span></a>`,
+    first.imageOpen ? `<a class="m-card__slide" href="${href(first)}" data-card-link aria-label="Открытый вид конструкции"><img src="${rel}${first.imageOpen}" alt="${esc(m.name)} в открытом виде" loading="lazy" decoding="async" data-card-img-open><span class="m-card__state-label">Открыто</span></a>` : '',
+    `<a class="m-card__slide" href="${href(first)}" data-card-link aria-label="Смотреть конструкцию в архитектуре"><img src="${architecture}" alt="${esc(m.name)} в архитектуре дома" loading="lazy" decoding="async"></a>`,
+  ].filter(Boolean);
+  const slideCount = photoSlides.length + 1;
+  return `<article class="m-card${soon ? ' m-card--soon' : ''}" data-card data-card-config="${esc(JSON.stringify(cardConfig))}" data-variants="${esc(JSON.stringify(data))}" data-sizes="${esc(JSON.stringify(sizes))}" data-3d="${esc(JSON.stringify(model3d(m)))}">
+        <div class="m-card__media" data-card-gallery>
+          <div class="m-card__media-track" data-card-gallery-track>
+            <div class="m-card__slide m-card__slide--3d" data-card-3d-stage>
+              <img src="${rel}${first.image}" alt="" loading="lazy" decoding="async" data-card-3d-fallback>
+            </div>
+            ${photoSlides.join('\n            ')}
+          </div>
+          <div class="m-card__media-price">${price}</div>
+          <div class="m-card__gallery-nav" data-card-gallery-nav>
+            <button type="button" data-card-gallery-prev aria-label="Предыдущий кадр">←</button>
+            <span class="m-card__gallery-count" aria-live="polite"><b data-card-gallery-current>1</b> / ${slideCount}</span>
+            <button type="button" data-card-gallery-next aria-label="Следующий кадр">→</button>
+          </div>
           ${soon ? '<span class="m-card__badge">Скоро в продаже</span>' : ''}
-        </a>
+        </div>
         <div class="m-card__body">
           <p class="m-card__meta" data-card-meta>${esc(sizes[m.width].m)}</p>
           <a class="m-card__title" href="${href(first)}" data-card-link data-card-title>${esc(m.name)}</a>
-          ${opt('Проём', sizeChips)}
+          <p class="m-card__facts"><span>Алюминий</span><span data-card-passage>${esc(sizes[m.width].passage)}</span></p>
+          ${opt('Высота проёма (м)', heightChip)}
+          ${opt('Ширина проёма (м)', sizeChips)}
           ${opt(esc(m.scheme_title), schemeChips)}
           ${opt('Цвет', swatches)}
-          <div class="m-card__buy"><div class="m-card__price">${price}</div>${action}</div>
+          <div class="m-card__buy">${configure}${action}</div>
         </div>
       </article>`;
 }
@@ -243,33 +221,21 @@ function marketCard(base, rel) {
 const hsAvail = () => data.models.filter(m => m.system === 'HS' && m.status === 'available');
 // Готовые двери для калькулятора (data-doors) — все размеры из таблицы. Совпали тип HS, ширина, створки, одна из стандартных
 // высот (hs), схема есть у модели, стандартная комплектация (стекло по умолчанию, однотонный RAL, стандартная ручка) —
-// это товар из каталога (цена каталога, срок PROD_TEXT, «В корзину»), иначе — индивидуальный заказ по формуле ТЗ.
+// это товар из каталога (цена и срок зависят от стеклопакета, «В корзину»), иначе — индивидуальный проект.
 const calcReady = rel => JSON.stringify(hsAvail().flatMap(sizesOf).sort((a, b) => a.width - b.width || a.sections - b.sections).map(m => ({
   n: m.sections, w: m.width, h: m.height, hs: m.heights, price: m.price, code: m.code, name: m.name, passage: m.passage,
   schemes: Object.fromEntries(m.schemes.map(s => { const v = find(m.model, m.colors[0].slug, s.slug, m.width); return [s.code, { sku: v.sku, url: rel + v.path, img: rel + v.image }]; })),
   def: defScheme(m).code,
 })));
 const calcBox = (rel, attrs = {}) => {
-  const all = { doors: calcReady(rel), term: PROD_TEXT, base: rel, ...attrs };
+  const all = { doors: calcReady(rel), term: READY_HS_TERM, base: rel, ...attrs };
   return `<div class="qc-root" data-quick-calc ${Object.entries(all).map(([k, v]) => `data-${k}="${esc(String(v))}"`).join(' ')}></div>`;
 };
-// Ссылка на калькулятор с параметрами товара (тип, размер, створки, схема)
-const raschetHref = (rel, m, s) => `${rel}raschet/?type=${m.system}&amp;w=${m.width}&amp;h=${m.height}&amp;n=${m.sections}&amp;scheme=${encodeURIComponent(s.code)}&amp;from=${encodeURIComponent(`${m.code} · ${s.code}`)}`;
-
-const ICO = {
-  price: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3.2"/></svg>',
-  clip: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5 12.3 19.2a5 5 0 0 1-7.1-7.1l8-8a3.3 3.3 0 0 1 4.7 4.7l-8 8a1.7 1.7 0 0 1-2.4-2.4l7.3-7.3"/></svg>',
-  ruler: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6-12 12z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg>',
-  palette: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.6-.9 1.2-1.8-.5-1-.1-2.2 1.2-2.2H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg>',
-  glass: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M11 4v16M17 4v16"/><path d="M5 4h12M5 20h12" opacity=".5"/></svg>',
-  sill: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18M5 18V6h14v12"/><path d="M8 18l3-3h7" opacity=".6"/></svg>',
-};
-
 // Блок «Цена по размерам проёма» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
-function calcTeaser(rel, eyebrow) {
-  return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(PROD_TEXT)}" data-href="${rel}raschet/">
-      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>Цена раздвижной двери по размерам проёма</h2><p>Введите ширину и высоту проёма — сразу покажем цену. Если размер совпадёт с готовой дверью из каталога, предложим её.</p></header>
+function calcTeaser(rel, eyebrow, title = 'Цена раздвижной двери по размерам проёма', copy = 'Введите ширину и высоту проёма — сразу покажем цену. Если размер совпадёт с готовой дверью из каталога, предложим её.') {
+  return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(READY_HS_TERM)}" data-href="${rel}raschet/">
+      <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>${esc(title)}</h2><p>${esc(copy)}</p></header>
       <div class="qc-draw__size" data-open-size></div>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
@@ -316,76 +282,93 @@ function projectCard(calcHref, id) {
       </a>`;
 }
 
-// ---------- страница варианта ----------
-function variantPage(v) {
-  const { m, c, s } = v;
-  const base = '../../../';
-  const url = SITE + v.path;
-  const size = sizeText(m);
-  const soon = !v.available;
-  const family = byModel(m.model);
-  const colorOptions = m.colors.map(col => family.find(x => x.m.width === m.width && x.c.slug === col.slug && x.s.slug === s.slug));
-  const schemeOptions = m.schemes.map(sch => family.find(x => x.m.width === m.width && x.c.slug === c.slug && x.s.slug === sch.slug));
-  const sizeOptions = m.base.sizes.map(z => family.find(x => x.m.width === z.width && x.c.slug === c.slug && x.s.slug === s.slug));
-  const how = [s.how, m.note].filter(Boolean).join(' ');
-  const heightsText = `${(m.heights || [m.height]).join(' или ')} мм`;
-  const colorName = `${c.name} RAL ${c.ral}`;
-  const title = `${m.code} ${m.name} — ${size}, ${colorName} | ${BRAND}`;
-  const description = `${m.title} ${size}, ${colorName}, ${s.label[0].toLowerCase() + s.label.slice(1)}. ${soon ? 'Скоро в продаже.' : `Стоимость ${money(m.price)}.`} Изготовление и монтаж в Москве и МО.`;
-  const imageUrl = SITE + v.image;
-
-  const product = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: `${m.name} ${m.code}, ${size}, ${colorName}, ${s.label}`,
-    sku: v.sku,
-    url,
-    image: [imageUrl],
-    description: m.lead,
-    brand: { '@type': 'Brand', name: BRAND },
-    category: systemName(m),
-    color: colorName,
-    inProductGroupWithID: m.model,
-    width: { '@type': 'QuantitativeValue', value: m.width, unitCode: 'MMT' },
-    height: { '@type': 'QuantitativeValue', value: m.height, unitCode: 'MMT' },
-    additionalProperty: [
-      ['Схема открывания', s.label], ['Конфигурация', m.subtitle], ['Профильная система', m.profile], ['Фурнитура', m.hardware],
-      ['Стеклопакет', m.glass], ['Количество секций', String(m.sections)], ['Ширина створки', `${m.leaf} мм`],
-      ...(m.passage ? [['Чистый проход', `≈ ${m.passage} мм`]] : []), ['Глубина рамы', m.frame_depth],
-    ].map(([name, value]) => ({ '@type': 'PropertyValue', name, value })),
+// ---------- семейная карточка системы ----------
+// Две пользовательские PDP собирают все размеры, секции, схемы, цвета и стеклопакеты
+// в одном конфигураторе. Статические страницы вариантов сохраняются для SEO и фида.
+function familyPage(type, preset = null) {
+  const familyModels = data.models.filter(m => m.system === type && m.status === 'available');
+  const base = preset ? '../../../' : '../../';
+  const cat = type === 'HS' ? 'hs-portaly' : 'fs-portaly';
+  const pathName = preset ? preset.path : `catalog/${cat}/`;
+  const url = SITE + pathName;
+  const defaultBase = preset?.m.base || (type === 'HS' ? familyModels.find(m => m.model === 'HS2') : familyModels.find(m => m.model === 'FS4'));
+  const defaultModel = preset?.m || defSize(defaultBase || familyModels[0]);
+  const initialImage = preset?.image || defaultBase.render?.closed || defaultBase.image;
+  const initialOpen = preset?.imageOpen || defaultBase.render?.open || '';
+  const normalizeScheme = code => type === 'FS' ? (/-R$/.test(code) ? 'FS-R' : 'FS-L') : code;
+  const colors = [...new Map(familyModels.flatMap(m => m.colors).map(c => [c.slug, c])).values()];
+  const ready = variants.filter(v => v.m.system === type && v.available).map(v => ({
+    sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name,
+    w: v.m.width, h: v.m.height, n: v.m.sections,
+    scheme: normalizeScheme(v.s.code), sourceScheme: v.s.code, schemeName: v.s.short,
+    color: v.c.slug, colorName: `${v.c.name} RAL ${v.c.ral}`, hex: v.c.hex,
+    price: v.m.price, passage: v.m.passage, triplex: v.m.triplex,
+    image: base + v.image, open: v.imageOpen ? base + v.imageOpen : '', hasPhoto: v.hasPhoto,
+    photos: v.hasPhoto ? [
+      { src: base + v.image, alt: `${v.m.name}, ${v.m.sections} ${v.m.sections >= 2 && v.m.sections <= 4 ? 'секции' : 'секций'}, закрыто`, label: 'Закрыто' },
+      ...(v.imageOpen ? [{ src: base + v.imageOpen, alt: `${v.m.name}, ${v.m.sections} ${v.m.sections >= 2 && v.m.sections <= 4 ? 'секции' : 'секций'}, открыто`, label: 'Открыто' }] : []),
+      ...((v.m.gallery || []).map((src, i) => ({ src: base + src, alt: `${v.m.name} в интерьере`, label: `В интерьере ${i + 1}` }))),
+    ] : [],
+    url: base + v.path,
+  }));
+  const modelsBySections = Object.fromEntries(familyModels.map(m => [m.sections, {
+    model: m.model, n: m.sections, profile: m.profile, hardware: m.hardware, track: m.track,
+    frameDepth: m.frame_depth, sashDepth: m.sash_depth, filling: m.filling,
+    image: base + (m.render?.closed || m.image), open: m.render?.open ? base + m.render.open : '',
+    architecture: base + m.architecture,
+  }]));
+  const family3d = {
+    dynamic: true, sys: type, w: defaultModel.width, h: defaultModel.height, n: defaultModel.sections,
+    scheme: normalizeScheme(preset?.s.code || defScheme(defaultBase).code),
+    colors: Object.fromEntries(colors.map(c => [c.slug, c.hex])),
   };
-  // «Скоро»: без Offer — цены на странице нет, заказать нельзя
-  if (!soon) {
-    product.offers = {
-      '@type': 'Offer', url, priceCurrency: 'RUB', price: String(m.price),
-      availability: 'https://schema.org/MadeToOrder', itemCondition: 'https://schema.org/NewCondition',
-      seller: { '@type': 'Organization', name: BRAND },
-    };
-  }
+  const familyConfig = {
+    type, cat, cartHref: `${base}cart/`, familyHref: `${base}catalog/${cat}/`,
+    default: { w: defaultModel.width, h: defaultModel.height, n: defaultModel.sections, scheme: normalizeScheme(preset?.s.code || defScheme(defaultBase).code), color: preset?.c.slug || defaultBase.colors[0].slug, glass: defaultModel.triplex ? 'triplex' : 'base' },
+    limits: PORTAL.LIMITS[type], colors, ready, models: modelsBySections,
+  };
+  const low = Math.min(...ready.map(x => x.price)), high = Math.max(...ready.map(x => x.price));
+  const familyTitle = type === 'HS'
+    ? `HS-порталы — конфигуратор подъёмно-сдвижных дверей | ${BRAND}`
+    : `Складные двери-гармошки FS — конфигуратор | ${BRAND}`;
+  const familyDescription = type === 'HS'
+    ? 'Подберите алюминиевый HS-портал по размеру проёма: 2–6 секций, схемы открывания, любой цвет RAL и стеклопакет. Цена и срок онлайн.'
+    : 'Подберите алюминиевую складную дверь-гармошку FS по размеру проёма: 2–8 секций, схема складывания, любой цвет RAL и стеклопакет.';
+  const title = preset ? `${preset.m.code} ${preset.m.name} — ${preset.m.width} × ${preset.m.height} мм, ${preset.c.name} RAL ${preset.c.ral} | ${BRAND}` : familyTitle;
+  const description = preset ? `${preset.m.title} ${preset.m.width} × ${preset.m.height} мм, ${preset.c.name} RAL ${preset.c.ral}, ${preset.s.label}. Настройте размер, секции, стеклопакет и цвет на одной странице.` : familyDescription;
+  const heading = type === 'HS' ? 'Подъёмно-сдвижной HS-портал' : 'Складная дверь-гармошка FS';
+  const eyebrow = type === 'HS' ? 'HS · Lift & Slide' : 'FS · Fold & Slide';
+  const lead = type === 'HS'
+    ? 'Одна система вместо десятков карточек. Задайте проём — покажем допустимые секции, схемы, чистый проход, срок и стоимость.'
+    : 'Настройте складную панорамную дверь под свой проём. Алгоритм проверит габариты, предложит число секций и рассчитает проект.';
+  const product = preset ? {
+    '@context': 'https://schema.org', '@type': 'Product', name: `${preset.m.name} ${preset.m.code}`, sku: preset.sku, url,
+    image: [SITE + preset.image], description, brand: { '@type': 'Brand', name: BRAND }, category: type === 'HS' ? 'Подъёмно-сдвижные двери' : 'Складные двери-гармошки',
+    color: `${preset.c.name} RAL ${preset.c.ral}`, inProductGroupWithID: preset.m.model,
+    offers: { '@type': 'Offer', url, priceCurrency: 'RUB', price: String(preset.m.price), availability: 'https://schema.org/MadeToOrder', itemCondition: 'https://schema.org/NewCondition' },
+  } : {
+    '@context': 'https://schema.org', '@type': 'Product', name: heading, url,
+    image: [SITE + initialImage], description,
+    brand: { '@type': 'Brand', name: BRAND }, category: type === 'HS' ? 'Подъёмно-сдвижные двери' : 'Складные двери-гармошки',
+    offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', lowPrice: String(low), highPrice: String(high), offerCount: String(ready.length), availability: 'https://schema.org/MadeToOrder' },
+  };
   const crumbs = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-    itemListElement: [['Главная', SITE], ['Каталог', SITE + 'catalog/'], [m.system, SITE + (m.system === 'HS' ? 'systems/hs/' : 'systems/fs/')], [m.code, url]]
-      .map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
+    itemListElement: [['Главная', SITE], ['Каталог', SITE + 'catalog/'], [type === 'HS' ? 'HS-порталы' : 'FS-порталы', SITE + `catalog/${cat}/`], ...(preset ? [[preset.m.code, url]] : [])].map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
   };
-
-  const swatches = colorOptions.map(x => `<a class="product-swatch${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}><span class="product-swatch__dot" style="--sw:${x.c.hex}"></span><span><strong>${esc(x.c.name)}</strong><small>RAL ${x.c.ral}</small></span></a>`).join('');
-  const sizesHtml = sizeOptions.map(x => `<a class="product-size${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${metres(x.m.width)}<small>м</small></a>`).join('');
-  const schemes = schemeOptions.map(x => `<a class="product-scheme${x === v ? ' is-active' : ''}" href="${base + x.path}"${x === v ? ' aria-current="page"' : ''}>${esc(schemeText(x.s))}<span>→</span></a>`).join('');
-  const tech = [
-    ['Ширина проёма', `${fmtN(m.width)} мм`], ['Высота', heightsText], ['Секции', String(m.sections)], ['Створки', m.subtitle],
-    ['Ширина створки', `${fmtN(m.leaf)} мм`], ['Чистый проход', m.passage ? `≈ ${fmtN(m.passage)} мм` : m.opening],
-    ['Глубина рамы', m.frame_depth], ['Глубина створки', m.sash_depth],
-    ['Профильная база', m.profile], ['Механизм', m.hardware], ['Направляющая', m.track], ['Заполнение', m.filling], ['Стеклопакет', m.glass],
-  ].map(([a, b]) => `<div><small>${esc(a)}</small><strong>${esc(b)}</strong></div>`).join('');
-  const limits = m.limits.map(l => `<li>${esc(l)}</li>`).join('');
-
-  const priceBlock = soon
-    ? `<div class="product-price"><div class="product-price__value"><small>Статус</small><strong>Скоро в продаже</strong></div><div class="product-price__term">цену и старт продаж сообщим по запросу</div></div>`
-    : `<div class="product-price"><div class="product-price__value"><small>Стоимость конструкции</small><strong>${money(m.price)}</strong></div><div class="product-price__term"><b>Срок — ${PROD_TEXT}</b>изготовление после подтверждения заказа</div></div>
-      <p class="product-price-note"><b>Цена без доставки и монтажа.</b> Их посчитаем после бесплатного замера.</p>`;
-  const mainCta = soon ? 'Узнать о старте продаж' : 'Получить точную смету';
-  const hasCalc = m.system === 'HS' && !soon;
-  const customLink = hasCalc ? raschetHref(base, m, s) : '#product-contact';
+  const specs = type === 'HS'
+    ? [['Система', 'Подъёмно-сдвижная'], ['Профиль', 'Алюминий · тёплый контур'], ['Секции', '2, 3, 4 или 6'], ['Высота', 'до 3 700 мм']]
+    : [['Система', 'Складная панорамная'], ['Профиль', 'ALUMARK S70'], ['Фурнитура', 'Patio Fold'], ['Высота', 'до 2 800 мм']];
+  const interiorPhotos = type === 'HS'
+    ? [
+        ['assets/images/family/interiors/hs-winter-interior.webp', 'HS-портал в интерьере загородного дома', 'Тёплый выход на террасу'],
+        ['assets/images/family/interiors/hs-installation.jpg', 'Монтаж подъёмно-сдвижного HS-портала', 'Портал на этапе монтажа'],
+      ]
+    : [
+        ['assets/images/family/interiors/fs-black-open.jpg', 'Чёрная складная дверь-гармошка в открытом положении', 'Открытый фасад без лишних стоек'],
+        ['assets/images/family/interiors/fs-white-open.jpg', 'Белая складная система FS на объекте', 'Складная система на этапе отделки'],
+        ['assets/images/family/interiors/fs-before-after.jpg', 'Остекление проёма складной системой до и после', 'До и после остекления'],
+      ];
 
   return `<!doctype html>
 <html lang="ru">
@@ -401,98 +384,100 @@ ${fontPreload(base)}
 <meta name="theme-color" content="#050505">
 <meta property="og:type" content="product">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:site_name" content="${BRAND}">
-<meta property="og:title" content="${esc(`${m.code} ${m.name} — ${size}, ${colorName}`)}">
+<meta property="og:title" content="${esc(heading)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${imageUrl}">
-<link rel="stylesheet" href="${base}assets/css/product.css">
+<meta property="og:image" content="${SITE + initialImage}">
+<link rel="stylesheet" href="${base}assets/css/quick-calc.css?v=3">
+<link rel="stylesheet" href="${base}assets/css/family-product.css?v=3">
 <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
 ${jsonLd(product)}
 ${jsonLd(crumbs)}
 </head>
-<body class="product-page${soon ? ' product-page--soon' : ''}" data-sku="${v.sku}">
+<body class="family-page" data-family-product>
 <site-menu data-base="${base}"></site-menu>
 <main>
-<nav class="crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="${base}">Главная</a><span aria-hidden="true">—</span><a href="${base}catalog/">Каталог</a><span aria-hidden="true">—</span><a href="${systemHref(m, base)}">${m.system}</a><span aria-hidden="true">—</span><span aria-current="page">${esc(m.code)}</span></div></nav>
-<section class="product-hero">
-  <div class="product-hero__grid">
-    <div class="product-media"${v.imageOpen ? ' data-media-toggle' : ''} data-reveal>
-      <img src="${base + v.image}" alt="${esc(`${m.code} — ${size}, ${c.name}, закрыто`)}" fetchpriority="high">${v.imageOpen ? `
-      <img class="product-media__open" src="${base + v.imageOpen}" alt="${esc(`${m.code} — ${size}, ${c.name}, открыто`)}" loading="lazy">
-      <div class="product-media__states" role="group" aria-label="Вид конструкции"><button type="button" class="is-active" aria-pressed="true" data-media-state="closed">Закрыто</button><button type="button" aria-pressed="false" data-media-state="open">Открыто</button></div>` : ''}
-      <span class="product-media__label">${esc(s.code)} · ${esc(colorName)}</span>
-    </div>
-    <aside class="product-buy">
-      <div class="product-buy__top"><span class="product-buy__code">${esc(m.code)}</span><span class="product-buy__status">${soon ? 'скоро в продаже' : 'готовая конфигурация'}</span></div>
-      <h1>${esc(m.name)}<small>${esc(size)} · ${esc(colorName)}</small></h1>
-      <p class="product-buy__lead">${esc(m.lead)}</p>
-      ${priceBlock}
-      <div class="product-quick">
-        <div><small>Схема</small><strong>${esc(s.code)}</strong></div><div><small>Ширина прохода</small><strong>${esc(m.opening)}</strong></div>
-        <div><small>Секции</small><strong>${m.sections}</strong></div><div><small>Сценарий</small><strong>${esc(m.use)}</strong></div>
+  <nav class="crumbs" aria-label="Хлебные крошки"><div class="ui-wrap crumbs__in"><a href="${base}">Главная</a><span aria-hidden="true">—</span><a href="${base}catalog/">Каталог</a><span aria-hidden="true">—</span><span aria-current="page">${type}-порталы${preset ? ` · ${esc(preset.m.code)}` : ''}</span></div></nav>
+  <section class="family-hero">
+    <div class="family-hero__grid">
+      <div class="family-gallery" data-family-gallery>
+        <figure class="family-gallery__slide family-render" data-family-render-slide data-family-3d data-3d="${esc(JSON.stringify(family3d))}">
+          <div class="family-render__stage" data-family-render-stage><img data-family-render src="${base + initialImage}" alt="${esc(heading)}, закрыто" fetchpriority="high"><img class="family-render__open" data-family-render-open src="${initialOpen ? base + initialOpen : ''}" alt="${esc(heading)}, открыто"></div>
+          <div class="family-render__states" role="group" aria-label="Вид конструкции"><button class="is-active" type="button" data-family-state="closed" aria-pressed="true">Закрыто</button><button type="button" data-family-state="open" aria-pressed="false">Открыто</button></div>
+          <div class="family-render__caption"><span>Конфигурация обновляется</span><strong data-family-visual-name>${defaultModel.sections} секции · ${defaultModel.width} × ${defaultModel.height} мм</strong></div>
+          <figcaption>01 · Конструкция</figcaption>
+        </figure>
+        <a class="family-gallery__interior-link" href="#family-interiors" data-family-interior-link>Смотреть в интерьере <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="product-variant"><div class="product-variant__head"><span>Проём</span><span>${fmtN(m.width)} мм · проход ≈ ${m.passage ? fmtN(m.passage) : '—'} мм</span></div><div class="product-sizes">${sizesHtml}</div></div>
-      <div class="product-variant"><div class="product-variant__head"><span>Цвет</span><span>${esc(c.name)} · RAL ${c.ral}</span></div><div class="product-swatches">${swatches}</div></div>
-      <div class="product-variant"><div class="product-variant__head"><span>Схема</span><span>${esc(s.code)}</span></div><div class="product-schemes">${schemes}</div></div>
-      <div class="product-actions">${soon
-        ? `<a class="ui-btn ui-btn--dark" href="#product-contact">${mainCta} <span>→</span></a>`
-        : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}<a class="ui-btn" href="${customLink}">${hasCalc ? 'Рассчитать под свой размер' : 'Индивидуальный расчёт'} <span>→</span></a></div>
-      <p class="product-sku">Артикул: ${v.sku}</p>
-    </aside>
-  </div>
-</section>
-
-<section class="product-story">
-  <div class="p-wrap">
-    <div class="product-story__grid"><p class="ui-eyebrow">01 · Конфигурация</p><div class="product-story__main"><h2>${esc(m.story)}</h2><p class="product-story__copy">${esc(m.lead)} Артикул фиксирует размер, цвет и схему; если архитектура требует другого решения, рассчитываем отдельную конфигурацию.</p></div></div>
-    <div class="product-config" data-reveal><div class="product-config__drawing">${largeSvg(m, s)}</div><div class="product-config__facts"><div><small>Размер</small><strong>${esc(size)}</strong></div><div><small>Конфигурация</small><strong>${esc(m.subtitle)}</strong></div><div><small>Схема</small><strong>${esc(s.label)}</strong></div>${how ? `<div><small>Как работает</small><strong>${esc(how)}</strong></div>` : ''}<div><small>Цвет</small><strong>${esc(c.name)} · RAL ${c.ral}</strong></div></div></div>
-  </div>
-</section>
-
-<section class="product-tech">
-  <div class="p-wrap">
-    <header class="product-tech__head"><h2>Инженерная спецификация</h2><p>Поставщиков и комплектующие показываем на техническом уровне. Итоговые характеристики конкретной конструкции подтверждаются после расчёта размера и стеклопакета.</p></header>
-    <div class="product-tech__grid">${tech}</div>
-    <ul class="product-limits">${limits}</ul>
-    <div class="product-docs"><a class="product-doc" href="${systemHref(m, base)}"><div><strong>Описание системы и механики</strong><small>Схемы открывания, стеклопакеты и инженерные ориентиры</small></div><span>↗</span></a><a class="product-doc" href="${customLink}"><div><strong>Индивидуальная конфигурация</strong><small>Другой размер, стекло, цвет или монтажный узел</small></div><span>→</span></a></div>
-  </div>
-</section>
-
-<section class="product-contact" id="product-contact">
-  <div class="p-wrap product-contact__grid">
-    <div class="product-contact__intro">
-      <p class="ui-eyebrow">02 · ${soon ? 'Старт продаж' : 'Под ваш проём'}</p>
-      <h2>${soon ? 'Сообщим о старте продаж' : 'Другой размер или комплектация?'}</h2>
-      <p class="product-contact__copy">${soon ? 'Оставьте телефон — позвоним, когда конфигурация станет доступна к заказу, и назовём цену.' : 'Посчитаем под ваш проём: калькулятор сразу покажет ориентировочную цену, а инженер после бесплатного замера — точную.'}</p>
-      <ul class="product-options">
-        <li>${ICO.ruler}<span><b>Другой размер</b>проверим створки и вес стекла</span></li>
-        <li>${ICO.palette}<span><b>Любой RAL</b>под фасад и кровлю</span></li>
-        <li>${ICO.glass}<span><b>Стекло под задачу</b>безопасность, тепло, солнце</span></li>
-        <li>${ICO.sill}<span><b>Монтажный узел</b>порог, пол, водоотвод</span></li>
-      </ul>
-      ${hasCalc ? `<a class="ui-btn ui-btn--dark product-contact__calc" href="${customLink}">Рассчитать под свой размер <span>→</span></a>` : ''}
+      <aside class="family-buy">
+        <p class="ui-eyebrow">${eyebrow}</p>
+        <h1 data-family-main-title>${preset ? esc(preset.m.name) : heading}</h1>
+        <p class="family-buy__lead" data-family-subtitle>${preset ? `${metres(preset.m.width)} м · ${sectionsText(preset.m.sections)} · ${esc(preset.s.short)}` : lead}</p>
+        <div class="family-price"><div><small>Ориентировочная стоимость</small><strong data-family-price></strong><span>за выбранную конструкцию</span></div><p><b data-family-term></b><em data-family-mode></em></p></div>
+        <div class="family-facts"><div><small>Материал</small><strong>Алюминий</strong></div><div><small>Открытый проход</small><strong data-family-passage></strong></div><div><small>Секции</small><strong data-family-sections-summary></strong></div></div>
+        <section class="family-config" aria-labelledby="family-config-title">
+          <header><span id="family-config-title">Настройте конструкцию</span><small>цена и срок пересчитываются сразу</small></header>
+          <div class="family-step family-step--size">
+            <div class="family-step__head"><span>01</span><div><b>Размер проёма</b><small>готовая ширина или точный размер в миллиметрах</small></div></div>
+            <div class="family-widths" data-family-widths></div>
+            <div class="family-size"><label><span>Ширина, мм</span><input type="number" inputmode="numeric" min="${PORTAL.LIMITS[type].wMin}" max="${PORTAL.LIMITS[type].wMax}" step="10" data-family-width value="${defaultModel.width}"></label><label><span>Высота, мм</span><input type="number" inputmode="numeric" min="${PORTAL.LIMITS[type].hMin}" max="${PORTAL.LIMITS[type].hMax}" step="10" data-family-height value="${defaultModel.height}"></label><button type="button" data-family-apply-size>Применить</button></div>
+            <p class="family-status" data-family-status aria-live="polite"></p>
+          </div>
+          <div class="family-step family-step--sections"><div class="family-step__head"><span>02</span><div><b>Количество секций</b><small>доступно для выбранной ширины</small></div></div><div class="family-options" data-family-sections></div></div>
+          <div class="family-step family-step--schemes"><div class="family-step__head"><span>03</span><div><b>Схема открывания</b><small data-family-scheme-copy></small></div></div><div class="family-options family-options--schemes" data-family-schemes></div></div>
+          <div class="family-step family-step--colors"><div class="family-step__head"><span>04</span><div><b>Цвет профиля</b><small>любой однотонный RAL — без доплаты</small></div></div><div class="family-colors" data-family-colors></div></div>
+          <details class="family-glass"><summary><span><i>05</i><b>Стеклопакет</b></span><strong data-family-glass-label>Базовый</strong></summary><div class="family-glass__body" data-family-glasses></div></details>
+        </section>
+        <details class="family-included" open><summary><b>Что входит в цену</b><span aria-hidden="true"></span></summary><div>Алюминиевый профиль, выбранный стеклопакет, фурнитура ${type === 'HS' ? 'Patio Lift' : 'Patio Fold'} и любой цвет RAL. <em>Доставка и монтаж рассчитываются после подтверждения заказа.</em></div></details>
+        <div class="family-actions"><div class="family-actions__price"><div><small>Итоговая стоимость</small><em data-family-term-copy></em></div><strong data-family-price-copy></strong></div><button class="ui-btn ui-btn--dark" type="button" data-family-buy></button></div>
+      </aside>
     </div>
-    <lead-form data-base="${base}" data-source="${v.sku}" data-context="${esc(`${m.code}, ${colorName}, ${s.code} (${v.sku})`)}" data-cta="${soon ? 'Сообщить о старте' : 'Получить точный расчёт'}"></lead-form>
-  </div>
-</section>
+  </section>
 
-<section class="product-lifestyle" data-reveal>
-  <img src="${base + m.architecture}" alt="${esc(m.code)} в архитектуре загородного дома" loading="lazy" decoding="async">
-  <div class="product-lifestyle__copy"><small>${esc(m.code)} · ${esc(size)}</small><h2>Система внутри архитектуры</h2><p>${esc(m.use)}. Портал подбираем по проёму, планировке и маршруту движения, а не только по размеру из каталога.</p></div>
-</section>
+  <section class="family-configuration" id="family-configuration">
+    <div class="p-wrap">
+      <div class="family-configuration__intro"><p class="ui-eyebrow">01 · Конфигурация и спецификация</p><div><h2 data-family-config-heading></h2><p data-family-config-copy></p></div></div>
+      <div class="family-configuration__grid">
+        <div class="family-configuration__drawing" data-family-scheme-drawing aria-label="Схема выбранного открывания"></div>
+        <dl class="family-configuration__facts">
+          <div><dt>Размер</dt><dd data-family-config-size></dd></div>
+          <div><dt>Конфигурация</dt><dd data-family-config-layout></dd></div>
+          <div><dt>Схема</dt><dd data-family-config-scheme></dd></div>
+          <div><dt>Как работает</dt><dd data-family-config-how></dd></div>
+          <div><dt>Цвет</dt><dd data-family-config-color></dd></div>
+        </dl>
+      </div>
+      <div class="family-configuration__spec family-tech">
+        <header><h2>Инженерная спецификация</h2><p>Параметры меняются вместе с выбранным числом секций и схемой открывания.</p></header>
+        <div class="family-tech__grid"><div><small>Ширина проёма</small><strong data-family-result-size></strong></div><div><small>Секции</small><strong data-family-sections-summary-spec></strong></div><div><small>Схема</small><strong data-family-result-scheme></strong></div><div><small>Чистый проход</small><strong data-family-result-passage></strong></div>${specs.map(([a,b]) => `<div><small>${a}</small><strong>${b}</strong></div>`).join('')}<div><small>Глубина рамы</small><strong data-family-frame></strong></div><div><small>Стеклопакет</small><strong data-family-tech-glass></strong></div><div><small>Ширина створки</small><strong data-family-leaf></strong></div><div><small>Статус</small><strong data-family-tech-status></strong></div></div>
+      </div>
+    </div>
+  </section>
 
-<div class="mobile-buy"><div class="mobile-buy__price">${soon ? '<small>статус</small><strong>Скоро</strong>' : `<small>цена</small><strong>${money(m.price)}</strong>`}</div>${soon ? '<a class="ui-btn ui-btn--dark" href="#product-contact">Узнать о старте <span>→</span></a>' : `<button class="ui-btn ui-btn--dark" type="button" data-add-to-cart data-sku="${v.sku}" data-cart-href="${base}cart/">В корзину <span>+</span></button>`}</div>
+  <section class="family-interiors" id="family-interiors">
+    <div class="p-wrap family-interiors__layout">
+      <header><div><p class="ui-eyebrow">На объектах</p><h2>Смотреть в интерьере</h2></div><p>${type === 'HS' ? 'Как подъёмно-сдвижной портал работает в тёплом контуре и выглядит на этапе установки.' : 'Как складная система освобождает проём и объединяет интерьер с террасой.'}</p></header>
+      <div class="family-interiors__list">${interiorPhotos.map(([src, alt, caption], i) => `<figure><img src="${base + src}" alt="${esc(alt)}" loading="lazy" decoding="async"><figcaption><span>${String(i + 1).padStart(2, '0')}</span><strong>${esc(caption)}</strong></figcaption></figure>`).join('')}</div>
+    </div>
+  </section>
+
+  <section class="family-seo"><div class="p-wrap family-seo__grid"><div><p class="ui-eyebrow">Как выбрать</p><h2>${type === 'HS' ? 'Панорама, тепло и лёгкое открывание' : 'Почти полностью открытый проём'}</h2></div><div><p>${type === 'HS' ? 'HS-портал подходит для тёплого выхода из гостиной на террасу, панорамного фасада и широких проёмов. Створка приподнимается и плавно сдвигается вдоль направляющей.' : 'Складная система FS собирает створки в компактную пачку у края проёма. Это решение для террас, веранд, ресторанов и пространств, где важно максимально объединить интерьер с улицей.'}</p><p>Введите фактический размер проёма: система сама оставит только допустимое число секций и схемы, рассчитает ориентировочный проход, стоимость и срок изготовления.</p><a href="${base}${type === 'HS' ? 'systems/hs/' : 'systems/fs/'}">Подробнее о системе <span>→</span></a></div></div></section>
+
+  <section class="product-contact" id="product-contact"><div class="p-wrap product-contact__grid"><div class="product-contact__intro"><p class="ui-eyebrow">Проверка инженером</p><h2>Нужен сложный проём или монтажный узел?</h2><p class="product-contact__copy">Пришлите размеры или проект. Проверим вес створок, стеклопакет, порог, водоотвод и подготовим точную смету.</p></div><lead-form data-base="${base}" data-source="FAMILY-${type}" data-context="Конфигуратор ${type}-портала" data-cta="Отправить проект инженеру"></lead-form></div></section>
 </main>
+<div class="family-mobile-buy"><div><small data-family-mobile-label>Стоимость</small><strong data-family-mobile-price></strong></div><button class="ui-btn ui-btn--dark" type="button" data-family-buy-mobile></button></div>
+<script type="application/json" id="family-config">${JSON.stringify(familyConfig).replace(/</g, '\\u003c')}</script>
 <site-footer data-base="${base}"></site-footer>
 <script src="${base}assets/js/components/site-menu.js"></script>
 <script src="${base}assets/js/components/site-footer.js"></script>
-<script src="${base}assets/js/shop.js"></script>
-<script src="${base}assets/js/product.js"></script>
+<script src="${base}assets/js/portal-calc.js?v=3"></script>
+<script src="${base}assets/js/opening-draw.js?v=3"></script>
+<script src="${base}assets/js/shop.js?v=3"></script>
+<script src="${base}assets/js/family-product.js?v=3"></script>
+<script type="module" src="${base}assets/js/card3d.js?v=3"></script>
 <script src="${base}assets/js/components/lead-form.js"></script>
 </body>
-</html>
-`;
+</html>`;
 }
 
 // ---------- страница «Проекты» (/projects/) ----------
@@ -554,7 +539,10 @@ const blocks = {
   },
   // «Системы» (блок «Открыть пространство») — отдельная страница /systems/, плашки готовых HS
   'systems/index.html': {
-    'hs-mini-cards': featured.map(m => `<a class="sx-strip" href="../${firstOf(m.base).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`).join('\n          '),
+    'hs-mini-cards': featured.map(m => {
+      const v = firstOf(m.base);
+      return `<a class="sx-strip" href="../${v.path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`;
+    }).join('\n          '),
   },
   'index.html': {
     'home-cards': [...hs.map(m => marketCard(m, '')), projectCard('raschet/')].join('\n\n      '),
@@ -564,7 +552,7 @@ const blocks = {
 
 // ---------- sitemap ----------
 const sitemapUrls = [
-  ['', 'weekly', '1.0'], ['systems/', 'monthly', '0.8'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['systems/fs/', 'monthly', '0.7'],
+  ['', 'weekly', '1.0'], ['systems/', 'monthly', '0.8'], ['systems/hs/', 'monthly', '0.9'], ['catalog/', 'weekly', '0.8'], ['catalog/hs-portaly/', 'weekly', '0.9'], ['catalog/fs-portaly/', 'weekly', '0.9'], ['systems/fs/', 'monthly', '0.7'],
   ['raschet/', 'monthly', '0.8'], ['projects/', 'monthly', '0.6'], ['about/', 'monthly', '0.6'], ['contacts/', 'monthly', '0.6'],
   ['osteklenie-pod-klyuch/', 'monthly', '0.7'],
   ...variants.map(v => [v.path, 'monthly', v.available ? '0.6' : '0.4']),
@@ -577,7 +565,9 @@ ${sitemapUrls.map(([p, f, pr]) => `  <url>\n    <loc>${SITE}${p}</loc>\n    <cha
 
 // ---------- запись ----------
 const outputs = new Map();
-for (const v of variants) outputs.set(v.path + 'index.html', variantPage(v));
+outputs.set('catalog/hs-portaly/index.html', familyPage('HS'));
+outputs.set('catalog/fs-portaly/index.html', familyPage('FS'));
+for (const v of variants) outputs.set(v.path + 'index.html', familyPage(v.m.system, v));
 for (const [file, map] of Object.entries(blocks)) {
   let html = read(file);
   for (const [name, content] of Object.entries(map)) {
@@ -591,14 +581,16 @@ outputs.set('sitemap.xml', sitemap);
 // Данные для корзины (assets/js/shop.js): актуальные цены и названия по артикулу
 outputs.set('data/catalog.json', JSON.stringify({
   _comment: 'Сгенерировано tools/build.mjs из data/products.json и data/site-config.json — не редактировать вручную.',
-  // Для корзины: самовывоз с производства и оценка доставки + монтажа
+  // Для корзины: адрес производства и предварительная оценка доставки + монтажа
   factory: (({ _comment, ...f }) => f)(config.factory || {}),
   services: (({ _comment, ...s }) => s)(config.services || {}),
   variants: variants.map(v => ({
-    sku: v.sku, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m), width: v.m.width, size_short: `${metres(v.m.width)} м`,
+    sku: v.sku, system: v.m.system, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m), width: v.m.width, height: v.m.height, sections: v.m.sections, size_short: `${metres(v.m.width)} м`,
     color: `${v.c.name} RAL ${v.c.ral}`, color_slug: v.c.slug, hex: v.c.hex,
-    scheme: v.s.label, scheme_slug: v.s.slug, scheme_short: v.s.short, scheme_title: v.m.scheme_title,
-    price: v.m.price, available: v.available, image: v.image, image_open: v.imageOpen, url: v.path,
+    scheme: v.s.label, scheme_code: v.s.code, scheme_slug: v.s.slug, scheme_short: v.s.short, scheme_title: v.m.scheme_title,
+    price: v.m.price, available: v.available, triplex: v.m.triplex, default_glass: v.m.triplex ? 'triplex' : 'base',
+    default_glass_label: v.m.triplex ? 'Триплекс' : 'Базовый', default_term: `до ${PORTAL.days(v.m.system, v.m.triplex ? 'triplex' : 'base', false, false)} дней`,
+    image: v.image, image_open: v.imageOpen, url: v.path,
   })),
 }, null, 2) + '\n');
 
@@ -607,7 +599,8 @@ const stale = [];
 for (const cat of ['catalog/hs-portaly', 'catalog/fs-portaly']) {
   if (!exists(cat)) continue;
   for (const dir of fs.readdirSync(path.join(ROOT, cat))) {
-    if (!variants.some(v => v.path === `${cat}/${dir}/`)) stale.push(`${cat}/${dir}`);
+    const entry = path.join(ROOT, cat, dir);
+    if (fs.statSync(entry).isDirectory() && !variants.some(v => v.path === `${cat}/${dir}/`)) stale.push(`${cat}/${dir}`);
   }
 }
 

@@ -61,6 +61,22 @@ function box(w, h, d, mat) {
   return m;
 }
 
+// Семейная PDP умеет менять число секций и схему без перехода на другой SKU.
+// Для неё собираем ту же 3D-конфигурацию напрямую из общей инженерной раскладки PSPortal.
+function normalizeConfig(seed) {
+  if (!seed.dynamic || !window.PSPortal) return seed;
+  const layout = window.PSPortal.layout(seed.sys, seed.n, seed.scheme, false);
+  const kinds = layout.map(item => item.kind === 'door' ? 'fold' : item.kind);
+  const to = {}, handles = [], dirs = layout.map(item => item.dir || 0);
+  layout.forEach((item, index) => {
+    if (item.kind === 'move') to[index] = item.dir < 0 ? 0 : seed.n - 1;
+    if (item.handle) handles.push([index, item.handle]);
+  });
+  const colors = { ...(seed.colors || {}) };
+  if (seed.color && seed.hex) colors[seed.color] = seed.hex;
+  return { ...seed, kinds, to, handles, dirs, colors, mirror: {} };
+}
+
 // Створка: рамка из профиля + стекло; ручка на замковой стороне ('l' / 'r')
 function leaf(w, h, mat, handle) {
   const g = new THREE.Group(), p = 0.075, d = 0.06;
@@ -100,6 +116,8 @@ function buildPortal(cfg, hex) {
     return l;
   });
   const movers = cfg.kinds.map((k, i) => (k === 'move' ? i : -1)).filter(i => i >= 0);
+  const leftFolds = cfg.dirs ? cfg.kinds.map((k, i) => k === 'fold' && cfg.dirs[i] < 0 ? i : -1).filter(i => i >= 0) : [];
+  const rightFolds = cfg.dirs ? cfg.kinds.map((k, i) => k === 'fold' && cfg.dirs[i] > 0 ? i : -1).filter(i => i >= 0).reverse() : [];
 
   // p: 0 — закрыто, 1 — открыто
   function place(p) {
@@ -118,7 +136,19 @@ function buildPortal(cfg, hex) {
         l.position.set(lerp(base, target, p), cy + lift, 0.03 + (stacked ? mi * 0.05 : 0));
         return;
       }
-      // складные: гармошка от левого косяка, панели ломаются к комнате; распашная — от правого
+      // Семейная FS: пакет может складываться влево, вправо или симметрично в две стороны.
+      if (kind === 'fold' && cfg.dirs) {
+        const w = lw + 0.006;
+        const dir = cfg.dirs[i] < 0 ? -1 : 1;
+        const order = dir < 0 ? leftFolds : rightFolds;
+        const k = order.indexOf(i), dx = (dir < 0 ? 1 : -1) * Math.cos(theta);
+        const dz = (k % 2 ? -1 : 1) * Math.sin(theta) * (dir < 0 ? 1 : -1);
+        const hx = (dir < 0 ? -iw / 2 : iw / 2) + k * w * dx;
+        l.position.set(hx + dx * w / 2, cy, (k % 2 ? w * Math.sin(theta) : 0) * (dir < 0 ? 1 : -1) + dz * w / 2);
+        l.rotation.y = Math.atan2(-dz, dx);
+        return;
+      }
+      // Карточки каталога: прежняя гармошка от левого косяка; распашная — от правого.
       const w = lw + 0.006;
       let hx, dx, dz;
       if (kind === 'fold') {
@@ -142,34 +172,39 @@ function buildPortal(cfg, hex) {
 // ---------- карточка ----------
 function initCard(card, R) {
   let cfg;
-  try { cfg = JSON.parse(card.dataset['3d']); } catch (e) { return; }
-  const media = card.querySelector('.m-card__media');
-  if (!media) return;
+  try { cfg = normalizeConfig(JSON.parse(card.dataset['3d'])); } catch (e) { return; }
+  const isFamily = card.hasAttribute('data-family-3d');
+  const media = card.querySelector('.m-card__media') || card;
+  const stage = card.querySelector('[data-card-3d-stage],[data-family-render-stage]') || media;
+  if (!media || !stage) return;
 
   const canvas = document.createElement('canvas');
-  canvas.className = 'm-card__3d';
+  canvas.className = isFamily ? 'family-render__3d' : 'm-card__3d';
   canvas.setAttribute('aria-hidden', 'true');
-  media.appendChild(canvas);
+  stage.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'm-card__3d-toggle';
-  btn.innerHTML = '<span>Открыть</span>';
-  btn.setAttribute('aria-label', 'Показать открытым');
-  card.appendChild(btn);
-  const hint = document.createElement('span');
-  hint.className = 'm-card__3d-hint';
-  hint.setAttribute('aria-hidden', 'true');
-  hint.innerHTML = '3D<span> · потяните</span>';
-  card.appendChild(hint);
+  let btn = null;
+  if (!isFamily) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'm-card__3d-toggle';
+    btn.innerHTML = '<span>Закрыто</span>';
+    btn.setAttribute('aria-label', 'Показать открытым');
+    stage.appendChild(btn);
+    const hint = document.createElement('span');
+    hint.className = 'm-card__3d-hint';
+    hint.setAttribute('aria-hidden', 'true');
+    hint.innerHTML = '3D<span> · потяните</span>';
+    stage.appendChild(hint);
+  }
 
   const state = {
-    c: card.querySelector('[data-color].is-active')?.dataset.color || Object.keys(cfg.colors)[0],
-    s: card.querySelector('[data-scheme].is-active')?.dataset.scheme || Object.keys(cfg.mirror)[0]
+    c: cfg.color || card.querySelector('[data-color].is-active')?.dataset.color || Object.keys(cfg.colors)[0],
+    s: cfg.scheme || card.querySelector('[data-scheme].is-active')?.dataset.scheme || Object.keys(cfg.mirror)[0]
   };
-  let model = buildPortal(cfg, cfg.colors[state.c]);
-  const setScheme = () => { model.portal.scale.x = cfg.mirror[state.s] ? -1 : 1; };
+  let model = buildPortal(cfg, cfg.colors[state.c] || cfg.hex || Object.values(cfg.colors)[0] || '#383b3a');
+  const setScheme = () => { model.portal.scale.x = !cfg.dynamic && cfg.mirror[state.s] ? -1 : 1; };
   setScheme();
 
   let yaw = reduced ? YAW0 : YAW0 - 0.55, yawT = YAW0, pitch = PITCH0, pitchT = PITCH0, prog = 0, progT = 0;
@@ -204,7 +239,7 @@ function initCard(card, R) {
     scene.remove(model.portal);
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(gl.domElement, 0, 0, cw, ch);
-    if (!shown) { shown = true; media.classList.add('is-3d'); }
+    if (!shown) { shown = true; stage.classList.add('is-3d'); }
   }
 
   const tick = () => {
@@ -220,9 +255,11 @@ function initCard(card, R) {
 
   const setOpen = open => {
     progT = open ? 1 : 0;
-    btn.classList.toggle('is-open', open);
-    btn.innerHTML = `<span>${open ? 'Закрыть' : 'Открыть'}</span>`;
-    btn.setAttribute('aria-label', open ? 'Показать закрытым' : 'Показать открытым');
+    btn?.classList.toggle('is-open', open);
+    if (btn) {
+      btn.innerHTML = `<span>${open ? 'Открыто' : 'Закрыто'}</span>`;
+      btn.setAttribute('aria-label', open ? 'Показать закрытым' : 'Показать открытым');
+    }
     kick();
   };
 
@@ -246,29 +283,36 @@ function initCard(card, R) {
   canvas.addEventListener('pointerup', end);
   canvas.addEventListener('pointercancel', end);
   // после поворота клик не должен уводить на страницу товара
-  media.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
+  stage.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
   canvas.addEventListener('dblclick', e => { e.preventDefault(); yawT = YAW0; pitchT = PITCH0; kick(); });
 
-  if (canHover) {
-    media.addEventListener('pointerenter', () => setOpen(true));
+  if (!isFamily && canHover) {
+    stage.addEventListener('pointerenter', () => setOpen(true));
     card.addEventListener('pointerleave', () => setOpen(false));
   }
-  btn.addEventListener('click', () => setOpen(progT < 0.5));
+  btn?.addEventListener('click', () => setOpen(progT < 0.5));
+  if (isFamily) card.addEventListener('ps-family-state', event => setOpen(!!event.detail?.open));
 
   card.addEventListener('ps-card-variant', e => {
-    const { w, c, s } = e.detail;
+    const { w, h, n, c, s, hex, type } = e.detail;
+    if (cfg.dynamic) {
+      cfg = normalizeConfig({ ...cfg, sys: type || cfg.sys, w: w || cfg.w, h: h || cfg.h, n: n || cfg.n, scheme: s || cfg.scheme, color: c || cfg.color, hex: hex || cfg.hex });
+      state.c = c || state.c; state.s = s || state.s;
+      model = buildPortal(cfg, cfg.colors[state.c] || cfg.hex || Object.values(cfg.colors)[0] || '#383b3a');
+      setScheme(); kick(); return;
+    }
     if (w && w !== cfg.w) { cfg = { ...cfg, w }; state.c = c; model = buildPortal(cfg, cfg.colors[c]); setScheme(); }
     if (c !== state.c) { state.c = c; model.mat.color.set(cfg.colors[c]); }
     if (s !== state.s) { state.s = s; setScheme(); }
     kick();
   });
 
-  if ('ResizeObserver' in window) new ResizeObserver(() => { if (shown) kick(); }).observe(media);
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (shown) kick(); }).observe(stage);
   kick();
 }
 
 // Инициализация, когда карточка подъезжает к экрану
-const cards = [...document.querySelectorAll('.m-card[data-3d]')];
+const cards = [...document.querySelectorAll('.m-card[data-3d], [data-family-3d][data-3d]')];
 if (cards.length) {
   const start = card => {
     const r = renderer();

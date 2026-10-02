@@ -1,5 +1,5 @@
 {
-  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = размеры (sizes) × цвета × схемы каждой модели. sizes — ширины проёма из таблицы размеров: width, note (пояснение). Цену и чистый проход считает assets/js/portal-calc.js по ТЗ калькулятора (55 000 ₽/м² HS, 40 000 ₽/м² FS, ×1,4 за трёхполозную раму, триплекс при створке > 5 м²). heights — стандартные высоты, цена одна. Код варианта — code_prefix/ширина в дм (HS2/36), название — name_base + ширина в м. default_width — размер, выбранный в карточке. schemes[].how — как работает схема. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото вариантов: assets/images/products/<model>/<color.slug>-<scheme.slug>.webp и …-open.webp (одни на все размеры модели). render — студийный рендер модели: node tools/recolor-photos.mjs перекрашивает его во все цвета модели, зеркальные схемы отражает.",
+  "_comment": "Источник данных каталога. После правки: node tools/build.mjs. Варианты = размеры (sizes) × цвета × схемы каждой модели. sizes — ширины проёма из таблицы размеров: width, note (пояснение). Цену и чистый проход считает assets/js/portal-calc.js по единым формулам (базовое стекло: 35 000 ₽/м² HS, 55 000 ₽/м² FS; ×1,4 за трёхполозную раму HS, триплекс при створке > 5 м²; срок — PSPortal.days). heights — стандартные высоты, цена одна. Код варианта — code_prefix/ширина в дм (HS2/36), название — name_base + ширина в м. default_width — размер, выбранный в карточке. schemes[].how — как работает схема. status: available — в продаже и в фиде, soon — страница есть, цена скрыта, в фид не попадает. Фото вариантов: assets/images/products/<model>/<color.slug>-<scheme.slug>.webp и …-open.webp (одни на все размеры модели). render — студийный рендер модели: node tools/recolor-photos.mjs перекрашивает его во все цвета модели, зеркальные схемы отражает.",
   "models": [
     {
       "model": "HS2",
@@ -264,7 +264,7 @@
       "model": "FS3",
       "cat": "fs-portaly",
       "system": "FS",
-      "status": "soon",
+      "status": "available",
       "title": "Складной портал",
       "card_desc": "Компактный пакет створок у левой или правой стороны проёма.",
       "story": "Створки складываются к краю и освобождают почти весь проём.",
@@ -274,7 +274,7 @@
       "sections": 3,
       "subtitle": "Схема 330 · 3 складные створки",
       "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
+      "hardware": "Patio",
       "track": "Fold&Slide",
       "frame_depth": "70 мм",
       "sash_depth": "80 мм",
@@ -331,7 +331,7 @@
       "model": "FS4",
       "cat": "fs-portaly",
       "system": "FS",
-      "status": "soon",
+      "status": "available",
       "title": "Складной портал",
       "card_desc": "Три складные створки собираются с одной стороны, отдельная проходная — с другой.",
       "story": "Большой складной фасад с отдельной проходной створкой.",
@@ -341,7 +341,7 @@
       "sections": 4,
       "subtitle": "Схема 431 · 3 + 1",
       "profile": "ALUMARK S70",
-      "hardware": "Roto Patio Fold",
+      "hardware": "Patio",
       "track": "Fold&Slide",
       "frame_depth": "70 мм",
       "sash_depth": "80 мм",

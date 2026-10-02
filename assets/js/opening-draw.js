@@ -17,9 +17,10 @@
 
   function svg(st) {
     // прямоугольник проёма в пропорции w × h, вписанный в рабочее поле
-    const aw = VB_W - PAD.l - PAD.r, ah = VB_H - PAD.t - PAD.b;
+    const pad = st.presentation ? { l: 40, r: 40, t: 40, b: 118 } : PAD;
+    const aw = VB_W - pad.l - pad.r, ah = VB_H - pad.t - pad.b;
     const k = Math.min(aw / st.w, ah / st.h);
-    const W = st.w * k, H = st.h * k, x0 = PAD.l + (aw - W) / 2, y0 = PAD.t + (ah - H) / 2, x1 = x0 + W, y1 = y0 + H;
+    const W = st.w * k, H = st.h * k, x0 = pad.l + (aw - W) / 2, y0 = pad.t + (ah - H) / 2, x1 = x0 + W, y1 = y0 + H;
     const L = P.layout(st.type, st.n, st.scheme || defScheme(st.type, st.n), st.door), n = L.length, pw = W / n, f = 7;
     let g = `<rect class="od-frame" x="${r1(x0)}" y="${r1(y0)}" width="${r1(W)}" height="${r1(H)}"/>`;
     g += `<rect class="od-frame od-frame--in" x="${r1(x0 + f)}" y="${r1(y0 + f)}" width="${r1(W - 2 * f)}" height="${r1(H - 2 * f)}"/>`;
@@ -48,18 +49,23 @@
         g += `<line class="od-handle" x1="${r1(hx)}" y1="${r1(midY - 26)}" x2="${r1(hx)}" y2="${r1(midY + 26)}"/>`;
       }
     });
-    // размерные линии
-    const dy = y0 - 44, dx = x1 + 60;
-    g += `<path class="od-dim" d="M${r1(x0)} ${r1(dy)}H${r1(x1)}M${r1(x0)} ${r1(dy - 10)}v20M${r1(x1)} ${r1(dy - 10)}v20M${r1(x0)} ${r1(y0 - 6)}V${r1(dy - 10)}M${r1(x1)} ${r1(y0 - 6)}V${r1(dy - 10)}"/>`;
-    g += `<path class="od-dim" d="M${r1(dx)} ${r1(y0)}V${r1(y1)}M${r1(dx - 10)} ${r1(y0)}h20M${r1(dx - 10)} ${r1(y1)}h20M${r1(x1 + 6)} ${r1(y0)}H${r1(dx + 10)}M${r1(x1 + 6)} ${r1(y1)}H${r1(dx + 10)}"/>`;
+    // В презентационном блоке размерная линия находится снизу, как в архитектурной спецификации.
+    const dy = st.presentation ? y1 + 38 : y0 - 44, dx = x1 + 60;
+    if (st.presentation) {
+      g += `<path class="od-dim" d="M${r1(x0)} ${r1(dy)}H${r1(x1)}M${r1(x0)} ${r1(dy - 10)}v20M${r1(x1)} ${r1(dy - 10)}v20"/>`;
+    } else {
+      g += `<path class="od-dim" d="M${r1(x0)} ${r1(dy)}H${r1(x1)}M${r1(x0)} ${r1(dy - 10)}v20M${r1(x1)} ${r1(dy - 10)}v20M${r1(x0)} ${r1(y0 - 6)}V${r1(dy - 10)}M${r1(x1)} ${r1(y0 - 6)}V${r1(dy - 10)}"/>`;
+      g += `<path class="od-dim" d="M${r1(dx)} ${r1(y0)}V${r1(y1)}M${r1(dx - 10)} ${r1(y0)}h20M${r1(dx - 10)} ${r1(y1)}h20M${r1(x1 + 6)} ${r1(y0)}H${r1(dx + 10)}M${r1(x1 + 6)} ${r1(y1)}H${r1(dx + 10)}"/>`;
+    }
     g += `<line class="od-floor" x1="${r1(x0 - 30)}" y1="${r1(y1)}" x2="${r1(x1 + 30)}" y2="${r1(y1)}"/>`;
-    return { g, pos: { wx: (x0 + x1) / 2 / VB_W * 100, wy: dy / VB_H * 100, hx: dx / VB_W * 100, hy: (y0 + y1) / 2 / VB_H * 100 } };
+    return { g, pos: { wx: (x0 + x1) / 2 / VB_W * 100, wy: (st.presentation ? dy + 34 : dy) / VB_H * 100, hx: dx / VB_W * 100, hy: (y0 + y1) / 2 / VB_H * 100 } };
   }
 
   function mount(el, opts = {}) {
-    const st = { type: opts.type || 'HS', w: opts.w || 3600, h: opts.h || 2300, n: opts.n || 0, scheme: opts.scheme || '', door: !!opts.door };
+    const st = { type: opts.type || 'HS', w: opts.w || 3600, h: opts.h || 2300, n: opts.n || 0, scheme: opts.scheme || '', door: !!opts.door, presentation: !!opts.presentation };
     if (!st.n) st.n = recommend(st.w, st.type);
     el.classList.add('od');
+    if (st.presentation) el.classList.add('od--presentation');
     el.innerHTML = `
       <svg class="od__svg" viewBox="0 0 ${VB_W} ${VB_H}" role="img" aria-label="Чертёж проёма"></svg>
       <span class="od__in od__in--w" aria-hidden="true"><span class="od__cap">Ширина</span><b></b><span>мм</span></span>
@@ -142,8 +148,8 @@
     };
   }
 
-  // Цена по ТЗ (portal-calc.js) с параметрами по умолчанию: стекло стандарт (или обязательный триплекс), однотонный RAL, стандартная ручка
-  const price = st => P.price({ type: st.type || 'HS', w: st.w, h: st.h, n: st.n, scheme: st.scheme || defScheme(st.type || 'HS', st.n), glass: st.glass, color: st.color, handle: st.handle, door: st.door, extraSections: st.extraSections });
+  // Цена по ТЗ (portal-calc.js) с параметрами по умолчанию: базовое стекло (или обязательный триплекс), однотонный RAL, стандартная ручка
+  const price = st => P.price({ type: st.type || 'HS', w: st.w, h: st.h, n: st.n, scheme: st.scheme || defScheme(st.type || 'HS', st.n), glass: st.glass || 'base', color: st.color, handle: st.handle, door: st.door, extraSections: st.extraSections, customHeight: st.h !== 2300 });
 
   window.PSOpening = { mount, sizeControl, price, recommend, fmt, matchReady, word };
 
@@ -166,7 +172,8 @@
         const sc = defScheme('HS', st.n), p = price({ ...st, scheme: sc }), v = P.validate('HS', st.w, st.h);
         out.textContent = p ? `≈ ${fmt(p)} ₽` : 'по расчёту';
         leaves.textContent = v.ok ? `Индивидуальный заказ · ${size} · проход ≈ ${fmt(P.passage('HS', st.w, st.n, sc))} мм` : v.errors[0];
-        note.textContent = `нестандартный размер — срок дольше ${term}, точный назовём после замера`;
+        const glass=P.glassFor(st.w,st.h,st.n,'base'),days=P.days('HS',glass,!ready.some(x=>x.w===st.w&&x.n===st.n),st.h!==2300);
+        note.textContent = `ваш размер · изготовление до ${days} дней · ${days<=45?'можно заказать':'нужно обсудить проект'}`;
         link.href = `${box.dataset.href}?type=HS&w=${st.w}&h=${st.h}&n=${st.n}`; link.firstChild.textContent = 'Индивидуальный расчёт ';
       }
     };
