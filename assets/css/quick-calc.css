@@ -106,7 +106,7 @@
 
 /* Размеры на чертеже — подписи (вводят в блоке выбора размера) */
 .od__in b{font:400 var(--fs-h4)/1.1 var(--font);letter-spacing:-.02em;color:var(--ui-ink);border-bottom:1px solid var(--ui-ink);padding:2px 2px 1px}
-.qc-draw__head p{max-width:44ch;margin:16px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
+.qc-draw__head p:not(.ui-eyebrow){max-width:44ch;margin:16px 0 0;color:var(--ui-muted);font:300 var(--fs-body)/1.55 var(--font)}
 
 /* ---------- Выбор размера (.sz — sizeControl в opening-draw.js): кнопки готовых дверей + «Свой размер» с полями ---------- */
 .sz{display:grid;gap:12px}
