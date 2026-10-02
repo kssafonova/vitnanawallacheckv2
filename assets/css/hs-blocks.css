@@ -555,3 +555,77 @@
 .hs-page .hs-intro .hs-intro__sub{margin:32px 0 0;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.14em;text-transform:uppercase}
 @media(min-width:900px){.hs-page .hs-intro .hs-intro__sub{margin-top:48px}}
 .hs-make__item:last-child{border-bottom:0}
+
+/* ============================================================
+   Страница HS по структуре владельца: первый экран с двумя кнопками, свой размер в блоке схем (мм / м),
+   вкладка «3D-модель», 04 «Индивидуально под проект» (баннер), 07 «Собрать свой проект».
+   ============================================================ */
+.hs-head__copy--sub{margin-top:12px;font-size:var(--fs-body)}
+.hs-head__cta{display:grid;gap:8px;margin-top:clamp(22px,2.6vw,34px);max-width:560px}
+.hs-head__cta .ui-btn{width:100%}
+@media(min-width:640px){.hs-head__cta{grid-template-columns:1fr 1fr;max-width:640px}}
+.hs-head h1{max-width:18ch}
+
+.hs-intro__list--long li{gap:8px;padding-top:20px;padding-bottom:20px}
+.hs-intro__list--long b{font-size:var(--fs-body)}
+.hs-intro__list--long span{font-size:var(--fs-small);line-height:1.55}
+@media(max-width:639.98px){
+  .hs-intro__list--long{grid-template-columns:1fr}
+  .hs-intro__list--long li,.hs-intro__list--long li:nth-child(odd),.hs-intro__list--long li:nth-child(even){padding-left:0;padding-right:0;border-right:0}
+}
+
+/* Свой размер: два поля, единицы мм / м, кнопка — плоско, линии снизу, выбранное — чёрная заливка */
+.hsx-size{grid-column:1/-1;margin:0}
+.hsx-size__row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px 12px;align-items:end}
+.hsx-size__field{display:grid;gap:6px;min-width:0;color:var(--ui-muted);font-size:var(--fs-caption)}
+.hsx-size__field i{font-style:normal}
+.hsx-size__field input{width:100%;min-width:0;height:46px;padding:0 2px;border:0;border-bottom:1px solid var(--hx-line-2);border-radius:0;background:transparent;color:var(--ui-ink);font:400 var(--fs-h4)/1 var(--font)}
+.hsx-size__field input:focus{outline:none;border-bottom-color:var(--ui-ink)}
+.hsx-size__x{padding-bottom:12px;color:var(--ui-muted);font:300 var(--fs-h4)/1 var(--font)}
+.hsx-unit{display:flex;grid-column:1/2;border:1px solid var(--hx-line-2)}
+.hsx-unit button{flex:1;min-width:52px;height:46px;padding:0 14px;border:0;background:transparent;color:var(--ui-ink);cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.hsx-unit button+button{border-left:1px solid var(--hx-line-2)}
+.hsx-unit button[aria-pressed="true"]{background:var(--ui-black);color:#fff}
+.hsx-size .hsx-size__go{grid-column:2/4;height:46px;padding:0 18px;border:1px solid var(--ui-black);background:var(--ui-black);color:#fff;cursor:pointer;font:600 var(--fs-label)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hsx-size__msg{min-height:1.4em;margin:10px 0 0;color:var(--ui-muted);font-size:var(--fs-caption);line-height:1.4}
+.hsx-size__msg.is-error{color:#963c2e}
+@media(min-width:768px){
+  .hsx-size__row{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto auto}
+  .hsx-unit,.hsx-size .hsx-size__go{grid-column:auto}
+}
+@media(hover:hover){.hsx-unit button:not([aria-pressed="true"]):hover{background:var(--ui-paper)}.hsx-size .hsx-size__go:hover{opacity:.85}}
+.hsx-none{display:flex;align-items:center;min-height:62px;margin:0;padding:10px 15px;color:var(--ui-muted);font-size:var(--fs-caption)}
+
+/* «3D-модель»: та же модель, что в карточках (card3d.js), поверх схемы — схема задаёт высоту блока */
+.hsx-model{position:absolute;inset:0;z-index:2;display:none;background:#fff}
+.hsx-model__stage{position:absolute;inset:0}
+.hsx-model .family-render__3d{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+.hsx-model .family-render__3d:active{cursor:grabbing}
+.hsx-model__hint{position:absolute;left:12px;bottom:12px;z-index:3;padding:7px 10px;border:1px solid var(--ui-line-soft);background:#fff;color:var(--ui-ink);font:500 var(--fs-caption)/1.2 var(--font);pointer-events:none}
+.hsx-visual.is-model .hsx-model{display:block}
+.hsx-visual.is-model canvas[data-hsx-canvas]{visibility:hidden}
+.hsx-visual.is-model::after{display:none}
+
+/* строка под схемой для своего размера — ведёт в конфигуратор */
+.hsx-next.is-custom .hsx-next__bar svg{opacity:.35}
+
+/* 04 · Индивидуально под проект */
+.hs-custom{padding:var(--space-section) 0 0;background:var(--hs-bg,var(--ui-bg))}
+.hs-custom__copy p{margin:0 0 14px;color:var(--ui-muted);font:300 var(--fs-body)/1.6 var(--font)}
+.hs-custom__banner{display:grid;gap:22px;margin-top:var(--space-head);padding:clamp(22px,3vw,40px);background:var(--ui-black);color:#fff;text-decoration:none;transition:box-shadow .25s var(--ease-ui)}
+.hs-custom__banner svg{width:100%;max-width:340px;height:auto;fill:none;stroke:rgba(255,255,255,.55);stroke-width:1}
+.hs-custom__body{display:grid;gap:10px;align-content:center}
+.hs-custom__k{color:#a9a8a5;font:600 var(--fs-label)/1.2 var(--font);letter-spacing:.1em;text-transform:uppercase}
+.hs-custom__banner .hs-custom__t{color:#fff;font:300 var(--fs-h2s)/1 var(--font);letter-spacing:-.05em}
+.hs-custom__d{max-width:52ch;color:#cfcecd;font:300 var(--fs-body)/1.55 var(--font)}
+.hs-custom__go{justify-self:start;margin-top:10px}
+@media(min-width:900px){.hs-custom__banner{grid-template-columns:minmax(220px,.42fr) minmax(0,1fr);align-items:center;gap:clamp(32px,5vw,80px)}}
+@media(hover:hover){.hs-custom__banner:hover{box-shadow:var(--sh-3)}}
+
+/* 06 · Проекты: подпись раздела над заголовком; 07 · Собрать свой проект */
+.projects-intro.projects-intro .ui-eyebrow{max-width:none;margin:0 0 14px;color:var(--ui-muted);font:600 var(--fs-label)/1 var(--font);letter-spacing:.12em;text-transform:uppercase}
+.hs-glazing{padding:var(--space-section) 0 0;background:var(--ui-bg)}
+.hs-glazing .ui-eyebrow{margin:0 0 14px}
+.hsx-size{order:-1;padding-bottom:4px}
+.hsx-open__copy p+p{margin-top:10px}
+@media(max-width:899.98px){.hs-custom__banner svg{display:none}}

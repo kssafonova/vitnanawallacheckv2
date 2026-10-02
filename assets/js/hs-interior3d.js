@@ -98,7 +98,7 @@ export function createInterior(host, { viewSrc, onReady } = {}) {
   function build(width, height) {
     if (room) { scene.remove(room); room.traverse(o => o.geometry && o.geometry.dispose()); }
     room = new THREE.Group(); scene.add(room);
-    const W = width / 1000, H = height / 1000, RW = W + 3.6, D = 8, RH = 2.95, T = .3;
+    const W = width / 1000, H = height / 1000, RW = W + 3.6, D = 8, RH = Math.max(2.95, H + .45), T = .3;
     // задняя стена с проёмом
     const sideW = (RW - W) / 2;
     const wl = box(sideW, RH, T, M.wall); wl.position.set(-W / 2 - sideW / 2, RH / 2, -T / 2);
@@ -163,13 +163,15 @@ export function createInterior(host, { viewSrc, onReady } = {}) {
   function place() {
     if (!parts || !state) return;
     const { W, H, P, TH, fz, leaves } = parts, v = state.variant, n = v.sections;
-    if (leaves.length !== n || leaves.key !== state.key) {
-      leaves.forEach(l => room.remove(l)); leaves.length = 0; leaves.key = state.key;
+    const sig = state.code || state.key;
+    if (leaves.length !== n || leaves.key !== sig) {
+      leaves.forEach(l => room.remove(l)); leaves.length = 0; leaves.key = sig;
       const iw = W - P * 2, lw = iw / n + .04, lh = H - P - TH;
-      const leadIdx = state.key === 'center' ? [1, 2] : [state.key === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)];
+      // ручки: у своего размера — из раскладки PSPortal (v.handles), у готовых — по стороне открывания
+      const leadIdx = v.handles ? v.handles.map(x => x[0]) : state.key === 'center' ? [1, 2] : [state.key === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)];
       for (let i = 0; i < n; i++) {
         const lead = leadIdx.includes(i);
-        const leadRight = state.key === 'left' || (state.key === 'center' && i === Math.min(...v.moving));
+        const leadRight = v.handles ? (v.handles.find(x => x[0] === i) || [])[1] === 'r' : state.key === 'left' || (state.key === 'center' && i === Math.min(...v.moving));
         const l = makeLeaf(lw, lh, lead, leadRight); l.userData.i = i; leaves.push(l); room.add(l);
       }
     }

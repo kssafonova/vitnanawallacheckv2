@@ -233,14 +233,15 @@ const calcBox = (rel, attrs = {}) => {
 };
 // Блок «Цена по размерам проёма» на главной и странице HS — инженерный чертёж проёма (assets/js/opening-draw.js):
 // ширина и высота вводятся на размерных линиях, число створок подбирается само, цена — сразу; дальше /raschet/?w=&h=&n=.
-function calcTeaser(rel, eyebrow, title = 'Цена раздвижной двери по размерам проёма', copy = 'Введите ширину и высоту проёма — сразу покажем цену. Если размер совпадёт с готовой дверью из каталога, предложим её.') {
-  return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(READY_HS_TERM)}" data-href="${rel}raschet/">
+// config — ссылка «Перейти в конфигуратор» вместо калькулятора (страница HS)
+function calcTeaser(rel, eyebrow, title = 'Цена раздвижной двери по размерам проёма', copy = 'Введите ширину и высоту проёма — сразу покажем цену. Если размер совпадёт с готовой дверью из каталога, предложим её.', config = '') {
+  return `<div class="qc-draw" data-open-teaser data-doors="${esc(calcReady(rel))}" data-term="${esc(READY_HS_TERM)}" data-href="${rel}raschet/"${config ? ` data-config="${config}"` : ''}>
       <header class="qc-draw__head"><p class="ui-eyebrow">${esc(eyebrow)}</p><h2>${esc(title)}</h2><p>${esc(copy)}</p></header>
       <div class="qc-draw__size" data-open-size></div>
       <div class="qc-draw__fig" data-open-draw></div>
       <div class="qc-draw__foot">
         <p class="qc-draw__res"><span data-od-leaves>3 створки</span><strong data-od-price>—</strong><small data-od-note>стеклопакет 40 мм, любой однотонный RAL · без доставки и монтажа</small></p>
-        <a class="qc-draw__go" href="${rel}raschet/" data-od-link>Подробный расчёт <span aria-hidden="true">→</span></a>
+        <a class="qc-draw__go" href="${config || `${rel}raschet/`}" data-od-link>${config ? 'Перейти в конфигуратор' : 'Подробный расчёт'} <span aria-hidden="true">→</span></a>
       </div>
     </div>`;
 }
@@ -261,7 +262,7 @@ const hsxData = rel => JSON.stringify({
     def: OPEN_LAYOUT[defScheme(m).code].key, use: m.use, note: m.note || '',
     variants: Object.fromEntries(m.schemes.map(s => {
       const L = OPEN_LAYOUT[s.code], v = find(m.model, m.colors[0].slug, s.slug, m.width);
-      return [L.key, { label: s.short[0].toUpperCase() + s.short.slice(1), sections: m.sections, moving: L.moving, targets: L.targets,
+      return [L.key, { label: s.short[0].toUpperCase() + s.short.slice(1), code: s.code, sections: m.sections, moving: L.moving, targets: L.targets,
         passage: m.passage, ratio: m.passage / m.width, dir: s.how, href: rel + v.path, sku: v.sku, w: m.width, s: s.slug }];
     })),
   }])),
@@ -388,7 +389,7 @@ ${fontPreload(base)}
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${SITE + initialImage}">
-<link rel="stylesheet" href="${base}assets/css/quick-calc.css?v=3">
+<link rel="stylesheet" href="${base}assets/css/quick-calc.css?v=4">
 <link rel="stylesheet" href="${base}assets/css/family-product.css?v=3">
 <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
 ${jsonLd(product)}
@@ -471,7 +472,7 @@ ${jsonLd(crumbs)}
 <script src="${base}assets/js/components/site-menu.js"></script>
 <script src="${base}assets/js/components/site-footer.js"></script>
 <script src="${base}assets/js/portal-calc.js?v=3"></script>
-<script src="${base}assets/js/opening-draw.js?v=3"></script>
+<script src="${base}assets/js/opening-draw.js?v=4"></script>
 <script src="${base}assets/js/shop.js?v=3"></script>
 <script src="${base}assets/js/family-product.js?v=3"></script>
 <script type="module" src="${base}assets/js/card3d.js?v=3"></script>
@@ -520,8 +521,9 @@ const blocks = {
     'fs-cards': fsModels.map(m => marketCard(m, '../')).join('\n\n      '),
   },
   'systems/hs/index.html': {
-    'hs-cards': [...hs.map(m => marketCard(m, '../../')), projectCard('../../raschet/', 'project')].join('\n\n      '),
-    'hs-calc': calcTeaser('../../', '05 · Подбор по размеру'),
+    // 03 · Готовые решения — только карточки; «Индивидуальный расчёт» — отдельный раздел 04 на странице
+    'hs-cards': hs.map(m => marketCard(m, '../../')).join('\n\n      '),
+    'hs-calc': calcTeaser('../../', '05 · Рассчитать стоимость', 'Рассчитать стоимость HS-портала', 'Введите ширину и высоту проёма — сразу покажем цену. Цена предварительная: точную инженер назовёт после бесплатного замера, доставку и монтаж посчитаем отдельно.', '../../catalog/hs-portaly/'),
     'hsx-data': `<script type="application/json" data-hsx-json>${hsxData('../../')}</script>`,
   },
   'projects/index.html': {

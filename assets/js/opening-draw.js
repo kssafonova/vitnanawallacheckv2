@@ -159,6 +159,8 @@
     let ready = [];
     try { ready = JSON.parse(box.dataset.doors || '[]'); } catch (_) { /* пусто */ }
     const term = box.dataset.term || '30–60 дней';
+    // data-config — ссылка «Перейти в конфигуратор» (страница HS ведёт в единую страницу товара /catalog/hs-portaly/ с размером)
+    const conf = box.dataset.config || '';
     const out = box.querySelector('[data-od-price]'), leaves = box.querySelector('[data-od-leaves]'), link = box.querySelector('[data-od-link]'), note = box.querySelector('[data-od-note]');
     const show = st => {
       const r = matchReady(ready, st), size = `${fmt(st.w)} × ${fmt(st.h)} мм · ${st.n} ${word(st.n)}`;
@@ -166,15 +168,16 @@
         const v = r.schemes[r.def];
         out.textContent = `${fmt(r.price)} ₽`;
         leaves.textContent = `Готовая дверь ${r.code} · ${size} · проход ≈ ${fmt(r.passage)} мм`;
-        note.textContent = `срок — ${term} · без доставки и монтажа`;
-        link.href = v.url; link.firstChild.textContent = 'Открыть дверь ';
+        note.textContent = `${conf ? 'цена предварительная · ' : ''}срок — ${term} · без доставки и монтажа`;
+        link.href = v.url; link.firstChild.textContent = conf ? 'Перейти в конфигуратор ' : 'Открыть дверь ';
       } else {
         const sc = defScheme('HS', st.n), p = price({ ...st, scheme: sc }), v = P.validate('HS', st.w, st.h);
         out.textContent = p ? `≈ ${fmt(p)} ₽` : 'по расчёту';
         leaves.textContent = v.ok ? `Индивидуальный заказ · ${size} · проход ≈ ${fmt(P.passage('HS', st.w, st.n, sc))} мм` : v.errors[0];
         const glass=P.glassFor(st.w,st.h,st.n,'base'),days=P.days('HS',glass,!ready.some(x=>x.w===st.w&&x.n===st.n),st.h!==2300);
-        note.textContent = `ваш размер · изготовление до ${days} дней · ${days<=45?'можно заказать':'нужно обсудить проект'}`;
-        link.href = `${box.dataset.href}?type=HS&w=${st.w}&h=${st.h}&n=${st.n}`; link.firstChild.textContent = 'Индивидуальный расчёт ';
+        note.textContent = `${conf ? 'цена предварительная, без доставки и монтажа · ' : 'ваш размер · '}изготовление до ${days} дней · ${days<=45?'можно заказать':'нужно обсудить проект'}`;
+        link.href = conf ? `${conf}?w=${st.w}&h=${st.h}&n=${st.n}` : `${box.dataset.href}?type=HS&w=${st.w}&h=${st.h}&n=${st.n}`;
+        link.firstChild.textContent = conf ? 'Перейти в конфигуратор ' : 'Индивидуальный расчёт ';
       }
     };
     const start = ready.find(r => r.w === 3600) || ready[0] || { w: 3600, h: 2300, n: 2 };

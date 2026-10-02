@@ -1,5 +1,7 @@
 /* Блок «Как открывается дверь» (systems/hs/#schemes).
-   Ширина × активная створка → схема на canvas (стена, рама, створки, улица за стеклом, размер прохода), ползунок открытия, свободный проход, ссылка на товар. */
+   Створки → ширина из таблицы размеров → схема; или свой размер (ширина и высота в мм или метрах) — тогда секции, схемы и проход
+   считает assets/js/portal-calc.js (window.PSPortal), как в калькуляторе. Вид: схема на canvas (стена, рама, створки, улица, проход),
+   3D-модель (card3d.js, data-family-3d) и «В интерьере» (hs-interior3d.js). Ползунок открытия, свободный проход, ссылка на товар. */
 (() => {
   const root = document.querySelector('[data-hsx-open]');
   if (!root) return;
@@ -11,6 +13,8 @@
   try { const j = JSON.parse(root.querySelector('[data-hsx-json]').textContent); DATA = j.families; START = j.start; DEFS = j.defaults || {}; } catch (_) { return; }
   const keys = Object.keys(DATA);
   if (!keys.length) return;
+  const P = window.PSPortal;
+  const CUSTOM = '__custom';
 
   const $ = s => root.querySelector(s);
   const sectionsGroup = $('[data-hsx-sections]');
@@ -27,6 +31,35 @@
   let familyKey = DATA[START] ? START : keys[0], variantKey = DATA[familyKey].def, progress = 0, view = 'scheme', dragging = false;
   const family = () => DATA[familyKey];
   const variant = () => family().variants[variantKey];
+  // Сторона движения: у готовых размеров — ключ схемы (left / right / center), у своего размера — по направлению створок
+  const side = () => variant().side || variantKey;
+  const code = () => variant().code || '';
+  const readyKeys = () => keys.filter(k => k !== CUSTOM);
+
+  // Свой размер: секции и схемы по правилам калькулятора, створки и куда едут — из PSPortal.layout()
+  function customFamily(w, h, n) {
+    const S = P.sectionsFor('HS', w);
+    if (!S.list.includes(n)) n = S.list.includes(S.rec) ? S.rec : S.list[0];
+    const variants = {};
+    P.schemesFor('HS', n).forEach(sc => {
+      const L = P.layout('HS', n, sc.code), moving = [], targets = [], handles = [];
+      L.forEach((it, i) => {
+        if (it.handle) handles.push([i, it.handle]);
+        if (it.kind !== 'move') return;
+        let t = i;
+        for (let j = i + it.dir; j >= 0 && j < n; j += it.dir) { t = j; if (L[j].kind === 'fix') break; }
+        moving.push(i); targets.push(t);
+      });
+      const dirs = L.filter(x => x.kind === 'move').map(x => x.dir);
+      const pass = P.passage('HS', w, n, sc.code);
+      variants[sc.code] = { label: sc.t, code: sc.code, sections: n, moving, targets, handles, passage: pass, ratio: pass / w, dir: `${sc.d}.`,
+        side: dirs.every(d => d > 0) ? 'left' : dirs.every(d => d < 0) ? 'right' : 'center' };
+    });
+    return { code: `HS · ${n} ${word(n)}`, width: w, height: h, heights: [h], sections: n, rec: S.rec, list: S.list, def: Object.keys(variants)[0],
+      use: 'Индивидуальный размер — изготовим под ваш проём', note: '', variants, custom: true };
+  }
+  // При смене размера сохраняем сторону открывания, если такая схема есть
+  const pickVariant = (f, prevSide) => Object.keys(f.variants).find(k => (f.variants[k].side || k) === prevSide) || f.def;
 
   const icon = side => {
     if (side === 'center') return '<svg viewBox="0 0 42 34" aria-hidden="true"><rect x="1" y="1" width="40" height="32"/><path d="M21 1v32M18 17H8m0 0 4-4m-4 4 4 4M24 17h10m0 0-4-4m4 4-4 4"/></svg>';
@@ -38,21 +71,72 @@
   const mm = w => (w / 1000).toFixed(1).replace('.', ',');
   const word = n => (n < 5 ? 'створки' : 'створок');
   function renderSizes() {
-    const f = family(), counts = [...new Set(keys.map(k => DATA[k].sections))];
-    sectionsGroup.innerHTML = counts.map(n => {
-      const ws = keys.filter(k => DATA[k].sections === n).map(k => DATA[k].width);
-      return `<button type="button" class="hsx-width" data-sections="${n}" aria-pressed="${n === f.sections}"><strong>${n} ${word(n)}</strong><span>${mm(Math.min(...ws))}–${mm(Math.max(...ws))} м</span></button>`;
-    }).join('');
-    const same = keys.filter(k => DATA[k].sections === f.sections);
-    widthGroup.style.gridTemplateColumns = `repeat(${same.length},minmax(0,1fr))`;
-    widthGroup.innerHTML = same.map(k => `<button type="button" class="hsx-width" data-family="${k}" aria-pressed="${k === familyKey}"><strong>${mm(DATA[k].width)} м</strong><span>проход ≈ ${mm(DATA[k].variants[DATA[k].def].passage)} м</span></button>`).join('');
+    const f = family(), rk = readyKeys();
+    if (f.custom) {
+      // свой размер: секции, допустимые для этой ширины (как в калькуляторе)
+      sectionsGroup.innerHTML = f.list.map(n => `<button type="button" class="hsx-width" data-sections="${n}" aria-pressed="${n === f.sections}"><strong>${n} ${word(n)}</strong><span>${n === f.rec ? 'рекомендуем' : `створка ≈ ${mm(f.width / n)} м`}</span></button>`).join('');
+    } else {
+      const counts = [...new Set(rk.map(k => DATA[k].sections))];
+      sectionsGroup.innerHTML = counts.map(n => {
+        const ws = rk.filter(k => DATA[k].sections === n).map(k => DATA[k].width);
+        return `<button type="button" class="hsx-width" data-sections="${n}" aria-pressed="${n === f.sections}"><strong>${n} ${word(n)}</strong><span>${mm(Math.min(...ws))}–${mm(Math.max(...ws))} м</span></button>`;
+      }).join('');
+    }
+    const same = rk.filter(k => DATA[k].sections === f.sections);
+    widthGroup.style.gridTemplateColumns = `repeat(${Math.max(1, same.length)},minmax(0,1fr))`;
+    widthGroup.innerHTML = same.length
+      ? same.map(k => `<button type="button" class="hsx-width" data-family="${k}" aria-pressed="${k === familyKey}"><strong>${mm(DATA[k].width)} м</strong><span>проход ≈ ${mm(DATA[k].variants[DATA[k].def].passage)} м</span></button>`).join('')
+      : `<p class="hsx-none">Готовых размеров на ${f.sections} ${word(f.sections)} нет — изготовим под проём</p>`;
+    syncSizeInputs();
   }
   function renderSides() {
-    const keys = Object.keys(family().variants);
-    sideGroup.classList.toggle('is-single', keys.length === 1);
-    sideGroup.innerHTML = keys.map(k =>
-      `<button type="button" class="hsx-side" data-variant="${k}" aria-pressed="${k === variantKey}">${icon(k)}<span>${family().variants[k].label}</span></button>`
+    const vk = Object.keys(family().variants);
+    sideGroup.classList.toggle('is-single', vk.length === 1);
+    sideGroup.innerHTML = vk.map(k =>
+      `<button type="button" class="hsx-side" data-variant="${k}" aria-pressed="${k === variantKey}">${icon(family().variants[k].side || k)}<span>${family().variants[k].label}</span></button>`
     ).join('');
+  }
+
+  // ---------- свой размер: ширина и высота, мм или метры ----------
+  const sizeBox = $('[data-hsx-size-form]');
+  const inW = $('[data-hsx-w]'), inH = $('[data-hsx-h]'), sizeMsg = $('[data-hsx-size-msg]');
+  let unit = 'mm';
+  const show = v => unit === 'm' ? String(+(v / 1000).toFixed(3)).replace('.', ',') : String(v);
+  const read = input => { const x = parseFloat(String(input.value).replace(',', '.').replace(/\s/g, '')); return Number.isFinite(x) ? Math.round(unit === 'm' ? x * 1000 : x) : NaN; };
+  function syncSizeInputs() {
+    if (!inW) return;
+    const f = family();
+    inW.value = show(f.width); inH.value = show(f.height);
+  }
+  function setUnit(u) {
+    if (!inW || u === unit) return;
+    const w = read(inW), h = read(inH);
+    unit = u;
+    sizeBox.querySelectorAll('[data-hsx-unit]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.hsxUnit === u)));
+    [inW, inH].forEach(i => { i.step = u === 'm' ? '0.01' : '10'; i.inputMode = 'decimal'; });
+    inW.value = Number.isFinite(w) ? show(w) : ''; inH.value = Number.isFinite(h) ? show(h) : '';
+    sizeBox.querySelectorAll('[data-hsx-unit-label]').forEach(el => { el.textContent = u === 'm' ? 'м' : 'мм'; });
+  }
+  function applySize() {
+    if (!inW || !P) return;
+    const w = read(inW), h = read(inH);
+    const check = P.validate('HS', w, h);
+    sizeMsg.classList.toggle('is-error', !check.ok);
+    if (!check.ok) { sizeMsg.textContent = check.errors[0]; return; }
+    const prevSide = side(), prevN = family().sections;
+    // совпало с готовым размером из таблицы — показываем его (с карточкой и ценой каталога)
+    const ready = readyKeys().filter(k => DATA[k].width === w && (DATA[k].heights || [DATA[k].height]).includes(h));
+    const hit = ready.find(k => DATA[k].sections === prevN) || ready[0];
+    if (hit) { familyKey = hit; DATA[hit] = { ...DATA[hit], height: h }; }
+    else { DATA[CUSTOM] = customFamily(w, h, prevN); familyKey = CUSTOM; }
+    variantKey = pickVariant(family(), prevSide); progress = 0;
+    sizeMsg.textContent = hit ? `Это готовый размер ${family().code} — карточка с ценой ниже.` : (check.warnings[0] || 'Свой размер — изготовим под ваш проём. Схема и проход пересчитаны.');
+    renderSizes(); renderSides(); update();
+  }
+  if (sizeBox) {
+    sizeBox.addEventListener('submit', e => { e.preventDefault(); applySize(); });
+    sizeBox.addEventListener('click', e => { const b = e.target.closest('[data-hsx-unit]'); if (b) setUnit(b.dataset.hsxUnit); });
+    [inW, inH].forEach(i => i.addEventListener('change', applySize));
   }
 
   function update() {
@@ -68,18 +152,31 @@
     range.setAttribute('aria-valuetext', `${Math.round(progress)}% открыто`);
     draw();
     sync3d();
+    syncModel();
+  }
+
+  // «3D» — та же модель, что в карточках и на странице товара (card3d.js, режим data-family-3d): размер, створки и схема
+  // из конфигурации; ползунок открывает. card3d.js запускает модель, когда вкладка видна, и читает data-3d — держим его актуальным.
+  const model3d = $('[data-hsx-3d]');
+  function syncModel() {
+    if (!model3d) return;
+    const f = family(), v = variant();
+    const seed = { dynamic: true, sys: 'HS', w: f.width, h: f.height, n: v.sections, scheme: code(), color: 'antratsit', colors: { antratsit: '#383b3a' } };
+    model3d.dataset['3d'] = JSON.stringify(seed);
+    model3d.dispatchEvent(new CustomEvent('ps-card-variant', { detail: { type: 'HS', w: f.width, h: f.height, n: v.sections, s: code(), c: 'antratsit', hex: '#383b3a' } }));
+    model3d.dispatchEvent(new CustomEvent('ps-family-state', { detail: { open: progress >= 50 } }));
   }
 
   // «В интерьере» — 3D-сцена (hs-interior3d.js + three.js) грузится только при первом открытии вкладки.
   // Пока грузится или если WebGL недоступен — рисованный интерьер на canvas (drawInterior).
   let i3d = null, i3dState = 'idle';
   function sync3d() {
-    if (i3d && view === 'interior') i3d.set({ width: family().width, height: family().height, variant: variant(), key: variantKey, progress: progress / 100 });
+    if (i3d && view === 'interior') i3d.set({ width: family().width, height: family().height, variant: variant(), key: side(), code: `${familyKey}:${variantKey}`, progress: progress / 100 });
   }
   function load3d() {
     if (i3dState !== 'idle') return;
     i3dState = 'loading'; visual.classList.add('is-loading');
-    import(new URL('hs-interior3d.js', SELF).href).then(m => {
+    import(new URL('hs-interior3d.js?v=4', SELF).href).then(m => {
       i3d = m.createInterior(visual, {
         viewSrc: new URL('../images/systems/hs-interior-view.webp', SELF).href,
         onReady() { i3dState = 'ready'; visual.classList.remove('is-loading'); visual.classList.add('has-3d'); sync3d(); }
@@ -175,10 +272,10 @@
     v.moving.forEach(i => place(i, true));
 
     // ручки: на ведущей створке, при открывании от центра — на обеих центральных
-    const handles = variantKey === 'center' ? [1, 2] : [variantKey === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)];
+    const handles = v.handles ? v.handles.map(x => x[0]) : side() === 'center' ? [1, 2] : [side() === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)];
     handles.forEach((i, k) => {
       const q = pos[i]; if (!q) return;
-      const lead = variantKey === 'center' ? (k === 0 ? 'r' : 'l') : (variantKey === 'left' ? 'r' : 'l');
+      const lead = v.handles ? v.handles[k][1] : side() === 'center' ? (k === 0 ? 'r' : 'l') : (side() === 'left' ? 'r' : 'l');
       const hx = lead === 'r' ? q.x + q.w - prof - (mobile ? 6 : 10) : q.x + prof + (mobile ? 6 : 10);
       const hy = iy + ih * .52, len = mobile ? 14 : 22;
       ctx.strokeStyle = INK; ctx.lineWidth = mobile ? 2.4 : 3.2; ctx.lineCap = 'round';
@@ -188,9 +285,9 @@
     // направление движения — пока дверь не открыта полностью
     if (p < .97) {
       const ay = iy + ih * .38;
-      if (variantKey === 'left') arrow(ix + iw * .3, ay, ix + iw * .46);
-      if (variantKey === 'right') arrow(ix + iw * .7, ay, ix + iw * .54);
-      if (variantKey === 'center') { arrow(ix + iw * .46, ay, ix + iw * .34); arrow(ix + iw * .54, ay, ix + iw * .66); }
+      if (side() === 'left') arrow(ix + iw * .3, ay, ix + iw * .46);
+      if (side() === 'right') arrow(ix + iw * .7, ay, ix + iw * .54);
+      if (side() === 'center') { arrow(ix + iw * .46, ay, ix + iw * .34); arrow(ix + iw * .54, ay, ix + iw * .66); }
     }
 
     // порог-направляющая
@@ -298,9 +395,10 @@
       ctx.beginPath(); ctx.moveTo(l.x + l.w * .2, iy + ih * .22); ctx.lineTo(l.x + l.w * .42, iy + ih * .08); ctx.stroke();
       glassSpans.push([l.x + prof, l.x + l.w - prof]);
     });
-    const lead = variantKey === 'center' ? ls.filter(l => l.moving) : [ls.find(l => l.i === (variantKey === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)))];
+    const hIdx = v.handles ? v.handles.map(x => x[0]) : null;
+    const lead = hIdx ? ls.filter(l => hIdx.includes(l.i)) : side() === 'center' ? ls.filter(l => l.moving) : [ls.find(l => l.i === (side() === 'left' ? Math.max(...v.moving) : Math.min(...v.moving)))];
     lead.forEach(l => {
-      const right = variantKey === 'left' || (variantKey === 'center' && l.i === Math.min(...v.moving));
+      const right = hIdx ? v.handles.find(x => x[0] === l.i)[1] === 'r' : side() === 'left' || (side() === 'center' && l.i === Math.min(...v.moving));
       const hx = right ? l.x + l.w - prof - 7 : l.x + prof + 7, hy = iy + ih * .5, len = mobile ? 10 : 16;
       ctx.strokeStyle = '#c9c7c2'; ctx.lineWidth = mobile ? 2 : 2.8; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(hx, hy - len); ctx.lineTo(hx, hy + len); ctx.stroke(); ctx.lineCap = 'butt';
@@ -369,8 +467,16 @@
   }
   function renderNext() {
     if (!next) return;
-    const f = family(), v = variant(), m = matchCard();
-    $('[data-next-title]').textContent = `${f.code} · ${fmt(f.width)} × ${(f.heights || [f.height]).map(fmt).join('/')} мм`;
+    const f = family(), v = variant(), m = f.custom ? null : matchCard();
+    next.classList.toggle('is-custom', !!f.custom);
+    $('[data-next-k]').textContent = f.custom ? 'Свой размер' : 'Под эту схему есть готовая дверь';
+    $('[data-next-title]').textContent = `${f.custom ? `${v.sections} ${word(v.sections)} · ` : `${f.code} · `}${fmt(f.width)} × ${(f.heights || [f.height]).map(fmt).join('/')} мм`;
+    const go = $('[data-next-show]');
+    if (f.custom) {
+      const q = new URLSearchParams({ w: f.width, h: f.height, n: v.sections, scheme: code() });
+      go.href = `../../catalog/hs-portaly/?${q}`;
+      $('[data-next-go]').innerHTML = 'Цена в конфигураторе <i aria-hidden="true">→</i>';
+    } else { go.href = '#stock'; $('[data-next-go]').innerHTML = 'Показать <i aria-hidden="true">↓</i>'; }
     document.querySelectorAll('#stock .m-card.is-match').forEach(c => c.classList.remove('is-match'));
     if (m) {
       m.card.classList.add('is-match');
@@ -393,6 +499,7 @@
   }
   if (next) next.addEventListener('click', e => {
     if (e.target.closest('[data-next-show]')) {
+      if (family().custom) return;
       const m = matchCard();
       if (m) { e.preventDefault(); m.card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); m.card.classList.remove('is-pulse'); void m.card.offsetWidth; m.card.classList.add('is-pulse'); }
       return;
@@ -408,15 +515,22 @@
     const b = e.target.closest('[data-sections]'); if (!b) return;
     const n = +b.dataset.sections;
     if (n === family().sections) return;
+    if (family().custom) {
+      const prevSide = side();
+      DATA[CUSTOM] = customFamily(family().width, family().height, n); familyKey = CUSTOM;
+      variantKey = pickVariant(family(), prevSide); progress = 0;
+      renderSizes(); renderSides(); update(); return;
+    }
     // ширина по умолчанию для этого числа створок — как в карточке каталога (default_width)
-    familyKey = DATA[DEFS[n]] ? DEFS[n] : keys.find(k => DATA[k].sections === n);
+    familyKey = DATA[DEFS[n]] ? DEFS[n] : readyKeys().find(k => DATA[k].sections === n);
     variantKey = family().def; progress = 0;
     renderSizes(); renderSides(); update();
   });
   widthGroup.addEventListener('click', e => {
     const b = e.target.closest('[data-family]'); if (!b) return;
-    const side = variantKey;
-    familyKey = b.dataset.family; variantKey = family().variants[side] ? side : family().def; progress = 0;
+    const prevSide = side();
+    familyKey = b.dataset.family; variantKey = pickVariant(family(), prevSide); progress = 0;
+    if (sizeMsg) { sizeMsg.textContent = ''; sizeMsg.classList.remove('is-error'); }
     renderSizes(); renderSides(); update();
   });
   sideGroup.addEventListener('click', e => {
@@ -428,6 +542,8 @@
   tabs.forEach(t => t.addEventListener('click', () => {
     view = t.dataset.hsxView;
     visual.classList.toggle('is-interior', view === 'interior');
+    visual.classList.toggle('is-model', view === 'model');
+    if (view === 'model') syncModel();
     tabs.forEach(x => x.setAttribute('aria-selected', String(x === t)));
     draw();
     if (view === 'interior') { load3d(); sync3d(); }
@@ -438,8 +554,8 @@
   const fromPointer = ev => {
     const r = canvas.getBoundingClientRect();
     let q = (ev.clientX - r.left) / r.width;
-    if (variantKey === 'right') q = 1 - q;
-    if (variantKey === 'center') q = Math.min(1, Math.abs(q - .5) * 2);
+    if (side() === 'right') q = 1 - q;
+    if (side() === 'center') q = Math.min(1, Math.abs(q - .5) * 2);
     progress = Math.max(0, Math.min(100, q * 100));
     update();
   };
