@@ -44,7 +44,6 @@ $city = trim((string)($_POST['city'] ?? ''));
 $orderId = strtoupper(trim((string)($_POST['order_id'] ?? '')));
 $isOrder = $source === 'cart';
 $isMap = $source === 'glazing-map'; // «Персональная карта остекления»: зоны и ответы — полем glazing_map (JSON)
-$pickup = $isOrder && (($_POST['delivery'] ?? '') === 'pickup');
 
 $digits = preg_replace('/\D+/', '', $phone);
 $nameLen = function_exists('mb_strlen') ? mb_strlen($name, 'UTF-8') : strlen($name);
@@ -56,10 +55,10 @@ if ($name === '' || $nameLen > 100 || strlen($digits) < 10 || strlen($digits) > 
 
 // Заказ из корзины: нужны город и согласие, номер заказа — PS-ГГММДД-XXXX (создаём, если не пришёл)
 if ($isOrder) {
-    // Город нужен для доставки и монтажа; при самовывозе — нет
-    if ((!$pickup && $city === '') || empty($_POST['privacy_consent'] ?? '')) {
+    // Город нужен для доставки и монтажа (самовывоза нет)
+    if ($city === '' || empty($_POST['privacy_consent'] ?? '')) {
         http_response_code(422);
-        echo json_encode(['ok'=>false,'message'=>$pickup ? 'Подтвердите согласие на обработку данных.' : 'Укажите город и подтвердите согласие на обработку данных.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['ok'=>false,'message'=>'Укажите город и подтвердите согласие на обработку данных.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
     if (!preg_match('/^PS-\d{6}-[A-Z0-9]{4}$/', $orderId)) {
@@ -135,13 +134,13 @@ if (is_array($file) && ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_
 }
 
 $subject = $isOrder
-    ? "Заказ {$orderId}" . ($pickup ? ' (самовывоз)' : '') . " — PORTAL SYSTEMS"
+    ? "Заказ {$orderId} — PORTAL SYSTEMS"
     : 'Новая заявка PORTAL SYSTEMS — ' . ($isMap ? 'карта остекления' : ($source === 'calculator' ? 'калькулятор' : ($source === 'contacts' ? 'контакты' : 'сайт'))) . ($attachment ? ' + файл проекта' : '');
 $body = $isOrder ? "Новый заказ с сайта PORTAL SYSTEMS № {$orderId}\n\n" : "Новая заявка с сайта PORTAL SYSTEMS\n\n";
 $body .= "Источник: {$source}\n";
 $body .= "Имя: {$name}\n";
 $body .= "Телефон: {$phone}\n";
-if ($isOrder) $body .= 'Получение: ' . ($pickup ? 'самовывоз с производства' : 'доставка и монтаж') . "\n";
+if ($isOrder) $body .= "Получение: доставка и монтаж\n";
 if ($contactPref !== '') $body .= "Удобный способ связи: {$prefs[$contactPref]}\n";
 if ($city !== '') $body .= ($isMap ? 'Город / район объекта: ' : 'Город / посёлок: ') . "{$city}\n";
 if ($stage !== '') $body .= "Стадия: {$stages[$stage]}\n";

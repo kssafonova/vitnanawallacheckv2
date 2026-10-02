@@ -581,8 +581,7 @@ outputs.set('sitemap.xml', sitemap);
 // Данные для корзины (assets/js/shop.js): актуальные цены и названия по артикулу
 outputs.set('data/catalog.json', JSON.stringify({
   _comment: 'Сгенерировано tools/build.mjs из data/products.json и data/site-config.json — не редактировать вручную.',
-  // Для корзины: адрес производства и предварительная оценка доставки + монтажа
-  factory: (({ _comment, ...f }) => f)(config.factory || {}),
+  // Для корзины: предварительная оценка доставки + монтажа (самовывоза нет)
   services: (({ _comment, ...s }) => s)(config.services || {}),
   variants: variants.map(v => ({
     sku: v.sku, system: v.m.system, model: v.m.model, code: v.m.code, name: v.m.name, size: sizeText(v.m), width: v.m.width, height: v.m.height, sections: v.m.sections, size_short: `${metres(v.m.width)} м`,
