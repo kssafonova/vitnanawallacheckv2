@@ -3,8 +3,8 @@
 // «любой RAL» (color) и свой размер (custom + config) — тогда цену и срок корзина пересчитывает по assets/js/portal-calc.js
 // (window.PSPortal), цене из localStorage не доверяем. Срок изготовления — у каждой позиции свой («до N дней»).
 // Заказ уходит в forms/send.php (source=cart), после успеха — /cart/done/?order=НОМЕР.
-// Получение: доставка и монтаж (оценка — процент от стоимости, не меньше минимума; из site-config.json через catalog.json)
-// или самовывоз с производства.
+// Получение — только доставка и монтаж (оценка — процент от стоимости, не меньше минимума; из site-config.json через catalog.json).
+// Самовывоза нет (решение владельца).
 (() => {
   const root=document.querySelector('[data-cart-root]');
   const cart=window.PSCart,P=window.PSPortal;
@@ -18,9 +18,8 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money=n=>new Intl.NumberFormat('ru-RU').format(n)+' ₽';
   let catalog=new Map();
-  let services={install_delivery_pct:12,install_delivery_min:45000},factory={};
-  const mode=()=>form.elements.delivery.value==='pickup'?'pickup':'delivery';
-  // Оценка доставки и монтажа, округлённая до тысячи; при самовывозе — 0
+  let services={install_delivery_pct:12,install_delivery_min:45000};
+  // Оценка доставки и монтажа, округлённая до тысячи
   // Окно получения: сегодня + самый долгий срок среди позиций. Точную дату подтверждает менеджер.
   const etaDate=days=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+days);return d};
   const fmtDay=d=>d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
@@ -28,7 +27,7 @@
   const termText=items=>`до ${maxDays(items)} дней`;
   const etaText=items=>`до ${fmtDay(etaDate(maxDays(items)))}`;
   const GLASS={base:'Базовый',standard:'Стандарт',triplex:'Триплекс',solar:'Solar'};
-  const serviceCost=goods=>mode()==='pickup'?0:Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
+  const serviceCost=goods=>Math.max(Math.round(goods*services.install_delivery_pct/100/1000)*1000,services.install_delivery_min);
 
   // Позиция корзины → готовая строка: базовый вариант каталога + стекло, цвет и размер позиции, цена и срок по формулам
   const line=i=>{
@@ -87,15 +86,12 @@
     const count=items.reduce((n,i)=>n+i.qty,0);
     root.querySelector('[data-cart-count]').textContent=count;
     const hc=document.querySelector('[data-cart-head-count]');if(hc)hc.textContent=count;
-    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods),pickup=mode()==='pickup';
+    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods);
     root.querySelector('[data-cart-goods]').textContent=money(goods);
-    root.querySelector('[data-cart-service-label]').textContent=pickup?'Самовывоз':`Доставка и монтаж, ≈${services.install_delivery_pct}%`;
-    root.querySelector('[data-cart-service]').textContent=pickup?'0 ₽':'≈ '+money(service);
+    root.querySelector('[data-cart-service-label]').textContent=`Доставка и монтаж, ≈${services.install_delivery_pct}%`;
+    root.querySelector('[data-cart-service]').textContent='≈ '+money(service);
     root.querySelector('[data-cart-total]').textContent=money(goods+service);
-    root.querySelector('[data-cart-note-delivery]').hidden=pickup;
-    root.querySelector('[data-cart-note-pickup]').hidden=!pickup;
     root.querySelector('[data-cart-days]').textContent=termText(items);
-    root.querySelector('[data-cart-eta-label]').textContent=pickup?'Самовывоз ориентировочно':'Доставка и монтаж ориентировочно';
     root.querySelector('[data-cart-eta-date]').textContent=etaText(items);
   };
 
@@ -119,10 +115,6 @@
     return `PS-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${[...r].map(x=>abc[x%abc.length]).join('')}`;
   };
 
-  // Самовывоз: город не нужен
-  const cityField=form.querySelector('[data-city-field]');
-  const syncMode=()=>{const pickup=mode()==='pickup';cityField.hidden=pickup;form.elements.city.required=!pickup;render()};
-  form.addEventListener('change',e=>{if(e.target.name==='delivery')syncMode()});
 
   const phone=form.elements.phone;
   phone.addEventListener('input',()=>phone.setCustomValidity(''));
@@ -133,16 +125,13 @@
     const items=lines();
     if(!items.length){render();return}
     const id=orderId();
-    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods),total=goods+service,pickup=mode()==='pickup';
-    const deliveryLine=pickup
-      ?`Получение: САМОВЫВОЗ с производства (${factory.address||'квартал № 205'})`
-      :`Получение: доставка и монтаж — оценка ≈ ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
+    const goods=items.reduce((n,i)=>n+i.price*i.qty,0),service=serviceCost(goods),total=goods+service;
+    const deliveryLine=`Получение: доставка и монтаж — оценка ≈ ${money(service)} (≈${services.install_delivery_pct}%, мин. ${money(services.install_delivery_min)})`;
     const project=items.map((i,n)=>`${n+1}. ${i.custom?`ИНДИВИДУАЛЬНЫЙ РАЗМЕР (на основе ${i.v.code})`:i.v.code} ${i.title} — ${i.size}, ${i.n} секц., ${i.color}, ${i.scheme}, стеклопакет «${GLASS[i.glass]}», срок до ${i.days} дней\n   ${i.custom?'База':'Артикул'} ${i.v.sku} × ${i.qty} = ${money(i.price*i.qty)}\n   ${new URL(base+i.v.url,location.href).href}`).join('\n')
       +`\n\nКонструкции: ${money(goods)}\n${deliveryLine}\nИтого: ${money(total)}`
-      +`\nСрок изготовления: ${termText(items)}. Ориентировочно ${pickup?'самовывоз':'доставка и монтаж'}: ${etaText(items)} — дату нужно подтвердить клиенту.`;
+      +`\nСрок изготовления: ${termText(items)}. Ориентировочно доставка и монтаж: ${etaText(items)} — дату нужно подтвердить клиенту.`;
     const data=new FormData(form);
-    data.set('source','cart');data.set('order_id',id);data.set('project',project);data.set('delivery',mode());
-    if(pickup)data.delete('city');
+    data.set('source','cart');data.set('order_id',id);data.set('project',project);
     const button=form.querySelector('button[type="submit"]'),old=button.innerHTML;
     button.disabled=true;button.textContent='Отправляем…';status.textContent='';
     try{
@@ -150,7 +139,7 @@
       const json=await res.json().catch(()=>({}));
       if(!res.ok||!json.ok)throw new Error(json.message||'HTTP '+res.status);
       const number=json.order_id||id;
-      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,pickup,factory,eta:etaText(items),days:termText(items),items:items.map(i=>({title:`${i.custom?'':i.v.code+' · '}${i.title}`,meta:`${i.size} · ${i.color} · ${GLASS[i.glass]}`,qty:i.qty,sum:i.price*i.qty}))}))}catch(e){}
+      try{sessionStorage.setItem('ps-last-order',JSON.stringify({id:number,total,goods,service,eta:etaText(items),days:termText(items),items:items.map(i=>({title:`${i.custom?'':i.v.code+' · '}${i.title}`,meta:`${i.size} · ${i.color} · ${GLASS[i.glass]}`,qty:i.qty,sum:i.price*i.qty}))}))}catch(e){}
       cart.clear();
       location.href='done/?order='+encodeURIComponent(number);
     }catch(err){
@@ -164,7 +153,6 @@
     .then(data=>{
       catalog=new Map(data.variants.filter(v=>v.available).map(v=>[v.sku,v]));
       if(data.services)services={...services,...data.services};
-      if(data.factory)factory=data.factory;
       const hint=form.querySelector('[data-delivery-hint]');
       if(hint&&services.install_delivery_zone)hint.textContent=`${services.install_delivery_zone}. Оценка ≈${services.install_delivery_pct}% от стоимости, минимум ${money(services.install_delivery_min)}. Замер бесплатно.`;
       // Артикулы, которых больше нет в продаже, убираем и сообщаем об этом
