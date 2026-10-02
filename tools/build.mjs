@@ -261,7 +261,7 @@ const hsxData = rel => JSON.stringify({
     def: OPEN_LAYOUT[defScheme(m).code].key, use: m.use, note: m.note || '',
     variants: Object.fromEntries(m.schemes.map(s => {
       const L = OPEN_LAYOUT[s.code], v = find(m.model, m.colors[0].slug, s.slug, m.width);
-      return [L.key, { label: s.short[0].toUpperCase() + s.short.slice(1), sections: m.sections, moving: L.moving, targets: L.targets,
+      return [L.key, { label: s.short[0].toUpperCase() + s.short.slice(1), code: s.code, sections: m.sections, moving: L.moving, targets: L.targets,
         passage: m.passage, ratio: m.passage / m.width, dir: s.how, href: rel + v.path, sku: v.sku, w: m.width, s: s.slug }];
     })),
   }])),
