@@ -588,3 +588,9 @@
 @media(min-width:640px){.home-stock__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1100px){.home-stock__grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .home-process{padding:var(--space-section) 0;background:var(--ui-bg);border-top:1px solid var(--ui-line-soft)}
+
+/* Главная: «Остекление под ключ» — подпись над слайдером «До / после»; «Индивидуальный расчёт» — один баннер во всю ширину */
+.ba-head{padding-bottom:var(--space-head)}
+.ba-head .ui-eyebrow{margin:0 0 14px}
+.ba-head h2{margin:0;font:300 var(--fs-h2)/.95 var(--font);letter-spacing:-.06em}
+.home-custom .home-stock__grid{grid-template-columns:minmax(0,1fr)}

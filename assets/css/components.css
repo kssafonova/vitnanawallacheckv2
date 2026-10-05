@@ -733,3 +733,18 @@ lead-form{display:block}
 .ba.is-in .ba__line{opacity:1;transition:opacity .6s .9s}
 @media(max-width:639.98px){.ba{aspect-ratio:4/5;max-height:none}}
 @media(prefers-reduced-motion:reduce){.ba.is-pre,.ba.is-pre .ba__img{clip-path:none;transform:none}.ba.is-pre .ba__line{opacity:1}}
+
+/* ============================================================
+   Появление блоков при прокрутке (assets/js/reveal.js, подключает site-menu.js) — как на vitrocsa.com:
+   подъём на 40 px и проявление, ряды — друг за другом (--rv-i), фото — лёгкий «наезд» 1,06 → 1.
+   Свойства translate / scale, а не transform — чтобы не мешать подъёму карточек и увеличению фото при наведении.
+   Работает только с классом html.rv-on (его ставит скрипт) — без JS всё видно сразу.
+   ============================================================ */
+:root{--ease-rv:cubic-bezier(.19,1,.22,1)}
+.rv-on .rv{opacity:0;translate:0 40px;transition:opacity 1s var(--ease-rv),translate 1.2s var(--ease-rv),transform .28s var(--ease-ui),box-shadow .28s var(--ease-ui);transition-delay:calc(var(--rv-i,0) * 90ms),calc(var(--rv-i,0) * 90ms),0s,0s}
+.rv-on .rv.is-in{opacity:1;translate:none}
+.rv-on .rv-img{overflow:hidden}
+.rv-on .rv-img img{scale:1.06;transition:scale 1.8s var(--ease-rv),transform .6s var(--ease-ui),filter .3s ease}
+.rv-on .rv-img.is-in img{scale:1}
+@media(prefers-reduced-motion:reduce){.rv-on .rv{opacity:1;translate:none;transition:none}.rv-on .rv-img img{scale:1}}
+@media print{.rv-on .rv{opacity:1;translate:none}}
