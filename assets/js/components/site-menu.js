@@ -161,4 +161,12 @@
     }
   }
   if (!customElements.get('site-menu')) customElements.define('site-menu', SiteMenu);
+  // Появление блоков при прокрутке (как на vitrocsa.com) — один скрипт на весь сайт, подключаем отсюда: шапка есть на каждой странице
+  if (!document.querySelector('script[data-ps-reveal]')) {
+    const host = document.querySelector('site-menu');
+    const sc = document.createElement('script');
+    sc.src = normBase(host && host.dataset.base) + 'assets/js/reveal.js?v=2';
+    sc.defer = true; sc.dataset.psReveal = '';
+    document.head.appendChild(sc);
+  }
 })();

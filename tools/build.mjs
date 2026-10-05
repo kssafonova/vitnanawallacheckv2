@@ -512,6 +512,9 @@ const hs = models.filter(m => m.system === 'HS');
 const fsModels = models.filter(m => m.system === 'FS');
 const featured = hs.filter(m => m.status === 'available').slice(0, 2).map(defSize);   // 2 и 3 секции (размер по умолчанию) — плашки в «Системах» на главной
 
+// Плашки готовых решений в блоке «Открыть пространство» (главная и /systems/): HS — 2 и 3 секции, FS — обе модели
+const miniStrip = (rel, m) => `<a class="sx-strip" href="${rel}${firstOf(m.base).path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`;
+const fsFeatured = () => data.models.filter(m => m.system === 'FS' && m.status === 'available').map(defSize);
 const blocks = {
   'raschet/index.html': {
     'raschet-calc': calcBox('../', { h1: 1, url: 1, eyebrow: 'Калькулятор · HS и FS порталы', context: 'страница калькулятора' }),
@@ -541,13 +544,15 @@ const blocks = {
   },
   // «Системы» (блок «Открыть пространство») — отдельная страница /systems/, плашки готовых HS
   'systems/index.html': {
-    'hs-mini-cards': featured.map(m => {
-      const v = firstOf(m.base);
-      return `<a class="sx-strip" href="../${v.path}"><small>${esc(m.code)}</small><strong>${(m.width / 1000).toFixed(1).replace('.', ',')} × ${(m.height / 1000).toFixed(1).replace('.', ',')} м</strong><em>${money(m.price)}</em><i aria-hidden="true">→</i></a>`;
-    }).join('\n          '),
+    'hs-mini-cards': featured.map(m => miniStrip('../', m)).join('\n          '),
+    'fs-mini-cards': fsFeatured().map(m => miniStrip('../', m)).join('\n          '),
   },
   'index.html': {
-    'home-cards': [...hs.map(m => marketCard(m, '')), projectCard('raschet/')].join('\n\n      '),
+    // На главной карточек товаров нет (решение владельца): только баннер «Индивидуальный расчёт» после «Остекление под ключ»
+    'home-cards': projectCard('raschet/'),
+    // «Открыть пространство» вернулся на главную (без «Панорамного остекления») — плашки готовых HS
+    'hs-mini-cards': featured.map(m => miniStrip('', m)).join('\n          '),
+    'fs-mini-cards': fsFeatured().map(m => miniStrip('', m)).join('\n          '),
     'home-calc': calcTeaser('', 'Калькулятор'),
   },
 };
